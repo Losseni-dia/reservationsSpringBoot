@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout" layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Fiche d’un artiste</title>
+</head>
+
+<body>
+    <div class="container">
+        <div layout:fragment="content">
+            <h1 th:text="${artist.firstname} +' '+ ${artist.lastname}">Cédric N'savima</h1>
+            <h1 th:text="|${artist.firstname}  ${artist.lastname}|">Cédric N'savima</h1>
+            <nav><a th:href="@{/artists}">Retour à l'index</a></nav>
+        </div>
+    </div>
+</body>
+
+</html>

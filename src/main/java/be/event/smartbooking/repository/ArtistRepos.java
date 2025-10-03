@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import be.event.smartbooking.model.Artist;
 
 public interface ArtistRepos extends CrudRepository<Artist, Long> {
-    List<Artist> findByLastName(String lastName);
+    List<Artist> findByLastname(String lastname);
     Artist findById(long id);
 }
 

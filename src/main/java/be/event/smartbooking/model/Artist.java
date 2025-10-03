@@ -18,14 +18,14 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
+    private String firstname;
 
-    private String lastName;
+    private String lastname;
 
 
     @Override
     public String toString() {
-        return firstName + "" + lastName;
+        return firstname + " " + lastname;
     }
 
 
