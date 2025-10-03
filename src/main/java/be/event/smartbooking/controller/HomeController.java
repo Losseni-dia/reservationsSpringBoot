@@ -1,10 +1,10 @@
-package be.event.smartbooking.controllers;
+package be.event.smartbooking.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-public class HommeController {
+public class HomeController {
 
     @RequestMapping("/")
     public String index() {
@@ -12,3 +12,4 @@ public class HommeController {
     }
     
 }
+      
