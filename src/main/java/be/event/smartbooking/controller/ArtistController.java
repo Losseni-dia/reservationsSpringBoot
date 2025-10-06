@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @Controller
@@ -67,7 +70,7 @@ public class ArtistController {
     
     @PutMapping("artist/{id}/edit")
     public String updateArtist(@Valid @ModelAttribute Artist artist, BindingResult bindingResult, @PathVariable long id,
-                                Model model) {
+            Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("artist", artist);
             return "artist/edit";
@@ -78,10 +81,31 @@ public class ArtistController {
             // Gérer le cas où l'artiste n'existe pas
             return "redirect:/artists";
         }
-        
+
         artistService.updateArtist(id, artist);
         return "redirect:/artists/" + artist.getId();
     }
+
+    @GetMapping("artists/create")
+    public String createArtist(Model model) {
+        Artist artist = new Artist();
+
+        model.addAttribute("artist", artist);
+
+        return "artist/create";
+    }
+    
+    @PostMapping("artists/create")
+    public String storeArtist(@Valid @ModelAttribute Artist artist, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "artist/create";
+        }
+
+        artistService.addArtist(artist);
+        return "redirect:/artists/" + artist.getId();
+    }
+    
     
 
 
