@@ -12,6 +12,7 @@ import be.event.smartbooking.service.ArtistService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -104,6 +105,16 @@ public class ArtistController {
 
         artistService.addArtist(artist);
         return "redirect:/artists/" + artist.getId();
+    }
+
+    @DeleteMapping("artists/{id}")
+    public String deleteArtist(@PathVariable Long id, Model model) {
+        Artist existingArtist = artistService.getArtistById(id);
+        
+        if (existingArtist != null) {
+            artistService.deleteArtist(id);
+        }
+        return "redirect:/artists";
     }
     
     

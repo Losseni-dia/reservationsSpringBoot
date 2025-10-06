@@ -28,6 +28,14 @@
                         <td><a th:text="${artist.lastname}" th:href="@{/artists/{id}(id=${artist.id})}">NSavi</a></td>
                         <td><a th:href="@{/artists/{id}(id=${artist.id})}">Voir</a></td>
                         <td><a th:href="@{/artists/{id}/edit(id=${artist.id})}">Editer</a></td>
+                        <td>
+                            <form th:id="|deleteForm-${artist.id}|"
+                                th:action="@{/artists/{id}(id=${artist.id})}" method="delete">
+                                <a href="#" th:onclick="|if (confirm('Êtes-vous sûr de vouloir supprimer l\'artiste #${artist.id} ?')) 
+                                document.getElementById('deleteForm-${artist.id}').submit();
+                                return false;|">Supprimer</a>
+                            </form>
+                        </td>
                     </tr>
                 </tbody>
             </table>
