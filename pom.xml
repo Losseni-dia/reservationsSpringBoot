@@ -75,6 +75,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- === Sécurité === -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>4.0.0-M3</version>
+        </dependency>
+
         <!-- === Thymeleaf Extras pour Spring Security === -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

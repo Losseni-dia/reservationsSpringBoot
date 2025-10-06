@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +20,12 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Le prénom de l'artiste est obligatoire")
+    @Size(min = 2, max = 60, message = "Le prénom de l'artiste doit contenir entre 2 et 60 caractères")
     private String firstname;
 
+    @NotBlank(message = "Le nom de l'artiste est obligatoire")  
+    @Size(min = 2, max = 60, message = "Le nom de l'artiste doit contenir entre 2 et 60 caractères")
     private String lastname;
 
 

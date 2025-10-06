@@ -1,0 +1,33 @@
+    <!DOCTYPE html>
+    <html lang="fr" xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout" layout:decorate="~{layouts/main}">
+
+    <head>
+        <title>Modification d'un artiste</title>
+        <style>
+            .field-error {color: red;}
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div layout:fragment="content">
+                <h1 th:text="|${artist.firstname}  ${artist.lastname}|">Cédric Nsavi</h1>
+                <form th:action="@{/artists/{id}/edit(id=${artist.id})}" th:object="${artist}" th:method="put">
+                    <div> <label>Id:</label> <span th:text="${artist.id}">1</span> </div>
+                    <div> <label>Firstname:</label> <input type="text" th:field="*{firstname}" maxlength="60" required>
+                        <p th:if="${#fields.hasErrors('firstname')}"
+                           th:errors="*{firstname}" th:errorclass="field-error"></p>
+                    </div>
+                    <div> <label>Lastname:</label> <input type="text" th:field="*{lastname}" maxlength="60" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('lastname')}"
+                           th:errors="*{lastname}" th:errorclass="field-error"></p>
+                    </div>
+                    <div> <button type="submit" th:text="Modifier">Modifier</button> <button type="reset"
+                            th:text="Réinitialiser">Réinitialiser</button> <a th:href="${back}">Annuler</a> </div>
+                </form>
+                <nav><a th:href="@{/artists}">Retour à l'index</a></nav>
+            </div>
+        </div>
+    </body>
+
+    </html>

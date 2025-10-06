@@ -14,12 +14,15 @@
                     <tr>
                         <th>Firstname</th>
                         <th>Lastname</th>
+                        <th colspan="2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="artist : ${artists}">
-                        <td th:text="${artist.firstname}">Bob</td>
-                        <td><a th:text="${artist.lastname}" th:href="@{/artists/{id}(id=${artist.id})}">Sull</a></td>
+                        <td th:text="${artist.firstname}">Cédric</td>
+                        <td><a th:text="${artist.lastname}" th:href="@{/artists/{id}(id=${artist.id})}">NSavi</a></td>
+                        <td><a th:href="@{/artists/{id}(id=${artist.id})}">Voir</a></td>
+                        <td><a th:href="@{/artists/{id}/edit(id=${artist.id})}">Editer</a></td>
                     </tr>
                 </tbody>
             </table>
