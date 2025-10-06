@@ -20,12 +20,12 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Le prénom de l'artiste est obligatoire")
-    @Size(min = 2, max = 60, message = "Le prénom de l'artiste doit contenir entre 2 et 60 caractères")
+    @NotBlank(message = "Le prénom est obligatoire")
+    @Size(min = 2, max = 60, message = "Le prénom doit contenir entre 2 et 60 caractères")
     private String firstname;
 
-    @NotBlank(message = "Le nom de l'artiste est obligatoire")  
-    @Size(min = 2, max = 60, message = "Le nom de l'artiste doit contenir entre 2 et 60 caractères")
+    @NotBlank(message = "Le nom est obligatoire")  
+    @Size(min = 2, max = 60, message = "Le nom doit contenir entre 2 et 60 caractères")
     private String lastname;
 
 

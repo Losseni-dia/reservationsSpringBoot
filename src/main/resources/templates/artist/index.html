@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout" layout:decorate="~{layouts/main}">
-
+<html lang="fr" xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout" 
+layout:decorate="~{layouts/main}">
 <head>
     <title>Liste des artistes</title>
 </head>
-
 <body>
     <div class="container">
+        <div id="notification" th:replace="~{main::notification}"></div>
         <div layout:fragment="content">
             <h1 th:text="${title}">Liste des artistes</h1>
 
@@ -29,12 +29,13 @@
                         <td><a th:href="@{/artists/{id}(id=${artist.id})}">Voir</a></td>
                         <td><a th:href="@{/artists/{id}/edit(id=${artist.id})}">Editer</a></td>
                         <td>
-                            <form th:id="|deleteForm-${artist.id}|"
-                                th:action="@{/artists/{id}(id=${artist.id})}" method="delete">
-                                <a href="#" th:onclick="|if (confirm('Êtes-vous sûr de vouloir supprimer l\'artiste #${artist.id} ?')) 
-                                document.getElementById('deleteForm-${artist.id}').submit();
-                                return false;|">Supprimer</a>
+                            <form th:id="|deleteForm-${artist.id}|" th:action="@{/artists/{id}(id=${artist.id})}" method="post">
+                                <input type="hidden" name="_method" value="delete" />
+                                <a href="#" th:onclick="|if (confirm('Êtes-vous sûr de vouloir supprimer l\'artiste ${artist.id} ?')) 
+                                    document.getElementById('deleteForm-${artist.id}').submit();
+                                    return false;|">Supprimer</a>
                             </form>
+
                         </td>
                     </tr>
                 </tbody>

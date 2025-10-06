@@ -10,9 +10,11 @@
 
     <body>
         <div class="container">
+            <div id="notification" th:replace="~{main::notification}"></div>
             <div layout:fragment="content">
                 <h1 th:text="|${artist.firstname}  ${artist.lastname}|">Cédric Nsavi</h1>
-                <form th:action="@{/artists/{id}/edit(id=${artist.id})}" th:object="${artist}" th:method="put">
+
+                <form th:action="@{/artists/{id}/edit(id=${artist.id})}" th:object="${artist}"th:method="put">
 
                     <div> 
                         <label>Id:</label>

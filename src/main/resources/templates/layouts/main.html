@@ -9,7 +9,17 @@
 
 <body>
     <div th:replace="fragments/header :: header">Header here</div>
+    
     <div class="container">
+        <div id="notification" layout:fragment="notification">
+            <div th:if="${successMessage}" class="alert alert-success">
+               <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger">
+               <p th:text="${errorMessage}"></p>
+            </div>
+        </div>
+
         <div layout:fragment="content">Main content will be inserted here.</div>
     </div>
     <div th:replace="fragments/footer :: footer">&copy; 2026 The Static Templates</div>
