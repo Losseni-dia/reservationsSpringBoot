@@ -16,16 +16,6 @@ public class LocalityController {
     @Autowired
     LocalityService service;
 
-    @GetMapping("/localities")
-    public String index2(Model model) {
-        List<Locality> localities = service.getAll();
-
-        model.addAttribute("localities", localities);
-        model.addAttribute("title", "Liste des localités");
-
-        return "locality/index";
-    }
-
     @GetMapping("/localities/{id}")
     public String show(Model model, @PathVariable("id") String id) {
         Locality locality = service.get(id);
