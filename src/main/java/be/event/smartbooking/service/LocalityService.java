@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import be.event.smartbooking.model.Locality;
 import be.event.smartbooking.repository.LocalityRepos;
 
+@Service
 public class LocalityService {
     @Autowired
 	private LocalityRepos repository;

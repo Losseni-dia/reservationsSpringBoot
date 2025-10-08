@@ -68,6 +68,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.slugify</groupId>
+            <artifactId>slugify</artifactId>
+            <version>3.0.7</version>
+        </dependency>
+
         <!-- === Tests === -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import be.event.smartbooking.model.Role;
 import be.event.smartbooking.repository.RoleRepos;
 
+@Service
 public class RoleService {
     @Autowired
 	private RoleRepos repository;
