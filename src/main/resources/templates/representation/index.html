@@ -12,16 +12,15 @@
 
             <ul th:unless="${#lists.isEmpty(representations)}">
                 <li th:each="representation : ${representations}">
-                    <span th:text="${representation.show.title}">Ayiti</span>
+                    <span th:text="${representation.show.title}">Titre du spectacle</span>
                     <span th:if="${representation.location}" th:text="' - '+${representation.location.designation}">-
-                        Art Center</span>
-                    <span th:text="${#temporals.format(representation.when,'dd-MM-yyyy')}">
-                        12-10-2012</span>
-                    <span th:text="${#temporals.format(representation.when,'HH:mm')}">
-                        13:30</span>
+                        Lieu</span>
+                    <span th:text="${#temporals.format(representation.when, 'dd-MM-yyyy')}">01-01-2025</span>
+                    <span th:text="${#temporals.format(representation.when, 'HH:mm')}">20:30</span>
                     <a th:href="@{/representations/{id}(id=${representation.id})}">Voir</a>
                 </li>
             </ul>
+            <p th:if="${#lists.isEmpty(representations)}">Aucune représentation disponible.</p>
         </div>
     </div>
 </body>
