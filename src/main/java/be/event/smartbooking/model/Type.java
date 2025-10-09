@@ -3,6 +3,8 @@ package be.event.smartbooking.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +26,7 @@ public class Type {
     private Long id;
     private String type;
 
+    @JsonBackReference
     @ManyToMany
 	@JoinTable(
 		  name = "artist_type", 

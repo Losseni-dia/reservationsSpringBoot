@@ -3,6 +3,8 @@ package be.event.smartbooking.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +34,7 @@ public class Artist {
     @Size(min = 2, max = 60, message = "Le nom doit contenir entre 2 et 60 caractères")
     private String lastname;
 
+    @JsonManagedReference
     @ManyToMany(mappedBy = "artists")
     private List<Type> types = new ArrayList<>();
 
