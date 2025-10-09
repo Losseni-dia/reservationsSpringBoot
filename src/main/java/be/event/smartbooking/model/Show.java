@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -64,6 +65,11 @@ public class Show {
 	@OneToMany(targetEntity=Representation.class, mappedBy="show")
 	private List<Representation> representations = new ArrayList<>();
 
+	@ManyToMany(mappedBy = "shows")
+	private List<ArtistType> artistTypes = new ArrayList<>();
+
+
+
     
     @PrePersist
     @PreUpdate
@@ -72,6 +78,24 @@ public class Show {
 			Slugify slg = Slugify.builder().build();
 			this.slug = slg.slugify(title);
 		}
+	}
+
+	public Show addArtistType(ArtistType artistType) {
+		if (!this.artistTypes.contains(artistType)) {
+			this.artistTypes.add(artistType);
+			artistType.addShow(this);
+		}
+
+		return this;
+	}
+
+	public Show removeArtistType(ArtistType artistType) {
+		if (this.artistTypes.contains(artistType)) {
+			this.artistTypes.remove(artistType);
+			artistType.getShows().remove(this);
+		}
+
+		return this;
 	}
 	
 	public List<Representation> getRepresentations() {
