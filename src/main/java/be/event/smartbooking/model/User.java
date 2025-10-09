@@ -1,6 +1,8 @@
 package be.event.smartbooking.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,15 +29,33 @@ public class User {
     private String lastname;
     private String email;
     private String langue;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-
     private LocalDateTime created_at;
+
+	@ManyToMany(mappedBy = "users")
+    private List<Role> roles = new ArrayList<>();
+
+    //Méthodes
+    public User addRole(Role role) {
+        if (!this.roles.contains(role)) {
+            this.roles.add(role);
+            role.addUser(this);
+        }
+
+        return this;
+    }
+
+    public User removeRole(Role role) {
+        if (this.roles.contains(role)) {
+            this.roles.remove(role);
+            role.getUsers().remove(this);
+        }
+
+        return this;
+    }
 
     @Override
     public String toString() {
-        return login + "(" + firstname +  lastname + role + ")";
+        return login + "(" + firstname +  lastname +")";
     }
 
     
