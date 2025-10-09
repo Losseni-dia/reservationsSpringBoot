@@ -29,6 +29,28 @@
             </ul>
             <p th:if="${#lists.size(show.representations)==0}">Aucune représentation</p>
 
+                <h2>Liste des artistes</h2>
+                <p><strong>Auteur:</strong>
+                    <span th:each="auteur,iter : ${collaborateurs['auteur']}" th:text="${auteur.firstname}+' '+${auteur.lastname}
+                		        	+ (${iter.count}==${iter.size}-1 ? ' et ':(${iter.last}?'':', '))">
+                        Firstname Lastname
+                    </span>
+                </p>
+                <p><strong>Metteur en scène:</strong>
+                    <span th:each="scenographe,iter : ${collaborateurs['scénographe']}" th:text="${scenographe.firstname}+' '+${scenographe.lastname}
+                	        		+ (${iter.count}==${iter.size}-1 ? ' et ':(${iter.last}?'':', '))">
+                        Firstname Lastname
+                    </span>
+                </p>
+                <p><strong>Distribution:</strong>
+                    <span th:each="comedien,iter : ${collaborateurs['comédien']}" th:text="${comedien.firstname}+' '+${comedien.lastname}
+                	        		+ (${iter.count}==${iter.size}-1 ? ' et ':(${iter.last}?'':', '))">
+                        Firstname Lastname
+                    </span>
+                </p>
+
+
+
             <nav><a th:href="@{/shows}">Retour à l'index</a></nav>
         </div>
     </div>
