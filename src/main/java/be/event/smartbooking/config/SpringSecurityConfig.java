@@ -37,9 +37,11 @@ public class SpringSecurityConfig {
                 })
                 .httpBasic(Customizer.withDefaults()) // Permet l'authentification de base (utile pour tests)
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("/login")                
                         .usernameParameter("login")
-                        .failureUrl("/login?loginError=true"))
+                        .failureUrl("/login?loginError=true")
+                )
+
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logoutSuccess=true")
                         .deleteCookies("JSESSIONID"))
