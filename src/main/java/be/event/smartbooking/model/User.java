@@ -32,7 +32,7 @@ public class User {
     private String langue;
     private LocalDateTime created_at;
 
-	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER )
     private List<Role> roles = new ArrayList<>();
 
     @ManyToMany(mappedBy = "users")
