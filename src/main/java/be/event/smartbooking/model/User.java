@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,6 +39,8 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
     private String langue;
+
+    @CreationTimestamp
     private LocalDateTime created_at;
 
 	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER )

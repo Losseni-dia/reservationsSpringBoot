@@ -27,6 +27,11 @@
                 <p sec:authorize="!isAuthenticated()">Vous n'êtes pas connecté.<br>
                     <a th:href="@{/login}" class="nav-link">Se connecter</a>
                 </p>
+                
+                <p sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/register}" class="nav-link">S'inscrire</a>
+                </p>
+
                 <div sec:authorize="isAuthenticated()">
                     <p>Bonjour <span sec:authentication="principal.username">Bob</span>!</p>
                     <form th:action="@{/logout}" method="post" class="nav-link">

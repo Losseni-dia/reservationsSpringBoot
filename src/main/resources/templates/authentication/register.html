@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Inscription</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="notification" th:replace="~{main :: notification}"></div>
+        <div layout:fragment="content">
+            <h2>Inscription</h2>
+
+            <form th:action="@{/register}" th:object="${user}" method="post">
+                <div>
+                    <label>Prénom</label>
+                    <input type="text" th:field="*{firstname}" required>
+                </div>
+                <div>
+                    <label>Nom</label>
+                    <input type="text" th:field="*{lastname}" required>
+                </div>
+                <div>
+                    <label>Email</label>
+                    <input type="email" th:field="*{email}" required>
+                </div>
+                <div>
+                    <label>Login</label>
+                    <input type="text" th:field="*{login}" required>
+                </div>
+                <div>
+                    <label>Mot de passe</label>
+                    <input type="password" th:field="*{password}" required>
+                </div>
+                <div>
+                    <label>Confirmer le mot de passe</label>
+                    <input type="password" th:field="*{confirmPassword}" required>
+                </div>
+                <div>
+                    <label>Langue</label>
+                    <select th:field="*{langue}">
+                        <option value="">Choisissez votre langue</option>
+                        <option value="fr">Français</option>
+                        <option value="nl">Néerlandais</option>
+                        <option value="en">Anglais</option>
+                    </select>
+                </div>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <p><a href="/login.html">Se connecter</a></p>
+        </div>
+    </div>
+</body>
+
+</html>
