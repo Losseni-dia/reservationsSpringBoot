@@ -33,7 +33,9 @@
                 </p>
 
                 <div sec:authorize="isAuthenticated()">
-                    <p>Bonjour <span sec:authentication="principal.username">Bob</span>!</p>
+                    <p>Bonjour <span sec:authentication="principal.username">Bob</span>!
+                    </p>
+                    <p><a th:href="@{/profile}">Mon profil</a></p>
                     <form th:action="@{/logout}" method="post" class="nav-link">
                         <button class="unset">Se déconnecter</button>
                     </form>

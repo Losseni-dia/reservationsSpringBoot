@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import be.event.smartbooking.dto.UserProfileDto;
 import be.event.smartbooking.dto.UserRegistrationDto;
 import be.event.smartbooking.model.Role;
 import be.event.smartbooking.model.User;
@@ -64,9 +65,27 @@ public class UserService {
         userRepos.deleteById(id);
     }
 
-        public boolean isLoginAndEmailAvailable(String login, String email) {
+    public boolean isLoginAndEmailAvailable(String login, String email) {
         return !userRepos.existsByLogin(login) && !userRepos.existsByEmail(email);
     }
+    
+        public void updateUserFromDto(UserProfileDto dto) {
+        User user = userRepos.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        user.setFirstname(dto.getFirstname());
+        user.setLastname(dto.getLastname());
+        user.setEmail(dto.getEmail());
+        user.setLangue(dto.getLangue());
+
+        // Si un nouveau mot de passe est fourni et validé
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        userRepos.save(user);
+    }
+
 
 
  

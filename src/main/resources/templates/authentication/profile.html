@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Mon profil</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="notification" th:replace="~{main :: notification}"></div>
+        <div layout:fragment="content">
+            <section th:unless="${param.edit != null}">
+                <h2>Mon profil</h2>
+                <h3 th:text="|${user.firstname} ${user.lastname}|">Firstname Lastname</h3>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Login:</td>
+                            <td th:text="${user.login}">Login</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td th:text="${user.email}">Email</td>
+                        </tr>
+                        <tr>
+                            <td>Langue:</td>
+                            <td th:text="${user_language}">Langue</td>
+                        </tr>
+                        <tr>
+                            <td>Rôle:</td>
+                            <td th:text="${user.role}">Rôle</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><a th:href="@{/profile?edit}">Modifier</a></p>
+            </section>
+            <section th:if="${param.edit != null}">
+                <h2>Modifier son profil</h2>
+
+                <form th:action="@{/profile}" th:object="${user}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div>
+                        <label>Prénom:</label>
+                        <input type="text" th:field="*{firstname}" />
+                        <div class="error" th:errors="*{firstname}"></div>
+                    </div>
+
+                    <div>
+                        <label>Nom:</label>
+                        <input type="text" th:field="*{lastname}" />
+                        <div class="error" th:errors="*{lastname}"></div>
+                    </div>
+
+                    <div>
+                        <label>Login:</label>
+                        <input type="text" th:field="*{login}" readonly />
+                    </div>
+
+                    <div>
+                        <label>Email:</label>
+                        <input type="email" th:field="*{email}" />
+                        <div class="error" th:errors="*{email}"></div>
+                    </div>
+
+                    <div>
+                        <label>Langue:</label>
+                        <select th:field="*{langue}">
+                            <option value="fr">Français</option>
+                            <option value="nl">Néerlandais</option>
+                            <option value="en">Anglais</option>
+                        </select>
+                    </div>
+
+                    <hr>
+                    <h3>Changer le mot de passe</h3>
+                    <div>
+                        <label>Nouveau mot de passe (laisser vide pour ne pas changer):</label>
+                        <input type="password" th:field="*{password}" />
+                    </div>
+                    <div>
+                        <label>Confirmer le mot de passe (laisser vide pour ne pas changer):</label>
+                        <input type="password" th:field="*{confirmPassword}" />
+                    </div>
+
+                    <!-- Erreur globale -->
+                    <div class="error" th:errors="*{__all__}"></div>
+
+                    <button type="submit" style="margin-top: 15px;">Mettre à jour</button>
+                    <p><a th:href="@{/profile}">Annuler</a></p>
+                </form>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>
