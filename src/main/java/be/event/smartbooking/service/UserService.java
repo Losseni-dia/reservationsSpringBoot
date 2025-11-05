@@ -65,6 +65,11 @@ public class UserService {
         userRepos.deleteById(id);
     }
 
+    public void deleteByLogin(String login) {
+        User user = userRepos.findByLogin(login);
+        userRepos.delete(user);
+    }
+
     public boolean isLoginAndEmailAvailable(String login, String email) {
         return !userRepos.existsByLogin(login) && !userRepos.existsByEmail(email);
     }
