@@ -1,6 +1,7 @@
 package be.event.smartbooking.dto;
 
 import be.event.smartbooking.validation.PasswordMatches;
+import be.event.smartbooking.validation.StrongPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,7 +21,7 @@ public class UserRegistrationDto {
     private String login;
 
     @NotBlank(message = "Le mot de passe est obligatoire")
-    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
+    @StrongPassword
     private String password;
 
     @NotBlank(message = "Veuillez confirmer votre mot de passe")
