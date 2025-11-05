@@ -1,11 +1,13 @@
 package be.event.smartbooking.dto;
 
+import be.event.smartbooking.validation.PasswordMatches;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@PasswordMatches 
 public class UserRegistrationDto {
     @NotBlank(message = "Le prénom est obligatoire")
     private String firstname;
