@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.repository.UserRepos;
 
+@Service
 public class UserService {
     @Autowired
     private UserRepos userRepos;
@@ -22,6 +24,10 @@ public class UserService {
         return userRepos.findById(id);
     }
 
+    public User findByEmail(String email) {
+        return userRepos.findByEmail(email).orElse(null);
+    }
+
     public void addUser(User user) {
         userRepos.save(user);
     }
@@ -33,4 +39,5 @@ public class UserService {
     public void deleteUser(long id) {
         userRepos.deleteById(id);
     }
+
 }

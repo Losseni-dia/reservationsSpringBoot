@@ -1,16 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layouts/main}">
-
 <head>
     <title>Connexion</title>
 </head>
-
 <body>
     <div layout:fragment="content">
         <h1 class="mb-4">Connexion</h1>
-
-
         <form th:action="@{/login}" method="post">
             <div>
                 <label>Login:</label>
@@ -24,6 +20,7 @@
                 <button type="submit" class="btn btn-primary mt-4">Se connecter</button>
             </div>
         </form>
+        <p class="mt-3"><a href="/forgot-password">Mot de passe oublié</a></p>
     </div>
 </body>
 

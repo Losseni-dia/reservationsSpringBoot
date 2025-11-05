@@ -27,7 +27,10 @@ public class SpringSecurityConfig {
         return http.cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .authorizeHttpRequests(auth -> {
+                        .authorizeHttpRequests(auth -> {
+                        auth.requestMatchers("/login", "/login**", "/css/**", "/js/**", 
+			 "/forgot-password", "/reset-password", "/reset-success").permitAll();
+
                     auth.requestMatchers("/admin").hasRole("ADMIN");
                     auth.requestMatchers("/user").hasRole("MEMBER");
                     // API

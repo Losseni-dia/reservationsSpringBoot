@@ -1,6 +1,7 @@
 package be.event.smartbooking.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -10,7 +11,7 @@ public interface UserRepos extends CrudRepository<User, Long> {
     User findById(long id);
 
     User findByLogin(String login);
-    User findByEmail(String email);
+    Optional <User> findByEmail(String email);
 
     List<User> findByLastname(String lastname);
 
