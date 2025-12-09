@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import be.event.smartbooking.dto.UserProfileDto;
 import be.event.smartbooking.model.Language;
 import be.event.smartbooking.model.User;
-import be.event.smartbooking.model.Role;
 import be.event.smartbooking.repository.UserRepos;
 import be.event.smartbooking.service.UserService;
 

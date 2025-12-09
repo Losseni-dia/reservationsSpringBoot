@@ -1,6 +1,5 @@
 package be.event.smartbooking.api.hateoas;
 
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +7,8 @@ import be.event.smartbooking.api.controller.ArtistApiController;
 import be.event.smartbooking.model.Artist;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.hateoas.EntityModel;
 
 @Component
 public class ArtistModelAssembler implements RepresentationModelAssembler<Artist, EntityModel<Artist>> {

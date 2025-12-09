@@ -1,135 +1,124 @@
 package be.event.smartbooking.model;
 
+import com.github.slugify.Slugify;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.slugify.Slugify;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+@Entity
+@Table(name = "shows")
 @Data
 @NoArgsConstructor
-@Entity
-@Table(name="shows")
+@AllArgsConstructor
+@Builder
 public class Show {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(unique=true)
+	@Column(unique = true, nullable = false)
 	private String slug;
 
+	@Column(nullable = false)
 	private String title;
+
+	@Column(columnDefinition = "TEXT")
 	private String description;
 
-	@Column(name="poster_url")
+	@Column(name = "poster_url")
 	private String posterUrl;
-	
-	/**
-	 * Lieu de création du spectacle
-	 */
-	@ManyToOne
-	@JoinColumn(name="location_id", nullable=true)
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "location_id")
 	private Location location;
-	
-	private boolean bookable;
-	private double price;
-	
-	/**
-	 * Date de création du spectacle
-	 */
-	@Column(name="created_at")
+
+	@Column(nullable = false)
+	private boolean bookable = true;
+
+	// Supprimé le champ "price" → les prix sont maintenant gérés via Price +
+	// Representation !
+	// private double price;
+
+	@CreationTimestamp
+	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
-	
-	/**
-	 * Date de modification du spectacle
-	 */
-	@Column(name="updated_at")
+
+	@UpdateTimestamp
+	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
-	
-	
-	@OneToMany(targetEntity=Representation.class, mappedBy="show")
+
+	// =================================================================
+	// RELATIONS
+	// =================================================================
+
+	@OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Representation> representations = new ArrayList<>();
 
-	@ManyToMany(mappedBy = "shows")
+	@OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Review> reviews = new ArrayList<>();
+
+	@ManyToMany
+	@JoinTable(name = "show_artist_types", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "artist_type_id"))
 	private List<ArtistType> artistTypes = new ArrayList<>();
 
+	// =================================================================
+	// SLUG AUTOMATIQUE
+	// =================================================================
 
-
-    
-    @PrePersist
-    @PreUpdate
+	@PrePersist
+	@PreUpdate
 	public void generateSlug() {
 		if (title != null && !title.isBlank()) {
-			Slugify slg = Slugify.builder().build();
-			this.slug = slg.slugify(title);
+			Slugify slugify = Slugify.builder().lowerCase(true).build();
+			this.slug = slugify.slugify(title);
 		}
 	}
 
-	public Show addArtistType(ArtistType artistType) {
-		if (!this.artistTypes.contains(artistType)) {
-			this.artistTypes.add(artistType);
-			artistType.addShow(this);
-		}
+	// =================================================================
+	// MÉTHODES UTILITAIRES
+	// =================================================================
 
-		return this;
+	public void addRepresentation(Representation representation) {
+		representations.add(representation);
+		representation.setShow(this);
 	}
 
-	public Show removeArtistType(ArtistType artistType) {
-		if (this.artistTypes.contains(artistType)) {
-			this.artistTypes.remove(artistType);
-			artistType.getShows().remove(this);
-		}
-
-		return this;
-	}
-	
-	public List<Representation> getRepresentations() {
-		return representations;
+	public void removeRepresentation(Representation representation) {
+		representations.remove(representation);
+		representation.setShow(null);
 	}
 
-	public Show addRepresentation(Representation representation) {
-		if (!this.representations.contains(representation)) {
-			this.representations.add(representation);
-			representation.setShow(this);
-		}
-
-		return this;
+	public void addArtistType(ArtistType artistType) {
+		artistTypes.add(artistType);
+		artistType.getShows().add(this);
 	}
 
-	public Show removeRepresentation(Representation representation) {
-		if (this.representations.contains(representation)) {
-			this.representations.remove(representation);
-			if (representation.getLocation().equals(this)) {
-				representation.setLocation(null);
-			}
-		}
-
-		return this;
+	public void removeArtistType(ArtistType artistType) {
+		artistTypes.remove(artistType);
+		artistType.getShows().remove(this);
 	}
 
-	@Override
-	public String toString() {
-		return "Show [id=" + id + ", slug=" + slug + ", title=" + title
-				+ ", description=" + description + ", posterUrl=" + posterUrl + ", location="
-				+ location + ", bookable=" + bookable + ", price=" + price
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", representations=" + representations.size() + "]";
+	public void addReview(Review review) {
+		reviews.add(review);
+		review.setShow(this);
 	}
 
-    
+	// Note de moyenne
+	public Double getAverageRating() {
+		return reviews.isEmpty() ? null
+				: reviews.stream()
+						.mapToInt(Review::getStars)
+						.average()
+						.orElse(0.0);
+	}
+
+	public Long getReviewCount() {
+		return (long) reviews.size();
+	}
 }

@@ -1,77 +1,91 @@
 package be.event.smartbooking.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
 @Entity
 @Table(name = "representations")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Representation {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "show_id", nullable = false)
     private Show show;
 
-    /**
-     * Date de création de la représentation
-     */
-    private LocalDateTime when;
+    @Column(nullable = false)
+    private LocalDateTime when; // date et heure de la représentation
 
-    /**
-     * Lieu de prestation de la représentation
-     */
-    @ManyToOne
-    @JoinColumn(name = "location_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
     private Location location;
 
-    @ManyToMany
-	@JoinTable(
-		  name = "reservations", 
-		  joinColumns = @JoinColumn(name = "representation_id"), 
-		  inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users = new ArrayList<>();
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
-    
-    //Méthodes
-    
-    public List<User> getUsers() {
-        return users;
+    // =================================================================
+    // RELATIONS CORRECTES
+    // =================================================================
+
+    // 1. Prix disponibles pour cette représentation
+    @OneToMany(mappedBy = "representation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Price> prices = new ArrayList<>();
+
+    // 2. Réservations détaillées (via la table d'association)
+    @OneToMany(mappedBy = "representation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RepresentationReservation> reservations = new ArrayList<>();
+
+    // =================================================================
+    // MÉTHODES UTILITAIRES
+    // =================================================================
+
+    public void addPrice(Price price) {
+        prices.add(price);
+        price.setRepresentation(this);
     }
 
-    public Representation addUser(User user) {
-        if (!this.users.contains(user)) {
-            this.users.add(user);
-            user.addRepresentation(this);
-        }
-
-        return this;
+    public void removePrice(Price price) {
+        prices.remove(price);
+        price.setRepresentation(null);
     }
 
-    public Representation removeUser(User user) {
-        if (this.users.contains(user)) {
-            this.users.remove(user);
-            user.getRepresentations().remove(this);
-        }
-
-        return this;
+    public void addReservationItem(RepresentationReservation item) {
+        reservations.add(item);
+        item.setRepresentation(this);
     }
+
+    public void removeReservationItem(RepresentationReservation item) {
+        reservations.remove(item);
+        item.setRepresentation(null);
+    }
+
+    // Méthode pratique : récupérer tous les utilisateurs ayant réservé (même
+    // plusieurs fois)
+    public List<User> getReservedUsers() {
+        return reservations.stream()
+                .map(item -> item.getReservation().getUser())
+                .distinct()
+                .toList();
+    }
+
+    // Nombre total de places réservées
+    public int getTotalReservedSeats() {
+        return reservations.stream()
+                .mapToInt(RepresentationReservation::getQuantity)
+                .sum();
+    }
+
    
-    
 }

@@ -21,14 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepos userRepository;
 
 
-    private List<GrantedAuthority> getGrantedAuthorities(List<Role> roles) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole()));
-        }
-        return authorities;
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final User user = userRepository.findByLogin(username);
@@ -40,5 +32,15 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 getGrantedAuthorities(user.getRoles()));
     }
+    
 
+    private List<GrantedAuthority> getGrantedAuthorities(List<Role> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole()));
+        }
+        return authorities;
+    }
+
+   
 }

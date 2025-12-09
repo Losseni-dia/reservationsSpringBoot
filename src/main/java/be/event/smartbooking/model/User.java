@@ -1,100 +1,117 @@
 package be.event.smartbooking.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.CreationTimestamp;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 50)
     private String login;
 
     @Column(nullable = false)
-    private String password;
+    private String password; // À hasher avec BCrypt en pratique !
 
     private String firstname;
-
     private String lastname;
 
     @Column(unique = true, nullable = false)
     private String email;
-    private String langue;
+
+    private String langue; // ex: "fr", "en", "nl"
 
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER )
+    // =================================================================
+    // ROLES
+    // =================================================================
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
-    private List<Representation> representations = new ArrayList<>();
+    // =================================================================
+    // RÉSERVATIONS (relation principale)
+    // =================================================================
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 
-    //Méthodes
-    public User addRole(Role role) {
-        if (!this.roles.contains(role)) {
-            this.roles.add(role);
-            role.addUser(this);
+
+    // =================================================================
+    // AVIS (reviews)
+    // =================================================================
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
+
+    // =================================================================
+    // MÉTHODES UTILITAIRES
+    // =================================================================
+
+    // --- Rôles ---
+    public void addRole(Role role) {
+        if (!roles.contains(role)) {
+            roles.add(role);
+            role.getUsers().add(this);
         }
-
-        return this;
     }
 
-    public User removeRole(Role role) {
-        if (this.roles.contains(role)) {
-            this.roles.remove(role);
+    public void removeRole(Role role) {
+        if (roles.remove(role)) {
             role.getUsers().remove(this);
         }
-
-        return this;
     }
 
-    public List<Representation> getRepresentations() {
-        return representations;
+    // --- Réservations ---
+    public void addReservation(Reservation reservation) {
+        reservations.add(reservation);
+        reservation.setUser(this);
     }
 
-    public User addRepresentation(Representation representation) {
-        if (!this.representations.contains(representation)) {
-            this.representations.add(representation);
-            representation.addUser(this);
-        }
-
-        return this;
+    public void removeReservation(Reservation reservation) {
+        reservations.remove(reservation);
+        reservation.setUser(null);
     }
 
-    public User removeRepresentation(Representation representation) {
-        if (this.representations.contains(representation)) {
-            this.representations.remove(representation);
-            representation.getUsers().remove(this);
-        }
 
-        return this;
+    public void addReview(Review review) {
+        reviews.add(review);
+        review.setUser(this);
+    }
+
+    public void removeReview(Review review) {
+        reviews.remove(review);
+        review.setUser(null);
+    }
+
+    // --- Méthodes pratiques très utiles ---
+   
+
+    /**
+     * Vérifie si l'utilisateur a le rôle donné
+     */
+    public boolean hasRole(String roleName) {
+        return roles.stream()
+                .anyMatch(role -> role.getRole().equalsIgnoreCase(roleName));
     }
 
     @Override
     public String toString() {
-        return login + "(" + firstname +  lastname +")";
+        return login + " (" + firstname + " " + lastname + ")";
     }
-
-    
-
 }
