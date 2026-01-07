@@ -19,51 +19,55 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 @EnableMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig {
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+        @Autowired
+        private CustomUserDetailsService customUserDetailsService;
 
-    @Bean
-    public SecurityFilterChain configure(final HttpSecurity http) throws Exception {
-        return http.cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                        .authorizeHttpRequests(auth -> {
-                        auth.requestMatchers("/login", "/login**", "/css/**", "/js/**", 
-			 "/forgot-password", "/reset-password", "/reset-success","/registration").permitAll();
+        @Bean
+        public SecurityFilterChain configure(final HttpSecurity http) throws Exception {
+                return http.cors(Customizer.withDefaults())
+                                .csrf(csrf -> csrf
+                                                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                                .authorizeHttpRequests(auth -> {
+                                        auth.requestMatchers("/login", "/login**", "/css/**", "/js/**",
+                                                        "/forgot-password", "/reset-password", "/reset-success",
+                                                        "/registration", "/uploads/**").permitAll();
 
-                    auth.requestMatchers("/admin").hasRole("ADMIN");
-                    auth.requestMatchers("/user").hasRole("MEMBER");
-                    // API
-                    auth.requestMatchers("/api/public/**").permitAll(); // Endpoints publics
-                    auth.requestMatchers("/api/admin/**").hasRole("ADMIN"); // Endpoints réservés aux administrateurs
-                    auth.anyRequest().permitAll();
-                })
-                .httpBasic(Customizer.withDefaults()) // Permet l'authentification de base (utile pour tests)
-                .formLogin(form -> form
-                        .loginPage("/login")                
-                        .usernameParameter("login")
-                        .failureUrl("/login?loginError=true")
-                )
+                                        auth.requestMatchers("/admin").hasRole("ADMIN");
+                                        auth.requestMatchers("/user").hasRole("MEMBER");
+                                        // API
+                                        auth.requestMatchers("/api/public/**").permitAll(); // Endpoints publics
+                                        auth.requestMatchers("/api/admin/**").hasRole("ADMIN"); // Endpoints réservés
+                                                                                                // aux administrateurs
+                                        auth.anyRequest().permitAll();
+                                })
+                                .httpBasic(Customizer.withDefaults()) // Permet l'authentification de base (utile pour
+                                                                      // tests)
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .usernameParameter("login")
+                                                .failureUrl("/login?loginError=true"))
 
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logoutSuccess=true")
-                        .deleteCookies("JSESSIONID"))
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login?loginRequired=true")))
-                .build();
-    }
+                                .logout(logout -> logout
+                                                .logoutSuccessUrl("/login?logoutSuccess=true")
+                                                .deleteCookies("JSESSIONID"))
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(
+                                                                "/login?loginRequired=true")))
+                                .build();
+        }
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
-            throws Exception {
-        AuthenticationManagerBuilder authMngrBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authMngrBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
-        return authMngrBuilder.build();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(HttpSecurity http,
+                        BCryptPasswordEncoder bCryptPasswordEncoder)
+                        throws Exception {
+                AuthenticationManagerBuilder authMngrBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+                authMngrBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
+                return authMngrBuilder.build();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder(BCryptVersion.$2Y, 12);
+        }
 
 }
