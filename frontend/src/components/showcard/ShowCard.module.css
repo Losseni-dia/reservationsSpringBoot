@@ -1,0 +1,124 @@
+.card {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #222;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    /* Lueur jaune style néon */
+    box-shadow: 0 0 20px rgba(245, 197, 24, 0.4);
+    border-color: #f5c518;
+}
+
+.posterContainer {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #000;
+}
+
+/* Le dégradé sur l'image pour que le texte soit toujours lisible */
+.posterContainer::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(26, 26, 26, 1), transparent);
+    z-index: 1;
+}
+
+.poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    transition: transform 0.6s ease;
+}
+
+.card:hover .poster {
+    transform: scale(1.1);
+}
+
+.content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #1a1a1a;
+    z-index: 2;
+    /* Pour passer au-dessus du dégradé si besoin */
+}
+
+.title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 2px;
+    letter-spacing: -0.5px;
+}
+
+.location {
+    color: #f5c518;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.btnDetails,
+.btnReserve {
+    flex: 1;
+    padding: 10px 5px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    transition: 0.3s;
+    border: none;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnDetails {
+    background-color: #333;
+    color: #fff;
+}
+
+.btnDetails:hover {
+    background-color: #444;
+}
+
+.btnReserve {
+    background-color: #f5c518;
+    /* Jaune action */
+    color: #000;
+}
+
+.btnReserve:hover:not(:disabled) {
+    background-color: #fff;
+    color: #000;
+}
+
+.btnReserve:disabled {
+    background-color: #222;
+    color: #555;
+}

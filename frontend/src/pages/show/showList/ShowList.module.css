@@ -1,0 +1,100 @@
+/* Chemin : src/pages/show/ShowList.module.css */
+.pageWrapper {
+    background-color: #141414;
+    min-height: 100vh;
+    padding-top: 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.sectionTitle {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-left: 20px;
+    border-left: 5px solid #f5c518;
+    padding-left: 15px;
+}
+
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
+
+.dot {
+    width: 14px;
+    height: 14px;
+    margin: 0 6px;
+    background-color: #f5c518;
+    /* Jaune action */
+    border-radius: 50%;
+    animation: bounce 0.6s infinite alternate;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.searchContainer {
+    position: relative;
+    min-width: 300px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 12px 20px;
+    padding-right: 45px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 50px;
+    /* Bordure arrondie style moderne */
+    color: white;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+    border-color: #f5c518;
+    box-shadow: 0 0 10px rgba(245, 197, 24, 0.2);
+    background-color: #222;
+}
+
+.searchIcon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.sectionTitle {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: bold;
+    border-left: 5px solid #f5c518;
+    padding-left: 15px;
+    margin: 0;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+
+    to {
+        transform: translateY(-18px);
+        opacity: 1;
+    }
+}

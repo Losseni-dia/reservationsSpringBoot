@@ -1,0 +1,110 @@
+/* Chemin : src/components/layout/Header.module.css */
+.header {
+    background-color: #000000;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid #222;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: -1px;
+}
+
+.yellow {
+    color: #f5c518;
+}
+
+.nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.link {
+    color: #e5e5e5;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.link:hover {
+    color: #f5c518;
+}
+
+.activeLink {
+    color: #f5c518;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 2px solid #f5c518;
+}
+
+/* ... garde tes styles logo et nav d'avant ... */
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    /* Ligne très fine */
+    padding: 2px 0;
+    margin-right: 10px;
+}
+
+.searchIcon {
+    color: #ffffff;
+    /* Icône purement blanche */
+    margin-right: 8px;
+    opacity: 0.8;
+}
+
+.searchInput {
+    background: none;
+    border: none;
+    color: white;
+    outline: none;
+    font-size: 0.85rem;
+    width: 120px;
+    transition: width 0.3s ease;
+}
+
+.searchInput:focus {
+    width: 180px;
+    border-bottom: 1px solid #f5c518;
+    /* Soulignement jaune en tapant */
+}
+
+/* On garde les boutons panier et login simples */
+.cartBtn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+}
+
+.loginBtn {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid #555;
+    padding: 5px 15px;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.loginBtn:hover {
+    background: white;
+    color: black;
+    border-color: white;
+}

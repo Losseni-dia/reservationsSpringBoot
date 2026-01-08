@@ -1,0 +1,23 @@
+/* Reset total pour éviter les marges blanches et le centrage forcé */
+:root {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #141414;
+  /* Noir Netflix */
+  color: white;
+  width: 100%;
+  min-height: 100vh;
+  /* Annule le centrage par défaut de Vite */
+  display: block !important;
+}
+
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}

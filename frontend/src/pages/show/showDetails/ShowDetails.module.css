@@ -1,0 +1,126 @@
+.detailsContainer {
+    background-color: #141414;
+    color: #ffffff;
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+.heroSection {
+    position: relative;
+    height: 50vh;
+    background-size: cover;
+    background-position: center top;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 40px;
+    border-bottom: 2px solid #f5c518;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.8);
+    margin-bottom: 0;
+}
+
+.locationTag {
+    font-size: 1.2rem;
+    color: #f5c518;
+    font-weight: 600;
+}
+
+.infoSection {
+    padding: 20px 0;
+}
+
+.infoSection h3 {
+    border-left: 4px solid #f5c518;
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+.descriptionText {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #ccc;
+}
+
+.bookingCard {
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid #333;
+    position: sticky;
+    top: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.priceItem {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    color: white;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.priceItem:hover {
+    border-color: #f5c518;
+    background-color: #333;
+}
+
+.reserveBtn {
+    background-color: #f5c518;
+    color: #000000;
+    font-weight: 800;
+    font-size: 1.2rem;
+    border: none;
+    padding: 18px;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 10px;
+    text-transform: uppercase;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.reserveBtn:hover:not(:disabled) {
+    background-color: #ffffff;
+    transform: translateY(-3px);
+}
+
+/* Ton Loader animé */
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    margin: 0 8px;
+    background-color: #f5c518;
+    border-radius: 50%;
+    animation: bounce 0.6s infinite alternate;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+
+    to {
+        transform: translateY(-20px);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,41 @@
+/* Chemin : src/components/layout/Footer.module.css */
+.footer {
+    background-color: #000000;
+    color: #808080;
+    padding: 3rem 0;
+    border-top: 1px solid #222;
+    margin-top: auto;
+}
+
+.socials {
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    gap: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.copyright {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.yellow {
+    color: #f5c518;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.links a {
+    color: #808080;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
