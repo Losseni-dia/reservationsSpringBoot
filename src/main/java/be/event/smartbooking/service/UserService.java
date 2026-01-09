@@ -61,6 +61,10 @@ public class UserService {
         userRepos.save(user);
     }
 
+    public User findByLogin(String login) {
+        return userRepos.findByLogin(login);
+    }
+
     public void deleteUser(long id) {
         userRepos.deleteById(id);
     }

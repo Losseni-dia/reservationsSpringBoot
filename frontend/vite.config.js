@@ -1,5 +1,4 @@
-// C:\PID\smartbooking\frontend\vite.config.ts
-import { defineConfig } from 'vite'; // <--- LA LIGNE INDISPENSABLE
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -7,15 +6,15 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
+      // Cette règle couvre désormais /api/shows, /api/users/login, /api/users/profile, etc.
+      '/api': { 
+        target: 'http://localhost:8080', 
         changeOrigin: true,
-        secure: false,
+        secure: false 
       },
-      '/uploads': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
+      '/uploads': { 
+        target: 'http://localhost:8080', 
+        changeOrigin: true 
       }
     }
   }

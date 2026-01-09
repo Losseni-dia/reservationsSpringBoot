@@ -5,10 +5,11 @@ import be.event.smartbooking.model.Show;
 import be.event.smartbooking.repository.ShowRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShowService {
@@ -16,76 +17,61 @@ public class ShowService {
     @Autowired
     private ShowRepos repository;
 
-    // Tes méthodes existantes (conservées à l’identique)
+    /**
+     * Récupère tous les spectacles avec leur lieu chargé (JOIN FETCH)
+     * Indispensable pour éviter l'erreur 500 dans le contrôleur API.
+     */
+    @Transactional(readOnly = true)
     public List<Show> getAll() {
-        List<Show> shows = new ArrayList<>();
-        repository.findAll().forEach(shows::add);
-        return shows;
-    }
-    
-    public Show get(Long id) {
-        try {
-            Long indice = Long.valueOf(id);
-            Optional<Show> show = repository.findById(indice);
-            return show.orElse(null);
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        return repository.findAllWithLocation();
     }
 
+    /**
+     * Recherche un spectacle par son slug via le Repository (Plus rapide que la
+     * boucle)
+     */
+    @Transactional(readOnly = true)
+    public Show findBySlug(String slug) {
+        return repository.findBySlug(slug);
+    }
+
+    /**
+     * Récupère un spectacle par ID
+     */
+    @Transactional(readOnly = true)
+    public Show get(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    /**
+     * Retourne uniquement les spectacles réservables
+     */
+    @Transactional(readOnly = true)
+    public List<Show> getAllBookableShows() {
+        // Version optimisée avec Stream
+        return repository.findAllWithLocation().stream()
+                .filter(Show::isBookable)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public void add(Show show) {
         repository.save(show);
     }
 
-    public void update(String id, Show show) {
+    @Transactional
+    public void update(Long id, Show show) {
+        show.setId(id);
         repository.save(show);
     }
 
-    public void delete(String id) {
-        try {
-            Long indice = Long.valueOf(id);
-            repository.deleteById(indice);
-        } catch (NumberFormatException e) {
-            // rien à faire
-        }
+    @Transactional
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Show> getFromLocation(Location location) {
         return repository.findByLocation(location);
-    }
-
-    // LES 2 MÉTHODES QUE TU DEMANDES (ajoutées dans ton style)
-
-    /**
-     * Retourne uniquement les spectacles réservables (bookable = true)
-     */
-    public List<Show> getAllBookableShows() {
-        List<Show> allShows = new ArrayList<>();
-        List<Show> bookableShows = new ArrayList<>();
-
-        repository.findAll().forEach(allShows::add);
-
-        for (Show show : allShows) {
-            if (show.isBookable()) { // ou show.getBookable() selon ton getter
-                bookableShows.add(show);
-            }
-        }
-
-        return bookableShows;
-    }
-
-    /**
-     * Recherche un spectacle par son slug (ex: "le-misanthrope-2025")
-     */
-    public Show findBySlug(String slug) {
-        List<Show> allShows = new ArrayList<>();
-        repository.findAll().forEach(allShows::add);
-
-        for (Show show : allShows) {
-            if (show.getSlug() != null && show.getSlug().equals(slug)) {
-                return show;
-            }
-        }
-        return null; // pas trouvé
     }
 }
