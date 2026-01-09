@@ -159,3 +159,9 @@
     border-radius: 2px;
     opacity: 0.3;
 }
+
+.forgotPasswordLink {
+    font-size: 0.75rem;
+    color: #6A0DAD;
+    text-decoration: none;
+}
