@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
               value={loginIdentifier}
               onChange={(e) => setLoginIdentifier(e.target.value)}
               className={styles.input}
-              placeholder="Votre login"
+              placeholder="Votre login charmant"
               required
             />
           </div>
