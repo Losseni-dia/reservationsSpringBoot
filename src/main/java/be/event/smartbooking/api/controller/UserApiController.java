@@ -6,6 +6,7 @@ import be.event.smartbooking.model.User;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +31,24 @@ public class UserApiController {
 
     // RÉCUPÉRER MON PROFIL (Connecté)
     @GetMapping("/profile")
-    public ResponseEntity<UserProfileDto> getProfile(Principal principal) {
-        // Principal.getName() retourne l'email (ou login) de l'utilisateur connecté
-        User user = userService.findByEmail(principal.getName());
-        if (user == null)
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> getProfile(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non connecté");
+        }
 
+        // On cherche l'utilisateur (on utilise findByLogin car c'est le standard
+        // getName() de Spring Security)
+        User user = userService.findByLogin(principal.getName());
+
+        // Plan B si login non trouvé
+        if (user == null)
+            user = userService.findByEmail(principal.getName());
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profil introuvable");
+        }
+
+        // Mapping DTO manuel ultra-sécurisé
         UserProfileDto dto = new UserProfileDto();
         dto.setId(user.getId());
         dto.setFirstname(user.getFirstname());
@@ -43,8 +56,17 @@ public class UserApiController {
         dto.setEmail(user.getEmail());
         dto.setLangue(user.getLangue());
         dto.setLogin(user.getLogin());
-        // On récupère le premier rôle pour l'affichage
-        dto.setRole(user.getRoles().isEmpty() ? "MEMBER" : user.getRoles().get(0).getRole());
+
+        // Sécurité sur les rôles (évite le crash Lazy Loading)
+        try {
+            if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+                dto.setRole(user.getRoles().get(0).getRole());
+            } else {
+                dto.setRole("MEMBER");
+            }
+        } catch (Exception e) {
+            dto.setRole("MEMBER");
+        }
 
         return ResponseEntity.ok(dto);
     }
@@ -52,9 +74,15 @@ public class UserApiController {
     // METTRE À JOUR MON PROFIL (Connecté)
     @PutMapping("/profile")
     public ResponseEntity<String> updateProfile(@Valid @RequestBody UserProfileDto profileDto, Principal principal) {
-        User user = userService.findByEmail(principal.getName());
-        profileDto.setId(user.getId()); // Sécurité : on force l'ID de l'utilisateur connecté
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expirée");
+        }
 
+        User user = userService.findByEmail(principal.getName());
+        if (user == null)
+            user = userService.findByLogin(principal.getName());
+
+        profileDto.setId(user.getId());
         userService.updateUserFromDto(profileDto);
         return ResponseEntity.ok("Profil mis à jour avec succès");
     }

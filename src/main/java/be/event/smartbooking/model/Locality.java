@@ -3,6 +3,7 @@ package be.event.smartbooking.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,10 @@ public class Locality {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "postal_code")
     private Long postalCode;
+    
     private String locality;
 
     @OneToMany( targetEntity=Location.class, mappedBy="locality" )

@@ -1,7 +1,9 @@
-// Chemin : src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Context
+import { AuthProvider } from './components/context/AuthContext'; 
 
 // Layout
 import Header from './components/layout/header/Header';
@@ -10,30 +12,30 @@ import Footer from './components/layout/footer/Footer';
 // Pages
 import Home from './pages/home/Home';
 import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
+import LoginPage from './pages/Login/LoginPage';
+import ProfilePage from './pages/Profile/ProfilePage';
 
 function App() {
   return (
-    <Router>
-      {/* On utilise flex-column et min-vh-100 pour s'assurer 
-          que le footer reste en bas de l'écran 
-      */}
-      <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#141414' }}>
-        
-        <Header />
+    /* 1. Le Router enveloppe maintenant l'AuthProvider */
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <AuthProvider>
+        <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#141414' }}>
+          
+          <Header />
 
-        <main className="flex-grow-1">
-          <Routes>
-            {/* La page d'accueil contient maintenant la Hero section + la liste */}
-            <Route path="/" element={<Home />} />
-            
-            {/* Page de détails */}
-            <Route path="/show/:slug" element={<ShowDetailsPage />} />
-          </Routes>
-        </main>
+          <main className="flex-grow-1">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/show/:slug" element={<ShowDetailsPage />} />
+            </Routes>
+          </main>
 
-        <Footer />
-        
-      </div>
+          <Footer />
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

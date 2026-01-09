@@ -1,9 +1,11 @@
-// Chemin : src/components/layout/Header.tsx
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
+    const { user, logout } = useAuth();
+
     return (
         <header className={styles.header}>
             <div className="container d-flex justify-content-between align-items-center">
@@ -21,7 +23,6 @@ const Header: React.FC = () => {
                 </nav>
 
                 <div className={styles.actions}>
-                    {/* Recherche Simple avec SVG Blanc */}
                     <div className={styles.searchBox}>
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
@@ -45,7 +46,18 @@ const Header: React.FC = () => {
                         <span className={styles.cartBadge}>0</span>
                     </button>
                     
-                    <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                    {user ? (
+                        <div className={styles.userActions}>
+                            <Link to="/profile" className={styles.profileLink}>
+                                👤 <span className="ms-1">{user.firstname}</span>
+                            </Link>
+                            <button onClick={logout} className={styles.logoutBtn}>
+                                Déconnexion
+                            </button>
+                        </div>
+                    ) : (
+                        <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                    )}
                 </div>
             </div>
         </header>

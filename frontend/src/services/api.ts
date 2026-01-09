@@ -1,27 +1,30 @@
 import { 
     Artist, Show, Location, Review, 
-    Reservation, ReservationRequest 
+    Reservation, ReservationRequest, 
+    UserProfileDto
 } from '../types/models';
 
-const API_BASE = '/api';
 
+const API_BASE = '/api';
 /**
  * URL de base pour les médias (images uploads)
  * Pointe vers ton dossier configurer dans Spring Boot
  */
 export const IMAGE_STORAGE_BASE = '/uploads/';
 
-// --- UTILITAIRE DE SÉCURITÉ ---
 
 function getCsrfToken(): string | undefined {
-    return document.cookie.split('; ')
-        .find(row => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1];
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; XSRF-TOKEN=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+    return undefined;
 }
 
 async function secureFetch(url: string, options: RequestInit = {}) {
     const method = options.method?.toUpperCase() || 'GET';
     const headers = new Headers(options.headers);
+    
+    headers.append('Accept', 'application/json');
 
     if (['POST', 'PUT', 'DELETE'].includes(method)) {
         const token = getCsrfToken();
@@ -30,15 +33,60 @@ async function secureFetch(url: string, options: RequestInit = {}) {
         }
     }
 
-    const response = await fetch(url, { ...options, headers });
+    const response = await fetch(url, { 
+        ...options, 
+        headers,
+        credentials: 'include' 
+    });
 
+    // --- LOGIQUE AJUSTÉE ICI ---
     if (!response.ok) {
+        if (response.status === 401) {
+            // On utilise un message informatif simple au lieu d'une erreur bloquante
+            // Cela permet à AuthContext de mettre l'utilisateur à null proprement
+            return Promise.reject("UNAUTHORIZED"); 
+        }
+        
+        // Pour les autres erreurs (404, 500), on garde le throw car ce sont de vrais problèmes
         const errorText = await response.text();
         throw new Error(errorText || `Erreur ${response.status}`);
     }
 
     return response;
 }
+
+export const authApi = {
+    login: async (credentials: { login: string; password: string }) => {
+        const params = new URLSearchParams();
+        params.append('login', credentials.login); 
+        params.append('password', credentials.password);
+
+        // DOIT ETRE /api/users/login pour matcher ton SpringSecurityConfig
+        return await fetch('/api/users/login', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json' 
+            },
+            body: params,
+            credentials: 'include' 
+        });
+    },
+    logout: async () => {
+            try {
+                // On appelle le logout. Si secureFetch échoue (ex: 401 ou CSRF manquant), 
+                // on attrape l'erreur pour ne pas bloquer le flux utilisateur.
+                return await secureFetch('/api/users/logout', { method: 'POST' });
+            } catch (e) {
+                console.warn("Le serveur a déjà fermé la session ou erreur CSRF");
+                return null;
+            }
+        },
+    getProfile: async () => {
+        const res = await secureFetch(`${API_BASE}/users/profile`);
+        return res.json();
+    }
+};
 
 // --- API MODULES ---
 

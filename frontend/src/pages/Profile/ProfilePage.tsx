@@ -1,0 +1,67 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../components/context/AuthContext';
+import styles from './ProfilePage.module.css';
+
+const ProfilePage: React.FC = () => {
+    const { user } = useAuth();
+    const [formData, setFormData] = useState({
+        firstname: '', lastname: '', email: '', langue: '', password: '', confirmPassword: ''
+    });
+    const [message, setMessage] = useState({ type: '', text: '' });
+
+    useEffect(() => {
+        if (user) {
+            setFormData(prev => ({
+                ...prev,
+                firstname: user.firstname || '',
+                lastname: user.lastname || '',
+                email: user.email || '',
+                langue: user.langue || 'fr'
+            }));
+        }
+    }, [user]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setMessage({ type: '', text: '' });
+        try {
+            const res = await fetch('/api/users/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+            if (res.ok) setMessage({ type: 'success', text: 'Profil mis à jour !' });
+            else throw new Error('Erreur lors de la mise à jour');
+        } catch (err: any) {
+            setMessage({ type: 'error', text: err.message });
+        }
+    };
+
+    if (!user) return <div className="text-white text-center mt-5">Chargement...</div>;
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.card}>
+                <h2 className="text-white mb-4">Mon Profil</h2>
+                {message.text && <div className={message.type === 'success' ? styles.success : styles.error}>{message.text}</div>}
+                <form onSubmit={handleSubmit} className={styles.form}>
+                    <div className="row mb-3">
+                        <div className="col"><label className={styles.label}>Prénom</label>
+                        <input className={styles.input} type="text" name="firstname" value={formData.firstname} onChange={handleChange}/></div>
+                        <div className="col"><label className={styles.label}>Nom</label>
+                        <input className={styles.input} type="text" name="lastname" value={formData.lastname} onChange={handleChange}/></div>
+                    </div>
+                    <div className="mb-3"><label className={styles.label}>Email</label>
+                    <input className={styles.input} type="email" name="email" value={formData.email} onChange={handleChange}/></div>
+                    <button type="submit" className={styles.btn}>Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default ProfilePage;

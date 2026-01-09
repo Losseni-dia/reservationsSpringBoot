@@ -1,0 +1,161 @@
+.pageContainer {
+    min-height: 100vh;
+    background-color: #121212;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    color: white;
+}
+
+.logoSection {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.logoTitle {
+    font-size: 2.25rem;
+    font-weight: bold;
+    letter-spacing: -0.05em;
+    margin: 0;
+}
+
+.logoAccent {
+    color: #6A0DAD;
+}
+
+.logoSubtitle {
+    color: #a0a0a0;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.loginCard {
+    width: 100%;
+    max-width: 448px;
+    padding: 2.5rem;
+    background-color: #1e1e1e;
+    border-radius: 1.25rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2a2a2a;
+}
+
+.cardTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.errorMessage {
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 0.5rem;
+    color: #f87171;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: #9ca3af;
+}
+
+.input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background-color: #2a2a2a;
+    border: 1px solid #3f3f46;
+    border-radius: 0.75rem;
+    color: white;
+    transition: all 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #6A0DAD;
+    box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.3);
+}
+
+.forgotPasswordWrapper {
+    text-align: right;
+}
+
+.forgotPasswordLink {
+    font-size: 0.75rem;
+    color: #6A0DAD;
+    text-decoration: none;
+}
+
+.forgotPasswordLink:hover {
+    color: #FFD700;
+}
+
+.submitButton {
+    margin-top: 1rem;
+    padding: 0.85rem;
+    background-color: #FF3B3F;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.submitButton:hover:not(.buttonDisabled) {
+    background-color: #e63539;
+}
+
+.submitButton:active:not(.buttonDisabled) {
+    transform: scale(0.98);
+}
+
+.buttonDisabled {
+    background-color: #4b5563;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.footerText {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.signupLink {
+    color: #6A0DAD;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.signupLink:hover {
+    text-decoration: underline;
+}
+
+.decorativeElement {
+    margin-top: 3rem;
+    height: 4px;
+    width: 5rem;
+    background-color: #FFD700;
+    border-radius: 2px;
+    opacity: 0.3;
+}
