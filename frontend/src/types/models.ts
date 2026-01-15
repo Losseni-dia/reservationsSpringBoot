@@ -118,6 +118,7 @@ export interface Show {
     posterUrl: string;
     bookable: boolean;
     locationDesignation: string; // Provient du DTO aplati
+    createdAt: string;
 }
 
 export interface Locality {

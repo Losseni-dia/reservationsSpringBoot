@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Context
 import { AuthProvider } from './components/context/AuthContext'; 
@@ -14,6 +13,7 @@ import Home from './pages/home/Home';
 import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
 import ProfilePage from './pages/Profile/ProfilePage';
+import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
 
 function App() {
   return (
@@ -30,6 +30,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
+              <Route path="/producer/dashboard" element={<ProducerDashboard />} />
             </Routes>
           </main>
 

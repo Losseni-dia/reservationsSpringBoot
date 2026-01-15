@@ -17,4 +17,5 @@ public class ShowDTO {
     private String posterUrl;
     private boolean bookable;
     private String locationDesignation; // Nom du lieu uniquement
+    private String createdAt;
 }

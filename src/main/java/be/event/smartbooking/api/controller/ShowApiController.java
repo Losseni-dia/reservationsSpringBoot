@@ -60,6 +60,7 @@ public class ShowApiController {
                                 .posterUrl(show.getPosterUrl())
                                 .bookable(show.isBookable())
                                 .locationDesignation(locationName)
+                                .createdAt(show.getCreatedAt().toString())
                                 .build();
         }
 }
