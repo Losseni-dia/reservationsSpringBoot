@@ -52,15 +52,49 @@ public class ShowApiController {
          * GET /api/shows/search?query=... : Recherche par titre (Issue #1)
          */
         @GetMapping("/search")
-        public ResponseEntity<List<ShowDTO>> search(@RequestParam String query) {
-                // Note: Assurez-vous que la méthode findByTitle existe dans votre
-                // repository/service
-                // Sinon, vous pouvez filtrer la liste getAll() ici
-                List<ShowDTO> results = showService.getAll().stream()
-                                .filter(s -> s.getTitle().toLowerCase().contains(query.toLowerCase()))
-                                .map(this::safeConvertToDto)
-                                .collect(Collectors.toList());
-                return ResponseEntity.ok(results);
+        public ResponseEntity<List<ShowDTO>> search(
+                        @RequestParam(required = false) String title,
+                        @RequestParam(required = false) String location,
+                        @RequestParam(required = false) String date) {
+
+                try {
+                        List<Show> shows = showService.getAll(); // Récupère tous les spectacles avec leurs lieux
+
+                        List<ShowDTO> results = shows.stream()
+                                        .filter(show -> {
+                                                boolean matches = true;
+
+                                                // Filtrage par titre
+                                                if (title != null && !title.isEmpty()) {
+                                                        matches = matches && show.getTitle().toLowerCase()
+                                                                        .contains(title.toLowerCase());
+                                                }
+
+                                                // Filtrage par lieu (désignation)
+                                                if (location != null && !location.isEmpty()
+                                                                && show.getLocation() != null) {
+                                                        matches = matches && show.getLocation().getDesignation()
+                                                                        .toLowerCase().contains(location.toLowerCase());
+                                                }
+
+                                                // Filtrage par date (vérifie les représentations liées au spectacle)
+                                                if (date != null && !date.isEmpty()
+                                                                && show.getRepresentations() != null) {
+                                                        matches = matches && show.getRepresentations().stream()
+                                                                        .anyMatch(rep -> rep.getWhen().toString()
+                                                                                        .contains(date));
+                                                }
+
+                                                return matches;
+                                        })
+                                        .map(this::safeConvertToDto) // Utilise de la méthode de conversion sécurisée
+                                        .collect(Collectors.toList());
+
+                        return ResponseEntity.ok(results);
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        return ResponseEntity.ok(new ArrayList<>());
+                }
         }
 
         /**
