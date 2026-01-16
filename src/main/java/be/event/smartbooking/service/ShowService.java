@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,5 +73,19 @@ public class ShowService {
     @Transactional(readOnly = true)
     public List<Show> getFromLocation(Location location) {
         return repository.findByLocation(location);
+    }
+
+    //methode de recherche optimisée utilisant la requête définie dans le repository
+    @Transactional(readOnly = true)
+    public List<Show> search(String title, String location, LocalDateTime start, LocalDateTime end) {
+        return repository.searchShows(
+                (title != null && !title.isEmpty()) ? title : null,
+                (location != null && !location.isEmpty()) ? location : null,
+                (start != null) ? start : null,
+                (end != null) ? end : null
+                
+        );
+    
+                
     }
 }

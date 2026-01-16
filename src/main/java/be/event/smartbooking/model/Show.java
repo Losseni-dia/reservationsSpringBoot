@@ -64,7 +64,7 @@ public class Show {
 	private List<Review> reviews = new ArrayList<>();
 
 	@ManyToMany
-	@JoinTable(name = "show_artist_types", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "artist_type_id"))
+	@JoinTable(name = "artist_type_show", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "artist_type_id"))
 	private List<ArtistType> artistTypes = new ArrayList<>();
 
 	// =================================================================

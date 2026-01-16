@@ -31,10 +31,6 @@ public class Representation {
     @JoinColumn(name = "location_id")
     private Location location;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
     // =================================================================
     // RELATIONS CORRECTES
     // =================================================================
