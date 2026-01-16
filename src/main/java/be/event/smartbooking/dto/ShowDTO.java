@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,5 +18,13 @@ public class ShowDTO {
     private String description;
     private String posterUrl;
     private boolean bookable;
-    private String locationDesignation; // Nom du lieu uniquement
+    private String locationDesignation;
+
+    // Nouveaux champs pour les détails complets
+    private Double averageRating; // Calculé via show.getAverageRating()
+    private Long reviewCount; // Calculé via show.getReviewCount()
+    private List<RepresentationDTO> representations; // Liste des dates
+    private List<ReviewDTO> reviews; // Liste des avis
+    private List<ArtistDTO> artists; // Liste des artistes associés
+
 }
