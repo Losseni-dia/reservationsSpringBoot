@@ -26,7 +26,8 @@ public interface ShowRepos extends JpaRepository<Show, Long> {
            "LEFT JOIN s.representations r " +
            "WHERE (:title IS NULL OR LOWER(s.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
            "AND (:location IS NULL OR LOWER(l.designation) LIKE LOWER(CONCAT('%', :location, '%'))) " +
-           "AND (:start IS NULL OR (r.when >= :start AND r.when < :end))")
+            "AND (:start IS NULL OR r.when >= :start) " +
+            "AND (:end IS NULL OR r.when < :end)")
     List<Show> searchShows(@Param("title") String title,
                            @Param("location") String location,
                            @Param("start") LocalDateTime start,

@@ -132,11 +132,12 @@ export const showApi = {
      * Recherche multi-critères ( Deja implementé - Rôle Utilisateur/Visiteur)
      * Permet de filtrer par titre, lieu ou date.
      */
-    search: async (params: { title?: string; location?: string; date?: string }): Promise<Show[]> => {
+    search: async (params: { title?: string; location?: string; start?: string; end?: string }):  Promise<Show[]> => {
         const queryParams = new URLSearchParams();
         if (params.title) queryParams.append('title', params.title);
         if (params.location) queryParams.append('location', params.location);
-        if (params.date) queryParams.append('date', params.date);
+        if (params.start) queryParams.append('start', params.start);
+        if (params.end) queryParams.append('end', params.end);
 
         const res = await secureFetch(`${API_BASE}/shows/search?${queryParams.toString()}`);
         return res.json();

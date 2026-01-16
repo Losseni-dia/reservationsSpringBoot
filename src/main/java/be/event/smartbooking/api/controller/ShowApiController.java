@@ -5,7 +5,6 @@ import be.event.smartbooking.dto.PriceDTO;
 import be.event.smartbooking.dto.RepresentationDTO;
 import be.event.smartbooking.dto.ReviewDTO;
 import be.event.smartbooking.dto.ShowDTO;
-import be.event.smartbooking.model.Artist;
 import be.event.smartbooking.model.Price;
 import be.event.smartbooking.model.Representation;
 import be.event.smartbooking.model.Review;
@@ -89,6 +88,7 @@ public class ShowApiController {
          * GET /api/shows/search?query=... : Recherche par titre (Issue #1)
          */
         @GetMapping("/search")
+        @Transactional(readOnly = true)
         public ResponseEntity<List<ShowDTO>> search(
                         @RequestParam(required = false) String title,
                         @RequestParam(required = false) String location,
@@ -199,6 +199,7 @@ public class ShowApiController {
 
                 return RepresentationDTO.builder()
                                 .id(rep.getId())
+                                .when(rep.getWhen())
                                 .showTitle(title)
                                 .locationName(location)
                                 .prices(rep.getPrices() != null ? rep.getPrices().stream()
@@ -226,15 +227,5 @@ public class ShowApiController {
         }
 
 
-        private ArtistDTO convertArtistToDto(Artist artist, String typeName) {
-        if (artist == null) return null;
-        
-        return ArtistDTO.builder()
-                .id(artist.getId())
-                .firstname(artist.getFirstname())
-                .lastname(artist.getLastname())
-                // Ici, on met le rôle actuel dans la liste des types du DTO
-                .types(List.of(typeName)) 
-                .build();
-        }
+       
 }
