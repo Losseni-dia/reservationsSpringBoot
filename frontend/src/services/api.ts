@@ -146,6 +146,7 @@ export const showApi = {
     create: async (showData: Partial<Show>): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows`, {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(showData),
         });
         return res.json();
@@ -155,6 +156,7 @@ export const showApi = {
     update: async (id: number, showData: Partial<Show>): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/${id}`, {
             method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(showData),
         });
         return res.json();

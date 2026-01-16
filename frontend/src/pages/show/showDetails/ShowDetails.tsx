@@ -15,6 +15,7 @@ const ShowDetailPage: React.FC = () => {
 
     useEffect(() => {
         if (!slug) return;
+        setSelectedRepIndex(0);
         setLoading(true);
         showApi.getBySlug(slug)
             .then(json => {
@@ -70,7 +71,7 @@ const ShowDetailPage: React.FC = () => {
                                         className={`btn ${selectedRepIndex === index ? 'btn-warning' : 'btn-outline-light'}`}
                                         style={selectedRepIndex === index ? {backgroundColor: '#f5c518', color: '#000'} : {}}
                                     >
-                                        {new Date(rep.when).toLocaleDateString('fr-FR', { 
+                                        {new Date(rep.when).toLocaleString('fr-FR', { 
                                             day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' 
                                         })}
                                     </button>
@@ -83,7 +84,7 @@ const ShowDetailPage: React.FC = () => {
                             <div className="mt-3">
                                 {data.artists?.map((artist: any) => (
                                     <div key={artist.id} className="text-light mb-2">
-                                        <span className="fw-bold">{artist.firstname} {artist.lastname}</span>
+                                        <span className="fw-bold">{artist.firstname} {artist.lastname+" "}</span>
                                       
                                         <small className="text-warning">
                                             {/* Types sera maintenant ["Acteur", "Scénographe"] */}
@@ -102,7 +103,7 @@ const ShowDetailPage: React.FC = () => {
                                 data.reviews.map((rev: any) => (
                                     <div key={rev.id} className="mb-4 p-3 border-bottom border-secondary">
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <strong className="text-warning">{rev.userFirstname}</strong>
+                                            <strong className="text-warning">{rev.authorLogin}</strong>
                                             <span className="text-muted small">{new Date(rev.createdAt).toLocaleDateString()}</span>
                                         </div>
                                         <div className="text-warning mb-2">{"★".repeat(rev.stars)}{"☆".repeat(5 - rev.stars)}</div>

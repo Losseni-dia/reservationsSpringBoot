@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ public class ShowApiController {
          * GET /api/shows/{id} : Récupère un spectacle par son ID
          */
         @GetMapping("/{id}")
+        @Transactional(readOnly = true)
         public ResponseEntity<ShowDTO> getById(@PathVariable Long id) {
                 Show show = showService.get(id);
                 if (show == null) {
@@ -90,10 +92,12 @@ public class ShowApiController {
         public ResponseEntity<List<ShowDTO>> search(
                         @RequestParam(required = false) String title,
                         @RequestParam(required = false) String location,
-                        @RequestParam(required = false) String date) {
+                        @RequestParam(required = false) LocalDateTime start,
+                        @RequestParam(required = false) LocalDateTime end) {
+
                 try {
                         // Appel au service avec les 3 paramètres
-                        List<Show> shows = showService.search(title, location, date);
+                        List<Show> shows = showService.search(title, location, start, end);
 
                         List<ShowDTO> dtos = shows.stream()
                                         .map(this::safeConvertToDto)
@@ -102,7 +106,7 @@ public class ShowApiController {
                         return ResponseEntity.ok(dtos);
                 } catch (Exception e) {
                         e.printStackTrace();
-                        return ResponseEntity.ok(new ArrayList<>());
+                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
         }
         /**
@@ -128,7 +132,8 @@ public class ShowApiController {
                         return ResponseEntity.notFound().build();
                 }
                 showService.update(id, show);
-                return ResponseEntity.ok(safeConvertToDto(show));
+                Show updatedShow = showService.get(id);
+                return ResponseEntity.ok(safeConvertToDto(updatedShow));
         }
 
         /**

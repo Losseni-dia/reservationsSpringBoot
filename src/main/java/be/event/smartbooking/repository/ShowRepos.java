@@ -1,5 +1,6 @@
 package be.event.smartbooking.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,8 +26,9 @@ public interface ShowRepos extends JpaRepository<Show, Long> {
            "LEFT JOIN s.representations r " +
            "WHERE (:title IS NULL OR LOWER(s.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
            "AND (:location IS NULL OR LOWER(l.designation) LIKE LOWER(CONCAT('%', :location, '%'))) " +
-           "AND (:date IS NULL OR CAST(r.when AS string) LIKE CONCAT(:date, '%'))")
-    List<Show> searchShows(@Param("title") String title, 
-                           @Param("location") String location, 
-                           @Param("date") String date);
+           "AND (:start IS NULL OR (r.when >= :start AND r.when < :end))")
+    List<Show> searchShows(@Param("title") String title,
+                           @Param("location") String location,
+                           @Param("start") LocalDateTime start,
+                           @Param("end") LocalDateTime end);
 }
