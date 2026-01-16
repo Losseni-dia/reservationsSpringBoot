@@ -4,6 +4,7 @@ import be.event.smartbooking.dto.ShowDTO;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,37 +19,101 @@ public class ShowApiController {
         @Autowired
         private ShowService showService;
 
+        /**
+         * GET /api/shows : Récupère tous les spectacles
+         */
         @GetMapping
         public ResponseEntity<List<ShowDTO>> getAll() {
                 try {
-                        // On récupère la liste via le service
                         List<Show> shows = showService.getAll();
-
-                        // On transforme en DTO de manière ultra-sécurisée
                         List<ShowDTO> dtos = shows.stream()
                                         .map(this::safeConvertToDto)
                                         .collect(Collectors.toList());
-
                         return ResponseEntity.ok(dtos);
                 } catch (Exception e) {
-                        // Si une erreur survient ici, on la voit dans la console Java
                         e.printStackTrace();
-                        // Mais on renvoie une liste vide à React pour éviter la 500
                         return ResponseEntity.ok(new ArrayList<>());
                 }
         }
 
+    /**
+     * GET /api/shows/{id} : Récupère un spectacle par son ID
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<ShowDTO> getById(@PathVariable Long id) {
+        Show show = showService.get(id);
+        if (show == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(safeConvertToDto(show));
+    }
+
+        /**
+         * GET /api/shows/search?query=... : Recherche par titre (Issue #1)
+         */
+        @GetMapping("/search")
+        public ResponseEntity<List<ShowDTO>> search(@RequestParam String query) {
+                // Note: Assurez-vous que la méthode findByTitle existe dans votre
+                // repository/service
+                // Sinon, vous pouvez filtrer la liste getAll() ici
+                List<ShowDTO> results = showService.getAll().stream()
+                                .filter(s -> s.getTitle().toLowerCase().contains(query.toLowerCase()))
+                                .map(this::safeConvertToDto)
+                                .collect(Collectors.toList());
+                return ResponseEntity.ok(results);
+        }
+
+        /**
+         * POST /api/shows : Crée un nouveau spectacle (Issue #3)
+         */
+        @PostMapping
+        public ResponseEntity<ShowDTO> create(@RequestBody Show show) {
+                try {
+                        showService.add(show);
+                        return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                }
+        }
+
+        /**
+         * PUT /api/shows/{id} : Met à jour un spectacle existant
+         */
+        @PutMapping("/{id}")
+        public ResponseEntity<ShowDTO> update(@PathVariable Long id, @RequestBody Show show) {
+                Show existingShow = showService.get(id);
+                if (existingShow == null) {
+                        return ResponseEntity.notFound().build();
+                }
+                showService.update(id, show);
+                return ResponseEntity.ok(safeConvertToDto(show));
+        }
+
+        /**
+         * DELETE /api/shows/{id} : Supprime un spectacle
+         */
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> delete(@PathVariable Long id) {
+                Show existingShow = showService.get(id);
+                if (existingShow == null) {
+                        return ResponseEntity.notFound().build();
+                }
+                showService.delete(id);
+                return ResponseEntity.noContent().build();
+        }
+
+        /**
+         * Transformation sécurisée de l'entité Show vers ShowDTO
+         */
         private ShowDTO safeConvertToDto(Show show) {
                 String locationName = "Lieu non défini";
 
-                // PROTECTION CRITIQUE : C'est ici que l'erreur 500 se produisait
                 if (show.getLocation() != null) {
                         try {
-                                // On tente de lire le nom du lieu
+                                // Utilisation de la désignation du lieu (Issue #1)
                                 locationName = show.getLocation().getDesignation();
                         } catch (Exception e) {
-                                // Si Hibernate fait une erreur de Lazy Loading (Proxy), on capture
-                                locationName = "Lieu (en cours...)";
+                                locationName = "Lieu (chargement...)";
                         }
                 }
 
