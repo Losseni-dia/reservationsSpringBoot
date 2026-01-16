@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { showApi, IMAGE_STORAGE_BASE } from '../../../services/api';
 import styles from './ShowDetails.module.css';
+import Loader from '../../../components/ui/loader/Loader';
 
 const ShowDetailPage: React.FC = () => {
     const { slug } = useParams();
@@ -24,18 +25,20 @@ const ShowDetailPage: React.FC = () => {
             });
     }, [slug]);
 
-    if (loading) return <div className={styles.loaderContainer}>Chargement...</div>;
+    // Loader.tsx ici
+    if (loading) return <Loader />;
+
     if (error || !data) return <div className="text-white text-center mt-5">Oups ! {error}</div>;
 
-    // Utilisation du proxy pour l'image
-    const posterUrl = `${IMAGE_STORAGE_BASE}${data.show.posterUrl}`;
+    // Correction ici : data contient directement les champs selon votre ShowDTO
+    const posterUrl = `${IMAGE_STORAGE_BASE}${data.posterUrl}`;
 
     return (
         <div className={styles.detailsContainer}>
             <div className={styles.heroSection} style={{ backgroundImage: `linear-gradient(to top, #141414, transparent), url(${posterUrl})` }}>
                 <div className="container">
-                    <h1 className={styles.title}>{data.show.title}</h1>
-                    <p className={styles.locationTag}>📍 {data.show.locationDesignation}</p>
+                    <h1 className={styles.title}>{data.title}</h1>
+                    <p className={styles.locationTag}>📍 {data.locationDesignation || "Lieu non défini"}</p>
                 </div>
             </div>
             <div className="container mt-5">
@@ -43,13 +46,13 @@ const ShowDetailPage: React.FC = () => {
                     <div className="col-lg-8">
                         <div className={styles.infoSection}>
                             <h3 className="text-white">À propos</h3>
-                            <p className={styles.descriptionText}>{data.show.description}</p>
+                            <p className={styles.descriptionText}>{data.description}</p>
                         </div>
                     </div>
                     <div className="col-lg-4">
                         <div className={styles.bookingCard}>
-                            <button className={styles.reserveBtn} disabled={!data.show.bookable}>
-                                {data.show.bookable ? '🎟️ RÉSERVER' : 'COMPLET'}
+                            <button className={styles.reserveBtn} disabled={!data.bookable}>
+                                {data.bookable ? '🎟️ RÉSERVER' : 'COMPLET'}
                             </button>
                         </div>
                     </div>
