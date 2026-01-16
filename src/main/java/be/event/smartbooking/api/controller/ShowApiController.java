@@ -36,17 +36,37 @@ public class ShowApiController {
                 }
         }
 
-    /**
-     * GET /api/shows/{id} : Récupère un spectacle par son ID
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<ShowDTO> getById(@PathVariable Long id) {
-        Show show = showService.get(id);
-        if (show == null) {
-            return ResponseEntity.notFound().build();
+        /**
+         * GET /api/shows/{id} : Récupère un spectacle par son ID
+         */
+        @GetMapping("/{id}")
+        public ResponseEntity<ShowDTO> getById(@PathVariable Long id) {
+                Show show = showService.get(id);
+                if (show == null) {
+                        return ResponseEntity.notFound().build();
+                }
+                return ResponseEntity.ok(safeConvertToDto(show));
         }
-        return ResponseEntity.ok(safeConvertToDto(show));
-    }
+        
+        /**
+         * GET /api/shows/slug/{slug} : Récupère un spectacle par son slug
+         * Utilisé pour les URLs du frontend (ex: /show/mon-spectacle)
+         */
+        @GetMapping("/slug/{slug}")
+        public ResponseEntity<ShowDTO> getBySlug(@PathVariable String slug) {
+                try {
+                        Show show = showService.findBySlug(slug); // Utilise votre service existant
+
+                        if (show == null) {
+                                return ResponseEntity.notFound().build();
+                        }
+
+                        return ResponseEntity.ok(safeConvertToDto(show)); // Utilise votre conversion sécurisée
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+        }
 
         /**
          * GET /api/shows/search?query=... : Recherche par titre (Issue #1)
