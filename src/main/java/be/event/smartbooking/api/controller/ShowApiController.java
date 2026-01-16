@@ -56,47 +56,20 @@ public class ShowApiController {
                         @RequestParam(required = false) String title,
                         @RequestParam(required = false) String location,
                         @RequestParam(required = false) String date) {
-
                 try {
-                        List<Show> shows = showService.getAll(); // Récupère tous les spectacles avec leurs lieux
+                        // Appel au service avec les 3 paramètres
+                        List<Show> shows = showService.search(title, location, date);
 
-                        List<ShowDTO> results = shows.stream()
-                                        .filter(show -> {
-                                                boolean matches = true;
-
-                                                // Filtrage par titre
-                                                if (title != null && !title.isEmpty()) {
-                                                        matches = matches && show.getTitle().toLowerCase()
-                                                                        .contains(title.toLowerCase());
-                                                }
-
-                                                // Filtrage par lieu (désignation)
-                                                if (location != null && !location.isEmpty()
-                                                                && show.getLocation() != null) {
-                                                        matches = matches && show.getLocation().getDesignation()
-                                                                        .toLowerCase().contains(location.toLowerCase());
-                                                }
-
-                                                // Filtrage par date (vérifie les représentations liées au spectacle)
-                                                if (date != null && !date.isEmpty()
-                                                                && show.getRepresentations() != null) {
-                                                        matches = matches && show.getRepresentations().stream()
-                                                                        .anyMatch(rep -> rep.getWhen().toString()
-                                                                                        .contains(date));
-                                                }
-
-                                                return matches;
-                                        })
-                                        .map(this::safeConvertToDto) // Utilise de la méthode de conversion sécurisée
+                        List<ShowDTO> dtos = shows.stream()
+                                        .map(this::safeConvertToDto)
                                         .collect(Collectors.toList());
 
-                        return ResponseEntity.ok(results);
+                        return ResponseEntity.ok(dtos);
                 } catch (Exception e) {
                         e.printStackTrace();
                         return ResponseEntity.ok(new ArrayList<>());
                 }
         }
-
         /**
          * POST /api/shows : Crée un nouveau spectacle (Issue #3)
          */

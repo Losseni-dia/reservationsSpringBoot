@@ -74,4 +74,13 @@ public class ShowService {
     public List<Show> getFromLocation(Location location) {
         return repository.findByLocation(location);
     }
+
+    //methode de recherche optimisée utilisant la requête définie dans le repository
+    @Transactional(readOnly = true)
+    public List<Show> search(String title, String location, String date) {
+        return repository.searchShows(
+                (title != null && !title.isEmpty()) ? title : null,
+                (location != null && !location.isEmpty()) ? location : null,
+                (date != null && !date.isEmpty()) ? date : null);
+    }
 }
