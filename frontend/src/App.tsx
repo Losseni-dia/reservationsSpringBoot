@@ -15,6 +15,7 @@ import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
 import ProfilePage from './pages/Profile/ProfilePage';
 import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/profile" element={<ProfilePage />} />
+              </Route>
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
             </Routes>
