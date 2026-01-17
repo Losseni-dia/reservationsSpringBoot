@@ -15,7 +15,7 @@
     position: absolute;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, rgba(20, 20, 20, 0) 70%);
+    background: radial-gradient(circle, rgba(245, 197, 24, 0.15) 0%, rgba(20, 20, 20, 0) 70%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -28,8 +28,8 @@
     font-weight: 800;
     margin: 0;
     line-height: 1;
-    color: #8a2be2; /* Violet accent */
-    text-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+    color: #f5c518; /* Jaune accent */
+    text-shadow: 0 0 30px rgba(245, 197, 24, 0.4);
     z-index: 1;
 }
 
@@ -51,8 +51,8 @@
 
 .homeButton {
     padding: 12px 30px;
-    background-color: #8a2be2;
-    color: white;
+    background-color: #f5c518;
+    color: #000000;
     border: none;
     border-radius: 50px;
     font-size: 1rem;
@@ -60,11 +60,11 @@
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 1;
-    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+    box-shadow: 0 4px 15px rgba(245, 197, 24, 0.3);
 }
 
 .homeButton:hover {
-    background-color: #7a1bd1;
+    background-color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+    box-shadow: 0 6px 20px rgba(245, 197, 24, 0.4);
 }
