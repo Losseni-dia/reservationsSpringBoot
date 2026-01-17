@@ -13,6 +13,7 @@ import Footer from './components/layout/footer/Footer';
 import Home from './pages/home/Home';
 import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
+import RegisterPage from './pages/Register/RegisterPage';
 import ProfilePage from './pages/Profile/ProfilePage';
 import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 import ProtectedRoute from './ProtectedRoute';
@@ -30,6 +31,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
               <Route element={<ProtectedRoute />}>
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
