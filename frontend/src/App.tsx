@@ -14,6 +14,7 @@ import Home from './pages/home/Home';
 import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
 import ProfilePage from './pages/Profile/ProfilePage';
+import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
+              <Route path="/forbidden" element={<ForbiddenPage />} />
             </Routes>
           </main>
 
