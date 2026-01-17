@@ -117,7 +117,14 @@ export const showApi = {
     getBySlug: async (slug: string): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/slug/${slug}`);
         return res.json();
-    }
+    },
+    create: async (formData: FormData): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows`, {
+        method: 'POST',
+        body: formData,
+    });
+    return res.json();
+},
 };
 
 export const locationApi = {
