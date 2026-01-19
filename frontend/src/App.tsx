@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Context
 import { AuthProvider } from './components/context/AuthContext'; 
@@ -15,6 +14,7 @@ import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import ProfilePage from './pages/Profile/ProfilePage';
+import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
 import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -36,6 +36,7 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
+              <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
             </Routes>
           </main>
