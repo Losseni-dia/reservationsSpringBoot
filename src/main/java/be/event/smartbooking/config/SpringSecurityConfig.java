@@ -3,6 +3,7 @@ package be.event.smartbooking.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -32,9 +33,11 @@ public class SpringSecurityConfig {
                                                                 "/api/users/logout"))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/shows/**").permitAll()
-                                                .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                                                .requestMatchers("/api/users/login").permitAll()
+                                                .requestMatchers("/api/users/register").permitAll()
                                                 .requestMatchers("/uploads/**", "/css/**", "/js/**", "/login")
                                                 .permitAll()
+                                                .requestMatchers("/error").permitAll()
                                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
