@@ -61,7 +61,10 @@ const Header: React.FC = () => {
                             </button>
                         </div>
                     ) : (
-                        <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        <>
+                            <Link to="/register" className={styles.loginBtn}>Inscription</Link>
+                            <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        </>
                     )}
                 </div>
             </div>
