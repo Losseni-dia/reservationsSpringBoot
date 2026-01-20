@@ -135,10 +135,39 @@ const ProducerDashboard: React.FC = () => {
     setShowToDelete(null);
   };
 
-  const handleConfirmDelete = () => {
-    console.log(`Confirm delete for show: ${showToDelete?.id}`);
+  const handleConfirmDelete = async () => {
+    if (!showToDelete) return;
+
+    // Sauvegarder l'état actuel pour rollback en cas d'erreur
+    const previousShows = [...shows];
+    const previousShowsStats = [...showsStats];
+
+    // Suppression optimiste : retirer immédiatement de la liste
+    const updatedShows = shows.filter(show => show.id !== showToDelete.id);
+    setShows(updatedShows);
+
+    // Mettre à jour les stats immédiatement
+    const updatedShowsStats = showsStats.filter(stat => stat.showId !== showToDelete.id);
+    setShowsStats(updatedShowsStats);
+    calculateStats(updatedShows, updatedShowsStats);
+
+    // Fermer la modale
     setIsDeleteModalOpen(false);
     setShowToDelete(null);
+
+    try {
+      // Appel API pour supprimer sur le backend
+      await showApi.deleteById(showToDelete.id);
+      
+      // Succès : log pour confirmation
+      console.log(`Show ${showToDelete.id} deleted successfully`);
+    } catch (err: any) {
+      // Erreur : rollback de l'état
+      console.error('Error deleting show:', err);
+      setShows(previousShows);
+      setShowsStats(previousShowsStats);
+      calculateStats(previousShows, previousShowsStats);
+    }
   };
 
   if (loading) return <Loader />;
