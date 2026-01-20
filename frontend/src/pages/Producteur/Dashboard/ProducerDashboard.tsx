@@ -13,8 +13,10 @@ import { Bar } from "react-chartjs-2";
 
 import { showApi, IMAGE_STORAGE_BASE } from "../../../services/api";
 import { Show, Reservation } from "../../../types/models";
-import Loader from "../../../components/ui/loader/Loader";import ConfirmModal from '../../../components/ui/confirmModal/ConfirmModal';
-import Toast from '../../../components/ui/toast/Toast';import styles from "./ProducerDashboard.module.css";
+import Loader from "../../../components/ui/loader/Loader";
+import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
+import Toast from "../../../components/ui/toast/Toast";
+import styles from "./ProducerDashboard.module.css";
 
 // Register Chart.js components
 ChartJS.register(
@@ -46,14 +48,19 @@ const StatCard: React.FC<StatCardProps> = ({ label, value }) => (
 );
 
 const ProducerDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<StatCardProps[]>([]);
   const [showsStats, setShowsStats] = useState<ShowStats[]>([]);
-    const [showToDelete, setShowToDelete] = useState<Show | null>(null);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-    const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showToDelete, setShowToDelete] = useState<Show | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         setLoading(true);
         const showsData = await showApi.getAll();
         setShows(showsData);
@@ -144,11 +151,13 @@ const ProducerDashboard: React.FC = () => {
     const deletedShowTitle = showToDelete.title;
 
     // Suppression optimiste : retirer immédiatement de la liste
-    const updatedShows = shows.filter(show => show.id !== showToDelete.id);
+    const updatedShows = shows.filter((show) => show.id !== showToDelete.id);
     setShows(updatedShows);
 
     // Mettre à jour les stats immédiatement
-    const updatedShowsStats = showsStats.filter(stat => stat.showId !== showToDelete.id);
+    const updatedShowsStats = showsStats.filter(
+      (stat) => stat.showId !== showToDelete.id,
+    );
     setShowsStats(updatedShowsStats);
     calculateStats(updatedShows, updatedShowsStats);
 
@@ -159,35 +168,38 @@ const ProducerDashboard: React.FC = () => {
     try {
       // Appel API pour supprimer sur le backend
       await showApi.deleteById(showToDelete.id);
-      
+
       // Succès : afficher toast
-      setToastMessage(`Le spectacle "${deletedShowTitle}" a été supprimé avec succès.`);
+      setToastMessage(
+        `Le spectacle "${deletedShowTitle}" a été supprimé avec succès.`,
+      );
     } catch (err: any) {
       // Erreur : rollback de l'état
       setShows(previousShows);
       setShowsStats(previousShowsStats);
       calculateStats(previousShows, previousShowsStats);
-      
+
       // Déterminer le type d'erreur et afficher message approprié
-      let errorMessage = 'Une erreur est survenue lors de la suppression.';
-      
+      let errorMessage = "Une erreur est survenue lors de la suppression.";
+
       // Vérifier si c'est une erreur de contrainte (spectacle avec réservations)
-      const errorText = err.message?.toLowerCase() || '';
+      const errorText = err.message?.toLowerCase() || "";
       if (
-        errorText.includes('reservation') || 
-        errorText.includes('contrainte') || 
-        errorText.includes('constraint') ||
-        errorText.includes('foreign key') ||
-        errorText.includes('référencé') ||
-        errorText.includes('référence')
+        errorText.includes("reservation") ||
+        errorText.includes("contrainte") ||
+        errorText.includes("constraint") ||
+        errorText.includes("foreign key") ||
+        errorText.includes("référencé") ||
+        errorText.includes("référence")
       ) {
         errorMessage = `Impossible de supprimer "${deletedShowTitle}" : ce spectacle possède des réservations actives. Veuillez annuler toutes les réservations avant de supprimer le spectacle.`;
-      } else if (errorText.includes('network') || errorText.includes('fetch')) {
-        errorMessage = 'Erreur de connexion. Vérifiez votre connexion internet et réessayez.';
+      } else if (errorText.includes("network") || errorText.includes("fetch")) {
+        errorMessage =
+          "Erreur de connexion. Vérifiez votre connexion internet et réessayez.";
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       // Afficher toast d'erreur
       setToastMessage(errorMessage);
     }
@@ -334,24 +346,22 @@ const ProducerDashboard: React.FC = () => {
           </tbody>
         </table>
       </section>
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Confirmer la suppression"
+        message={`Êtes-vous sûr de vouloir supprimer le spectacle "${showToDelete?.title}" ? Cette action est irréversible.`}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        confirmText="Supprimer"
+        cancelText="Annuler"
+      />
+
+      {toastMessage && (
+        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+      )}
     </div>
-
-        <ConfirmModal
-          isOpen={isDeleteModalOpen}
-          title="Confirmer la suppression"
-          message={`Êtes-vous sûr de vouloir supprimer le spectacle "${showToDelete?.title}" ? Cette action est irréversible.`}
-          onConfirm={handleConfirmDelete}
-          onCancel={handleCancelDelete}
-          confirmText="Supprimer"
-          cancelText="Annuler"
-        />
-
-        {toastMessage && (
-          <Toast 
-            message={toastMessage} 
-            onClose={() => setToastMessage(null)} 
-          />
-        )}
-      </div>
+  );
+};
 
 export default ProducerDashboard;
