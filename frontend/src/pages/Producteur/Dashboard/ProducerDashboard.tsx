@@ -13,8 +13,8 @@ import { Bar } from "react-chartjs-2";
 
 import { showApi, IMAGE_STORAGE_BASE } from "../../../services/api";
 import { Show, Reservation } from "../../../types/models";
-import Loader from "../../../components/ui/loader/Loader";
-import styles from "./ProducerDashboard.module.css";
+import Loader from "../../../components/ui/loader/Loader";import ConfirmModal from '../../../components/ui/confirmModal/ConfirmModal';
+import Toast from '../../../components/ui/toast/Toast';import styles from "./ProducerDashboard.module.css";
 
 // Register Chart.js components
 ChartJS.register(
@@ -51,11 +51,9 @@ const ProducerDashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<StatCardProps[]>([]);
   const [showsStats, setShowsStats] = useState<ShowStats[]>([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
+    const [showToDelete, setShowToDelete] = useState<Show | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
         setLoading(true);
         const showsData = await showApi.getAll();
         setShows(showsData);
@@ -127,8 +125,20 @@ const ProducerDashboard: React.FC = () => {
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("fr-FR");
 
-  const handleDeleteShow = (showId: number) => {
-    console.log(`Delete button clicked for show ${showId}`);
+  const handleDeleteShow = (show: Show) => {
+    setShowToDelete(show);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setShowToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    console.log(`Confirm delete for show: ${showToDelete?.id}`);
+    setIsDeleteModalOpen(false);
+    setShowToDelete(null);
   };
 
   if (loading) return <Loader />;
@@ -253,7 +263,7 @@ const ProducerDashboard: React.FC = () => {
                         Voir
                       </button>
                       <button
-                        onClick={() => handleDeleteShow(show.id)}
+                        onClick={() => handleDeleteShow(show)}
                         className={`${styles.actionButton} ${styles.deleteButton}`}
                       >
                         Supprimer
@@ -273,7 +283,23 @@ const ProducerDashboard: React.FC = () => {
         </table>
       </section>
     </div>
-  );
-};
+
+        <ConfirmModal
+          isOpen={isDeleteModalOpen}
+          title="Confirmer la suppression"
+          message={`Êtes-vous sûr de vouloir supprimer le spectacle "${showToDelete?.title}" ? Cette action est irréversible.`}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          confirmText="Supprimer"
+          cancelText="Annuler"
+        />
+
+        {toastMessage && (
+          <Toast 
+            message={toastMessage} 
+            onClose={() => setToastMessage(null)} 
+          />
+        )}
+      </div>
 
 export default ProducerDashboard;
