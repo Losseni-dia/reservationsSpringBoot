@@ -44,7 +44,7 @@ async function secureFetch(url: string, options: RequestInit = {}) {
         if (response.status === 401) {
             // On utilise un message informatif simple au lieu d'une erreur bloquante
             // Cela permet à AuthContext de mettre l'utilisateur à null proprement
-            return Promise.reject("UNAUTHORIZED"); 
+            return Promise.reject(new Error("UNAUTHORIZED"));
         }
         
         // Pour les autres erreurs (404, 500), on garde le throw car ce sont de vrais problèmes
@@ -85,6 +85,21 @@ export const authApi = {
     getProfile: async () => {
         const res = await secureFetch(`${API_BASE}/users/profile`);
         return res.json();
+    },
+    register: async (userData: any) => {
+        const res = await secureFetch(`${API_BASE}/users/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData),
+        });
+        
+        // Le backend peut renvoyer du texte brut (ex: "Utilisateur créé") ou du JSON
+        const text = await res.text();
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            return text;
+        }
     }
 };
 
@@ -110,10 +125,19 @@ export const artistApi = {
 };
 
 export const showApi = {
+    // Récupère tous les spectacles
     getAll: async (): Promise<Show[]> => {
         const res = await secureFetch(`${API_BASE}/shows`);
         return res.json();
     },
+
+    // Récupère un spectacle par son ID (utile pour l'édition)
+    getById: async (id: number): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}`);
+        return res.json();
+    },
+
+    // Récupère un spectacle par son slug pour les URLs frontend
     getBySlug: async (slug: string): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/slug/${slug}`);
         return res.json();
@@ -125,6 +149,51 @@ export const showApi = {
     });
     return res.json();
 },
+
+    /**
+     * Recherche multi-critères ( Deja implementé - Rôle Utilisateur/Visiteur)
+     * Permet de filtrer par titre, lieu ou date.
+     */
+    search: async (params: { title?: string; location?: string; start?: string; end?: string }):  Promise<Show[]> => {
+        const queryParams = new URLSearchParams();
+        if (params.title) queryParams.append('title', params.title);
+        if (params.location) queryParams.append('location', params.location);
+        if (params.start) queryParams.append('start', params.start);
+        if (params.end) queryParams.append('end', params.end);
+
+        const res = await secureFetch(`${API_BASE}/shows/search?${queryParams.toString()}`);
+        return res.json();
+    },
+
+    // Crée un nouveau spectacle (Issue #1 -  Mariam - Rôle Producteur/Admin)
+    create: async (showData: Partial<Show>): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(showData),
+        });
+        return res.json();
+    },
+
+    // Met à jour un spectacle existant - #03 issue - Anjum (Rôle Producteur/Admin)
+    update: async (id: number, showData: Partial<Show>): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(showData),
+        });
+        return res.json();
+    },
+
+    // Supprime un spectacle #04 issue - Lise (Rôle Producteur/Admin)
+    delete: async (id: number): Promise<void> => {
+        await secureFetch(`${API_BASE}/shows/${id}`, {
+            method: 'DELETE',
+    deleteById: async (id: number): Promise<void> => {
+        await secureFetch(`${API_BASE}/shows/${id}`, {
+            method: 'DELETE'
+        });
+    }
 };
 
 export const locationApi = {

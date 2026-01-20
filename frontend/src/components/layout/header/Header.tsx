@@ -20,6 +20,11 @@ const Header: React.FC = () => {
                     <NavLink to="/locations" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
                         Lieux
                     </NavLink>
+                    {user && user.role === 'affiliate' && (
+                        <NavLink to="/producer/dashboard" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
+                            Dashboard
+                        </NavLink>
+                    )}
                 </nav>
 
                 <div className={styles.actions}>
@@ -56,7 +61,10 @@ const Header: React.FC = () => {
                             </button>
                         </div>
                     ) : (
-                        <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        <>
+                            <Link to="/register" className={styles.loginBtn}>Inscription</Link>
+                            <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        </>
                     )}
                 </div>
             </div>
