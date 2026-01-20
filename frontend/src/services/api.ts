@@ -44,7 +44,7 @@ async function secureFetch(url: string, options: RequestInit = {}) {
         if (response.status === 401) {
             // On utilise un message informatif simple au lieu d'une erreur bloquante
             // Cela permet à AuthContext de mettre l'utilisateur à null proprement
-            return Promise.reject("UNAUTHORIZED"); 
+            return Promise.reject(new Error("UNAUTHORIZED"));
         }
         
         // Pour les autres erreurs (404, 500), on garde le throw car ce sont de vrais problèmes
@@ -85,6 +85,21 @@ export const authApi = {
     getProfile: async () => {
         const res = await secureFetch(`${API_BASE}/users/profile`);
         return res.json();
+    },
+    register: async (userData: any) => {
+        const res = await secureFetch(`${API_BASE}/users/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData),
+        });
+        
+        // Le backend peut renvoyer du texte brut (ex: "Utilisateur créé") ou du JSON
+        const text = await res.text();
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            return text;
+        }
     }
 };
 
@@ -110,16 +125,64 @@ export const artistApi = {
 };
 
 export const showApi = {
+   // Récupère tous les spectacles
     getAll: async (): Promise<Show[]> => {
         const res = await secureFetch(`${API_BASE}/shows`);
         return res.json();
     },
-    getBySlug: async (slug: string): Promise<Show> => {
+
+    // Récupère par ID
+      getById: async (id: number): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}`);
+        return res.json();
+    },
+
+    // Récupère par slug
+     getBySlug: async (slug: string): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/slug/${slug}`);
         return res.json();
+    },
+
+    // Recherche multi-critères
+    search: async (params: { title?: string; location?: string; start?: string; end?: string }): Promise<Show[]> => {
+        const queryParams = new URLSearchParams();
+        if (params.title) queryParams.append('title', params.title);
+        if (params.location) queryParams.append('location', params.location);
+        if (params.start) queryParams.append('start', params.start);
+        if (params.end) queryParams.append('end', params.end);
+
+        const res = await secureFetch(`${API_BASE}/shows/search?${queryParams.toString()}`);
+        return res.json();
+    },
+
+    // Création (Une seule version propre)
+    create: async (showData: Partial<Show>): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(showData),
+        });
+        return res.json();
+    },
+
+    // Mise à jour
+    update: async (id: number, showData: Partial<Show>): Promise<Show> => {
+        const res =  await secureFetch(`${API_BASE}/shows/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(showData),
+        });
+
+        return res.json();
+    },
+
+    // Suppression
+    deleteById: async (id: number): Promise<void> => {
+        await secureFetch(`${API_BASE}/shows/${id}`, {
+            method: 'DELETE'
+        });
     }
 };
-
 export const locationApi = {
     getAll: async (): Promise<Location[]> => {
         const res = await secureFetch(`${API_BASE}/locations`);

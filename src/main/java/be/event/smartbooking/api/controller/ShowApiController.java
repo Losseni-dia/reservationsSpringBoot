@@ -1,13 +1,22 @@
 package be.event.smartbooking.api.controller;
 
+import be.event.smartbooking.dto.ArtistDTO;
+import be.event.smartbooking.dto.PriceDTO;
+import be.event.smartbooking.dto.RepresentationDTO;
+import be.event.smartbooking.dto.ReviewDTO;
 import be.event.smartbooking.dto.ShowDTO;
+import be.event.smartbooking.model.Price;
+import be.event.smartbooking.model.Representation;
+import be.event.smartbooking.model.Review;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,10 +28,13 @@ public class ShowApiController {
         @Autowired
         private ShowService showService;
 
+        /**
+         * GET /api/shows : Récupère tous les spectacles
+         */
         @GetMapping
+        @Transactional(readOnly = true) // <--- ICI : Indispensable pour charger les relations (Lazy Loading)
         public ResponseEntity<List<ShowDTO>> getAll() {
                 try {
-                        // On récupère la liste via le service
                         List<Show> shows = showService.getAll();
                         List<ShowDTO> dtos = shows.stream()
                                         .map(this::safeConvertToDto)
@@ -93,27 +105,54 @@ public class ShowApiController {
 
                         return ResponseEntity.ok(dtos);
                 } catch (Exception e) {
-                        // Si une erreur survient ici, on la voit dans la console Java
                         e.printStackTrace();
-                        // Mais on renvoie une liste vide à React pour éviter la 500
-                        return ResponseEntity.ok(new ArrayList<>());
+                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+        }
+        /**
+         * POST /api/shows : Crée un nouveau spectacle (Issue #3)
+         */
+        @PostMapping
+        public ResponseEntity<ShowDTO> create(@RequestBody Show show) {
+                try {
+                        showService.add(show);
+                        return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
         }
 
-        private ShowDTO safeConvertToDto(Show show) {
-                String locationName = "Lieu non défini";
-
-                // PROTECTION CRITIQUE : C'est ici que l'erreur 500 se produisait
-                if (show.getLocation() != null) {
-                        try {
-                                // On tente de lire le nom du lieu
-                                locationName = show.getLocation().getDesignation();
-                        } catch (Exception e) {
-                                // Si Hibernate fait une erreur de Lazy Loading (Proxy), on capture
-                                locationName = "Lieu (en cours...)";
-                        }
+        /**
+         * PUT /api/shows/{id} : Met à jour un spectacle existant
+         */
+        @PutMapping("/{id}")
+        public ResponseEntity<ShowDTO> update(@PathVariable Long id, @RequestBody Show show) {
+                Show existingShow = showService.get(id);
+                if (existingShow == null) {
+                        return ResponseEntity.notFound().build();
                 }
+                showService.update(id, show);
+                Show updatedShow = showService.get(id);
+                return ResponseEntity.ok(safeConvertToDto(updatedShow));
+        }
 
+        /**
+         * DELETE /api/shows/{id} : Supprime un spectacle
+         */
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> delete(@PathVariable Long id) {
+                Show existingShow = showService.get(id);
+                if (existingShow == null) {
+                        return ResponseEntity.notFound().build();
+                }
+                showService.delete(id);
+                return ResponseEntity.noContent().build();
+        }
+
+        /**
+         * Transformation sécurisée de l'entité Show vers ShowDTO
+         */
+        private ShowDTO safeConvertToDto(Show show) {
                 return ShowDTO.builder()
                                 .id(show.getId())
                                 .slug(show.getSlug())
@@ -121,7 +160,73 @@ public class ShowApiController {
                                 .description(show.getDescription())
                                 .posterUrl(show.getPosterUrl())
                                 .bookable(show.isBookable())
-                                .locationDesignation(locationName)
+                                .locationDesignation(show.getLocation() != null ? show.getLocation().getDesignation()
+                                                : "Lieu non défini")
+                                .averageRating(show.getAverageRating())
+                                .reviewCount(show.getReviewCount())
+                                .representations(show.getRepresentations() != null ? show.getRepresentations().stream()
+                                                .map(rep -> convertRepToDto(rep, show.getTitle()))
+                                                .toList() : new ArrayList<>())
+                                .reviews(show.getReviews() != null ? show.getReviews().stream()
+                                                .map(this::convertReviewToDto)
+                                                .toList() : new ArrayList<>())
+
+                                               // Dans ShowApiController.java -> safeConvertToDto
+                                .artists(show.getArtistTypes() != null ? 
+                                show.getArtistTypes().stream()
+                                        .collect(Collectors.groupingBy(
+                                        at -> at.getArtist(), // Groupe par l'objet Artiste
+                                        Collectors.mapping(at -> at.getType().getType(), Collectors.toList()) // Récupère la liste des rôles
+                                        ))
+                                        .entrySet().stream()
+                                        .map(entry -> ArtistDTO.builder()
+                                        .id(entry.getKey().getId())
+                                        .firstname(entry.getKey().getFirstname())
+                                        .lastname(entry.getKey().getLastname())
+                                        .types(entry.getValue()) // Contient maintenant tous les rôles (ex: ["Acteur", "Metteur en scène"])
+                                        .build())
+                                        .toList() : new ArrayList<>())
+                                                                .build();
+                                
+   }
+
+        private RepresentationDTO convertRepToDto(Representation rep, String title) {
+                String location = "Lieu non défini";
+                // Sécurité contre les NullPointerException
+                if (rep.getShow() != null && rep.getShow().getLocation() != null) {
+                        location = rep.getShow().getLocation().getDesignation();
+                }
+
+                return RepresentationDTO.builder()
+                                .id(rep.getId())
+                                .when(rep.getWhen())
+                                .showTitle(title)
+                                .locationName(location)
+                                .prices(rep.getPrices() != null ? rep.getPrices().stream()
+                                                .map(this::convertPriceToDto)
+                                                .toList() : new ArrayList<>())
                                 .build();
         }
+
+        private ReviewDTO convertReviewToDto(Review rev) {
+                return ReviewDTO.builder()
+                                .id(rev.getId())
+                                .authorLogin(rev.getUser() != null ? rev.getUser().getFirstname() : "Anonyme")
+                                .stars(rev.getStars())
+                                .comment(rev.getComment())
+                                .createdAt(rev.getCreatedAt())
+                                
+                                .build();
+        }
+
+        private PriceDTO convertPriceToDto(Price p) {
+                return PriceDTO.builder()
+                                .id(p.getId())
+                                .type(p.getType().toString())
+                                .amount(p.getAmount())
+                                .build();
+        }
+
+
+       
 }
