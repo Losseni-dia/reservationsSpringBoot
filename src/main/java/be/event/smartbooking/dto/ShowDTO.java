@@ -1,11 +1,13 @@
 package be.event.smartbooking.dto;
 
+
+
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -18,7 +20,6 @@ public class ShowDTO {
     private String description;
     private String posterUrl;
     private boolean bookable;
-    private String locationDesignation;
 
     // Nouveaux champs pour les détails complets
     private Double averageRating; // Calculé via show.getAverageRating()

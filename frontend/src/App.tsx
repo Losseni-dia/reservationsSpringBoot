@@ -14,10 +14,12 @@ import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import ProfilePage from './pages/Profile/ProfilePage';
-import AddShowForm from './TEST/AddShowForm';
 import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
 import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 import ProtectedRoute from './ProtectedRoute';
+import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
+import AddShow from './pages/Producteur/AddShow/AddShow';
+import EditShow from './pages/Producteur/UpdateShow/EditShow';
 
 function App() {
   return (
@@ -37,7 +39,8 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
-               <Route path="/admin/shows/add" element={<AddShowForm />} />
+              <Route path="/admin/shows/add" element={<AddShow />} />
+              <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
             </Routes>

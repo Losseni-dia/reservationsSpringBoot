@@ -215,8 +215,7 @@ public class ShowApiController {
                                 .stars(rev.getStars())
                                 .comment(rev.getComment())
                                 .createdAt(rev.getCreatedAt())
-                                .locationDesignation(locationName)
-                                .createdAt(show.getCreatedAt().toString())
+                                
                                 .build();
         }
 
