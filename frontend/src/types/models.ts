@@ -118,6 +118,12 @@ export interface Show {
     posterUrl: string;
     bookable: boolean;
     locationDesignation: string; // Provient du DTO aplati
+    averageRating?: number;
+    reviewCount?: number;
+    representations?: Representation[]; 
+    reviews?: Review[];
+    artists?: Artist[];
+    createdAt: string;
 }
 
 export interface Locality {

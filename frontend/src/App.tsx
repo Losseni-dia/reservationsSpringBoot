@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Context
 import { AuthProvider } from './components/context/AuthContext'; 
@@ -13,7 +12,14 @@ import Footer from './components/layout/footer/Footer';
 import Home from './pages/home/Home';
 import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
+import RegisterPage from './pages/Register/RegisterPage';
 import ProfilePage from './pages/Profile/ProfilePage';
+import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
+import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
+import ProtectedRoute from './ProtectedRoute';
+import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
+import AddShow from './pages/Producteur/AddShow/AddShow';
+import EditShow from './pages/Producteur/UpdateShow/EditShow';
 
 function App() {
   return (
@@ -28,8 +34,15 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/profile" element={<ProfilePage />} />
+              </Route>
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
+              <Route path="/admin/shows/add" element={<AddShow />} />
+              <Route path="/admin/shows/edit/:id" element={<EditShow />} />
+              <Route path="/producer/dashboard" element={<ProducerDashboard />} />
+              <Route path="/forbidden" element={<ForbiddenPage />} />
             </Routes>
           </main>
 
