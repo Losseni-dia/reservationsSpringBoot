@@ -141,6 +141,7 @@ const ProducerDashboard: React.FC = () => {
     // Sauvegarder l'état actuel pour rollback en cas d'erreur
     const previousShows = [...shows];
     const previousShowsStats = [...showsStats];
+    const deletedShowTitle = showToDelete.title;
 
     // Suppression optimiste : retirer immédiatement de la liste
     const updatedShows = shows.filter(show => show.id !== showToDelete.id);
@@ -159,14 +160,36 @@ const ProducerDashboard: React.FC = () => {
       // Appel API pour supprimer sur le backend
       await showApi.deleteById(showToDelete.id);
       
-      // Succès : log pour confirmation
-      console.log(`Show ${showToDelete.id} deleted successfully`);
+      // Succès : afficher toast
+      setToastMessage(`Le spectacle "${deletedShowTitle}" a été supprimé avec succès.`);
     } catch (err: any) {
       // Erreur : rollback de l'état
-      console.error('Error deleting show:', err);
       setShows(previousShows);
       setShowsStats(previousShowsStats);
       calculateStats(previousShows, previousShowsStats);
+      
+      // Déterminer le type d'erreur et afficher message approprié
+      let errorMessage = 'Une erreur est survenue lors de la suppression.';
+      
+      // Vérifier si c'est une erreur de contrainte (spectacle avec réservations)
+      const errorText = err.message?.toLowerCase() || '';
+      if (
+        errorText.includes('reservation') || 
+        errorText.includes('contrainte') || 
+        errorText.includes('constraint') ||
+        errorText.includes('foreign key') ||
+        errorText.includes('référencé') ||
+        errorText.includes('référence')
+      ) {
+        errorMessage = `Impossible de supprimer "${deletedShowTitle}" : ce spectacle possède des réservations actives. Veuillez annuler toutes les réservations avant de supprimer le spectacle.`;
+      } else if (errorText.includes('network') || errorText.includes('fetch')) {
+        errorMessage = 'Erreur de connexion. Vérifiez votre connexion internet et réessayez.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      // Afficher toast d'erreur
+      setToastMessage(errorMessage);
     }
   };
 
