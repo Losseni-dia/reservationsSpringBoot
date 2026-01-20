@@ -1,0 +1,18 @@
+.delete-button {
+  background-color: red; /* Couleur de fond rouge */
+  color: white; /* Texte blanc pour contraste */
+  border: none; /* Pas de bordure */
+  padding: 8px 16px; /* Espacement interne */
+  cursor: pointer; /* Curseur pointeur */
+  border-radius: 4px; /* Coins arrondis */
+  font-size: 14px; /* Taille de police */
+  margin-left: 10px; /* Espacement à gauche */
+}
+
+.delete-button:hover {
+  background-color: darkred; /* Rouge plus foncé au survol */
+}
+
+.delete-button:active {
+  background-color: maroon; /* Rouge encore plus foncé au clic */
+}
