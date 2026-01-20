@@ -73,10 +73,9 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setLoginIdentifier(e.target.value)}
               className={styles.input}
               placeholder="Votre login"
-              required
-            />
-          </div>
 
+                />
+          </div>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>Mot de passe</label>
             <input

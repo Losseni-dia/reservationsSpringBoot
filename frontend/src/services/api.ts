@@ -142,6 +142,13 @@ export const showApi = {
         const res = await secureFetch(`${API_BASE}/shows/slug/${slug}`);
         return res.json();
     },
+    create: async (formData: FormData): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows`, {
+        method: 'POST',
+        body: formData,
+    });
+    return res.json();
+},
 
     /**
      * Recherche multi-critères ( Deja implementé - Rôle Utilisateur/Visiteur)

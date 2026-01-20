@@ -14,6 +14,7 @@ import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import ProfilePage from './pages/Profile/ProfilePage';
+import AddShowForm from './TEST/AddShowForm';
 import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
 import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 import ProtectedRoute from './ProtectedRoute';
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
+               <Route path="/admin/shows/add" element={<AddShowForm />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
             </Routes>
