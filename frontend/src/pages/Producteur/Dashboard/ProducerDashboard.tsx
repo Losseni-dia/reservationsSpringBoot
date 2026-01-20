@@ -14,6 +14,8 @@ import { Bar } from 'react-chartjs-2';
 import { showApi, IMAGE_STORAGE_BASE } from '../../../services/api';
 import { Show, Reservation } from '../../../types/models';
 import Loader from '../../../components/ui/loader/Loader';
+import ConfirmModal from '../../../components/ui/confirmModal/ConfirmModal';
+import Toast from '../../../components/ui/toast/Toast';
 import styles from './ProducerDashboard.module.css';
 
 // Register Chart.js components
@@ -51,6 +53,9 @@ const ProducerDashboard: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [stats, setStats] = useState<StatCardProps[]>([]);
     const [showsStats, setShowsStats] = useState<ShowStats[]>([]);
+    const [showToDelete, setShowToDelete] = useState<Show | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -116,6 +121,76 @@ const ProducerDashboard: React.FC = () => {
     
 
     const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('fr-FR');
+
+    const handleDeleteClick = (show: Show) => {
+        setShowToDelete(show);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleCancelDelete = () => {
+        setIsDeleteModalOpen(false);
+        setShowToDelete(null);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!showToDelete) return;
+
+        // Sauvegarder l'état actuel pour rollback en cas d'erreur
+        const previousShows = [...shows];
+        const previousShowsStats = [...showsStats];
+
+        // Suppression optimiste : retirer immédiatement de la liste
+        const updatedShows = shows.filter(show => show.id !== showToDelete.id);
+        setShows(updatedShows);
+
+        // Mettre à jour les stats immédiatement
+        const updatedShowsStats = showsStats.filter(stat => stat.showId !== showToDelete.id);
+        setShowsStats(updatedShowsStats);
+        calculateStats(updatedShows, updatedShowsStats);
+
+        // Fermer la modale
+        setIsDeleteModalOpen(false);
+        const deletedShowTitle = showToDelete.title;
+        setShowToDelete(null);
+
+        try {
+            // Appel API pour supprimer sur le backend
+            await showApi.delete(showToDelete.id);
+            
+            // Succès : afficher toast
+            setToastMessage(`Le spectacle "${deletedShowTitle}" a été supprimé avec succès.`);
+        } catch (err: any) {
+            // Erreur : rollback de l'état
+            setShows(previousShows);
+            setShowsStats(previousShowsStats);
+            calculateStats(previousShows, previousShowsStats);
+            
+            // Déterminer le type d'erreur et afficher message approprié
+            let errorMessage = 'Une erreur est survenue lors de la suppression.';
+            
+            // Vérifier si c'est une erreur de contrainte (spectacle avec réservations)
+            const errorText = err.message?.toLowerCase() || '';
+            if (
+                errorText.includes('reservation') || 
+                errorText.includes('contrainte') || 
+                errorText.includes('constraint') ||
+                errorText.includes('foreign key') ||
+                errorText.includes('référencé') ||
+                errorText.includes('référence')
+            ) {
+                errorMessage = `Impossible de supprimer "${deletedShowTitle}" : ce spectacle possède des réservations actives. Veuillez annuler toutes les réservations avant de supprimer le spectacle.`;
+            } else if (errorText.includes('network') || errorText.includes('fetch')) {
+                errorMessage = 'Erreur de connexion. Vérifiez votre connexion internet et réessayez.';
+            } else if (err.message) {
+                errorMessage = err.message;
+            }
+            
+            setError(errorMessage);
+            
+            // Fermer le message d'erreur après 7 secondes
+            setTimeout(() => setError(null), 7000);
+        }
+    };
 
     if (loading) return <Loader />;
 
@@ -238,6 +313,12 @@ const ProducerDashboard: React.FC = () => {
                                             >
                                                 Voir
                                             </button>
+                                            <button 
+                                                onClick={() => handleDeleteClick(show)}
+                                                className={`${styles.actionButton} ${styles.deleteButton}`}
+                                            >
+                                                Supprimer
+                                            </button>
                                         </td>
                                     </tr>
                                 );
@@ -250,6 +331,23 @@ const ProducerDashboard: React.FC = () => {
                     </tbody>
                 </table>
             </section>
+
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                title="Confirmer la suppression"
+                message={`Êtes-vous sûr de vouloir supprimer le spectacle "${showToDelete?.title}" ? Cette action est irréversible.`}
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
+                confirmText="Supprimer"
+                cancelText="Annuler"
+            />
+
+            {toastMessage && (
+                <Toast 
+                    message={toastMessage} 
+                    onClose={() => setToastMessage(null)} 
+                />
+            )}
         </div>
     );
 };
