@@ -27,4 +27,6 @@ public class ShowDTO {
     private List<ReviewDTO> reviews; // Liste des avis
     private List<ArtistDTO> artists; // Liste des artistes associés
 
+    private String locationDesignation; // Nom du lieu uniquement
+    private String createdAt;
 }

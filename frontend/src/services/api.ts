@@ -44,7 +44,7 @@ async function secureFetch(url: string, options: RequestInit = {}) {
         if (response.status === 401) {
             // On utilise un message informatif simple au lieu d'une erreur bloquante
             // Cela permet à AuthContext de mettre l'utilisateur à null proprement
-            return Promise.reject("UNAUTHORIZED"); 
+            return Promise.reject(new Error("UNAUTHORIZED"));
         }
         
         // Pour les autres erreurs (404, 500), on garde le throw car ce sont de vrais problèmes
@@ -85,6 +85,21 @@ export const authApi = {
     getProfile: async () => {
         const res = await secureFetch(`${API_BASE}/users/profile`);
         return res.json();
+    },
+    register: async (userData: any) => {
+        const res = await secureFetch(`${API_BASE}/users/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData),
+        });
+        
+        // Le backend peut renvoyer du texte brut (ex: "Utilisateur créé") ou du JSON
+        const text = await res.text();
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            return text;
+        }
     }
 };
 
@@ -167,6 +182,9 @@ export const showApi = {
     delete: async (id: number): Promise<void> => {
         await secureFetch(`${API_BASE}/shows/${id}`, {
             method: 'DELETE',
+    deleteById: async (id: number): Promise<void> => {
+        await secureFetch(`${API_BASE}/shows/${id}`, {
+            method: 'DELETE'
         });
     }
 };

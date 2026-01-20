@@ -1,0 +1,139 @@
+.pageContainer {
+    display: flex;
+    min-height: 80vh; /* S'adapte au layout */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #141414;
+    color: #ffffff;
+    padding: 2rem;
+    position: relative;
+}
+
+.logoSection {
+    text-align: center;
+    margin-bottom: 2rem;
+    z-index: 2;
+}
+
+.logoTitle {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.logoAccent {
+    color: #f5c518;
+}
+
+.registerCard {
+    background-color: #1f1f1f;
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    border: 1px solid #333;
+}
+
+.cardTitle {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: #f5c518;
+}
+
+.errorMessage {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+    color: #ff6b6b;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.row {
+    display: flex;
+    gap: 1rem;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    font-weight: 500;
+}
+
+.input {
+    background-color: #2b2b2b;
+    border: 1px solid #404040;
+    border-radius: 6px;
+    padding: 12px 15px;
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #f5c518;
+    box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.1);
+}
+
+.submitButton {
+    margin-top: 1rem;
+    background-color: #f5c518;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.submitButton:hover {
+    background-color: #e0b10d;
+    transform: translateY(-1px);
+}
+
+.buttonDisabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.footerText {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #a0a0a0;
+    font-size: 0.95rem;
+}
+
+.loginLink {
+    color: #f5c518;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.loginLink:hover {
+    text-decoration: underline;
+}

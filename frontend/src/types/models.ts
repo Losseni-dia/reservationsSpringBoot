@@ -123,6 +123,7 @@ export interface Show {
     representations?: Representation[]; 
     reviews?: Review[];
     artists?: Artist[];
+    createdAt: string;
 }
 
 export interface Locality {
