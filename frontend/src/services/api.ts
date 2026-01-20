@@ -1,7 +1,6 @@
 import { 
     Artist, Show, Location, Review, 
-    Reservation, ReservationRequest, 
-    UserProfileDto
+    Reservation, ReservationRequest
 } from '../types/models';
 
 
@@ -142,13 +141,6 @@ export const showApi = {
         const res = await secureFetch(`${API_BASE}/shows/slug/${slug}`);
         return res.json();
     },
-    create: async (formData: FormData): Promise<Show> => {
-    const res = await secureFetch(`${API_BASE}/shows`, {
-        method: 'POST',
-        body: formData,
-    });
-    return res.json();
-},
 
     /**
      * Recherche multi-critères ( Deja implementé - Rôle Utilisateur/Visiteur)
@@ -166,11 +158,13 @@ export const showApi = {
     },
 
     // Crée un nouveau spectacle (Issue #1 -  Mariam - Rôle Producteur/Admin)
-    create: async (showData: Partial<Show>): Promise<Show> => {
+    // Supporte à la fois FormData (pour upload d'images) et JSON
+    create: async (showData: Partial<Show> | FormData): Promise<Show> => {
+        const isFormData = showData instanceof FormData;
         const res = await secureFetch(`${API_BASE}/shows`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(showData),
+            headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+            body: isFormData ? showData : JSON.stringify(showData),
         });
         return res.json();
     },
@@ -187,9 +181,6 @@ export const showApi = {
 
     // Supprime un spectacle #04 issue - Lise (Rôle Producteur/Admin)
     delete: async (id: number): Promise<void> => {
-        await secureFetch(`${API_BASE}/shows/${id}`, {
-            method: 'DELETE',
-    deleteById: async (id: number): Promise<void> => {
         await secureFetch(`${API_BASE}/shows/${id}`, {
             method: 'DELETE'
         });
