@@ -300,7 +300,7 @@ const ProducerDashboard: React.FC = () => {
               <th>Titre</th>
               <th>Date de Création</th>
               <th>Billets Vendus (Démo)</th>
-              <th>Actions</th>
+              <th className={styles.actionsHeader}>Actions</th>
             </tr>
           </thead>
           <tbody>

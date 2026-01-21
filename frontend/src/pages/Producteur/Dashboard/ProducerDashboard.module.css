@@ -252,6 +252,11 @@
     letter-spacing: 1px;
 }
 
+.actionsHeader {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
 .showsTable tbody tr {
     transition: background-color 0.2s ease;
 }
