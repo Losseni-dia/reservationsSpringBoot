@@ -268,12 +268,20 @@ const ProducerDashboard: React.FC = () => {
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
         <h1 className={styles.dashboardTitle}>Tableau de bord du Producteur</h1>
-        <button
-          onClick={() => navigate("/create-show")}
-          className={styles.createShowButton}
-        >
-          + Créer un nouveau spectacle
-        </button>
+        <div>
+          <button
+            onClick={() => navigate("/admin/shows/add")}
+            className={styles.addShowButton}
+          >
+            + Ajouter un spectacle
+          </button>
+          <button
+            onClick={() => navigate("/create-show")}
+            className={styles.createShowButton}
+          >
+            + Créer un nouveau spectacle
+          </button>
+        </div>
       </header>
 
       {error && <div className={styles.errorBanner}>{error}</div>}
