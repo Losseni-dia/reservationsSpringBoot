@@ -319,25 +319,29 @@ const ProducerDashboard: React.FC = () => {
                     <td>{show.title}</td>
                     <td>{formatDate(show.createdAt)}</td>
                     <td>{showStat?.ticketsSold || 0}</td>
-                    <td className={styles.actionsCell}>
-                      <button
-                        onClick={() => navigate(`/admin/shows/edit/${show.id}`)}
-                        className={`${styles.actionButton} ${styles.editButton}`}
-                      >
-                        Modifier
-                      </button>
-                      <button
-                        onClick={() => navigate(`/show/${show.id}`)}
-                        className={`${styles.actionButton} ${styles.viewButton}`}
-                      >
-                        Voir
-                      </button>
-                      <button
-                        onClick={() => handleDeleteShow(show)}
-                        className={`${styles.actionButton} ${styles.deleteButton}`}
-                      >
-                        Supprimer
-                      </button>
+                    <td>
+                      <div className={styles.actionsContainer}>
+                        <button
+                          onClick={() =>
+                            navigate(`/admin/shows/edit/${show.id}`)
+                          }
+                          className={`${styles.actionButton} ${styles.editButton}`}
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => navigate(`/show/${show.id}`)}
+                          className={`${styles.actionButton} ${styles.viewButton}`}
+                        >
+                          Voir
+                        </button>
+                        <button
+                          onClick={() => handleDeleteShow(show)}
+                          className={`${styles.actionButton} ${styles.deleteButton}`}
+                        >
+                          Supprimer
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

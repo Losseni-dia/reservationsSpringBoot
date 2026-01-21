@@ -272,7 +272,7 @@
     border: 2px solid #555;
 }
 
-.actionsCell {
+.actionsContainer {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
