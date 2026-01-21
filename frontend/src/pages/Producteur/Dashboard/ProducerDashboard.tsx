@@ -321,6 +321,12 @@ const ProducerDashboard: React.FC = () => {
                     <td>{showStat?.ticketsSold || 0}</td>
                     <td className={styles.actionsCell}>
                       <button
+                        onClick={() => navigate(`/admin/shows/edit/${show.id}`)}
+                        className={`${styles.actionButton} ${styles.editButton}`}
+                      >
+                        Modifier
+                      </button>
+                      <button
                         onClick={() => navigate(`/show/${show.id}`)}
                         className={`${styles.actionButton} ${styles.viewButton}`}
                       >
