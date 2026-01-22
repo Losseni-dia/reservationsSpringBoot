@@ -100,6 +100,14 @@ export const authApi = {
         } catch (e) {
             return text;
         }
+    },
+    updateProfile: async (profileData: Partial<UserProfileDto>) => {
+        const res = await secureFetch(`${API_BASE}/users/profile`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profileData),
+        });
+        return res.text();
     }
 };
  
