@@ -32,13 +32,13 @@ const AdminShowPage: React.FC = () => {
       setLoading(true);
       setError(null);
       const data = await showApi.getAll();
-      
+
       // Tri des spectacles : non confirmés (bookable=false) d'abord, puis confirmés
       const sortedShows = data.sort((a, b) => {
         if (a.bookable === b.bookable) return 0;
         return a.bookable ? 1 : -1;
       });
-      
+
       setShows(sortedShows);
       setToastMessage("Spectacles chargés avec succès");
       setToastType("success");
@@ -62,7 +62,11 @@ const AdminShowPage: React.FC = () => {
     <div className={styles.adminContainer}>
       <div className={styles.adminHeader}>
         <h1 className={styles.adminTitle}>Gestion des Spectacles</h1>
-        <button className={styles.refreshButton} onClick={handleRefresh} disabled={loading}>
+        <button
+          className={styles.refreshButton}
+          onClick={handleRefresh}
+          disabled={loading}
+        >
           {loading ? "Chargement..." : "Rafraîchir"}
         </button>
       </div>
@@ -72,7 +76,8 @@ const AdminShowPage: React.FC = () => {
       <div className={styles.showsListContainer}>
         {shows.length > 0 ? (
           <p className={styles.showsCount}>
-            {shows.length} spectacle{shows.length > 1 ? "s" : ""} trouvé{shows.length > 1 ? "s" : ""}
+            {shows.length} spectacle{shows.length > 1 ? "s" : ""} trouvé
+            {shows.length > 1 ? "s" : ""}
           </p>
         ) : (
           <p className={styles.noShows}>Aucun spectacle trouvé</p>
