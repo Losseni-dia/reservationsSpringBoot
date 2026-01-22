@@ -1,7 +1,8 @@
 import {
     Artist, Show, Location, Review,
     Reservation, ReservationRequest,
-    UserProfileDto
+    UserProfileDto,
+    UserRegistrationDto
 } from '../types/models';
  
  
@@ -86,7 +87,7 @@ export const authApi = {
         const res = await secureFetch(`${API_BASE}/users/profile`);
         return res.json();
     },
-    register: async (userData: any) => {
+    register: async (userData: UserRegistrationDto) => {
         const res = await secureFetch(`${API_BASE}/users/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

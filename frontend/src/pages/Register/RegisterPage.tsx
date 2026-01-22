@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../../services/api';
 import { useAuth } from '../../components/context/AuthContext';
+import { UserRegistrationDto } from '../../types/models';
 import styles from './RegisterPage.module.css';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserRegistrationDto>({
     login: '',
     firstname: '',
     lastname: '',
@@ -19,7 +20,7 @@ const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
