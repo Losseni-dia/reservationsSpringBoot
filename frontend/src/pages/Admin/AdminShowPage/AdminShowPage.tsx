@@ -56,6 +56,10 @@ const AdminShowPage: React.FC = () => {
     fetchShows();
   };
 
+  const handleCreateShow = () => {
+    navigate("/admin/shows/add");
+  };
+
   const renderShowsTable = () => {
     return (
       <table className={styles.showsTable}>
@@ -127,13 +131,21 @@ const AdminShowPage: React.FC = () => {
     <div className={styles.adminContainer}>
       <div className={styles.adminHeader}>
         <h1 className={styles.adminTitle}>Gestion des Spectacles</h1>
-        <button
-          className={styles.refreshButton}
-          onClick={handleRefresh}
-          disabled={loading}
-        >
-          {loading ? "Chargement..." : "Rafraîchir"}
-        </button>
+        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <button
+            className={styles.createShowButton}
+            onClick={handleCreateShow}
+          >
+            + Créer un Spectacle
+          </button>
+          <button
+            className={styles.refreshButton}
+            onClick={handleRefresh}
+            disabled={loading}
+          >
+            {loading ? "Chargement..." : "Rafraîchir"}
+          </button>
+        </div>
       </div>
 
       {error && <div className={styles.errorMessage}>{error}</div>}
