@@ -140,6 +140,20 @@ const RegisterPage: React.FC = () => {
             />
           </div>
 
+          <div className={styles.fieldGroup}>
+            <label className={styles.label}>Langue</label>
+            <select
+              name="langue"
+              value={formData.langue}
+              onChange={handleChange}
+              className={styles.input}
+            >
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+              <option value="nl">Nederlands</option>
+            </select>
+          </div>
+
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
               <label className={styles.label}>Mot de passe</label>
