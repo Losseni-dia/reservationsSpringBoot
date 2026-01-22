@@ -100,6 +100,7 @@ const RegisterPage: React.FC = () => {
                 value={formData.firstname}
                 onChange={handleChange}
                 className={styles.input}
+                placeholder="Votre prénom"
                 required
               />
             </div>
@@ -111,6 +112,7 @@ const RegisterPage: React.FC = () => {
                 value={formData.lastname}
                 onChange={handleChange}
                 className={styles.input}
+                placeholder="Votre nom"
                 required
               />
             </div>
@@ -124,6 +126,7 @@ const RegisterPage: React.FC = () => {
               value={formData.login}
               onChange={handleChange}
               className={styles.input}
+              placeholder="Choisissez un identifiant"
               required
             />
           </div>
@@ -136,6 +139,7 @@ const RegisterPage: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               className={styles.input}
+              placeholder="exemple@email.com"
               required
             />
           </div>
@@ -157,14 +161,14 @@ const RegisterPage: React.FC = () => {
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
               <label className={styles.label}>Mot de passe</label>
-              <input name="password" type="password" value={formData.password} onChange={handleChange} className={styles.input} required />
+              <input name="password" type="password" value={formData.password} onChange={handleChange} className={styles.input} placeholder="••••••••" required />
               <small style={{ color: '#888', fontSize: '0.75rem', marginTop: '4px' }}>
                 8 car. min, 1 maj, 1 min, 1 chiffre, 1 spécial (@$!%*?&)
               </small>
             </div>
             <div className={styles.fieldGroup}>
               <label className={styles.label}>Confirmer</label>
-              <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} className={styles.input} required />
+              <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} className={styles.input} placeholder="••••••••" required />
             </div>
           </div>
 
