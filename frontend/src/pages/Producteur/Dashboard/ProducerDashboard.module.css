@@ -252,6 +252,11 @@
     letter-spacing: 1px;
 }
 
+.actionsHeader {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
 .showsTable tbody tr {
     transition: background-color 0.2s ease;
 }
@@ -272,7 +277,7 @@
     border: 2px solid #555;
 }
 
-.actionsCell {
+.actionsContainer {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
@@ -309,6 +314,18 @@
 
 .actionButton:active {
     transform: scale(0.97);
+}
+
+.editButton {
+    background-color: transparent;
+    color: #ffa726;
+    border-color: #ffa726;
+}
+
+.editButton:hover {
+    background-color: #ffa726;
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 167, 38, 0.5);
 }
 
 .viewButton {
