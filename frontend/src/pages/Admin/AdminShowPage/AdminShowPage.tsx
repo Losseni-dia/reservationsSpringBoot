@@ -30,9 +30,18 @@ const AdminShowPage: React.FC = () => {
   const fetchShows = async () => {
     try {
       setLoading(true);
-      const data = await showApi.getAll();
-      setShows(data);
       setError(null);
+      const data = await showApi.getAll();
+      
+      // Tri des spectacles : non confirmés (bookable=false) d'abord, puis confirmés
+      const sortedShows = data.sort((a, b) => {
+        if (a.bookable === b.bookable) return 0;
+        return a.bookable ? 1 : -1;
+      });
+      
+      setShows(sortedShows);
+      setToastMessage("Spectacles chargés avec succès");
+      setToastType("success");
     } catch (err: any) {
       console.error("Erreur lors du chargement des spectacles:", err);
       setError("Impossible de charger les spectacles. Veuillez réessayer.");
@@ -43,19 +52,28 @@ const AdminShowPage: React.FC = () => {
     }
   };
 
+  const handleRefresh = () => {
+    fetchShows();
+  };
+
   if (loading) return <Loader />;
 
   return (
     <div className={styles.adminContainer}>
       <div className={styles.adminHeader}>
         <h1 className={styles.adminTitle}>Gestion des Spectacles</h1>
+        <button className={styles.refreshButton} onClick={handleRefresh} disabled={loading}>
+          {loading ? "Chargement..." : "Rafraîchir"}
+        </button>
       </div>
 
       {error && <div className={styles.errorMessage}>{error}</div>}
 
       <div className={styles.showsListContainer}>
         {shows.length > 0 ? (
-          <p>Nombre de spectacles: {shows.length}</p>
+          <p className={styles.showsCount}>
+            {shows.length} spectacle{shows.length > 1 ? "s" : ""} trouvé{shows.length > 1 ? "s" : ""}
+          </p>
         ) : (
           <p className={styles.noShows}>Aucun spectacle trouvé</p>
         )}
