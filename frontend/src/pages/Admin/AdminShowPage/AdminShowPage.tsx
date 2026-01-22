@@ -60,6 +60,10 @@ const AdminShowPage: React.FC = () => {
     navigate("/admin/shows/add");
   };
 
+  const handleEditShow = (id: number) => {
+    navigate(`/admin/shows/edit/${id}`);
+  };
+
   const renderShowsTable = () => {
     return (
       <table className={styles.showsTable}>
@@ -108,6 +112,7 @@ const AdminShowPage: React.FC = () => {
                 <div className={styles.actionsCell}>
                   <button
                     className={`${styles.actionButton} ${styles.editButton}`}
+                    onClick={() => handleEditShow(show.id)}
                   >
                     Modifier
                   </button>
