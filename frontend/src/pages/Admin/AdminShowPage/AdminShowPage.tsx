@@ -56,6 +56,71 @@ const AdminShowPage: React.FC = () => {
     fetchShows();
   };
 
+  const renderShowsTable = () => {
+    return (
+      <table className={styles.showsTable}>
+        <thead className={styles.tableHeader}>
+          <tr>
+            <th className={styles.tableHeaderCell}>Titre</th>
+            <th className={styles.tableHeaderCell}>Description</th>
+            <th className={styles.tableHeaderCell}>Localité</th>
+            <th className={styles.tableHeaderCell}>Statut</th>
+            <th className={styles.tableHeaderCell}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {shows.map((show) => (
+            <tr key={show.id} className={styles.tableRow}>
+              <td className={styles.tableCell}>
+                <div className={styles.showTitle}>{show.title}</div>
+              </td>
+              <td className={styles.tableCell}>
+                <div
+                  style={{
+                    maxWidth: "300px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {show.description || "-"}
+                </div>
+              </td>
+              <td className={styles.tableCell}>
+                {show.locationDesignation || "-"}
+              </td>
+              <td className={styles.tableCell}>
+                <span
+                  className={
+                    show.bookable
+                      ? styles.statusConfirmed
+                      : styles.statusPending
+                  }
+                >
+                  {show.bookable ? "✓ Confirmé" : "⏳ En attente"}
+                </span>
+              </td>
+              <td className={styles.tableCell}>
+                <div className={styles.actionsCell}>
+                  <button
+                    className={`${styles.actionButton} ${styles.editButton}`}
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    className={`${styles.actionButton} ${styles.confirmButton}`}
+                  >
+                    {show.bookable ? "Révoquer" : "Confirmer"}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
   if (loading) return <Loader />;
 
   return (
@@ -75,10 +140,13 @@ const AdminShowPage: React.FC = () => {
 
       <div className={styles.showsListContainer}>
         {shows.length > 0 ? (
-          <p className={styles.showsCount}>
-            {shows.length} spectacle{shows.length > 1 ? "s" : ""} trouvé
-            {shows.length > 1 ? "s" : ""}
-          </p>
+          <>
+            <p className={styles.showsCount}>
+              {shows.length} spectacle{shows.length > 1 ? "s" : ""} trouvé
+              {shows.length > 1 ? "s" : ""}
+            </p>
+            {renderShowsTable()}
+          </>
         ) : (
           <p className={styles.noShows}>Aucun spectacle trouvé</p>
         )}
