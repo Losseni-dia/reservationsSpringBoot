@@ -64,6 +64,47 @@ const AdminShowPage: React.FC = () => {
     navigate(`/admin/shows/edit/${id}`);
   };
 
+  const handleToggleConfirmShow = async (show: Show) => {
+    try {
+      setLoading(true);
+      const updatedShow = { ...show, bookable: !show.bookable };
+      await showApi.update(show.id, updatedShow);
+
+      setToastMessage(
+        updatedShow.bookable
+          ? `✓ Spectacle "${show.title}" confirmé et visible au public`
+          : `⏳ Spectacle "${show.title}" retiré de la visibilité publique`,
+      );
+      setToastType("success");
+
+      // Rafraîchir la liste
+      await fetchShows();
+    } catch (err: any) {
+      console.error("Erreur lors de la confirmation du spectacle:", err);
+      setToastMessage("Erreur lors de la mise à jour du statut du spectacle");
+      setToastType("error");
+      setLoading(false);
+    }
+  };
+
+  const handleOpenConfirmModal = (show: Show) => {
+    setShowToConfirm(show);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmModalConfirm = async () => {
+    if (showToConfirm) {
+      setIsConfirmModalOpen(false);
+      await handleToggleConfirmShow(showToConfirm);
+      setShowToConfirm(null);
+    }
+  };
+
+  const handleConfirmModalCancel = () => {
+    setIsConfirmModalOpen(false);
+    setShowToConfirm(null);
+  };
+
   const renderShowsTable = () => {
     return (
       <table className={styles.showsTable}>
@@ -118,6 +159,8 @@ const AdminShowPage: React.FC = () => {
                   </button>
                   <button
                     className={`${styles.actionButton} ${styles.confirmButton}`}
+                    onClick={() => handleOpenConfirmModal(show)}
+                    disabled={loading}
                   >
                     {show.bookable ? "Révoquer" : "Confirmer"}
                   </button>
@@ -176,6 +219,20 @@ const AdminShowPage: React.FC = () => {
           onClose={() => setToastMessage(null)}
         />
       )}
+
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        title={showToConfirm?.bookable ? "Révoquer le spectacle ?" : "Confirmer le spectacle ?"}
+        message={
+          showToConfirm?.bookable
+            ? `Êtes-vous sûr de vouloir retirer le spectacle "${showToConfirm?.title}" de la visibilité publique ? Les clients ne pourront plus voir ce spectacle.`
+            : `Êtes-vous sûr de vouloir confirmer le spectacle "${showToConfirm?.title}" ? Il sera visible par tous les clients et réservable.`
+        }
+        confirmButtonLabel={showToConfirm?.bookable ? "Révoquer" : "Confirmer"}
+        confirmButtonClass={showToConfirm?.bookable ? "danger" : "success"}
+        onConfirm={handleConfirmModalConfirm}
+        onCancel={handleConfirmModalCancel}
+      />
     </div>
   );
 };
