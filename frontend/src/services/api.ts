@@ -165,12 +165,18 @@ export const showApi = {
     },
  
     // Création (Une seule version propre)
-    create: async (showData: Partial<Show>): Promise<Show> => {
-        const res = await secureFetch(`${API_BASE}/shows`, {
+    create: async (formData: FormData): Promise<Show> => {
+    // 1. On utilise secureFetch (ou fetch)
+    const res = await secureFetch(`${API_BASE}/shows`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(showData),
+            /* ATTENTION : Ne surtout pas mettre de 'Content-Type': 'application/json'.
+            En passant un objet FormData dans le body, le navigateur va 
+            automatiquement configurer le Header 'multipart/form-data' 
+            AVEC la "boundary" (délimiteur) nécessaire pour le serveur.
+            */
+            body: formData,
         });
+
         return res.json();
     },
  
