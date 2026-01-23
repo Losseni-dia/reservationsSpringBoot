@@ -132,6 +132,14 @@ export const artistApi = {
         return res.json();
     }
 };
+
+
+export const artistTypeApi = {
+    getAll: async (): Promise<any[]> => {
+        const res = await secureFetch(`${API_BASE}/artist-types`);
+        return res.json();
+    }
+};
  
 export const showApi = {
    // Récupère tous les spectacles

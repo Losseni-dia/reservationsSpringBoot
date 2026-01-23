@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { showApi } from "../../../services/api"; // Assure-toi que ces méthodes existent dans ton api.ts
+import { showApi, locationApi, artistTypeApi } from "../../../services/api";
 import styles from "./AddShowForm.module.css";
 
 interface ShowCreateRequest {
@@ -40,18 +40,18 @@ const AddShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isS
     // Chargement des données initiales (Lieux et Artistes)
     useEffect(() => {
         const loadOptions = async () => {
-            try {
-                const [locs, arts] = await Promise.all([
-                    showApi.getLocations(), 
-                    showApi.getArtistTypes()
-                ]);
-                setLocations(locs);
-                setAvailableArtists(arts);
-            } catch (err) {
-                console.error("Erreur de chargement des options", err);
-            }
-        };
-        loadOptions();
+        try {
+            // On utilise tes exports spécifiques
+            const [locs, arts] = await Promise.all([
+                locationApi.getAll(), 
+                artistTypeApi.getAll()
+            ]);
+            setLocations(locs);
+            setAvailableArtists(arts);
+        } catch (err) {
+            console.error("Erreur de chargement", err);
+        }
+    };
 
         if (initialData) {
             setShow({
