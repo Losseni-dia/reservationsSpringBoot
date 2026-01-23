@@ -8,10 +8,10 @@ const AddShow = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    const handleCreate = async (data: any) => {
-        setLoading(true);
-        try {
-            await showApi.create(data);
+    const handleCreate = async (formData: FormData) => {
+    setLoading(true);
+    try {
+            await showApi.create(formData);
             navigate('/shows');
         } catch (err) {
             alert("Erreur lors de la création");

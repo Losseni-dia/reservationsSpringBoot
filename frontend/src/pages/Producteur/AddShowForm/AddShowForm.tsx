@@ -1,86 +1,139 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { showApi } from "../../../services/api"; // Assure-toi que ces méthodes existent dans ton api.ts
 import styles from "./AddShowForm.module.css";
 
-interface ShowDTO {
+interface ShowCreateRequest {
     id?: number;
     title: string;
     description: string;
-    posterUrl?: string;
-    bookable?: boolean;
+    locationId: number | "";
+    artistTypeIds: number[];
+    bookable: boolean;
+    posterUrl?: string; // Correctif pour l'erreur TS(2339)
 }
 
 interface Props {
     mode?: "add" | "edit";
-    initialData?: ShowDTO | null;
-    onSubmit: (formData: FormData) => void; // On change ShowDTO par FormData
+    initialData?: any; 
+    onSubmit: (formData: FormData) => void;
     isSubmitting: boolean;
 }
 
 const AddShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isSubmitting }) => {
-    const [show, setShow] = useState<ShowDTO>({ title: "", description: "", bookable: true });
-    
-    // --- États pour l'image ---
+    // 1. État du formulaire
+    const [show, setShow] = useState<ShowCreateRequest>({
+        title: "",
+        description: "",
+        locationId: "",
+        artistTypeIds: [],
+        bookable: true
+    });
+
+    // 2. États pour les options (Chargés depuis la DB)
+    const [locations, setLocations] = useState<any[]>([]);
+    const [availableArtists, setAvailableArtists] = useState<any[]>([]);
+
+    // 3. États pour l'image
     const [posterFile, setPosterFile] = useState<File | null>(null);
     const [posterPreview, setPosterPreview] = useState<string | null>(null);
 
+    // Chargement des données initiales (Lieux et Artistes)
     useEffect(() => {
+        const loadOptions = async () => {
+            try {
+                const [locs, arts] = await Promise.all([
+                    showApi.getLocations(), 
+                    showApi.getArtistTypes()
+                ]);
+                setLocations(locs);
+                setAvailableArtists(arts);
+            } catch (err) {
+                console.error("Erreur de chargement des options", err);
+            }
+        };
+        loadOptions();
+
         if (initialData) {
-            setShow(initialData);
+            setShow({
+                ...initialData,
+                locationId: initialData.location?.id || "",
+                artistTypeIds: initialData.artistTypes?.map((a: any) => a.id) || []
+            });
             if (initialData.posterUrl) setPosterPreview(initialData.posterUrl);
         }
     }, [initialData]);
 
-    const handleChange = (field: keyof ShowDTO) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const value = e.target instanceof HTMLInputElement && e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        setShow((prev) => ({ ...prev, [field]: value }));
-    };
-
-    // Gestion du fichier image
+    // Gestion du changement de fichier
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setPosterFile(file);
-            setPosterPreview(URL.createObjectURL(file)); // Création de l'aperçu
+            setPosterPreview(URL.createObjectURL(file));
         }
     };
 
-    // Nettoyage de l'URL d'aperçu pour éviter les fuites mémoire
-    useEffect(() => {
-        return () => { if (posterPreview && posterPreview.startsWith('blob:')) URL.revokeObjectURL(posterPreview); };
-    }, [posterPreview]);
+    // Gestion des cases à cocher (Artistes)
+    const handleArtistChange = (id: number) => {
+        const newIds = show.artistTypeIds.includes(id)
+            ? show.artistTypeIds.filter(item => item !== id)
+            : [...show.artistTypeIds, id];
+        setShow({ ...show, artistTypeIds: newIds });
+    };
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        
-        // --- Création du FormData pour le Backend ---
         const formData = new FormData();
         
-        // Partie JSON (correspond à @RequestPart("show") en Java)
-        const showBlob = new Blob([JSON.stringify(show)], { type: 'application/json' });
-        formData.append("show", showBlob);
+        // On emballe le JSON dans un Blob pour Spring Boot @RequestPart
+        formData.append("show", new Blob([JSON.stringify(show)], { type: 'application/json' }));
         
-        // Partie Fichier (correspond à @RequestPart("poster") en Java)
-        if (posterFile) {
-            formData.append("poster", posterFile);
-        }
-
+        if (posterFile) formData.append("poster", posterFile);
+        
         onSubmit(formData);
     };
 
     return (
         <form className={styles["add-show-form"]} onSubmit={handleSubmit}>
+            {/* Titre & Description */}
             <div className={styles["form-group"]}>
                 <label>Titre</label>
-                <input type="text" value={show.title} onChange={handleChange("title")} required />
+                <input type="text" value={show.title} onChange={(e) => setShow({...show, title: e.target.value})} required />
             </div>
 
             <div className={styles["form-group"]}>
                 <label>Description</label>
-                <textarea value={show.description} onChange={handleChange("description")} required />
+                <textarea value={show.description} onChange={(e) => setShow({...show, description: e.target.value})} required />
             </div>
 
+            {/* Sélection du Lieu */}
             <div className={styles["form-group"]}>
-                <label>Affiche (Image)</label>
+                <label>Lieu</label>
+                <select value={show.locationId} onChange={(e) => setShow({...show, locationId: Number(e.target.value)})} required>
+                    <option value="">-- Choisir un lieu --</option>
+                    {locations.map(l => <option key={l.id} value={l.id}>{l.designation}</option>)}
+                </select>
+            </div>
+
+            {/* Sélection des Artistes (Checkboxes) */}
+            <div className={styles["form-group"]}>
+                <label>Artistes & Types</label>
+                <div className={styles.artistGrid}>
+                    {availableArtists.map(a => (
+                        <label key={a.id} className={styles.checkboxItem}>
+                            <input 
+                                type="checkbox" 
+                                checked={show.artistTypeIds.includes(a.id)} 
+                                onChange={() => handleArtistChange(a.id)} 
+                            />
+                            {a.artist.firstname} {a.artist.lastname} <small>({a.type.type})</small>
+                        </label>
+                    ))}
+                </div>
+            </div>
+
+            {/* Image */}
+            <div className={styles["form-group"]}>
+                <label>Affiche du spectacle</label>
                 <input type="file" accept="image/*" onChange={handleFileChange} />
             </div>
 
@@ -91,7 +144,7 @@ const AddShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isS
             )}
 
             <button type="submit" className={styles["submit-btn"]} disabled={isSubmitting}>
-                {isSubmitting ? "Traitement..." : mode === "edit" ? "Mettre à jour" : "Créer le spectacle"}
+                {isSubmitting ? "Enregistrement..." : mode === "edit" ? "Mettre à jour" : "Créer le spectacle"}
             </button>
         </form>
     );

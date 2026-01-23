@@ -15,10 +15,10 @@ const EditShow = () => {
         showApi.getById(Number(id)).then(setShowData).finally(() => setLoading(false));
     }, [id]);
 
-    const handleUpdate = async (data: any) => {
+    const handleUpdate = async (formData: FormData) => {
         setSubmitting(true);
         try {
-            await showApi.update(Number(id), data);
+            await showApi.update(Number(id), formData);
             navigate('/shows');
         } catch (err) { alert("Erreur MAJ"); } finally { setSubmitting(false); }
     };

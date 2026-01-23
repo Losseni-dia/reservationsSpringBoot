@@ -181,16 +181,14 @@ export const showApi = {
     },
  
     // Mise à jour
-    update: async (id: number, showData: Partial<Show>): Promise<Show> => {
-        const res =  await secureFetch(`${API_BASE}/shows/${id}`, {
+    update: async (id: number, formData: FormData): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(showData),
+            // On enlève le header Content-Type, le navigateur gère le multipart
+            body: formData, 
         });
- 
         return res.json();
     },
- 
     // Suppression
     deleteById: async (id: number): Promise<void> => {
         await secureFetch(`${API_BASE}/shows/${id}`, {
