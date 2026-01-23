@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../../services/api';
 import { useAuth } from '../../components/context/AuthContext';
+import { UserRegistrationDto } from '../../types/models';
 import styles from './RegisterPage.module.css';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserRegistrationDto>({
     login: '',
     firstname: '',
     lastname: '',
@@ -19,7 +20,7 @@ const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -99,6 +100,7 @@ const RegisterPage: React.FC = () => {
                 value={formData.firstname}
                 onChange={handleChange}
                 className={styles.input}
+                placeholder="Votre prénom"
                 required
               />
             </div>
@@ -110,6 +112,7 @@ const RegisterPage: React.FC = () => {
                 value={formData.lastname}
                 onChange={handleChange}
                 className={styles.input}
+                placeholder="Votre nom"
                 required
               />
             </div>
@@ -123,6 +126,7 @@ const RegisterPage: React.FC = () => {
               value={formData.login}
               onChange={handleChange}
               className={styles.input}
+              placeholder="Choisissez un identifiant"
               required
             />
           </div>
@@ -135,21 +139,36 @@ const RegisterPage: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               className={styles.input}
+              placeholder="exemple@email.com"
               required
             />
+          </div>
+
+          <div className={styles.fieldGroup}>
+            <label className={styles.label}>Langue</label>
+            <select
+              name="langue"
+              value={formData.langue}
+              onChange={handleChange}
+              className={styles.input}
+            >
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+              <option value="nl">Nederlands</option>
+            </select>
           </div>
 
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
               <label className={styles.label}>Mot de passe</label>
-              <input name="password" type="password" value={formData.password} onChange={handleChange} className={styles.input} required />
+              <input name="password" type="password" value={formData.password} onChange={handleChange} className={styles.input} placeholder="••••••••" required />
               <small style={{ color: '#888', fontSize: '0.75rem', marginTop: '4px' }}>
                 8 car. min, 1 maj, 1 min, 1 chiffre, 1 spécial (@$!%*?&)
               </small>
             </div>
             <div className={styles.fieldGroup}>
               <label className={styles.label}>Confirmer</label>
-              <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} className={styles.input} required />
+              <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} className={styles.input} placeholder="••••••••" required />
             </div>
           </div>
 
