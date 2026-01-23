@@ -12,9 +12,11 @@ import be.event.smartbooking.model.Show;
 import be.event.smartbooking.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -112,14 +114,26 @@ public class ShowApiController {
         /**
          * POST /api/shows : Crée un nouveau spectacle (Issue #3)
          */
-        @PostMapping
-        public ResponseEntity<ShowDTO> create(@RequestBody Show show) {
-                try {
-                        showService.add(show);
-                        return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
-                } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+       @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+        public ResponseEntity<ShowDTO> create(
+                @RequestPart("show") Show show, 
+                @RequestPart(value = "poster", required = false) MultipartFile file) {
+        try {
+                // 1. Si un fichier est présent, on le traite
+                if (file != null && !file.isEmpty()) {
+                // Ici, tu appelleras un service pour sauvegarder le fichier sur le disque 
+                // ou sur un service comme Cloudinary/S3.
+                // Pour l'exemple, on imagine que la méthode renvoie l'URL finale :
+                String imageUrl = fileService.save(file); 
+                show.setPosterUrl(imageUrl);
                 }
+
+                showService.add(show);
+                return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
+        } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         }
 
         /**
