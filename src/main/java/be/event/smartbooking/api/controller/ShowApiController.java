@@ -4,11 +4,15 @@ import be.event.smartbooking.dto.ArtistDTO;
 import be.event.smartbooking.dto.PriceDTO;
 import be.event.smartbooking.dto.RepresentationDTO;
 import be.event.smartbooking.dto.ReviewDTO;
+import be.event.smartbooking.dto.ShowCreateRequest;
 import be.event.smartbooking.dto.ShowDTO;
+import be.event.smartbooking.model.ArtistType;
 import be.event.smartbooking.model.Price;
 import be.event.smartbooking.model.Representation;
 import be.event.smartbooking.model.Review;
 import be.event.smartbooking.model.Show;
+import be.event.smartbooking.repository.LocationRepos;
+import be.event.smartbooking.service.FileService;
 import be.event.smartbooking.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +33,17 @@ public class ShowApiController {
 
         @Autowired
         private ShowService showService;
+
+        @Autowired
+        private LocationRepos locationRepos;
+
+        @Autowired
+        private ArtistTypeRepos artistTypeRepos;
+
+        @Autowired
+        private FileService fileService;
+
+
 
         /**
          * GET /api/shows : Récupère tous les spectacles
@@ -114,26 +129,37 @@ public class ShowApiController {
         /**
          * POST /api/shows : Crée un nouveau spectacle (Issue #3)
          */
-       @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+      @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
         public ResponseEntity<ShowDTO> create(
-                @RequestPart("show") Show show, 
+                @RequestPart("show") ShowCreateRequest request, 
                 @RequestPart(value = "poster", required = false) MultipartFile file) {
-        try {
-                // 1. Si un fichier est présent, on le traite
-                if (file != null && !file.isEmpty()) {
-                // Ici, tu appelleras un service pour sauvegarder le fichier sur le disque 
-                // ou sur un service comme Cloudinary/S3.
-                // Pour l'exemple, on imagine que la méthode renvoie l'URL finale :
-                String imageUrl = fileService.save(file); 
-                show.setPosterUrl(imageUrl);
-                }
+        
+        // 1. Création de base
+        Show show = Show.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .bookable(request.isBookable())
+                .build();
 
-                showService.add(show);
-                return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
-        } catch (Exception e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        // 2. Association du lieu (Location)
+        if (request.getLocationId() != null) {
+                locationRepos.findById(request.getLocationId()).ifPresent(show::setLocation);
         }
+
+        // 3. Association des Artistes (ManyToMany)
+        if (request.getArtistTypeIds() != null && !request.getArtistTypeIds().isEmpty()) {
+                List<ArtistType> artists = artistTypeRepos.findAllById(request.getArtistTypeIds());
+                show.setArtistTypes(artists);
+        }
+
+        // 4. Image
+        if (file != null && !file.isEmpty()) {
+                String url = fileService.save(file);
+                show.setPosterUrl(url);
+        }
+
+        showService.add(show);
+        return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
         }
 
         /**
