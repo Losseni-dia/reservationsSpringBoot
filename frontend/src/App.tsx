@@ -20,6 +20,7 @@ import ProtectedRoute from './ProtectedRoute';
 import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
+import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             </Routes>
           </main>
 
