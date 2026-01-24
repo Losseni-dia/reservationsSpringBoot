@@ -21,6 +21,7 @@ import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
 import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
+import ResetPasswordPage from './pages/Login/ResetPasswordPage';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
             </Routes>
           </main>
 
