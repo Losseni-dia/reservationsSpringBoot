@@ -38,21 +38,28 @@ const AddShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isS
     const [posterPreview, setPosterPreview] = useState<string | null>(null);
 
     // Chargement des données initiales (Lieux et Artistes)
+    // 1. Premier useEffect : Charger les listes de la base de données (Lieux & Artistes)
     useEffect(() => {
         const loadOptions = async () => {
-        try {
-            // On utilise tes exports spécifiques
-            const [locs, arts] = await Promise.all([
-                locationApi.getAll(), 
-                artistTypeApi.getAll()
-            ]);
-            setLocations(locs);
-            setAvailableArtists(arts);
-        } catch (err) {
-            console.error("Erreur de chargement", err);
-        }
-    };
+            try {
+                console.log("Appel API pour les options...");
+                const [locs, arts] = await Promise.all([
+                    locationApi.getAll(), 
+                    artistTypeApi.getAll()
+                ]);
+                console.log("Options reçues :", { locs, arts });
+                setLocations(locs);
+                setAvailableArtists(arts);
+            } catch (err) {
+                console.error("Erreur de chargement des options :", err);
+            }
+        };
 
+        loadOptions(); // <--- IL MANQUAIT CETTE LIGNE !
+    }, []); // S'exécute une seule fois au montage
+
+    // 2. Deuxième useEffect : Pré-remplir si on est en mode "Edit"
+    useEffect(() => {
         if (initialData) {
             setShow({
                 ...initialData,
