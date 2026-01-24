@@ -11,9 +11,26 @@ interface ShowCardProps {
 const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
     const navigate = useNavigate();
 
-    const getImageUrl = (posterPath: string | null) => {
-        if (!posterPath) return 'https://placehold.co/400x400/1a1a1a/ffffff?text=Image+Manquante';
-        return posterPath.startsWith('http') ? posterPath : `${IMAGE_STORAGE_BASE}${posterPath}`;
+      const getImageUrl = (posterPath: string | null) => {
+        // 1. Si pas d'image, placeholder
+        if (!posterPath) {
+            return 'https://placehold.co/400x600/1a1a1a/ffffff?text=Pas+d\'affiche';
+        }
+
+        // 2. Si c'est déjà une URL complète (ex: Firebase ou externe)
+        if (posterPath.startsWith('http')) {
+            return posterPath;
+        }
+
+        /**
+         * 3. Logique de nettoyage :
+         * Si posterPath = "/uploads/img.jpg" et IMAGE_STORAGE_BASE = ""
+         * On veut éviter de rajouter un slash si le path commence déjà par un /
+         */
+        const cleanPath = posterPath.startsWith('/') ? posterPath : `/${posterPath}`;
+        
+        // On concatène. Si IMAGE_STORAGE_BASE est vide, ça donnera juste "/uploads/..."
+        return `${IMAGE_STORAGE_BASE}${cleanPath}`;
     };
 
     return (

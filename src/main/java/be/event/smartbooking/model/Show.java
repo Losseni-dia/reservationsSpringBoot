@@ -57,12 +57,15 @@ public class Show {
 	// RELATIONS
 	// =================================================================
 
+	@Builder.Default
 	@OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Representation> representations = new ArrayList<>();
 
+	@Builder.Default
 	@OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Review> reviews = new ArrayList<>();
 
+	@Builder.Default // Ajoute bien ceci pour le problème du Builder !
 	@ManyToMany
 	@JoinTable(name = "artist_type_show", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "artist_type_id"))
 	private List<ArtistType> artistTypes = new ArrayList<>();
@@ -111,11 +114,14 @@ public class Show {
 
 	// Note de moyenne
 	public Double getAverageRating() {
-		return reviews.isEmpty() ? null
-				: reviews.stream()
-						.mapToInt(Review::getStars)
-						.average()
-						.orElse(0.0);
+		// Sécurité supplémentaire : null check + empty check
+		if (reviews == null || reviews.isEmpty()) {
+			return null;
+		}
+		return reviews.stream()
+				.mapToInt(Review::getStars) // Vérifie que c'est bien getStars et pas getRating
+				.average()
+				.orElse(0.0);
 	}
 
 	public Long getReviewCount() {
