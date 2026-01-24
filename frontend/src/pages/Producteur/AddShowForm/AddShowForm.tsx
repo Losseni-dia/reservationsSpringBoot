@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { showApi, locationApi, artistTypeApi } from "../../../services/api";
+import {  locationApi, artistTypeApi } from "../../../services/api";
 import styles from "./AddShowForm.module.css";
 
 interface ShowCreateRequest {
@@ -123,20 +123,19 @@ const AddShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isS
 
             {/* Sélection des Artistes (Checkboxes) */}
             <div className={styles["form-group"]}>
-                <label>Artistes & Types</label>
-                <div className={styles.artistGrid}>
-                    {availableArtists.map(a => (
-                        <label key={a.id} className={styles.checkboxItem}>
-                            <input 
-                                type="checkbox" 
-                                checked={show.artistTypeIds.includes(a.id)} 
-                                onChange={() => handleArtistChange(a.id)} 
-                            />
-                            {a.artist.firstname} {a.artist.lastname} <small>({a.type.type})</small>
-                        </label>
-                    ))}
-                </div>
-            </div>
+                {availableArtists.map(a => (
+                <label key={a.id} className={styles.checkboxItem}>
+                    <input 
+                        type="checkbox" 
+                        checked={show.artistTypeIds.includes(a.id)} 
+                        onChange={() => handleArtistChange(a.id)} 
+                    />
+                    {/* Structure plate du DTO */}
+                    {a.firstname} {a.lastname} <small>({a.type})</small>
+                </label>
+           ))}
+          </div>
+
 
             {/* Image */}
             <div className={styles["form-group"]}>

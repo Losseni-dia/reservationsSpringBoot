@@ -3,6 +3,8 @@ package be.event.smartbooking.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,12 +34,9 @@ public class ArtistType {
 	@JoinColumn(name="type_id", nullable=false)
 	private Type type;
 	
-	@ManyToMany(targetEntity=Show.class)
-	@JoinTable(
-		name = "artist_type_show", 
-		joinColumns = @JoinColumn(name = "artist_type_id"), 
-        inverseJoinColumns = @JoinColumn(name = "show_id"))
-    private List<Show> shows = new ArrayList<>();
+	@ManyToMany(mappedBy = "artistTypes") // Référence le nom du champ dans l'entité Show
+	@JsonIgnore // Crucial pour stopper la boucle infinie Show -> ArtistType -> Show
+	private List<Show> shows = new ArrayList<>();
 
     public List<Show> getShows() {
 		return shows;

@@ -14,10 +14,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // On transforme le chemin relatif en chemin absolu pour Spring
         String absolutePath = Paths.get(uploadDir).toFile().getAbsolutePath();
 
+        // On s'assure que le chemin se termine par un slash et possède les bons
+        // préfixes
+        if (!absolutePath.endsWith("/")) {
+            absolutePath += "/";
+        }
+
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + absolutePath + "/");
+                .addResourceLocations("file:///" + absolutePath); // Utilise 3 slashes ///
     }
 }

@@ -20,6 +20,7 @@ import ProtectedRoute from './ProtectedRoute';
 import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
+import LocationList from './pages/AdminPages/Locations/AdminLocationsPage';
 
 function App() {
   return (

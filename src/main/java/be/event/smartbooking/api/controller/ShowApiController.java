@@ -166,6 +166,7 @@ public class ShowApiController {
                         showService.add(show);
                         return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
                 } catch (Exception e) {
+                        e.printStackTrace();
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
         }

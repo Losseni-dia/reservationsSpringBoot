@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { locationApi } from '../../services/api';
-import styles from './LocationList.module.css';
+import { locationApi } from '../../../services/api';
+import styles from './AdminLocationsPage.module.css';
 
 interface Location {
     id: number;

@@ -12,7 +12,7 @@ const AddShow = () => {
     setLoading(true);
     try {
             await showApi.create(formData);
-            navigate('/shows');
+            navigate('/');
         } catch (err) {
             alert("Erreur lors de la création");
         } finally { setLoading(false); }

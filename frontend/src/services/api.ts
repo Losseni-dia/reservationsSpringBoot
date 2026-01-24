@@ -11,7 +11,7 @@ const API_BASE = '/api';
  * URL de base pour les médias (images uploads)
  * Pointe vers ton dossier configurer dans Spring Boot
  */
-export const IMAGE_STORAGE_BASE = '/uploads/';
+export const IMAGE_STORAGE_BASE = '';
  
  
 function getCsrfToken(): string | undefined {
