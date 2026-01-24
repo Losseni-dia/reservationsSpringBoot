@@ -3,6 +3,7 @@ package be.event.smartbooking.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -43,6 +44,8 @@ public class SpringSecurityConfig {
                                                 // 4. Authentification & Profil
                                                 .requestMatchers("/api/users/login", "/api/users/register").permitAll()
                                                 .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
+                                                .requestMatchers("/api/users/reset-password").permitAll()
+                                                .requestMatchers("/api/users/forgot-password").permitAll()
                                                 .requestMatchers("/error").permitAll()
 
                                                 // 5. Administration
