@@ -323,7 +323,7 @@ const ProducerDashboard: React.FC = () => {
                       <div className={styles.actionsContainer}>
                         <button
                           onClick={() =>
-                            navigate(`/admin/shows/edit/${show.id}`)
+                            navigate(`/producer/shows/edit/${show.id}`)
                           }
                           className={`${styles.actionButton} ${styles.editButton}`}
                         >
