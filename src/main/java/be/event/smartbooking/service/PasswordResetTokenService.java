@@ -36,6 +36,6 @@ public class PasswordResetTokenService {
 
     @Transactional
     public void deleteToken(String token) {
-        tokenRepo.deleteByToken(token);
+        tokenRepo.findByToken(token).ifPresent(tokenRepo::delete);
     }
 }
