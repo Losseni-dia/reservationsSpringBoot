@@ -20,6 +20,8 @@ public class ShowDTO {
     private String description;
     private String posterUrl;
     private boolean bookable;
+    private Long locationId; // Crucial pour le <select>
+    private List<Long> artistTypeIds;
 
     // Nouveaux champs pour les détails complets
     private Double averageRating; // Calculé via show.getAverageRating()

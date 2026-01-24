@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AddShowForm from '../AddShowForm/AddShowForm';
+import AddShowForm from '../ShowForm/ShowForm';
 import { showApi } from '../../../services/api';
 import styles from '../UpdateShow/EditShow.module.css';
 

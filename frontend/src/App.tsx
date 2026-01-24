@@ -17,10 +17,11 @@ import ProfilePage from './pages/Profile/ProfilePage';
 import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
 import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 import ProtectedRoute from './ProtectedRoute';
-import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
 import LocationList from './pages/AdminPages/Locations/AdminLocationsPage';
+import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
+import ResetPasswordPage from './pages/Login/ResetPasswordPage';
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import AddShowForm from '../AddShowForm/AddShowForm';
+import AddShowForm from '../ShowForm/ShowForm';
 import { showApi } from '../../../services/api';
 import styles from './EditShow.module.css';
 
@@ -19,7 +19,7 @@ const EditShow = () => {
         setSubmitting(true);
         try {
             await showApi.update(Number(id), formData);
-            navigate('/shows');
+            navigate('/');
         } catch (err) { alert("Erreur MAJ"); } finally { setSubmitting(false); }
     };
 

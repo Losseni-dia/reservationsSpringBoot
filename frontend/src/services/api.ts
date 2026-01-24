@@ -205,11 +205,10 @@ export const showApi = {
     },
  
     // Mise à jour
-    update: async (id: number, formData: FormData): Promise<Show> => {
+   update: async (id: number, formData: FormData): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/${id}`, {
             method: 'PUT',
-            // On enlève le header Content-Type, le navigateur gère le multipart
-            body: formData, 
+            body: formData, // Pas de JSON.stringify ici, FormData s'occupe de tout
         });
         return res.json();
     },
