@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { showApi, IMAGE_STORAGE_BASE } from "../../../services/api";
+import { showApi } from "../../../services/api";
 import { Show } from "../../../types/models";
 import Loader from "../../../components/ui/loader/Loader";
 import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
@@ -23,11 +23,7 @@ const AdminShowPage: React.FC = () => {
     "info",
   );
 
-  useEffect(() => {
-    fetchShows();
-  }, []);
-
-  const fetchShows = async () => {
+  const fetchShows = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -50,60 +46,70 @@ const AdminShowPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleRefresh = () => {
+  useEffect(() => {
     fetchShows();
-  };
+  }, [fetchShows]);
 
-  const handleCreateShow = () => {
-    navigate("/admin/shows/add");
-  };
+  const handleRefresh = useCallback(() => {
+    fetchShows();
+  }, [fetchShows]);
 
-  const handleEditShow = (id: number) => {
-    navigate(`/admin/shows/edit/${id}`);
-  };
 
-  const handleToggleConfirmShow = async (show: Show) => {
-    try {
-      setLoading(true);
-      const updatedShow = { ...show, bookable: !show.bookable };
-      await showApi.update(show.id, updatedShow);
 
-      setToastMessage(
-        updatedShow.bookable
-          ? `✓ Spectacle "${show.title}" confirmé et visible au public`
-          : `⏳ Spectacle "${show.title}" retiré de la visibilité publique`,
-      );
-      setToastType("success");
+  const handleEditShow = useCallback(
+    (id: number) => {
+      navigate(`/admin/shows/edit/${id}`);
+    },
+    [navigate],
+  );
 
-      // Rafraîchir la liste
-      await fetchShows();
-    } catch (err: any) {
-      console.error("Erreur lors de la confirmation du spectacle:", err);
-      setToastMessage("Erreur lors de la mise à jour du statut du spectacle");
-      setToastType("error");
-      setLoading(false);
-    }
-  };
+  const handleToggleConfirmShow = useCallback(
+    async (show: Show) => {
+      try {
+        setLoading(true);
+        const updatedShow = { ...show, bookable: !show.bookable };
+        await showApi.update(show.id, updatedShow);
 
-  const handleOpenConfirmModal = (show: Show) => {
+        setToastMessage(
+          updatedShow.bookable
+            ? `✓ Spectacle "${show.title}" confirmé et visible au public`
+            : `⏳ Spectacle "${show.title}" retiré de la visibilité publique`,
+        );
+        setToastType("success");
+
+        // Rafraîchir la liste
+        await fetchShows();
+      } catch (err: any) {
+        console.error("Erreur lors de la confirmation du spectacle:", err);
+        setToastMessage(
+          "Erreur lors de la mise à jour du statut du spectacle",
+        );
+        setToastType("error");
+        setLoading(false);
+      }
+    },
+    [fetchShows],
+  );
+
+  const handleOpenConfirmModal = useCallback((show: Show) => {
     setShowToConfirm(show);
     setIsConfirmModalOpen(true);
-  };
+  }, []);
 
-  const handleConfirmModalConfirm = async () => {
+  const handleConfirmModalConfirm = useCallback(async () => {
     if (showToConfirm) {
       setIsConfirmModalOpen(false);
       await handleToggleConfirmShow(showToConfirm);
       setShowToConfirm(null);
     }
-  };
+  }, [showToConfirm, handleToggleConfirmShow]);
 
-  const handleConfirmModalCancel = () => {
+  const handleConfirmModalCancel = useCallback(() => {
     setIsConfirmModalOpen(false);
     setShowToConfirm(null);
-  };
+  }, []);
 
   const renderShowsTable = () => {
     return (
@@ -140,11 +146,11 @@ const AdminShowPage: React.FC = () => {
               </td>
               <td className={styles.tableCell}>
                 <span
-                  className={
+                  className={`${styles.statusBadge} ${
                     show.bookable
                       ? styles.statusConfirmed
                       : styles.statusPending
-                  }
+                  }`}
                 >
                   {show.bookable ? "✓ Confirmé" : "⏳ En attente"}
                 </span>
@@ -180,12 +186,7 @@ const AdminShowPage: React.FC = () => {
       <div className={styles.adminHeader}>
         <h1 className={styles.adminTitle}>Gestion des Spectacles</h1>
         <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-          <button
-            className={styles.createShowButton}
-            onClick={handleCreateShow}
-          >
-            + Créer un Spectacle
-          </button>
+
           <button
             className={styles.refreshButton}
             onClick={handleRefresh}
@@ -228,7 +229,6 @@ const AdminShowPage: React.FC = () => {
             ? `Êtes-vous sûr de vouloir retirer le spectacle "${showToConfirm?.title}" de la visibilité publique ? Les clients ne pourront plus voir ce spectacle.`
             : `Êtes-vous sûr de vouloir confirmer le spectacle "${showToConfirm?.title}" ? Il sera visible par tous les clients et réservable.`
         }
-        confirmButtonLabel={showToConfirm?.bookable ? "Révoquer" : "Confirmer"}
         confirmButtonClass={showToConfirm?.bookable ? "danger" : "success"}
         onConfirm={handleConfirmModalConfirm}
         onCancel={handleConfirmModalCancel}

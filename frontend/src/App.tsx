@@ -20,6 +20,10 @@ import ProtectedRoute from './ProtectedRoute';
 import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
+import LocationList from "./pages/Admin/Locations/AdminLocationsPage";
+import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
+import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 
 function App() {
   return (
@@ -42,6 +46,7 @@ function App() {
               </Route>
               <Route path="/locations" element={<LocationList />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
+              <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />

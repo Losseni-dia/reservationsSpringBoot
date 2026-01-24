@@ -141,16 +141,20 @@
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .statusConfirmed {
-  background-color: #1b5e20;
-  color: #4caf50;
+  background-color: #4CAF50; /* A brighter green */
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
 .statusPending {
-  background-color: #e65100;
-  color: #ffb74d;
+  background-color: #FFC107; /* Gold/yellow */
+  color: #121212;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
 }
 
 .actionsCell {
