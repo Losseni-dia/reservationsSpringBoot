@@ -12,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -24,24 +22,35 @@ public class SpringSecurityConfig {
         public SecurityFilterChain configure(HttpSecurity http) throws Exception {
                 return http
                                 .cors(Customizer.withDefaults())
-                                .csrf(csrf -> csrf
-                                                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                                                // AJOUT DU LOGOUT ICI POUR ÉVITER LE DOUBLE CLIC
-                                                .ignoringRequestMatchers("/api/users/login", "/api/users/register",
-                                                                "/api/users/logout", "/api/users/forgot-password",
-                                                                "/api/users/reset-password"))
+                                // 1. Désactivation du CSRF pour autoriser les requêtes POST/Multipart de React
+                                .csrf(csrf -> csrf.disable())
+
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/api/shows/**").permitAll()
-                                                .requestMatchers("/api/users/login").permitAll()
-                                                .requestMatchers("/api/users/register").permitAll()
-                                                .requestMatchers("/api/users/forgot-password").permitAll() 
-                                                .requestMatchers("/api/users/reset-password").permitAll()
-                                                .requestMatchers("/uploads/**", "/css/**", "/js/**", "/login")
-                                                .permitAll()
+                                                // 2. Les règles spécifiques (POST) DOIVENT être avant les règles
+                                                // générales
+                                                .requestMatchers(HttpMethod.POST, "/api/shows/**")
+                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
+                                                .requestMatchers(HttpMethod.PUT, "/api/shows/**")
+                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/shows/**")
+                                                .hasAnyRole("admin", "ADMIN")
+
+                                                // 3. Les accès publics (GET)
+                                                .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/artist-types/**").permitAll()
+
+                                                // 4. Authentification & Profil
+                                                .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                                                .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
                                                 .requestMatchers("/error").permitAll()
-                                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                                                // 5. Administration
+                                                .requestMatchers("/api/admin/**").hasAnyRole("admin", "ADMIN")
+
+                                                // Tout le reste nécessite d'être connecté
                                                 .anyRequest().authenticated())
+
                                 .formLogin(form -> form
                                                 .loginProcessingUrl("/api/users/login")
                                                 .usernameParameter("login")
@@ -50,17 +59,18 @@ public class SpringSecurityConfig {
                                                 .failureHandler((req, res, exc) -> res.sendError(
                                                                 HttpServletResponse.SC_UNAUTHORIZED,
                                                                 "Identifiants incorrects")))
+
                                 .exceptionHandling(ex -> ex
                                                 .authenticationEntryPoint((req, res, authEx) -> res
-                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                                                                "Non autorisé")))
+
                                 .logout(logout -> logout
                                                 .logoutUrl("/api/users/logout")
-                                                .logoutSuccessHandler((req, res, auth) -> {
-                                                        res.setStatus(HttpServletResponse.SC_OK);
-                                                })
-                                                .invalidateHttpSession(true) // Force la destruction de la session
-                                                .deleteCookies("JSESSIONID") // Supprime le cookie
-                                )
+                                                .logoutSuccessHandler((req, res, auth) -> res
+                                                                .setStatus(HttpServletResponse.SC_OK))
+                                                .invalidateHttpSession(true)
+                                                .deleteCookies("JSESSIONID"))
                                 .build();
         }
 

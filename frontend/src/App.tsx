@@ -20,8 +20,7 @@ import ProtectedRoute from './ProtectedRoute';
 import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
-import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
-import ResetPasswordPage from './pages/Login/ResetPasswordPage';
+import LocationList from './pages/AdminPages/Locations/AdminLocationsPage';
 
 function App() {
   return (
@@ -40,9 +39,10 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
+              <Route path="/locations" element={<LocationList />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
-              <Route path="/admin/shows/add" element={<AddShow />} />
-              <Route path="/admin/shows/edit/:id" element={<EditShow />} />
+              <Route path="/producer/shows/add" element={<AddShow />} />
+              <Route path="/producer/shows/edit/:id" element={<EditShow />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />

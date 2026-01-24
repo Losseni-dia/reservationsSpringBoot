@@ -130,3 +130,36 @@
     border: 1px solid #dc3545;
     text-align: center;
 }
+
+.artistGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    background: #111;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.checkboxItem input {
+    width: auto !important;
+}
+
+select {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+}

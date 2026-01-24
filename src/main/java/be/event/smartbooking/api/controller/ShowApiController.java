@@ -4,17 +4,24 @@ import be.event.smartbooking.dto.ArtistDTO;
 import be.event.smartbooking.dto.PriceDTO;
 import be.event.smartbooking.dto.RepresentationDTO;
 import be.event.smartbooking.dto.ReviewDTO;
+import be.event.smartbooking.dto.ShowCreateRequest;
 import be.event.smartbooking.dto.ShowDTO;
+import be.event.smartbooking.model.ArtistType;
 import be.event.smartbooking.model.Price;
 import be.event.smartbooking.model.Representation;
 import be.event.smartbooking.model.Review;
 import be.event.smartbooking.model.Show;
+import be.event.smartbooking.repository.ArtistTypeRepos;
+import be.event.smartbooking.repository.LocationRepos;
+import be.event.smartbooking.service.FileService;
 import be.event.smartbooking.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +34,17 @@ public class ShowApiController {
 
         @Autowired
         private ShowService showService;
+
+        @Autowired
+        private LocationRepos locationRepos;
+
+        @Autowired
+        private ArtistTypeRepos artistTypeRepos;
+
+        @Autowired
+        private FileService fileService;
+
+
 
         /**
          * GET /api/shows : Récupère tous les spectacles
@@ -112,12 +130,43 @@ public class ShowApiController {
         /**
          * POST /api/shows : Crée un nouveau spectacle (Issue #3)
          */
-        @PostMapping
-        public ResponseEntity<ShowDTO> create(@RequestBody Show show) {
+        @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+        public ResponseEntity<ShowDTO> create(
+                        @RequestPart("show") ShowCreateRequest request,
+                        @RequestPart(value = "poster", required = false) MultipartFile file) {
                 try {
+                        // 1. On construit l'entité Show de base
+                        Show show = Show.builder()
+                                        .title(request.getTitle())
+                                        .description(request.getDescription())
+                                        .bookable(request.isBookable())
+                                        .build();
+
+                        // 2. On lie le lieu (Location)
+                        if (request.getLocationId() != null) {
+                                locationRepos.findById(request.getLocationId())
+                                                .ifPresent(show::setLocation);
+                        }
+
+                        // 3. On lie les artistes (ManyToMany)
+                        if (request.getArtistTypeIds() != null) {
+                                // On récupère tous les objets ArtistType correspondants aux IDs
+                                List<ArtistType> artists = artistTypeRepos.findAllById(request.getArtistTypeIds());
+
+                                // On utilise ta méthode utilitaire pour chaque artiste
+                                artists.forEach(show::addArtistType);
+                        }
+
+                        // 4. On gère l'image
+                        if (file != null && !file.isEmpty()) {
+                                String imageUrl = fileService.save(file);
+                                show.setPosterUrl(imageUrl);
+                        }
+
                         showService.add(show);
                         return new ResponseEntity<>(safeConvertToDto(show), HttpStatus.CREATED);
                 } catch (Exception e) {
+                        e.printStackTrace();
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
         }

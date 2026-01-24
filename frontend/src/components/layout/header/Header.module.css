@@ -132,3 +132,98 @@
     color: white;
     box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
 }
+
+.divider {
+    width: 1px;
+    height: 20px;
+    background-color: #333;
+    margin: 0 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Optionnel : donner un look un peu plus "VIP/Gold" aux liens producteur */
+.link:hover .yellow {
+    color: #fff;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    /* Aligne verticalement le divider et les liens */
+    gap: 1.5rem;
+    /* Réduis un peu le gap si c'est trop large pour l'écran */
+    flex-wrap: wrap;
+    /* Au cas où il y a trop de liens */
+}
+
+/* Conteneur principal du dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Le bouton qui déclenche le menu */
+.dropdownBtn {
+    background: none;
+    border: none;
+    color: #e5e5e5;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dropdownBtn:hover {
+    color: #f5c518;
+}
+
+.caret {
+    font-size: 0.7rem;
+    transition: transform 0.3s;
+}
+
+/* Le menu qui apparaît */
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1a1a1a;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    border-radius: 4px;
+    border: 1px solid #333;
+    margin-top: 10px;
+    padding: 8px 0;
+}
+
+/* Les liens à l'intérieur du menu */
+.dropdownItem {
+    color: #fff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.dropdownItem:hover {
+    background-color: #333;
+    color: #f5c518;
+}
+
+/* Triangle au-dessus du menu (optionnel) */
+.dropdownMenu::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent #1a1a1a transparent;
+}
