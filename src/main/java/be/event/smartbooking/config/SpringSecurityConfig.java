@@ -35,6 +35,7 @@ public class SpringSecurityConfig {
                                                 .requestMatchers("/api/shows/**").permitAll()
                                                 .requestMatchers("/api/users/login").permitAll()
                                                 .requestMatchers("/api/users/register").permitAll()
+                                                .requestMatchers("/api/users/forgot-password").permitAll() 
                                                 .requestMatchers("/uploads/**", "/css/**", "/js/**", "/login")
                                                 .permitAll()
                                                 .requestMatchers("/error").permitAll()
