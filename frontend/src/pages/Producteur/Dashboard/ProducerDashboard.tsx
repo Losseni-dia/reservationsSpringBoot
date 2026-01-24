@@ -269,7 +269,7 @@ const ProducerDashboard: React.FC = () => {
       <header className={styles.dashboardHeader}>
         <h1 className={styles.dashboardTitle}>Tableau de bord du Producteur</h1>
         <button
-          onClick={() => navigate("/admin/shows/add")}
+          onClick={() => navigate("/producer/shows/add")}
           className={styles.addShowButton}
         >
           + Ajouter un spectacle
@@ -323,7 +323,7 @@ const ProducerDashboard: React.FC = () => {
                       <div className={styles.actionsContainer}>
                         <button
                           onClick={() =>
-                            navigate(`/admin/shows/edit/${show.id}`)
+                            navigate(`/producer/shows/edit/${show.id}`)
                           }
                           className={`${styles.actionButton} ${styles.editButton}`}
                         >

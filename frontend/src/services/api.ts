@@ -1,7 +1,8 @@
 import {
     Artist, Show, Location, Review,
     Reservation, ReservationRequest,
-    UserProfileDto
+    UserProfileDto,
+    UserRegistrationDto
 } from '../types/models';
  
  
@@ -10,7 +11,7 @@ const API_BASE = '/api';
  * URL de base pour les médias (images uploads)
  * Pointe vers ton dossier configurer dans Spring Boot
  */
-export const IMAGE_STORAGE_BASE = '/uploads/';
+export const IMAGE_STORAGE_BASE = '';
  
  
 function getCsrfToken(): string | undefined {
@@ -86,7 +87,7 @@ export const authApi = {
         const res = await secureFetch(`${API_BASE}/users/profile`);
         return res.json();
     },
-    register: async (userData: any) => {
+    register: async (userData: UserRegistrationDto) => {
         const res = await secureFetch(`${API_BASE}/users/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -108,7 +109,23 @@ export const authApi = {
             body: JSON.stringify(profileData),
         });
         return res.text();
-    }
+    },
+    forgotPassword: async (email: string) => {
+        const res = await secureFetch(`${API_BASE}/users/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+        return res.text();
+    },
+    resetPassword: async (token: string, password: string) => {
+        const res = await secureFetch(`${API_BASE}/users/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, password }),
+        });
+        return res.text();
+    },
 };
  
 // --- API MODULES ---
@@ -128,6 +145,14 @@ export const artistApi = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(artist),
         });
+        return res.json();
+    }
+};
+
+
+export const artistTypeApi = {
+    getAll: async (): Promise<any[]> => {
+        const res = await secureFetch(`${API_BASE}/artist-types`);
         return res.json();
     }
 };
@@ -164,26 +189,30 @@ export const showApi = {
     },
  
     // Création (Une seule version propre)
-    create: async (showData: Partial<Show>): Promise<Show> => {
-        const res = await secureFetch(`${API_BASE}/shows`, {
+    create: async (formData: FormData): Promise<Show> => {
+    // 1. On utilise secureFetch (ou fetch)
+    const res = await secureFetch(`${API_BASE}/shows`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(showData),
+            /* ATTENTION : Ne surtout pas mettre de 'Content-Type': 'application/json'.
+            En passant un objet FormData dans le body, le navigateur va 
+            automatiquement configurer le Header 'multipart/form-data' 
+            AVEC la "boundary" (délimiteur) nécessaire pour le serveur.
+            */
+            body: formData,
         });
+
         return res.json();
     },
  
     // Mise à jour
-    update: async (id: number, showData: Partial<Show>): Promise<Show> => {
-        const res =  await secureFetch(`${API_BASE}/shows/${id}`, {
+    update: async (id: number, formData: FormData): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(showData),
+            // On enlève le header Content-Type, le navigateur gère le multipart
+            body: formData, 
         });
- 
         return res.json();
     },
- 
     // Suppression
     deleteById: async (id: number): Promise<void> => {
         await secureFetch(`${API_BASE}/shows/${id}`, {

@@ -2,15 +2,20 @@ package be.event.smartbooking.api.controller;
 
 import be.event.smartbooking.dto.UserProfileDto;
 import be.event.smartbooking.dto.UserRegistrationDto;
+import be.event.smartbooking.model.PasswordResetToken;
 import be.event.smartbooking.model.User;
+import be.event.smartbooking.service.EmailService;
+import be.event.smartbooking.service.PasswordResetTokenService;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,6 +23,15 @@ public class UserApiController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordResetTokenService tokenService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // INSCRIPTION (Public)
     @PostMapping("/register")
@@ -85,5 +99,37 @@ public class UserApiController {
         profileDto.setId(user.getId());
         userService.updateUserFromDto(profileDto);
         return ResponseEntity.ok("Profil mis à jour avec succès");
+    }
+
+    // MOT DE PASSE OUBLIÉ (Public)
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        User user = userService.findByEmail(email);
+        if (user != null) {
+            PasswordResetToken token = tokenService.createTokenForUser(user);
+            emailService.sendPasswordResetMail(user.getEmail(), token.getToken());
+        }
+        return ResponseEntity.ok("Si un compte existe avec cet email, un lien a été envoyé.");
+    }
+
+    // RÉINITIALISATION MOT DE PASSE (Public)
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        String password = request.get("password");
+
+        User user = tokenService.validatePasswordResetToken(token);
+        
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Token invalide ou expiré");
+        }
+
+        user.setPassword(passwordEncoder.encode(password));
+        userService.updateUser(user.getId(), user);
+        
+        tokenService.deleteToken(token);
+        
+        return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
     }
 }
