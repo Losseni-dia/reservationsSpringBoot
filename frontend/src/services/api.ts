@@ -118,6 +118,14 @@ export const authApi = {
         });
         return res.text();
     },
+    resetPassword: async (token: string, password: string) => {
+        const res = await secureFetch(`${API_BASE}/users/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, password }),
+        });
+        return res.text();
+    },
 };
  
 // --- API MODULES ---

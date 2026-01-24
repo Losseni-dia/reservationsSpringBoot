@@ -3,7 +3,6 @@ package be.event.smartbooking.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -30,7 +29,8 @@ public class SpringSecurityConfig {
                                                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                                                 // AJOUT DU LOGOUT ICI POUR ÉVITER LE DOUBLE CLIC
                                                 .ignoringRequestMatchers("/api/users/login", "/api/users/register",
-                                                                "/api/users/logout"))
+                                                                "/api/users/logout", "/api/users/forgot-password",
+                                                                "/api/users/reset-password"))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/shows/**").permitAll()
                                                 .requestMatchers("/api/users/login").permitAll()

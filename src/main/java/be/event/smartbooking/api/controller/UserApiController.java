@@ -106,7 +106,6 @@ public class UserApiController {
     public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         User user = userService.findByEmail(email);
-
         if (user != null) {
             PasswordResetToken token = tokenService.createTokenForUser(user);
             emailService.sendPasswordResetMail(user.getEmail(), token.getToken());
@@ -121,14 +120,16 @@ public class UserApiController {
         String password = request.get("password");
 
         User user = tokenService.validatePasswordResetToken(token);
+        
         if (user == null) {
-            return ResponseEntity.badRequest().body("Lien invalide ou expiré.");
+            return ResponseEntity.badRequest().body("Token invalide ou expiré");
         }
 
         user.setPassword(passwordEncoder.encode(password));
         userService.updateUser(user.getId(), user);
+        
         tokenService.deleteToken(token);
-
+        
         return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
     }
 }
