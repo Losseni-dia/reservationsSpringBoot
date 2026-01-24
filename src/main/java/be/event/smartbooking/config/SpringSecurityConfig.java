@@ -44,6 +44,8 @@ public class SpringSecurityConfig {
                                                 // 4. Authentification & Profil
                                                 .requestMatchers("/api/users/login", "/api/users/register").permitAll()
                                                 .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
+                                                .requestMatchers("/api/users/reset-password").permitAll()
+                                                .requestMatchers("/api/users/forgot-password").permitAll()
                                                 .requestMatchers("/error").permitAll()
 
                                                 // 5. Administration
