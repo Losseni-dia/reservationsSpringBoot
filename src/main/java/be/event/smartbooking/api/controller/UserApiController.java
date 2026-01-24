@@ -2,15 +2,20 @@ package be.event.smartbooking.api.controller;
 
 import be.event.smartbooking.dto.UserProfileDto;
 import be.event.smartbooking.dto.UserRegistrationDto;
+import be.event.smartbooking.model.PasswordResetToken;
 import be.event.smartbooking.model.User;
+import be.event.smartbooking.service.EmailService;
+import be.event.smartbooking.service.PasswordResetTokenService;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,6 +23,15 @@ public class UserApiController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordResetTokenService tokenService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // INSCRIPTION (Public)
     @PostMapping("/register")
