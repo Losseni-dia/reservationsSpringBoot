@@ -132,3 +132,27 @@
     color: white;
     box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
 }
+
+.divider {
+    width: 1px;
+    height: 20px;
+    background-color: #333;
+    margin: 0 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Optionnel : donner un look un peu plus "VIP/Gold" aux liens producteur */
+.link:hover .yellow {
+    color: #fff;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    /* Aligne verticalement le divider et les liens */
+    gap: 1.5rem;
+    /* Réduis un peu le gap si c'est trop large pour l'écran */
+    flex-wrap: wrap;
+    /* Au cas où il y a trop de liens */
+}

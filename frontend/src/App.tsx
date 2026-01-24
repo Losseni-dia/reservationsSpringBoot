@@ -39,8 +39,8 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
-              <Route path="/admin/shows/add" element={<AddShow />} />
-              <Route path="/admin/shows/edit/:id" element={<EditShow />} />
+              <Route path="/producer/shows/add" element={<AddShow />} />
+              <Route path="/producer/shows/edit/:id" element={<EditShow />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
             </Routes>

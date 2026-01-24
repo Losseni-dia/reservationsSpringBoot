@@ -5,6 +5,7 @@ import styles from './Header.module.css';
 
 const Header: React.FC = () => {
     const { user, logout } = useAuth();
+    console.log("Utilisateur actuel :", user);
 
     return (
         <header className={styles.header}>
@@ -17,17 +18,30 @@ const Header: React.FC = () => {
                     <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
                         Spectacles
                     </NavLink>
-                    <NavLink to="/locations" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
-                        Lieux
-                    </NavLink>
-                    {user && user.role === 'affiliate' && (
-                        <NavLink to="/producer/dashboard" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
-                            Dashboard
-                        </NavLink>
+
+                    {/* --- ESPACE PRODUCTEUR --- */}
+                    {/* On affiche l'espace si l'utilisateur est admin OU affiliate */}
+                    {user && (user.role === 'affiliate' || user.role === 'admin') && (
+                        <>
+                            <div className={styles.divider}></div>
+                            <NavLink 
+                                to="/producer/dashboard" 
+                                className={({isActive}) => isActive ? styles.activeLink : styles.link}
+                            >
+                                Dashboard
+                            </NavLink>
+                            <NavLink 
+                                to="/producer/shows/add" 
+                                className={({isActive}) => isActive ? styles.activeLink : styles.link}
+                            >
+                                <span className={styles.yellow}>+</span> Ajouter
+                            </NavLink>
+                        </>
                     )}
                 </nav>
 
                 <div className={styles.actions}>
+                    {/* ... reste de ton code (recherche, panier, user) ... */}
                     <div className={styles.searchBox}>
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
