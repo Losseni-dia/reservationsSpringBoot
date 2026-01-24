@@ -19,7 +19,7 @@ const EditShow = () => {
         setSubmitting(true);
         try {
             await showApi.update(Number(id), formData);
-            navigate('/producteur/dashboard');
+            navigate('/producer/dashboard');
         } catch (err) { alert("Erreur MAJ"); } finally { setSubmitting(false); }
     };
 
