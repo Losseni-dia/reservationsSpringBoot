@@ -1,4 +1,6 @@
-/* --- STRUCTURE GÉNÉRALE --- */
+/* ==========================================================================
+   STRUCTURE ET LOGO
+   ========================================================================== */
 .header {
     background-color: #000000;
     padding: 0.8rem 0;
@@ -20,7 +22,9 @@
     color: #f5c518;
 }
 
-/* --- NAVIGATION --- */
+/* ==========================================================================
+   NAVIGATION PRINCIPALE
+   ========================================================================== */
 .nav {
     display: flex;
     align-items: center;
@@ -47,10 +51,16 @@
     padding-bottom: 2px;
 }
 
-/* --- DROPDOWNS (Producteur & Admin) --- */
+/* ==========================================================================
+   DROPDOWNS (Producteur & Admin) - FIX SENSIBILITÉ
+   ========================================================================== */
 .dropdown {
     position: relative;
     display: inline-block;
+    /* PONT INVISIBLE : On crée une zone de détection sous le bouton 
+       pour que la souris reste "active" en allant vers le menu */
+    padding-bottom: 15px;
+    margin-bottom: -15px;
 }
 
 .dropdownBtn {
@@ -71,12 +81,13 @@
     color: #f5c518;
 }
 
-/* Style spécial pour le bouton d'administration */
-.adminBtn {
+/* Style VIP pour le bouton Administration */
+.adminBtn, .producerBtn {
     color: #f5c518 !important;
     border: 1px solid rgba(245, 197, 24, 0.3);
-    padding: 4px 10px !important;
+    padding: 4px 12px !important;
     border-radius: 4px;
+    margin-left: 5px;
 }
 
 .adminBtn:hover {
@@ -91,14 +102,14 @@
 .dropdownMenu {
     position: absolute;
     top: 100%;
+    /* Se colle à la zone de détection */
     left: 0;
     background-color: #1a1a1a;
-    min-width: 210px;
-    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.7);
+    min-width: 220px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
     z-index: 1001;
     border-radius: 6px;
     border: 1px solid #333;
-    margin-top: 12px;
     padding: 10px 0;
     animation: fadeIn 0.2s ease-out;
 }
@@ -106,7 +117,7 @@
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(5px);
+        transform: translateY(8px);
     }
 
     to {
@@ -121,7 +132,7 @@
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-size: 0.9rem;
     transition: 0.2s;
 }
@@ -131,39 +142,54 @@
     color: #f5c518;
 }
 
-/* --- ACTIONS (Droite) --- */
+/* Triangle indicateur */
+.dropdownMenu::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent #1a1a1a transparent;
+}
+
+/* ==========================================================================
+   ACTIONS ET AUTHENTIFICATION
+   ========================================================================== */
 .actions {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
-/* Zone Auth (Non connecté) */
 .authButtons {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 18px;
 }
 
+/* Bouton Inscription (Lien épuré) */
 .registerBtn {
     color: #e5e5e5;
     text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     transition: 0.3s;
 }
 
 .registerBtn:hover {
     color: #f5c518;
+    text-shadow: 0 0 8px rgba(245, 197, 24, 0.5);
 }
 
+/* Bouton Connexion (Action principale) */
 .loginBtn {
     background-color: #f5c518;
     color: #000;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 700;
-    padding: 7px 18px;
+    padding: 8px 22px;
     border-radius: 4px;
     transition: 0.3s;
     border: none;
@@ -171,14 +197,17 @@
 
 .loginBtn:hover {
     background-color: #ffffff;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.3);
 }
 
-/* Zone Profil (Connecté) */
+/* ==========================================================================
+   ZONE PROFIL ET LOGOUT
+   ========================================================================== */
 .userActions {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 .profileLink {
@@ -199,11 +228,11 @@
     background-color: transparent;
     color: #ff4d4d;
     border: 1px solid rgba(255, 77, 77, 0.4);
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
@@ -213,24 +242,21 @@
     background-color: #ff4d4d;
     color: white;
     border-color: #ff4d4d;
-    box-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+    box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
 }
 
-/* --- COMPOSANTS ADDITIONNELS --- */
-.divider {
-    width: 1px;
-    height: 20px;
-    background-color: #333;
-    display: inline-block;
-    vertical-align: middle;
+.registerBtn {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 4px;
+    transition: 0.3s;
 }
 
-.dropdownMenu::before {
-    content: "";
-    position: absolute;
-    bottom: 100%;
-    left: 20px;
-    border-width: 8px;
-    border-style: solid;
-    border-color: transparent transparent #333 transparent;
+.registerBtn:hover {
+    border-color: #f5c518;
+    color: #f5c518;
 }

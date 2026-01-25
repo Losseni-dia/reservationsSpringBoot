@@ -1,71 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
     const { user, logout } = useAuth();
-    
-    // États séparés pour les deux menus déroulants
     const [isAffiliateOpen, setIsAffiliateOpen] = useState(false);
     const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+    const affiliateTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const adminTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleEnter = (setter: (v: boolean) => void, timer: React.MutableRefObject<any>) => {
+        if (timer.current) clearTimeout(timer.current);
+        setter(true);
+    };
+
+    const handleLeave = (setter: (v: boolean) => void, timer: React.MutableRefObject<any>) => {
+        timer.current = setTimeout(() => setter(false), 300);
+    };
 
     return (
         <header className={styles.header}>
             <div className="container d-flex justify-content-between align-items-center">
-                <Link to="/" className={styles.logo}>
-                    SMART<span className={styles.yellow}>BOOKING</span>
-                </Link>
+                <Link to="/" className={styles.logo}>SMART<span className={styles.yellow}>BOOKING</span></Link>
                 
                 <nav className={styles.nav}>
-                    <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
-                        Spectacles
-                    </NavLink>
-                    <NavLink to="/locations" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
-                        Lieux
-                    </NavLink>
+                    <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Spectacles</NavLink>
+                    <NavLink to="/locations" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Lieux</NavLink>
 
-                    {/* --- DROPDOWN ESPACE AFFILIÉS (Producteurs) --- */}
+                    {/* ESPACE PRODUCTEUR */}
                     {user && (user.role === 'producer' || user.role === 'admin') && (
-                        <div 
-                            className={styles.dropdown}
-                            onMouseEnter={() => setIsAffiliateOpen(true)}
-                            onMouseLeave={() => setIsAffiliateOpen(false)}
-                        >
-                            <button className={styles.dropdownBtn}>
-                                Espace Producteur <span className={styles.caret}>▼</span>
-                            </button>
-
+                        <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsAffiliateOpen, affiliateTimeout)} onMouseLeave={() => handleLeave(setIsAffiliateOpen, affiliateTimeout)}>
+                            <button className={`${styles.dropdownBtn} ${styles.producerBtn}`}>Espace Producteur ▼</button>
                             {isAffiliateOpen && (
                                 <div className={styles.dropdownMenu}>
-                                    <NavLink to="/producer/dashboard" className={styles.dropdownItem}>
-                                        📊 Dashboard
-                                    </NavLink>
-                                    <NavLink to="/producer/shows/add" className={styles.dropdownItem}>
-                                        ➕ Ajouter un spectacle
-                                    </NavLink>
+                                    <NavLink to="/producer/dashboard" className={styles.dropdownItem}>📊 Dashboard</NavLink>
+                                   
                                 </div>
                             )}
                         </div>
                     )}
 
-                    {/* --- DROPDOWN ADMINISTRATION (Uniquement Admin) --- */}
+                    {/* ESPACE ADMIN */}
                     {user && user.role === 'admin' && (
-                        <div 
-                            className={styles.dropdown}
-                            onMouseEnter={() => setIsAdminOpen(true)}
-                            onMouseLeave={() => setIsAdminOpen(false)}
-                        >
-                            <button className={`${styles.dropdownBtn} ${styles.adminBtn}`}>
-                                Administration <span className={styles.caret}>▼</span>
-                            </button>
-
+                        <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsAdminOpen, adminTimeout)} onMouseLeave={() => handleLeave(setIsAdminOpen, adminTimeout)}>
+                            <button className={`${styles.dropdownBtn} ${styles.adminBtn}`}>Administration ▼</button>
                             {isAdminOpen && (
                                 <div className={styles.dropdownMenu}>
-                                    <NavLink to="/admin/users" className={styles.dropdownItem}>
-                                        👥 Gestion Utilisateurs
-                                    </NavLink>
-                                    {/* Tu pourras ajouter "Gestion des Lieux" ou "Logs" ici plus tard */}
+                                    <NavLink to="/admin/users" className={styles.dropdownItem}>👥 Gestion Utilisateurs</NavLink>
                                 </div>
                             )}
                         </div>
@@ -75,14 +58,11 @@ const Header: React.FC = () => {
                 <div className={styles.actions}>
                     {user ? (
                         <div className={styles.userActions}>
-                            <Link to="/profile" className={styles.profileLink}>
-                                👤 <span className="ms-1">{user.firstname}</span>
-                            </Link>
+                            <Link to="/profile" className={styles.profileLink}>👤 {user.firstname}</Link>
                             <button onClick={logout} className={styles.logoutBtn}>Déconnexion</button>
                         </div>
                     ) : (
                         <div className={styles.authButtons}>
-                            {/* BOUTON INSCRIPTION AJOUTÉ ICI */}
                             <Link to="/register" className={styles.registerBtn}>Inscription</Link>
                             <Link to="/login" className={styles.loginBtn}>Connexion</Link>
                         </div>
@@ -92,5 +72,4 @@ const Header: React.FC = () => {
         </header>
     );
 };
-
 export default Header;
