@@ -1,11 +1,14 @@
-import React, { useState } from 'react'; // Ajout de useState
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
     const { user, logout } = useAuth();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    
+    // États séparés pour les deux menus déroulants
+    const [isAffiliateOpen, setIsAffiliateOpen] = useState(false);
+    const [isAdminOpen, setIsAdminOpen] = useState(false);
 
     return (
         <header className={styles.header}>
@@ -22,18 +25,18 @@ const Header: React.FC = () => {
                         Lieux
                     </NavLink>
 
-                    {/* --- DROPDOWN ESPACE AFFILIÉS --- */}
-                    {user && (user.role === 'affiliate' || user.role === 'admin') && (
+                    {/* --- DROPDOWN ESPACE AFFILIÉS (Producteurs) --- */}
+                    {user && (user.role === 'producer' || user.role === 'admin') && (
                         <div 
                             className={styles.dropdown}
-                            onMouseEnter={() => setIsDropdownOpen(true)}
-                            onMouseLeave={() => setIsDropdownOpen(false)}
+                            onMouseEnter={() => setIsAffiliateOpen(true)}
+                            onMouseLeave={() => setIsAffiliateOpen(false)}
                         >
                             <button className={styles.dropdownBtn}>
-                                Espace Affiliés <span className={styles.caret}>▼</span>
+                                Espace Producteur <span className={styles.caret}>▼</span>
                             </button>
 
-                            {isDropdownOpen && (
+                            {isAffiliateOpen && (
                                 <div className={styles.dropdownMenu}>
                                     <NavLink to="/producer/dashboard" className={styles.dropdownItem}>
                                         📊 Dashboard
@@ -45,12 +48,32 @@ const Header: React.FC = () => {
                             )}
                         </div>
                     )}
+
+                    {/* --- DROPDOWN ADMINISTRATION (Uniquement Admin) --- */}
+                    {user && user.role === 'admin' && (
+                        <div 
+                            className={styles.dropdown}
+                            onMouseEnter={() => setIsAdminOpen(true)}
+                            onMouseLeave={() => setIsAdminOpen(false)}
+                        >
+                            <button className={`${styles.dropdownBtn} ${styles.adminBtn}`}>
+                                Administration <span className={styles.caret}>▼</span>
+                            </button>
+
+                            {isAdminOpen && (
+                                <div className={styles.dropdownMenu}>
+                                    <NavLink to="/admin/users" className={styles.dropdownItem}>
+                                        👥 Gestion Utilisateurs
+                                    </NavLink>
+                                    {/* Tu pourras ajouter "Gestion des Lieux" ou "Logs" ici plus tard */}
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </nav>
 
-                {/* ... Reste du code (actions, searchBox, user) ... */}
                 <div className={styles.actions}>
-                     {/* Ton code existant pour le panier et l'utilisateur */}
-                     {user ? (
+                    {user ? (
                         <div className={styles.userActions}>
                             <Link to="/profile" className={styles.profileLink}>
                                 👤 <span className="ms-1">{user.firstname}</span>
@@ -58,7 +81,11 @@ const Header: React.FC = () => {
                             <button onClick={logout} className={styles.logoutBtn}>Déconnexion</button>
                         </div>
                     ) : (
-                        <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        <div className={styles.authButtons}>
+                            {/* BOUTON INSCRIPTION AJOUTÉ ICI */}
+                            <Link to="/register" className={styles.registerBtn}>Inscription</Link>
+                            <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        </div>
                     )}
                 </div>
             </div>
