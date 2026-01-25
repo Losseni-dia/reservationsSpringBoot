@@ -225,11 +225,17 @@ export const representationApi = {
     create: async (showId: number, data: any) => {
         return secureFetch(`${API_BASE}/shows/${showId}/representations`, {
             method: 'POST',
+            // On précise au serveur qu'on envoie du JSON
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(data)
         });
     },
     delete: async (id: number) => {
-        return secureFetch(`${API_BASE}/representations/${id}`, { method: 'DELETE' });
+        return secureFetch(`${API_BASE}/representations/${id}`, { 
+            method: 'DELETE' 
+        });
     }
 };
 

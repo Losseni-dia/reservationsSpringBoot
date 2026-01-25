@@ -40,7 +40,6 @@ const EditShow = () => {
         <div className={styles.container}>
             <div className={styles.wrapper}>
                 <div className={styles.headerFlex}>
-                    <h1 className={styles.header}>Modifier le spectacle</h1>
                     {/* LE LIEN VERS LA PROGRAMMATION */}
                     <Link to={`/admin/shows/${id}/schedule`} className={styles.scheduleBtn}>
                         📅 Gérer les séances & prix
