@@ -205,11 +205,10 @@ export const showApi = {
     },
  
     // Mise à jour
-    update: async (id: number, formData: FormData): Promise<Show> => {
+   update: async (id: number, formData: FormData): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/${id}`, {
             method: 'PUT',
-            // On enlève le header Content-Type, le navigateur gère le multipart
-            body: formData, 
+            body: formData, // Pas de JSON.stringify ici, FormData s'occupe de tout
         });
         return res.json();
     },
@@ -220,6 +219,27 @@ export const showApi = {
         });
     }
 };
+
+
+export const representationApi = {
+    create: async (showId: number, data: any) => {
+        return secureFetch(`${API_BASE}/shows/${showId}/representations`, {
+            method: 'POST',
+            // On précise au serveur qu'on envoie du JSON
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    },
+    delete: async (id: number) => {
+        return secureFetch(`${API_BASE}/representations/${id}`, { 
+            method: 'DELETE' 
+        });
+    }
+};
+
+
 export const locationApi = {
     getAll: async (): Promise<Location[]> => {
         const res = await secureFetch(`${API_BASE}/locations`);

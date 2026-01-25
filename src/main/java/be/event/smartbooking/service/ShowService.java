@@ -3,6 +3,8 @@ package be.event.smartbooking.service;
 import be.event.smartbooking.model.Location;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.repository.ShowRepos;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,9 +62,24 @@ public class ShowService {
     }
 
     @Transactional
-    public void update(Long id, Show show) {
-        show.setId(id);
-        repository.save(show);
+    public void update(Long id, Show updatedShow) {
+        // 1. On récupère l'entité gérée par Hibernate
+        Show existingShow = repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Spectacle non trouvé"));
+
+        // 2. On met à jour uniquement les champs nécessaires
+        existingShow.setTitle(updatedShow.getTitle());
+        existingShow.setDescription(updatedShow.getDescription());
+        existingShow.setPosterUrl(updatedShow.getPosterUrl());
+        existingShow.setBookable(updatedShow.isBookable());
+        existingShow.setLocation(updatedShow.getLocation());
+
+        // 3. Gestion des relations (Hibernate gère les jointures ici)
+        existingShow.getArtistTypes().clear();
+        existingShow.getArtistTypes().addAll(updatedShow.getArtistTypes());
+
+        // Pas besoin de repository.save(existingShow) ! 
+        // Hibernate détecte les changements (Dirty Checking) et fait l'UPDATE tout seul.
     }
 
     @Transactional

@@ -35,6 +35,10 @@ public class SpringSecurityConfig {
                                                 .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/shows/**")
                                                 .hasAnyRole("admin", "ADMIN")
+                                                .requestMatchers(HttpMethod.POST, "/api/shows/*/representations")
+                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/representations/*")
+                                                .hasAnyRole("admin", "affiliate","ADMIN", "AFFILIATE", "PRODUCER")
 
                                                 // 3. Les accès publics (GET)
                                                 .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()

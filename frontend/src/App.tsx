@@ -17,9 +17,12 @@ import ProfilePage from './pages/Profile/ProfilePage';
 import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
 import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 import ProtectedRoute from './ProtectedRoute';
-import AddShowForm from './pages/Producteur/AddShowForm/AddShowForm';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
+import LocationList from './pages/AdminPages/Locations/AdminLocationsPage';
+import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
+import ResetPasswordPage from './pages/Login/ResetPasswordPage';
+import ShowSchedule from './pages/Producteur/ShowSchedule/ShowSchedule';
 import LocationList from "./pages/Admin/Locations/AdminLocationsPage";
 import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
@@ -46,6 +49,9 @@ function App() {
               </Route>
               <Route path="/locations" element={<LocationList />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
+              <Route path="/producer/shows/add" element={<AddShow />} />
+              <Route path="/producer/shows/edit/:id" element={<EditShow />} />
+              <Route path="/admin/shows/:id/schedule" element={<ShowSchedule />} />
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />

@@ -110,6 +110,8 @@ export interface ReservationRequest {
     quantity: number;
 }
 
+
+
 export interface Show {
     id: number;
     slug: string;
@@ -117,7 +119,8 @@ export interface Show {
     description: string;
     posterUrl: string;
     bookable: boolean;
-    locationDesignation: string; // Provient du DTO aplati
+    locationId?: number; // AJOUTE CETTE LIGNE (indispensable pour ShowSchedule)
+    locationDesignation: string;
     averageRating?: number;
     reviewCount?: number;
     representations?: Representation[]; 
