@@ -24,7 +24,7 @@ public class Representation {
     @JoinColumn(name = "show_id", nullable = false)
     private Show show;
 
-    @Column(nullable = false)
+    @Column(name = "starts_at", nullable = false)
     private LocalDateTime when; // date et heure de la représentation
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,10 +36,12 @@ public class Representation {
     // =================================================================
 
     // 1. Prix disponibles pour cette représentation
+    @Builder.Default
     @OneToMany(mappedBy = "representation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> prices = new ArrayList<>();
 
     // 2. Réservations détaillées (via la table d'association)
+    @Builder.Default
     @OneToMany(mappedBy = "representation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RepresentationReservation> reservations = new ArrayList<>();
 

@@ -6,6 +6,7 @@ import be.event.smartbooking.dto.RepresentationDTO;
 import be.event.smartbooking.dto.ReviewDTO;
 import be.event.smartbooking.dto.ShowCreateRequest;
 import be.event.smartbooking.dto.ShowDTO;
+import be.event.smartbooking.dto.ShowUpdateDTO;
 import be.event.smartbooking.model.ArtistType;
 import be.event.smartbooking.model.Price;
 import be.event.smartbooking.model.Representation;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -175,17 +177,56 @@ public class ShowApiController {
         /**
          * PUT /api/shows/{id} : Met à jour un spectacle existant
          */
-        @PutMapping("/{id}")
-        public ResponseEntity<ShowDTO> update(@PathVariable Long id, @RequestBody Show show) {
-                Show existingShow = showService.get(id);
-                if (existingShow == null) {
-                        return ResponseEntity.notFound().build();
-                }
-                showService.update(id, show);
-                Show updatedShow = showService.get(id);
-                return ResponseEntity.ok(safeConvertToDto(updatedShow));
-        }
+        @PutMapping(value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+        public ResponseEntity<ShowDTO> update(
+                        @PathVariable Long id,
+                        @RequestPart("show") ShowUpdateDTO request,
+                        @RequestPart(value = "poster", required = false) MultipartFile file) {
 
+                try { // <--- IL MANQUAIT CE BLOC TRY ICI
+                      // 1. On récupère le spectacle existant
+                        Show show = showService.get(id);
+                        if (show == null) {
+                                return ResponseEntity.notFound().build();
+                        }
+
+                        // 2. Mapping du DTO vers l'entité
+                        show.setTitle(request.getTitle());
+                        show.setDescription(request.getDescription());
+                        show.setBookable(request.isBookable());
+
+                        // 3. Gestion du lieu
+                        if (request.getLocationId() != null) {
+                                locationRepos.findById(request.getLocationId()).ifPresent(show::setLocation);
+                        }
+
+                        // 4. Gestion des artistes
+                        show.getArtistTypes().clear();
+                        if (request.getArtistTypeIds() != null) {
+                                List<ArtistType> artists = artistTypeRepos.findAllById(request.getArtistTypeIds());
+                                artists.forEach(show::addArtistType);
+                        }
+
+                        // 5. Gestion de l'image (IOException possible ici)
+                        if (file != null && !file.isEmpty()) {
+                                String imageUrl = fileService.save(file);
+                                show.setPosterUrl(imageUrl);
+                        }
+
+                        // 6. Sauvegarde et retour
+                        showService.update(id, show);
+                        return ResponseEntity.ok(safeConvertToDto(show));
+
+                } catch (IOException e) {
+                        // Erreur spécifique au stockage du fichier
+                        e.printStackTrace();
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                } catch (Exception e) {
+                        // Erreur générale (Logique métier, IDs inexistants, etc.)
+                        e.printStackTrace();
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                }
+        }
         /**
          * DELETE /api/shows/{id} : Supprime un spectacle
          */
@@ -210,51 +251,65 @@ public class ShowApiController {
                                 .description(show.getDescription())
                                 .posterUrl(show.getPosterUrl())
                                 .bookable(show.isBookable())
+
+                                // --- DONNÉES POUR LE FORMULAIRE ---
+                                .locationId(show.getLocation() != null ? show.getLocation().getId() : null)
+                                .artistTypeIds(show.getArtistTypes() != null
+                                                ? show.getArtistTypes().stream().map(at -> at.getId()).toList()
+                                                : new ArrayList<>())
+                                // ----------------------------------
+
                                 .locationDesignation(show.getLocation() != null ? show.getLocation().getDesignation()
                                                 : "Lieu non défini")
                                 .averageRating(show.getAverageRating())
                                 .reviewCount(show.getReviewCount())
+
                                 .representations(show.getRepresentations() != null ? show.getRepresentations().stream()
                                                 .map(rep -> convertRepToDto(rep, show.getTitle()))
                                                 .toList() : new ArrayList<>())
+
                                 .reviews(show.getReviews() != null ? show.getReviews().stream()
                                                 .map(this::convertReviewToDto)
                                                 .toList() : new ArrayList<>())
 
-                                               // Dans ShowApiController.java -> safeConvertToDto
-                                .artists(show.getArtistTypes() != null ? 
-                                show.getArtistTypes().stream()
-                                        .collect(Collectors.groupingBy(
-                                        at -> at.getArtist(), // Groupe par l'objet Artiste
-                                        Collectors.mapping(at -> at.getType().getType(), Collectors.toList()) // Récupère la liste des rôles
-                                        ))
-                                        .entrySet().stream()
-                                        .map(entry -> ArtistDTO.builder()
-                                        .id(entry.getKey().getId())
-                                        .firstname(entry.getKey().getFirstname())
-                                        .lastname(entry.getKey().getLastname())
-                                        .types(entry.getValue()) // Contient maintenant tous les rôles (ex: ["Acteur", "Metteur en scène"])
-                                        .build())
-                                        .toList() : new ArrayList<>())
-                                                                .build();
-                                
-   }
+                                .artists(show.getArtistTypes() != null ? show.getArtistTypes().stream()
+                                                .collect(Collectors.groupingBy(
+                                                                at -> at.getArtist(),
+                                                                Collectors.mapping(at -> at.getType().getType(),
+                                                                                Collectors.toList())))
+                                                .entrySet().stream()
+                                                .map(entry -> ArtistDTO.builder()
+                                                                .id(entry.getKey().getId())
+                                                                .firstname(entry.getKey().getFirstname())
+                                                                .lastname(entry.getKey().getLastname())
+                                                                .types(entry.getValue())
+                                                                .build())
+                                                .toList() : new ArrayList<>())
+                                .build();
+        }
 
         private RepresentationDTO convertRepToDto(Representation rep, String title) {
-                String location = "Lieu non défini";
-                // Sécurité contre les NullPointerException
-                if (rep.getShow() != null && rep.getShow().getLocation() != null) {
-                        location = rep.getShow().getLocation().getDesignation();
+                String locationName = "Lieu non défini";
+
+                // 1. On vérifie d'abord si la séance a un lieu spécifique
+                if (rep.getLocation() != null) {
+                        locationName = rep.getLocation().getDesignation();
+                }
+                // 2. Sinon, on se rabat sur le lieu par défaut du spectacle
+                else if (rep.getShow() != null && rep.getShow().getLocation() != null) {
+                        locationName = rep.getShow().getLocation().getDesignation();
                 }
 
                 return RepresentationDTO.builder()
                                 .id(rep.getId())
                                 .when(rep.getWhen())
                                 .showTitle(title)
-                                .locationName(location)
-                                .prices(rep.getPrices() != null ? rep.getPrices().stream()
-                                                .map(this::convertPriceToDto)
-                                                .toList() : new ArrayList<>())
+                                .locationName(locationName) // Utilise la logique de priorité
+                                .prices(rep.getPrices() != null
+                                                ? rep.getPrices().stream()
+                                                                .map(this::convertPriceToDto)
+                                                                .toList()
+                                                : new ArrayList<>())
                                 .build();
         }
 
@@ -276,6 +331,9 @@ public class ShowApiController {
                                 .amount(p.getAmount())
                                 .build();
         }
+
+
+        
 
 
        

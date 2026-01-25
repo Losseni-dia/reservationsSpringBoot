@@ -1,0 +1,292 @@
+.adminContainer {
+  padding: 2rem;
+  background-color: #121212;
+  color: #e0e0e0;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.adminHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.adminTitle {
+  margin: 0;
+  font-size: 2.5rem;
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.refreshButton {
+  position: relative;
+  background-image: linear-gradient(45deg, #FFD700, #FFC107);
+  color: #333;
+  border: none;
+  padding: 0.9rem 2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+  overflow: hidden;
+}
+
+.refreshButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: all 0.6s ease;
+}
+
+.refreshButton:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.refreshButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.35);
+}
+
+.refreshButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  background-color: #d32f2f;
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  box-shadow: 0 2px 10px rgba(211, 47, 47, 0.3);
+}
+
+.showsListContainer {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.showsCount {
+  font-size: 1.1rem;
+  color: #FFD700;
+  margin: 0 0 1.5rem 0;
+  font-weight: 600;
+}
+
+.noShows {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #999;
+  padding: 2rem;
+  margin: 0;
+}
+
+.showsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  background-color: #282828;
+  border-bottom: 2px solid #FFD700;
+}
+
+.tableHeaderCell {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #FFD700;
+  font-size: 0.95rem;
+}
+
+.tableRow {
+  border-bottom: 1px solid #333;
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background-color: #232323;
+}
+
+.tableCell {
+  padding: 1rem;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+}
+
+.showTitle {
+  font-weight: 600;
+  color: #ffffff;
+  max-width: 250px;
+  word-break: break-word;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusConfirmed {
+  background-color: #4CAF50; /* A brighter green */
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.statusPending {
+  background-color: #FFC107; /* Gold/yellow */
+  color: #121212;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+}
+
+.actionsCell {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.editButton {
+  background-color: #1976d2;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+}
+
+.editButton:hover {
+  background-color: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+}
+
+.confirmButton {
+  background-color: #388e3c;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.3);
+}
+
+.confirmButton:hover {
+  background-color: #2e7d32;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(56, 142, 60, 0.4);
+}
+
+.createShowButton {
+  position: relative;
+  background-image: linear-gradient(45deg, #FFD700, #FFC107);
+  color: #333;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+  overflow: hidden;
+}
+
+.createShowButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: all 0.6s ease;
+}
+
+.createShowButton:hover::before {
+  left: 100%;
+}
+
+.createShowButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.35);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .adminContainer {
+    padding: 1rem;
+  }
+
+  .adminHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .adminTitle {
+    font-size: 1.8rem;
+  }
+
+  .refreshButton,
+  .createShowButton {
+    width: 100%;
+  }
+
+  .showsListContainer {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+
+  .actionsCell {
+    flex-direction: column;
+  }
+
+  .actionButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .adminContainer {
+    padding: 0.5rem;
+  }
+
+  .adminTitle {
+    font-size: 1.5rem;
+  }
+
+  .tableCell {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .tableHeaderCell {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .showTitle {
+    max-width: 150px;
+  }
+}

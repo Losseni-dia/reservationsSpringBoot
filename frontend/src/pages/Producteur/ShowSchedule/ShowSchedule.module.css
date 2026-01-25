@@ -1,0 +1,203 @@
+.container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.backBtn {
+    background: none;
+    border: 1px solid #f5c518;
+    color: #f5c518;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+}
+
+.sectionTitle {
+    color: #f5c518;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+
+/* Liste des séances */
+.repCardList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.repItem {
+    background: #252525;
+    padding: 1.2rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    border-left: 4px solid #f5c518;
+}
+
+.repInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.date {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.time {
+    color: #aaa;
+}
+
+.priceBadges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.badge {
+    background: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #f5c518;
+    border: 1px solid #444;
+}
+
+/* Formulaire */
+.repForm {
+    background: #111;
+    padding: 2rem;
+    border-radius: 8px;
+    position: sticky;
+    top: 2rem;
+}
+
+.field {
+    margin-bottom: 1.5rem;
+}
+
+.field label,
+.priceGrid label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.field input {
+    width: 100%;
+    padding: 12px;
+    background: #222;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.priceGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.fullWidth {
+    grid-column: span 2;
+}
+
+.priceInputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.priceInputGroup span {
+    font-size: 0.8rem;
+    color: #f5c518;
+}
+
+.priceInputGroup input {
+    padding: 8px;
+    background: #222;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.saveBtn {
+    width: 100%;
+    background: #f5c518;
+    color: #000;
+    border: none;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.deleteBtn {
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.deleteBtn:hover {
+    color: #ff0000;
+}
+
+
+/* Bouton principal de soumission (Mettre à jour) */
+.submitBtn {
+    width: 100%;
+    background-color: #f5c518;
+    color: #000;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.submitBtn:hover {
+    background-color: #dfb215;
+    transform: scale(1.01);
+}
+
+.submitBtn:disabled {
+    background-color: #444;
+    color: #888;
+    cursor: not-allowed;
+    transform: none;
+}
