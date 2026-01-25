@@ -219,6 +219,21 @@ export const showApi = {
         });
     }
 };
+
+
+export const representationApi = {
+    create: async (showId: number, data: any) => {
+        return secureFetch(`${API_BASE}/shows/${showId}/representations`, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    },
+    delete: async (id: number) => {
+        return secureFetch(`${API_BASE}/representations/${id}`, { method: 'DELETE' });
+    }
+};
+
+
 export const locationApi = {
     getAll: async (): Promise<Location[]> => {
         const res = await secureFetch(`${API_BASE}/locations`);
