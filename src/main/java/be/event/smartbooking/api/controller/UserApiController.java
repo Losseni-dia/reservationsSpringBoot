@@ -11,10 +11,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -120,16 +122,49 @@ public class UserApiController {
         String password = request.get("password");
 
         User user = tokenService.validatePasswordResetToken(token);
-        
+
         if (user == null) {
             return ResponseEntity.badRequest().body("Token invalide ou expiré");
         }
 
         user.setPassword(passwordEncoder.encode(password));
         userService.updateUser(user.getId(), user);
-        
+
         tokenService.deleteToken(token);
-        
+
         return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
+    }
+    
+
+    // LISTER TOUS LES USERS (Admin seulement)
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")  // Sécurité au niveau méthode
+    public ResponseEntity<List<UserProfileDto>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+
+        // On convertit les entités en DTO pour ne pas envoyer les mots de passe !
+        List<UserProfileDto> dtos = users.stream().map(user -> {
+            UserProfileDto dto = new UserProfileDto();
+            dto.setId(user.getId());
+            dto.setFirstname(user.getFirstname());
+            dto.setLastname(user.getLastname());
+            dto.setEmail(user.getEmail());
+            dto.setLogin(user.getLogin());
+            dto.setLangue(user.getLangue());
+            if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+                dto.setRole(user.getRoles().get(0).getRole());
+            }
+            return dto;
+        }).toList();
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    // SUPPRIMER UN USER (Admin seulement)
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")  // Sécurité au niveau méthode
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id); // Assure-toi d'avoir cette méthode dans ton service
+        return ResponseEntity.noContent().build();
     }
 }
