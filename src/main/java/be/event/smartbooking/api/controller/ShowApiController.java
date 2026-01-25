@@ -288,20 +288,27 @@ public class ShowApiController {
         }
 
         private RepresentationDTO convertRepToDto(Representation rep, String title) {
-                String location = "Lieu non défini";
-                // Sécurité contre les NullPointerException
-                if (rep.getShow() != null && rep.getShow().getLocation() != null) {
-                        location = rep.getShow().getLocation().getDesignation();
+                String locationName = "Lieu non défini";
+
+                // 1. On vérifie d'abord si la séance a un lieu spécifique
+                if (rep.getLocation() != null) {
+                        locationName = rep.getLocation().getDesignation();
+                }
+                // 2. Sinon, on se rabat sur le lieu par défaut du spectacle
+                else if (rep.getShow() != null && rep.getShow().getLocation() != null) {
+                        locationName = rep.getShow().getLocation().getDesignation();
                 }
 
                 return RepresentationDTO.builder()
                                 .id(rep.getId())
                                 .when(rep.getWhen())
                                 .showTitle(title)
-                                .locationName(location)
-                                .prices(rep.getPrices() != null ? rep.getPrices().stream()
-                                                .map(this::convertPriceToDto)
-                                                .toList() : new ArrayList<>())
+                                .locationName(locationName) // Utilise la logique de priorité
+                                .prices(rep.getPrices() != null
+                                                ? rep.getPrices().stream()
+                                                                .map(this::convertPriceToDto)
+                                                                .toList()
+                                                : new ArrayList<>())
                                 .build();
         }
 
@@ -323,6 +330,9 @@ public class ShowApiController {
                                 .amount(p.getAmount())
                                 .build();
         }
+
+
+        
 
 
        

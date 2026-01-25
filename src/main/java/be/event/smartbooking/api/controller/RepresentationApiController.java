@@ -1,7 +1,6 @@
 package be.event.smartbooking.api.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import be.event.smartbooking.dto.RepresentationRequest;
+import be.event.smartbooking.model.Location;
 import be.event.smartbooking.model.Price;
 import be.event.smartbooking.model.Representation;
 import be.event.smartbooking.model.Show;
@@ -36,6 +36,19 @@ public class RepresentationApiController {
         Show show = showService.get(showId);
         if (show == null)
             return ResponseEntity.notFound().build();
+
+        // SÉCURITÉ : On vérifie si on a un lieu quelque part
+        Location finalLocation = null;
+        if (request.getLocationId() != null) {
+            finalLocation = locRepo.findById(request.getLocationId()).orElse(show.getLocation());
+        } else {
+            finalLocation = show.getLocation();
+        }
+
+        // Si vraiment aucun lieu n'est défini ni dans la requête ni dans le spectacle
+        if (finalLocation == null) {
+            return ResponseEntity.badRequest().body("Erreur : Aucun lieu n'est défini pour cette séance.");
+        }
 
         // 1. Création de la représentation
         Representation rep = Representation.builder()

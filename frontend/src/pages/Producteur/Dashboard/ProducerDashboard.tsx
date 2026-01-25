@@ -321,6 +321,17 @@ const ProducerDashboard: React.FC = () => {
                     <td>{showStat?.ticketsSold || 0}</td>
                     <td>
                       <div className={styles.actionsContainer}>
+
+                        {/* NOUVEAU BOUTON : GÉRER LES SÉANCES */}
+                        <button
+                          onClick={() => navigate(`/admin/shows/${show.id}/schedule`)}
+                          className={`${styles.actionButton} ${styles.scheduleButton}`}
+                          title="Gérer le calendrier et les prix"
+                        >
+                          📅 Séances
+                        </button>
+
+
                         <button
                           onClick={() =>
                             navigate(`/producer/shows/edit/${show.id}`)
@@ -329,18 +340,24 @@ const ProducerDashboard: React.FC = () => {
                         >
                           Modifier
                         </button>
+
+
                         <button
                           onClick={() => navigate(`/show/${show.id}`)}
                           className={`${styles.actionButton} ${styles.viewButton}`}
                         >
                           Voir
                         </button>
+
+
                         <button
                           onClick={() => handleDeleteShow(show)}
                           className={`${styles.actionButton} ${styles.deleteButton}`}
                         >
                           Supprimer
                         </button>
+
+                        
                       </div>
                     </td>
                   </tr>
