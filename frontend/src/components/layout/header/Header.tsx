@@ -32,8 +32,19 @@ const Header: React.FC = () => {
                     {/* ESPACE PRODUCTEUR */}
                     {user && (user.role === 'producer' || user.role === 'admin') && (
                         <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsAffiliateOpen, affiliateTimeout)} onMouseLeave={() => handleLeave(setIsAffiliateOpen, affiliateTimeout)}>
-                            <button className={`${styles.dropdownBtn} ${styles.producerBtn}`}>Espace Producteur ▼</button>
-                            {isAffiliateOpen && (
+                                <button
+                                type="button"
+                                className={`${styles.dropdownBtn} ${styles.producerBtn}`}
+                                aria-haspopup="menu"
+                                aria-expanded={isAffiliateOpen}
+                                onClick={() => setIsAffiliateOpen(v => !v)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') setIsAffiliateOpen(v => !v);
+                                if (e.key === 'Escape') setIsAffiliateOpen(false); }}
+                                >
+                                Espace Producteur ▼
+                                </button>
+                                                            {isAffiliateOpen && (
                                 <div className={styles.dropdownMenu}>
                                     <NavLink to="/producer/dashboard" className={styles.dropdownItem}>📊 Dashboard</NavLink>
                                    

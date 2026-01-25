@@ -144,15 +144,7 @@ export const userApi = {
         });
     },
 
-    // Mettre à jour n'importe quel profil (Admin) ou son propre profil
-    update: async (profileData: UserProfileDto) => {
-        const res = await secureFetch('/api/users/profile', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(profileData),
-        });
-        return res.text();
-    }
+   
 };
  
 export const artistApi = {
