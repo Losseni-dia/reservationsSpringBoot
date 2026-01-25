@@ -1,5 +1,5 @@
 CREATE TABLE `localities` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `postal_code` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
   `locality` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY(id)

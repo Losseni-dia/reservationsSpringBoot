@@ -1,9 +1,9 @@
 CREATE TABLE `locations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `slug` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
   `designation` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `locality_id` int(11) NOT NULL,
+  `locality_id` BIGINT NOT NULL,
   `website` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY(id)

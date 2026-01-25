@@ -1,8 +1,8 @@
 CREATE TABLE `representation_reservations` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `representation_id` INT(11) NOT NULL,
-    `reservation_id` INT(11) NOT NULL,
-    `price_id` INT(11) NOT NULL,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `representation_id` BIGINT NOT NULL,
+    `reservation_id` BIGINT NOT NULL,
+    `price_id` BIGINT NOT NULL,
     `quantity` INT(11) DEFAULT 1,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uc_repr_res_price` (

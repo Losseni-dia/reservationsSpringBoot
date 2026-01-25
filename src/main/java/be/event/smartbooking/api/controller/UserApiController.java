@@ -138,7 +138,7 @@ public class UserApiController {
 
     // LISTER TOUS LES USERS (Admin seulement)
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")  // Sécurité au niveau méthode
+    @PreAuthorize("hasRole('ADMIN')") // Sécurité au niveau méthode
     public ResponseEntity<List<UserProfileDto>> getAllUsers() {
         List<User> users = userService.getAllUsers();
 
@@ -162,7 +162,7 @@ public class UserApiController {
 
     // SUPPRIMER UN USER (Admin seulement)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")  // Sécurité au niveau méthode
+    @PreAuthorize("hasRole('ADMIN')")// Sécurité au niveau méthode
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id); // Assure-toi d'avoir cette méthode dans ton service
         return ResponseEntity.noContent().build();

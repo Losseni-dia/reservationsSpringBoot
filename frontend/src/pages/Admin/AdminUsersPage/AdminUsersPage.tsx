@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { userApi } from '../../../services/api';
-import { UserProfileDto } from '../../../types/models';
+import { UserProfileDto } from '../../../types/models'; // Vérifie que ton DTO est bien ici
 import Loader from '../../../components/ui/loader/Loader';
 import styles from './AdminUsersPage.module.css';
 
@@ -19,21 +19,24 @@ const AdminUsersPage: React.FC = () => {
         }
     };
 
-    useEffect(() => { loadUsers(); }, []);
+    useEffect(() => {
+        loadUsers();
+    }, []);
 
     const handleDelete = async (id: number, name: string) => {
-        // CORRECTIF 1 : Ajout des backticks pour la chaîne de caractères
         if (!window.confirm(`⚠️ ATTENTION : Supprimer définitivement l'utilisateur "${name}" ?`)) return;
         
         try {
             await userApi.delete(id);
-            setUsers(users.filter(u => u.id !== id));
+            setUsers(prevUsers => prevUsers.filter(u => u.id !== id));
         } catch (err) {
-            alert("Erreur lors de la suppression. L'utilisateur a peut-être des réservations actives.");
+            alert("Erreur lors de la suppression. L'utilisateur a peut-être des données liées (réservations, etc.).");
         }
     };
 
+    // Transforme "ROLE_ADMIN" en "admin" pour correspondre aux classes CSS
     const getRoleClass = (role: string) => {
+        if (!role) return styles.member;
         const cleanRole = role.replace('ROLE_', '').toLowerCase();
         return styles[cleanRole] || styles.member;
     };
@@ -63,12 +66,13 @@ const AdminUsersPage: React.FC = () => {
                             users.map(user => (
                                 <tr key={user.id}>
                                     <td className={styles.userName}>
-                                        {user.lastname.toUpperCase()} {user.firstname}
+                                        {user.lastname?.toUpperCase()} {user.firstname}
                                     </td>
-                                    <td><code className={styles.loginTag}>{user.login}</td>
+                                    <td>
+                                        <code className={styles.loginTag}>{user.login}</code>
+                                    </td>
                                     <td>{user.email}</td>
                                     <td>
-                                        {/* CORRECTIF 2 : Ajout des backticks pour l'interpolation des classes CSS */}
                                         <span className={`${styles.roleBadge} ${getRoleClass(user.role)}`}>
                                             {user.role.replace('ROLE_', '')}
                                         </span>

@@ -1,7 +1,8 @@
 CREATE TABLE `reservations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `representation_id` int(11) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT NOT NULL,
+  `reservation_date` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `representation_id` BIGINT NOT NULL,
   `places` int(11) NOT NULL,
   PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
