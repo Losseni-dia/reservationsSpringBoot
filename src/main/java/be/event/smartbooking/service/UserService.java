@@ -67,6 +67,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        java.util.Objects.requireNonNull(id, "id");
         if (!userRepos.existsById(id)) {
             throw new EntityNotFoundException("Utilisateur introuvable");
         }
