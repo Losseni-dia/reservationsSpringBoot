@@ -1,6 +1,9 @@
+/* ==========================================================================
+   STRUCTURE ET LOGO
+   ========================================================================== */
 .header {
     background-color: #000000;
-    padding: 1rem 0;
+    padding: 0.8rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -19,9 +22,14 @@
     color: #f5c518;
 }
 
+/* ==========================================================================
+   NAVIGATION PRINCIPALE
+   ========================================================================== */
 .nav {
     display: flex;
+    align-items: center;
     gap: 2rem;
+    flex-wrap: wrap;
 }
 
 .link {
@@ -40,130 +48,21 @@
     text-decoration: none;
     font-weight: bold;
     border-bottom: 2px solid #f5c518;
+    padding-bottom: 2px;
 }
 
-.actions {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.searchBox {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #444;
-    padding: 2px 0;
-}
-
-.searchIcon {
-    color: #ffffff;
-    margin-right: 8px;
-    opacity: 0.8;
-}
-
-.searchInput {
-    background: none;
-    border: none;
-    color: white;
-    outline: none;
-    font-size: 0.85rem;
-    width: 100px;
-}
-
-.cartBtn {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    position: relative;
-}
-
-.loginBtn {
-    color: white;
-    text-decoration: none;
-    font-size: 0.9rem;
-    border: 1px solid #555;
-    padding: 5px 15px;
-    border-radius: 4px;
-    transition: 0.3s;
-}
-
-.loginBtn:hover {
-    background: white;
-    color: black;
-}
-
-/* ZONE CONNECTÉE */
-.userActions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.profileLink {
-    text-decoration: none;
-    font-weight: 500;
-    color: #e5e5e5;
-    display: flex;
-    align-items: center;
-    transition: 0.3s;
-}
-
-.profileLink:hover {
-    color: #f5c518;
-}
-
-.logoutBtn {
-    background-color: transparent;
-    color: #ff4d4d;
-    /* ROUGE */
-    border: 1px solid #ff4d4d;
-    padding: 5px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-}
-
-.logoutBtn:hover {
-    background-color: #ff4d4d;
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
-}
-
-.divider {
-    width: 1px;
-    height: 20px;
-    background-color: #333;
-    margin: 0 10px;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-/* Optionnel : donner un look un peu plus "VIP/Gold" aux liens producteur */
-.link:hover .yellow {
-    color: #fff;
-}
-
-.nav {
-    display: flex;
-    align-items: center;
-    /* Aligne verticalement le divider et les liens */
-    gap: 1.5rem;
-    /* Réduis un peu le gap si c'est trop large pour l'écran */
-    flex-wrap: wrap;
-    /* Au cas où il y a trop de liens */
-}
-
-/* Conteneur principal du dropdown */
+/* ==========================================================================
+   DROPDOWNS (Producteur & Admin) - FIX SENSIBILITÉ
+   ========================================================================== */
 .dropdown {
     position: relative;
     display: inline-block;
+    /* PONT INVISIBLE : On crée une zone de détection sous le bouton 
+       pour que la souris reste "active" en allant vers le menu */
+    padding-bottom: 15px;
+    margin-bottom: -15px;
 }
 
-/* Le bouton qui déclenche le menu */
 .dropdownBtn {
     background: none;
     border: none;
@@ -175,39 +74,65 @@
     transition: 0.3s;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
 .dropdownBtn:hover {
     color: #f5c518;
 }
 
-.caret {
-    font-size: 0.7rem;
-    transition: transform 0.3s;
+/* Style VIP pour le bouton Administration */
+.adminBtn, .producerBtn {
+    color: #f5c518 !important;
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    padding: 4px 12px !important;
+    border-radius: 4px;
+    margin-left: 5px;
 }
 
-/* Le menu qui apparaît */
+.adminBtn:hover {
+    background-color: rgba(245, 197, 24, 0.1);
+}
+
+.caret {
+    font-size: 0.6rem;
+    opacity: 0.6;
+}
+
 .dropdownMenu {
     position: absolute;
     top: 100%;
+    /* Se colle à la zone de détection */
     left: 0;
     background-color: #1a1a1a;
-    min-width: 200px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+    min-width: 220px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
     z-index: 1001;
-    border-radius: 4px;
+    border-radius: 6px;
     border: 1px solid #333;
-    margin-top: 10px;
-    padding: 8px 0;
+    padding: 10px 0;
+    animation: fadeIn 0.2s ease-out;
 }
 
-/* Les liens à l'intérieur du menu */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .dropdownItem {
     color: #fff;
-    padding: 12px 16px;
+    padding: 12px 20px;
     text-decoration: none;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-size: 0.9rem;
     transition: 0.2s;
 }
@@ -217,7 +142,7 @@
     color: #f5c518;
 }
 
-/* Triangle au-dessus du menu (optionnel) */
+/* Triangle indicateur */
 .dropdownMenu::before {
     content: "";
     position: absolute;
@@ -226,4 +151,112 @@
     border-width: 8px;
     border-style: solid;
     border-color: transparent transparent #1a1a1a transparent;
+}
+
+/* ==========================================================================
+   ACTIONS ET AUTHENTIFICATION
+   ========================================================================== */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.authButtons {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* Bouton Inscription (Lien épuré) */
+.registerBtn {
+    color: #e5e5e5;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.registerBtn:hover {
+    color: #f5c518;
+    text-shadow: 0 0 8px rgba(245, 197, 24, 0.5);
+}
+
+/* Bouton Connexion (Action principale) */
+.loginBtn {
+    background-color: #f5c518;
+    color: #000;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 8px 22px;
+    border-radius: 4px;
+    transition: 0.3s;
+    border: none;
+}
+
+.loginBtn:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.3);
+}
+
+/* ==========================================================================
+   ZONE PROFIL ET LOGOUT
+   ========================================================================== */
+.userActions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profileLink {
+    text-decoration: none;
+    font-weight: 600;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.profileLink:hover {
+    color: #f5c518;
+}
+
+.logoutBtn {
+    background-color: transparent;
+    color: #ff4d4d;
+    border: 1px solid rgba(255, 77, 77, 0.4);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.logoutBtn:hover {
+    background-color: #ff4d4d;
+    color: white;
+    border-color: #ff4d4d;
+    box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+}
+
+.registerBtn {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.registerBtn:hover {
+    border-color: #f5c518;
+    color: #f5c518;
 }

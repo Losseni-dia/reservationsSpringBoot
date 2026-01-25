@@ -129,6 +129,23 @@ export const authApi = {
 };
  
 // --- API MODULES ---
+
+export const userApi = {
+    // Lister tous les utilisateurs (Route @GetMapping("/api/users") protégée par ADMIN)
+    getAll: async (): Promise<UserProfileDto[]> => {
+        const res = await secureFetch('/api/users');
+        return res.json();
+    },
+
+    // Supprimer un utilisateur spécifique
+    delete: async (id: number) => {
+        return await secureFetch(`/api/users/${id}`, {
+            method: 'DELETE'
+        });
+    },
+
+   
+};
  
 export const artistApi = {
     getAll: async (): Promise<Artist[]> => {
