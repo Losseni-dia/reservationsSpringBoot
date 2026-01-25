@@ -22,6 +22,7 @@ import EditShow from './pages/Producteur/UpdateShow/EditShow';
 import LocationList from './pages/AdminPages/Locations/AdminLocationsPage';
 import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
 import ResetPasswordPage from './pages/Login/ResetPasswordPage';
+import ShowSchedule from './pages/Producteur/ShowSchedule/ShowSchedule';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
               <Route path="/producer/shows/add" element={<AddShow />} />
               <Route path="/producer/shows/edit/:id" element={<EditShow />} />
+              <Route path="/admin/shows/:id/schedule" element={<ShowSchedule />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
