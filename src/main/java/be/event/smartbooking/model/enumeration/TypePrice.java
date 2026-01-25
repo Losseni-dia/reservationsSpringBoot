@@ -3,6 +3,7 @@ package be.event.smartbooking.model.enumeration;
 public enum TypePrice {
     STANDARD("Standard"),
     VIP("VIP"),
+    REDUIT("Réduit"),
     PREMIUM("Premium");
 
     private final String type;

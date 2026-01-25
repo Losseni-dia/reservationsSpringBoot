@@ -9,5 +9,6 @@ export enum StatutReservation {
 export enum TypePrice {
     STANDARD = "STANDARD",
     VIP = "VIP",
+    REDUIT = "REDUIT",
     PREMIUM = "PREMIUM"
 }
