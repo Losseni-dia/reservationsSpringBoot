@@ -171,3 +171,33 @@
 .deleteBtn:hover {
     color: #ff0000;
 }
+
+
+/* Bouton principal de soumission (Mettre à jour) */
+.submitBtn {
+    width: 100%;
+    background-color: #f5c518;
+    color: #000;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.submitBtn:hover {
+    background-color: #dfb215;
+    transform: scale(1.01);
+}
+
+.submitBtn:disabled {
+    background-color: #444;
+    color: #888;
+    cursor: not-allowed;
+    transform: none;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import AddShowForm from '../ShowForm/ShowForm';
 import { showApi } from '../../../services/api';
 import styles from './EditShow.module.css';
@@ -12,15 +12,26 @@ const EditShow = () => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        showApi.getById(Number(id)).then(setShowData).finally(() => setLoading(false));
+        if (id) {
+            showApi.getById(Number(id))
+                .then(setShowData)
+                .catch(() => alert("Impossible de charger le spectacle"))
+                .finally(() => setLoading(false));
+        }
     }, [id]);
 
     const handleUpdate = async (formData: FormData) => {
         setSubmitting(true);
         try {
             await showApi.update(Number(id), formData);
+            // On peut rediriger vers le dashboard ou rester ici avec un message de succès
+            alert("Spectacle mis à jour avec succès !");
             navigate('/producer/dashboard');
-        } catch (err) { alert("Erreur MAJ"); } finally { setSubmitting(false); }
+        } catch (err) { 
+            alert("Erreur lors de la mise à jour"); 
+        } finally { 
+            setSubmitting(false); 
+        }
     };
 
     if (loading) return <div className={styles.loader}>Chargement...</div>;
@@ -28,10 +39,23 @@ const EditShow = () => {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <h1 className={styles.header}>Modifier le spectacle</h1>
-                <AddShowForm mode="edit" initialData={showData} onSubmit={handleUpdate} isSubmitting={submitting} />
+                <div className={styles.headerFlex}>
+                    <h1 className={styles.header}>Modifier le spectacle</h1>
+                    {/* LE LIEN VERS LA PROGRAMMATION */}
+                    <Link to={`/admin/shows/${id}/schedule`} className={styles.scheduleBtn}>
+                        📅 Gérer les séances & prix
+                    </Link>
+                </div>
+
+                <AddShowForm 
+                    mode="edit" 
+                    initialData={showData} 
+                    onSubmit={handleUpdate} 
+                    isSubmitting={submitting} 
+                />
             </div>
         </div>
     );
 };
+
 export default EditShow;

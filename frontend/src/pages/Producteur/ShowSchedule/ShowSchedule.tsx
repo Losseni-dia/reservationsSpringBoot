@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { showApi, representationApi } from '../../../services/api';
-import { Show, TypePrice } from '../../../types/models';
+import { TypePrice } from '../../../types/enums';
+import { Show} from '../../../types/models';
 import styles from './ShowSchedule.module.css';
 
 const ShowSchedule: React.FC = () => {
