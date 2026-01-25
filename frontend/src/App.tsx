@@ -1,12 +1,12 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Context
-import { AuthProvider } from './components/context/AuthContext'; 
+import { AuthProvider } from "./components/context/AuthContext";
 
 // Layout
-import Header from './components/layout/header/Header';
-import Footer from './components/layout/footer/Footer';
+import Header from "./components/layout/header/Header";
+import Footer from "./components/layout/footer/Footer";
 
 // Pages
 import Home from './pages/home/Home';
@@ -23,14 +23,20 @@ import LocationList from './pages/AdminPages/Locations/AdminLocationsPage';
 import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
 import ResetPasswordPage from './pages/Login/ResetPasswordPage';
 import ShowSchedule from './pages/Producteur/ShowSchedule/ShowSchedule';
+import LocationList from "./pages/Admin/Locations/AdminLocationsPage";
+import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
+import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
-        <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#141414' }}>
-          
+        <div
+          className="d-flex flex-column min-vh-100"
+          style={{ backgroundColor: "#141414" }}
+        >
           <Header />
 
           <main className="flex-grow-1">
@@ -46,6 +52,9 @@ function App() {
               <Route path="/producer/shows/add" element={<AddShow />} />
               <Route path="/producer/shows/edit/:id" element={<EditShow />} />
               <Route path="/admin/shows/:id/schedule" element={<ShowSchedule />} />
+              <Route path="/admin/shows" element={<AdminShowPage />} />
+              <Route path="/admin/shows/add" element={<AddShow />} />
+              <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
