@@ -129,6 +129,31 @@ export const authApi = {
 };
  
 // --- API MODULES ---
+
+export const userApi = {
+    // Lister tous les utilisateurs (Route @GetMapping("/api/users") protégée par ADMIN)
+    getAll: async (): Promise<UserProfileDto[]> => {
+        const res = await secureFetch('/api/users');
+        return res.json();
+    },
+
+    // Supprimer un utilisateur spécifique
+    delete: async (id: number) => {
+        return await secureFetch(`/api/users/${id}`, {
+            method: 'DELETE'
+        });
+    },
+
+    // Mettre à jour n'importe quel profil (Admin) ou son propre profil
+    update: async (profileData: UserProfileDto) => {
+        const res = await secureFetch('/api/users/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profileData),
+        });
+        return res.text();
+    }
+};
  
 export const artistApi = {
     getAll: async (): Promise<Artist[]> => {
