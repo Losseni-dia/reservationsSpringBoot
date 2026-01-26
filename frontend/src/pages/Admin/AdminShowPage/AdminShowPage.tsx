@@ -65,33 +65,43 @@ const AdminShowPage: React.FC = () => {
     [navigate],
   );
 
-  const handleToggleConfirmShow = useCallback(
-    async (show: Show) => {
-      try {
-        setLoading(true);
-        const updatedShow = { ...show, bookable: !show.bookable };
-        await showApi.update(show.id, updatedShow);
+const handleToggleConfirmShow = useCallback(
+  async (show: Show) => {
+    try {
+      setLoading(true);
+      
+      // 1. Créer l'objet avec la modification
+      const isBookable = !show.bookable;
 
-        setToastMessage(
-          updatedShow.bookable
-            ? `✓ Spectacle "${show.title}" confirmé et visible au public`
-            : `⏳ Spectacle "${show.title}" retiré de la visibilité publique`,
-        );
-        setToastType("success");
+      // 2. Transformer en FormData
+      const formData = new FormData();
+      formData.append("bookable", String(isBookable));
+      // On ajoute souvent les autres champs requis par le backend
+      formData.append("title", show.title);
+      formData.append("description", show.description);
+      formData.append("slug", show.slug);
+      if (show.locationId) formData.append("locationId", String(show.locationId));
 
-        // Rafraîchir la liste
-        await fetchShows();
-      } catch (err: any) {
-        console.error("Erreur lors de la confirmation du spectacle:", err);
-        setToastMessage(
-          "Erreur lors de la mise à jour du statut du spectacle",
-        );
-        setToastType("error");
-        setLoading(false);
-      }
-    },
-    [fetchShows],
-  );
+      // 3. Envoyer le FormData
+      await showApi.update(show.id, formData);
+
+      setToastMessage(
+        isBookable
+          ? `✓ Spectacle "${show.title}" confirmé`
+          : `⏳ Spectacle "${show.title}" révoqué`
+      );
+      setToastType("success");
+      await fetchShows();
+    } catch (err: any) {
+      console.error(err);
+      setToastMessage("Erreur lors de la mise à jour");
+      setToastType("error");
+    } finally {
+      setLoading(false);
+    }
+  },
+  [fetchShows]
+);
 
   const handleOpenConfirmModal = useCallback((show: Show) => {
     setShowToConfirm(show);
