@@ -1,10 +1,10 @@
 CREATE TABLE `representations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `show_id` int(11) NOT NULL,
-  `location_id` int(11) DEFAULT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `show_id` BIGINT NOT NULL,
+  `location_id` BIGINT DEFAULT NULL,
   `starts_at` datetime(6) NOT NULL,
   PRIMARY KEY(id)
-) ENGINE=InnoDB DEFAULT CHARSET= utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Index pour la table `representations`

@@ -13,6 +13,7 @@ import be.event.smartbooking.model.Role;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.repository.RoleRepos;
 import be.event.smartbooking.repository.UserRepos;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -65,9 +66,14 @@ public class UserService {
         return userRepos.findByLogin(login);
     }
 
-    public void deleteUser(long id) {
+    public void deleteUser(Long id) {
+        java.util.Objects.requireNonNull(id, "id");
+        if (!userRepos.existsById(id)) {
+            throw new EntityNotFoundException("Utilisateur introuvable");
+        }
         userRepos.deleteById(id);
     }
+    
 
     public void deleteByLogin(String login) {
         User user = userRepos.findByLogin(login);

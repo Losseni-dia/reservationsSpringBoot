@@ -19,14 +19,12 @@ import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
 import ProtectedRoute from './ProtectedRoute';
 import AddShow from './pages/Producteur/AddShow/AddShow';
 import EditShow from './pages/Producteur/UpdateShow/EditShow';
-import LocationList from './pages/AdminPages/Locations/AdminLocationsPage';
 import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
 import ResetPasswordPage from './pages/Login/ResetPasswordPage';
 import ShowSchedule from './pages/Producteur/ShowSchedule/ShowSchedule';
-import LocationList from "./pages/Admin/Locations/AdminLocationsPage";
-import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
+import LocationList from "./pages/Admin/Locations/AdminLocationsPage";
+import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
 
 function App() {
   return (
@@ -59,6 +57,7 @@ function App() {
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/admin/users" element={<AdminUsersPage />} />
             </Routes>
           </main>
 

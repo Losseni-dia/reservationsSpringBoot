@@ -1,69 +1,86 @@
-import React, { useState } from 'react'; // Ajout de useState
+import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
     const { user, logout } = useAuth();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isAffiliateOpen, setIsAffiliateOpen] = useState(false);
+    const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+    const affiliateTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const adminTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleEnter = (setter: (v: boolean) => void, timer: React.MutableRefObject<any>) => {
+        if (timer.current) clearTimeout(timer.current);
+        setter(true);
+    };
+
+    const handleLeave = (setter: (v: boolean) => void, timer: React.MutableRefObject<any>) => {
+        timer.current = setTimeout(() => setter(false), 300);
+    };
 
     return (
         <header className={styles.header}>
             <div className="container d-flex justify-content-between align-items-center">
-                <Link to="/" className={styles.logo}>
-                    SMART<span className={styles.yellow}>BOOKING</span>
-                </Link>
+                <Link to="/" className={styles.logo}>SMART<span className={styles.yellow}>BOOKING</span></Link>
                 
                 <nav className={styles.nav}>
-                    <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
-                        Spectacles
-                    </NavLink>
-                    <NavLink to="/locations" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
-                        Lieux
-                    </NavLink>
+                    <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Spectacles</NavLink>
+                    <NavLink to="/locations" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Lieux</NavLink>
 
-                    {/* --- DROPDOWN ESPACE AFFILIÉS --- */}
-                    {user && (user.role === 'affiliate' || user.role === 'admin') && (
-                        <div 
-                            className={styles.dropdown}
-                            onMouseEnter={() => setIsDropdownOpen(true)}
-                            onMouseLeave={() => setIsDropdownOpen(false)}
-                        >
-                            <button className={styles.dropdownBtn}>
-                                Espace Affiliés <span className={styles.caret}>▼</span>
-                            </button>
-
-                            {isDropdownOpen && (
+                    {/* ESPACE PRODUCTEUR */}
+                    {user && (user.role === 'producer' || user.role === 'admin') && (
+                        <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsAffiliateOpen, affiliateTimeout)} onMouseLeave={() => handleLeave(setIsAffiliateOpen, affiliateTimeout)}>
+                                <button
+                                type="button"
+                                className={`${styles.dropdownBtn} ${styles.producerBtn}`}
+                                aria-haspopup="menu"
+                                aria-expanded={isAffiliateOpen}
+                                onClick={() => setIsAffiliateOpen(v => !v)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') setIsAffiliateOpen(v => !v);
+                                if (e.key === 'Escape') setIsAffiliateOpen(false); }}
+                                >
+                                Espace Producteur ▼
+                                </button>
+                                                            {isAffiliateOpen && (
                                 <div className={styles.dropdownMenu}>
-                                    <NavLink to="/producer/dashboard" className={styles.dropdownItem}>
-                                        📊 Dashboard
-                                    </NavLink>
-                                    <NavLink to="/producer/shows/add" className={styles.dropdownItem}>
-                                        ➕ Ajouter un spectacle
-                                    </NavLink>
+                                    <NavLink to="/producer/dashboard" className={styles.dropdownItem}>📊 Dashboard</NavLink>
+                                   
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* ESPACE ADMIN */}
+                    {user && user.role === 'admin' && (
+                        <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsAdminOpen, adminTimeout)} onMouseLeave={() => handleLeave(setIsAdminOpen, adminTimeout)}>
+                            <button className={`${styles.dropdownBtn} ${styles.adminBtn}`}>Administration ▼</button>
+                            {isAdminOpen && (
+                                <div className={styles.dropdownMenu}>
+                                    <NavLink to="/admin/users" className={styles.dropdownItem}>👥 Gestion Utilisateurs</NavLink>
                                 </div>
                             )}
                         </div>
                     )}
                 </nav>
 
-                {/* ... Reste du code (actions, searchBox, user) ... */}
                 <div className={styles.actions}>
-                     {/* Ton code existant pour le panier et l'utilisateur */}
-                     {user ? (
+                    {user ? (
                         <div className={styles.userActions}>
-                            <Link to="/profile" className={styles.profileLink}>
-                                👤 <span className="ms-1">{user.firstname}</span>
-                            </Link>
+                            <Link to="/profile" className={styles.profileLink}>👤 {user.firstname}</Link>
                             <button onClick={logout} className={styles.logoutBtn}>Déconnexion</button>
                         </div>
                     ) : (
-                        <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        <div className={styles.authButtons}>
+                            <Link to="/register" className={styles.registerBtn}>Inscription</Link>
+                            <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                        </div>
                     )}
                 </div>
             </div>
         </header>
     );
 };
-
 export default Header;

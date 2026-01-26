@@ -1,0 +1,130 @@
+.container {
+    background-color: #141414;
+    min-height: 100vh;
+    padding: 3rem 5%;
+    color: white;
+}
+
+.header {
+    margin-bottom: 3rem;
+    border-left: 5px solid #f5c518;
+    padding-left: 1.5rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.yellow {
+    color: #f5c518;
+}
+
+.header p {
+    color: #888;
+    margin-top: 0.5rem;
+}
+
+/* Tableau */
+.tableWrapper {
+    background: #1f1f1f;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid #333;
+    overflow-x: auto;
+}
+
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.userTable th {
+    text-align: left;
+    padding: 1.2rem;
+    color: #f5c518;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #333;
+}
+
+.userTable td {
+    padding: 1.2rem;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 0.95rem;
+}
+
+.userTable tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.userName {
+    font-weight: 600;
+}
+
+.loginTag {
+    background: #333;
+    padding: 4px 10px;
+    border-radius: 4px;
+    color: #f5c518;
+    font-family: monospace;
+}
+
+/* Badges de Rôles */
+.roleBadge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.admin {
+    background-color: #f5c518;
+    color: #000;
+}
+
+.producer {
+    background-color: #00acc1;
+    color: #fff;
+}
+
+.member {
+    background-color: #444;
+    color: #bbb;
+}
+
+/* Boutons */
+.deleteBtn {
+    background-color: transparent;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.deleteBtn:hover {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.loaderContainer {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.empty {
+    text-align: center;
+    padding: 3rem !important;
+    color: #666;
+}
