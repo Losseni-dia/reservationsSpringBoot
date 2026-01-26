@@ -1,7 +1,7 @@
 CREATE TABLE `reviews` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `user_id` INT(11) NOT NULL,
-    `show_id` INT(11) NOT NULL,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL,
+    `show_id` BIGINT NOT NULL,
     `comment` TEXT COLLATE utf8mb4_unicode_ci NOT NULL,
     `stars` INT(1) NOT NULL,
     `validated` TINYINT(1) DEFAULT 0,

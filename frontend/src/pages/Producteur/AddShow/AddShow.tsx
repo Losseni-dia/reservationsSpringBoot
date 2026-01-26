@@ -19,7 +19,7 @@ const AddShow = () => {
             // REDIRECTION INTELLIGENTE :
             // On envoie Bob sur la page de modification du spectacle qu'il vient de créer
             // pour qu'il puisse enfin ajouter ses séances.
-            navigate(`/admin/shows/${newShow.id}/edit`); 
+            navigate(`/producer/shows/dashboard`); 
             
         } catch (err) {
             alert("Erreur lors de la création");

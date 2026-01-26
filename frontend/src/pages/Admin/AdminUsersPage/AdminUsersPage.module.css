@@ -3,7 +3,6 @@
     min-height: 100vh;
     padding: 3rem 5%;
     color: white;
-    font-family: 'Inter', sans-serif;
 }
 
 .header {
@@ -13,11 +12,10 @@
 }
 
 .header h1 {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     font-weight: 900;
     margin: 0;
     text-transform: uppercase;
-    letter-spacing: -1px;
 }
 
 .yellow {
@@ -27,16 +25,16 @@
 .header p {
     color: #888;
     margin-top: 0.5rem;
-    font-size: 1.1rem;
 }
 
 /* Tableau */
 .tableWrapper {
     background: #1f1f1f;
     border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    padding: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     border: 1px solid #333;
+    overflow-x: auto;
 }
 
 .userTable {
@@ -50,19 +48,14 @@
     color: #f5c518;
     font-size: 0.8rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     border-bottom: 2px solid #333;
 }
 
 .userTable td {
     padding: 1.2rem;
     border-bottom: 1px solid #2a2a2a;
-    color: #e5e5e5;
     font-size: 0.95rem;
-}
-
-.userTable tr:last-child td {
-    border-bottom: none;
 }
 
 .userTable tr:hover {
@@ -71,26 +64,24 @@
 
 .userName {
     font-weight: 600;
-    color: #fff;
 }
 
 .loginTag {
     background: #333;
     padding: 4px 10px;
     border-radius: 4px;
-    font-size: 0.85rem;
     color: #f5c518;
+    font-family: monospace;
 }
 
 /* Badges de Rôles */
 .roleBadge {
     display: inline-block;
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 900;
+    font-size: 0.75rem;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .admin {
@@ -113,33 +104,27 @@
     background-color: transparent;
     color: #ff4d4d;
     border: 1px solid #ff4d4d;
-    padding: 8px 18px;
+    padding: 6px 14px;
     border-radius: 4px;
-    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    font-size: 0.75rem;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
 .deleteBtn:hover {
     background-color: #ff4d4d;
     color: white;
-    box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
 }
 
-/* Utils */
 .loaderContainer {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #141414;
 }
 
 .empty {
     text-align: center;
     padding: 3rem !important;
     color: #666;
-    font-style: italic;
 }

@@ -24,8 +24,8 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDateTime reservationDate;
+    @Column( name="reservation_date", nullable = false)
+    private LocalDateTime reservationDate = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
