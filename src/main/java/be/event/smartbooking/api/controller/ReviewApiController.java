@@ -47,7 +47,7 @@ public class ReviewApiController {
 
         Review review = Review.builder()
                 .user(user)
-                .show(show)
+                //.show(show)
                 .comment(dto.getComment())
                 .stars(dto.getStars())
                 .build();

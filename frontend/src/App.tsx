@@ -9,22 +9,24 @@ import Header from "./components/layout/header/Header";
 import Footer from "./components/layout/footer/Footer";
 
 // Pages
-import Home from './pages/home/Home';
-import ShowDetailsPage from './pages/show/showDetails/ShowDetails';
-import LoginPage from './pages/Login/LoginPage';
-import RegisterPage from './pages/Register/RegisterPage';
-import ProfilePage from './pages/Profile/ProfilePage';
-import ProducerDashboard from './pages/Producteur/Dashboard/ProducerDashboard';
-import ForbiddenPage from './pages/Forbidden/ForbiddenPage';
-import ProtectedRoute from './ProtectedRoute';
-import AddShow from './pages/Producteur/AddShow/AddShow';
-import EditShow from './pages/Producteur/UpdateShow/EditShow';
-import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
-import ResetPasswordPage from './pages/Login/ResetPasswordPage';
-import ShowSchedule from './pages/Producteur/ShowSchedule/ShowSchedule';
+import Home from "./pages/home/Home";
+import ShowDetailsPage from "./pages/show/showDetails/ShowDetails";
+import LoginPage from "./pages/Login/LoginPage";
+import RegisterPage from "./pages/Register/RegisterPage";
+import ProfilePage from "./pages/Profile/ProfilePage";
+import ProducerDashboard from "./pages/Producteur/Dashboard/ProducerDashboard";
+import ForbiddenPage from "./pages/Forbidden/ForbiddenPage";
+import ProtectedRoute from "./ProtectedRoute";
+import AddShow from "./pages/Producteur/AddShow/AddShow";
+import EditShow from "./pages/Producteur/UpdateShow/EditShow";
+import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
+import ShowSchedule from "./pages/Producteur/ShowSchedule/ShowSchedule";
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
+import AdminHome from "./pages/Admin/AdminHome/AdminHome";
+
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 function App() {
   return (
@@ -49,7 +51,11 @@ function App() {
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
               <Route path="/producer/shows/add" element={<AddShow />} />
               <Route path="/producer/shows/edit/:id" element={<EditShow />} />
-              <Route path="/admin/shows/:id/schedule" element={<ShowSchedule />} />
+              <Route path="/admin" element={<AdminHome />} />
+              <Route
+                path="/admin/shows/:id/schedule"
+                element={<ShowSchedule />}
+              />
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
