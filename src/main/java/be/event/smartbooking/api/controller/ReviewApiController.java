@@ -55,6 +55,31 @@ public class ReviewApiController {
         }
     }
 
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ReviewDTO> getPending() {
+        return reviewService.getPendingReviews().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    // Valider un avis
+    @PutMapping("/{id}/validate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> validate(@PathVariable Long id) {
+        reviewService.validateReview(id);
+        return ResponseEntity.ok().build();
+    }
+
+    // Supprimer un avis (déjà géré si tu as mis le DeleteMapping générique, sinon
+    // ajoute-le)
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        reviewService.deleteReview(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private ReviewDTO convertToDTO(Review r) {
         return ReviewDTO.builder()
                 .id(r.getId())
