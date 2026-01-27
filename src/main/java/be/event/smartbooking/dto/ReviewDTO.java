@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewDTO {
     private Long id;
+    private Long showId;
     private String authorLogin;
     private String comment;
     private Integer stars;
