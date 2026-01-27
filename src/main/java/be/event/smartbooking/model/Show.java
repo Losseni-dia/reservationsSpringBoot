@@ -119,6 +119,7 @@ public class Show {
 			return null;
 		}
 		return reviews.stream()
+				.filter(Review::getValidated) // Garde uniquement les reviews validées
 				.mapToInt(Review::getStars) // Vérifie que c'est bien getStars et pas getRating
 				.average()
 				.orElse(0.0);

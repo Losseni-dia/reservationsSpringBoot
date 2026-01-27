@@ -267,9 +267,10 @@ public class ShowApiController {
                                                 .map(rep -> convertRepToDto(rep, show.getTitle()))
                                                 .toList() : new ArrayList<>())
 
-                                .reviews(show.getReviews() != null ? show.getReviews().stream()
-                                                .map(this::convertReviewToDto)
-                                                .toList() : new ArrayList<>())
+                                .reviews(show.getReviews().stream()
+                                                .filter(Review::getValidated) // Garde uniquement si validated == true
+                                                .map(this::convertToReviewDTO)
+                                                .toList())
 
                                 .artists(show.getArtistTypes() != null ? show.getArtistTypes().stream()
                                                 .collect(Collectors.groupingBy(
@@ -312,7 +313,7 @@ public class ShowApiController {
                                 .build();
         }
 
-        private ReviewDTO convertReviewToDto(Review rev) {
+        private ReviewDTO convertToReviewDTO(Review rev) {
                 return ReviewDTO.builder()
                                 .id(rev.getId())
                                 .authorLogin(rev.getUser() != null ? rev.getUser().getFirstname() : "Anonyme")
