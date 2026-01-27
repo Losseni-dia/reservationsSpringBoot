@@ -60,4 +60,16 @@ public class ReviewService {
     public void deleteReview(Long reviewId) {
         reviewRepository.deleteById(reviewId);
     }
+
+    @Transactional
+    public Review addReview(Review review) {
+        // Sécurité : Un utilisateur ne peut pas poster deux avis sur le même spectacle
+        if (reviewRepository.existsByUserIdAndShowId(review.getUser().getId(), review.getShow().getId())) {
+            throw new RuntimeException("Vous avez déjà posté un avis sur ce spectacle.");
+        }
+
+        // Par défaut, on peut décider de valider automatiquement ou d'attendre l'admin
+        review.setValidated(true);
+        return reviewRepository.save(review);
+    }
 }

@@ -24,4 +24,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("SELECT AVG(r.stars) FROM Review r WHERE r.show.id = :showId AND r.validated = true")
     Double getAverageRatingForShow(Long showId);
+
+
+    // Vérifier si un utilisateur a déjà voté pour ce spectacle
+    boolean existsByUserIdAndShowId(Long userId, Long showId);
 }
