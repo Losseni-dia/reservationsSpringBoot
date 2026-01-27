@@ -25,6 +25,7 @@ import ShowSchedule from './pages/Producteur/ShowSchedule/ShowSchedule';
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
+import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
+              <Route path="reviews" element={<AdminReviewPage />} />
               <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />

@@ -47,6 +47,7 @@ const Header: React.FC = () => {
                                                             {isAffiliateOpen && (
                                 <div className={styles.dropdownMenu}>
                                     <NavLink to="/producer/dashboard" className={styles.dropdownItem}>📊 Dashboard</NavLink>
+                                    <NavLink to="/admin/reviews" className={styles.dropdownItem}>⭐ Modération Avis</NavLink>
                                    
                                 </div>
                             )}
