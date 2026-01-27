@@ -11,25 +11,10 @@ interface ShowCardProps {
 const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
     const navigate = useNavigate();
 
-      const getImageUrl = (posterPath: string | null) => {
-        // 1. Si pas d'image, placeholder
-        if (!posterPath) {
-            return 'https://placehold.co/400x600/1a1a1a/ffffff?text=Pas+d\'affiche';
-        }
-
-        // 2. Si c'est déjà une URL complète (ex: Firebase ou externe)
-        if (posterPath.startsWith('http')) {
-            return posterPath;
-        }
-
-        /**
-         * 3. Logique de nettoyage :
-         * Si posterPath = "/uploads/img.jpg" et IMAGE_STORAGE_BASE = ""
-         * On veut éviter de rajouter un slash si le path commence déjà par un /
-         */
+    const getImageUrl = (posterPath: string | null) => {
+        if (!posterPath) return 'https://placehold.co/400x600/1a1a1a/ffffff?text=Pas+d\'affiche';
+        if (posterPath.startsWith('http')) return posterPath;
         const cleanPath = posterPath.startsWith('/') ? posterPath : `/${posterPath}`;
-        
-        // On concatène. Si IMAGE_STORAGE_BASE est vide, ça donnera juste "/uploads/..."
         return `${IMAGE_STORAGE_BASE}${cleanPath}`;
     };
 
@@ -41,11 +26,30 @@ const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
                     className={styles.poster} 
                     alt={show.title}
                 />
+                {/* BADGE DE NOTE SUR L'IMAGE (Style Netflix) */}
+                {show.reviewCount !== undefined && show.reviewCount > 0 && (
+                    <div className={styles.ratingBadge}>
+                        <span className={styles.starIcon}>★</span>
+                        {show.averageRating?.toFixed(1)}
+                    </div>
+                )}
             </div>
+
             <div className={styles.content}>
                 <h5 className={styles.title}>{show.title}</h5>
                 <p className={styles.location}>📍 {show.locationDesignation}</p>
                 
+                {/* INFO DE NOMBRE D'AVIS */}
+                <div className={styles.reviewSummary}>
+                    {show.reviewCount && show.reviewCount > 0 ? (
+                        <span className={styles.reviewCount}>
+                            ({show.reviewCount} avis)
+                        </span>
+                    ) : (
+                        <span className={styles.noReview}>Aucun avis</span>
+                    )}
+                </div>
+
                 <div className={styles.buttonGroup}>
                     <Link 
                         to={`/show/${show.slug}`} 

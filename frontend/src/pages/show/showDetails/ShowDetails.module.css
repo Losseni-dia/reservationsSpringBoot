@@ -2,101 +2,197 @@
     background-color: #141414;
     color: #ffffff;
     min-height: 100vh;
-    padding-bottom: 50px;
+    padding-bottom: 80px;
 }
 
 .heroSection {
     position: relative;
-    height: 50vh;
+    height: 60vh;
     background-size: cover;
-    background-position: center top;
+    background-position: center 20%;
     display: flex;
     align-items: flex-end;
-    padding-bottom: 40px;
-    border-bottom: 2px solid #f5c518;
+    padding-bottom: 60px;
+    border-bottom: 4px solid #f5c518;
 }
 
 .title {
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-weight: 900;
-    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.8);
-    margin-bottom: 0;
+    text-shadow: 2px 4px 15px rgba(0, 0, 0, 1);
+    margin-bottom: 10px;
 }
 
 .locationTag {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: #f5c518;
     font-weight: 600;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.ratingHero {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.starIcon {
+    color: #f5c518;
+    margin-right: 5px;
 }
 
 .infoSection {
-    padding: 20px 0;
+    padding: 30px 0;
 }
 
 .infoSection h3 {
-    border-left: 4px solid #f5c518;
-    padding-left: 15px;
-    margin-bottom: 20px;
+    border-left: 5px solid #f5c518;
+    padding-left: 20px;
+    margin-bottom: 25px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .descriptionText {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #ccc;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: #bbb;
 }
 
-.bookingCard {
+.artistType {
+    color: #f5c518;
+    margin-left: 10px;
+    font-size: 0.85rem;
+}
+
+/* FORMULAIRE D'AVIS */
+.reviewFormContainer {
     background-color: #1f1f1f;
     border-radius: 12px;
-    padding: 30px;
+    padding: 25px;
+    border: 1px solid #333;
+}
+
+.starPicker {
+    font-size: 2.2rem;
+    cursor: pointer;
+}
+
+.starFull {
+    color: #f5c518;
+}
+
+.starEmpty {
+    color: #444;
+    transition: 0.2s;
+}
+
+.starPicker span:hover {
+    transform: scale(1.2);
+    display: inline-block;
+}
+
+.reviewTextarea {
+    width: 100%;
+    background-color: #141414;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: white;
+    padding: 15px;
+    min-height: 120px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.reviewTextarea:focus {
+    border-color: #f5c518;
+    box-shadow: 0 0 10px rgba(245, 197, 24, 0.2);
+}
+
+.submitReviewBtn {
+    background-color: #f5c518;
+    color: #000;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 900;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submitReviewBtn:hover:not(:disabled) {
+    background-color: #fff;
+    transform: translateY(-2px);
+}
+
+.loginPrompt {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+    border: 2px dashed #333;
+    border-radius: 8px;
+}
+
+/* CARTES D'AVIS */
+.reviewCard {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 3px solid #333;
+}
+
+.starsDisplay {
+    color: #f5c518;
+    font-size: 1.1rem;
+    margin: 8px 0;
+}
+
+.reviewComment {
+    font-style: italic;
+    color: #ddd;
+    line-height: 1.6;
+}
+
+/* BOOKING CARD */
+.bookingCard {
+    background-color: #1f1f1f;
+    border-radius: 15px;
+    padding: 35px;
     border: 1px solid #333;
     position: sticky;
-    top: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    top: 100px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
 .priceItem {
     background-color: #2a2a2a;
     border: 1px solid #444;
-    color: white;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.priceItem:hover {
-    border-color: #f5c518;
-    background-color: #333;
+    margin-bottom: 15px;
+    transition: 0.3s;
 }
 
 .reserveBtn {
-    background-color: #f5b318;
-    color: #000000;
-    font-weight: 800;
-    font-size: 1.2rem;
+    background-color: #f5c518;
+    color: #000;
+    font-weight: 900;
+    font-size: 1.3rem;
     border: none;
-    padding: 18px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 10px;
     width: 100%;
-    margin-top: 10px;
-    text-transform: uppercase;
-    transition: transform 0.2s, background-color 0.2s;
+    margin-top: 15px;
+    transition: 0.3s;
 }
 
 .reserveBtn:hover:not(:disabled) {
     background-color: #ffffff;
-    transform: translateY(-3px);
+    transform: scale(1.02);
 }
 
-
-@keyframes bounce {
-    from {
-        transform: translateY(0);
-        opacity: 0.4;
-    }
-
-    to {
-        transform: translateY(-20px);
-        opacity: 1;
-    }
+.reserveBtn:disabled {
+    background-color: #444;
+    color: #888;
+    cursor: not-allowed;
 }
