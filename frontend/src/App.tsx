@@ -26,7 +26,6 @@ import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
-
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -60,6 +59,7 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
+            
             </Routes>
           </main>
 
