@@ -23,7 +23,7 @@ import ForgotPasswordPage from './pages/Login/ForgotPasswordPage';
 import ResetPasswordPage from './pages/Login/ResetPasswordPage';
 import ShowSchedule from './pages/Producteur/ShowSchedule/ShowSchedule';
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
-import LocationList from "./pages/Admin/Locations/AdminLocationsPage";
+import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
 
 function App() {
