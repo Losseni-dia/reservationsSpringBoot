@@ -114,17 +114,26 @@ public class Show {
 
 	// Note de moyenne
 	public Double getAverageRating() {
-		// Sécurité supplémentaire : null check + empty check
+		// Si la liste est nulle ou vide, on s'arrête de suite
 		if (reviews == null || reviews.isEmpty()) {
-			return null;
+			return 0.0;
 		}
+
 		return reviews.stream()
-				.mapToInt(Review::getStars) // Vérifie que c'est bien getStars et pas getRating
+				.filter(r -> r.getValidated() != null && r.getValidated()) // Filtre strict
+				.mapToInt(Review::getStars)
 				.average()
 				.orElse(0.0);
 	}
 
 	public Long getReviewCount() {
-		return (long) reviews.size();
+		if (reviews == null) {
+			return 0L;
+		}
+
+		// CORRECTION ICI : On compte UNIQUEMENT les avis validés
+		return reviews.stream()
+				.filter(r -> r.getValidated() != null && r.getValidated())
+				.count();
 	}
 }

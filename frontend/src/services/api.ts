@@ -293,6 +293,23 @@ export const reviewApi = {
         });
         return res.json();
     },
+
+    getPending: async (): Promise<Review[]> => {
+        const res = await secureFetch(`${API_BASE}/reviews/pending`);
+        return res.json();
+    },
+    validate: async (id: number) => {
+        return await secureFetch(`${API_BASE}/reviews/${id}/validate`, {
+            method: 'PUT'
+        });
+    },
+    delete: async (id: number) => {
+        return await secureFetch(`${API_BASE}/reviews/${id}`, {
+            method: 'DELETE'
+        });
+    },
+
+    // RÉCUPÉRER LES STATISTIQUES GLOBALES (admin)
     getStats: async (): Promise<any> => {
         const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
         return res.json();

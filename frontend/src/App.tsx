@@ -23,10 +23,11 @@ import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
 import ShowSchedule from "./pages/Producteur/ShowSchedule/ShowSchedule";
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
-import LocationList from "./pages/Admin/Locations/AdminLocationsPage";
+import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
 import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
+import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -58,14 +59,13 @@ function App() {
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
-              <Route
-                path="/producer/dashboard"
-                element={<ProducerDashboard />}
-              />
+              <Route path="/admin/reviews" element={<AdminReviewPage />} />
+              <Route path="/producer/dashboard" element={<ProducerDashboard />} />
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
+            
             </Routes>
           </main>
 

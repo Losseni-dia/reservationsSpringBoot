@@ -29,16 +29,7 @@ public class SpringSecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
                                                 // 2. Les règles spécifiques (POST) DOIVENT être avant les règles
                                                 // générales
-                                                .requestMatchers(HttpMethod.POST, "/api/shows/**")
-                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
-                                                .requestMatchers(HttpMethod.PUT, "/api/shows/**")
-                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
-                                                .requestMatchers(HttpMethod.DELETE, "/api/shows/**")
-                                                .hasAnyRole("admin", "ADMIN")
-                                                .requestMatchers(HttpMethod.POST, "/api/shows/*/representations")
-                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
-                                                .requestMatchers(HttpMethod.DELETE, "/api/representations/*")
-                                                .hasAnyRole("admin", "affiliate","ADMIN", "AFFILIATE", "PRODUCER")
+                                            
 
                                                 // 3. Les accès publics (GET)
                                                 .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
@@ -51,13 +42,33 @@ public class SpringSecurityConfig {
                                                 .requestMatchers("/api/users/reset-password").permitAll()
                                                 .requestMatchers("/api/users/forgot-password").permitAll()
                                                 .requestMatchers("/error").permitAll()
+                                               
+
+                                                // 2. Seuls les utilisateurs connectés peuvent poster un avis
+                                                .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()
+                                                // 2. Seuls les utilisateurs connectés peuvent poster un avis
+                                               
+
+                                                
 
                                                 // 5. Administration
                                                 .requestMatchers("/api/admin/**").hasAnyRole("admin", "ADMIN")
                                                 // On protège le GET (lister) et le DELETE sur /api/users
                                                 .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("admin", "ADMIN")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyRole("admin", "ADMIN")
-
+                                                // 3. Optionnel : Seul un ADMIN peut supprimer un avis (modération)
+                                                .requestMatchers(HttpMethod.DELETE, "/api/reviews/**")
+                                                .hasAnyRole("admin", "ADMIN")
+                                                .requestMatchers(HttpMethod.POST, "/api/shows/**")
+                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
+                                                .requestMatchers(HttpMethod.PUT, "/api/shows/**")
+                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/shows/**")
+                                                .hasAnyRole("admin", "ADMIN")
+                                                .requestMatchers(HttpMethod.POST, "/api/shows/*/representations")
+                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/representations/*")
+                                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
                                                 // Tout le reste nécessite d'être connecté
                                                 .anyRequest().authenticated())
 

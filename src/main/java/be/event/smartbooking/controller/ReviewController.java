@@ -56,12 +56,7 @@ public class ReviewController {
             return "show/show"; // ou une page dédiée
         }
 
-        try {
-            reviewService.createReview(user, showId, review.getComment(), review.getStars());
-            redirectAttributes.addFlashAttribute("successMessage", "Merci ! Votre avis est en attente de validation.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+      
 
         return "redirect:/shows/" + showId;
     }

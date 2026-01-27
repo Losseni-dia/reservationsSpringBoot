@@ -1,6 +1,7 @@
 package be.event.smartbooking.api.controller;
 
 import be.event.smartbooking.dto.ReviewDTO;
+import be.event.smartbooking.dto.ReviewStatsDTO;
 import be.event.smartbooking.model.Review;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.model.Show;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -22,10 +22,8 @@ public class ReviewApiController {
 
     @Autowired
     private ReviewService reviewService;
-
     @Autowired
-    private UserRepos userRepository; // Ton repo User
-
+    private UserRepos userRepository;
     @Autowired
     private ShowRepos showRepository;
 
@@ -33,27 +31,58 @@ public class ReviewApiController {
     public List<ReviewDTO> getByShow(@PathVariable Long showId) {
         return reviewService.getValidatedReviewsByShow(showId).stream()
                 .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()") // Obligatoire d'être connecté
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> create(@RequestBody ReviewDTO dto, Principal principal) {
-        // 1. Récupérer l'utilisateur connecté via son login (Principal)
-        User user = userRepository.findByLogin(principal.getName());
-        //Show show = showRepository.findById(dto.getShowId()).orElseThrow();
+           User user = userRepository.findByLogin(principal.getName());
+           if (user == null) {
+               return ResponseEntity.status(401).body("Utilisateur non trouvé");
+           }
+            
+           Show show = showRepository.findById(dto.getShowId())
+                .orElseThrow(() -> new RuntimeException("Spectacle non trouvé"));
 
-        // 2. Créer l'entité
         Review review = Review.builder()
                 .user(user)
                 //.show(show)
                 .comment(dto.getComment())
                 .stars(dto.getStars())
-                .validated(true)
                 .build();
 
-        Review saved = reviewService.addReview(review);
-        return ResponseEntity.ok(convertToDTO(saved));
+        try {
+            Review saved = reviewService.addReview(review);
+            return ResponseEntity.ok(convertToDTO(saved));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ReviewDTO> getPending() {
+        return reviewService.getPendingReviews().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    // Valider un avis
+    @PutMapping("/{id}/validate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> validate(@PathVariable Long id) {
+        reviewService.validateReview(id);
+        return ResponseEntity.ok().build();
+    }
+
+    // Supprimer un avis (déjà géré si tu as mis le DeleteMapping générique, sinon
+    // ajoute-le)
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        reviewService.deleteReview(id);
+        return ResponseEntity.noContent().build();
     }
 
     private ReviewDTO convertToDTO(Review r) {
@@ -63,7 +92,13 @@ public class ReviewApiController {
                 .comment(r.getComment())
                 .stars(r.getStars())
                 .createdAt(r.getCreatedAt())
-              //  .showId(r.getShow().getId()) // Ajoute ce champ dans ton ReviewDTO
+                .showId(r.getShow().getId())
                 .build();
+    }
+
+    @GetMapping("/admin/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ReviewStatsDTO> getGlobalStats() {
+        return ResponseEntity.ok(reviewService.getGlobalStats());
     }
 }
