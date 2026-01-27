@@ -27,7 +27,6 @@ const Header: React.FC = () => {
                 
                 <nav className={styles.nav}>
                     <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Spectacles</NavLink>
-                    <NavLink to="/locations" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Lieux</NavLink>
 
                     {/* ESPACE PRODUCTEUR */}
                     {user && (user.role === 'producer' || user.role === 'admin') && (
@@ -60,7 +59,8 @@ const Header: React.FC = () => {
                             {isAdminOpen && (
                                 <div className={styles.dropdownMenu}>
                                     <NavLink to="/admin/users" className={styles.dropdownItem}>👥 Gestion Utilisateurs</NavLink>
-                                      <NavLink to="/admin/reviews" className={styles.dropdownItem}>⭐ Modération Avis</NavLink>
+                                    <NavLink to="/admin/reviews" className={styles.dropdownItem}>⭐ Modération Avis</NavLink>
+                                    <NavLink to="/admin/locations" className={styles.dropdownItem}>📍 Gestion Lieux</NavLink>
                                 </div>
                             )}
                         </div>

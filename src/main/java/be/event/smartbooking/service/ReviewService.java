@@ -1,5 +1,6 @@
 package be.event.smartbooking.service;
 
+import be.event.smartbooking.dto.ReviewStatsDTO;
 import be.event.smartbooking.model.Review;
 import be.event.smartbooking.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +51,15 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long reviewId) {
         reviewRepository.deleteById(reviewId);
+    }
+
+
+    public ReviewStatsDTO getGlobalStats() {
+        return ReviewStatsDTO.builder()
+                .totalReviews(reviewRepository.count())
+                .pendingReviews(reviewRepository.countByValidatedFalse())
+                .validatedReviews(reviewRepository.countByValidatedTrue())
+                .globalAverage(reviewRepository.getGlobalAverageRating())
+                .build();
     }
 }

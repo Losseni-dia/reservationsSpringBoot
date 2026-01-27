@@ -46,7 +46,7 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
-              <Route path="/locations" element={<LocationList />} />
+              <Route path="/admin/locations" element={<LocationList />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
               <Route path="/producer/shows/add" element={<AddShow />} />
               <Route path="/producer/shows/edit/:id" element={<EditShow />} />

@@ -1,6 +1,7 @@
 package be.event.smartbooking.api.controller;
 
 import be.event.smartbooking.dto.ReviewDTO;
+import be.event.smartbooking.dto.ReviewStatsDTO;
 import be.event.smartbooking.model.Review;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.model.Show;
@@ -89,5 +90,11 @@ public class ReviewApiController {
                 .createdAt(r.getCreatedAt())
                 .showId(r.getShow().getId())
                 .build();
+    }
+
+    @GetMapping("/admin/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ReviewStatsDTO> getGlobalStats() {
+        return ResponseEntity.ok(reviewService.getGlobalStats());
     }
 }

@@ -307,6 +307,12 @@ export const reviewApi = {
         return await secureFetch(`${API_BASE}/reviews/${id}`, {
             method: 'DELETE'
         });
+    },
+
+    // RÉCUPÉRER LES STATISTIQUES GLOBALES (admin)
+    getStats: async (): Promise<any> => {
+        const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
+        return res.json();
     }
 };
  

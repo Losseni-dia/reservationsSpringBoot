@@ -21,4 +21,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // La méthode la plus efficace pour vérifier le doublon
     boolean existsByUserIdAndShowId(Long userId, Long showId);
+
+    // Compter les avis en attente
+    long countByValidatedFalse();
+
+    // Compter les avis validés
+    long countByValidatedTrue();
+
+    // Calculer la moyenne de TOUS les avis validés sur TOUTE la plateforme
+    @Query("SELECT AVG(r.stars) FROM Review r WHERE r.validated = true")
+    Double getGlobalAverageRating();
 }
