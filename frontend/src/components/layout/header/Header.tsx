@@ -58,6 +58,7 @@ const Header: React.FC = () => {
                             <button className={`${styles.dropdownBtn} ${styles.adminBtn}`}>Administration ▼</button>
                             {isAdminOpen && (
                                 <div className={styles.dropdownMenu}>
+                                    <NavLink to="/admin" end className={styles.dropdownItem}>📊 Dashboard Global</NavLink>
                                     <NavLink to="/admin/users" className={styles.dropdownItem}>👥 Gestion Utilisateurs</NavLink>
                                     <NavLink to="/admin/reviews" className={styles.dropdownItem}>⭐ Modération Avis</NavLink>
                                     <NavLink to="/admin/locations" className={styles.dropdownItem}>📍 Gestion Lieux</NavLink>
