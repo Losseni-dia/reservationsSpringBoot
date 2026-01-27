@@ -1,3 +1,4 @@
+/* --- TES STYLES EXISTANTS (Gardés tels quels) --- */
 .card {
     background-color: #1a1a1a;
     border-radius: 10px;
@@ -8,11 +9,11 @@
     flex-direction: column;
     border: 1px solid #222;
     position: relative;
+    cursor: pointer;
 }
 
 .card:hover {
     transform: translateY(-8px);
-    /* Lueur jaune style néon */
     box-shadow: 0 0 20px rgba(245, 197, 24, 0.4);
     border-color: #f5c518;
 }
@@ -25,7 +26,37 @@
     background-color: #000;
 }
 
-/* Le dégradé sur l'image pour que le texte soit toujours lisible */
+/* --- AJOUT : BADGE DE NOTE SUR L'IMAGE --- */
+.ratingBadge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    /* Effet de flou moderne */
+    color: #f5c518;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    z-index: 3;
+    /* Au dessus du dégradé ::after */
+    transition: transform 0.3s ease;
+}
+
+.card:hover .ratingBadge {
+    transform: scale(1.1);
+}
+
+.starIcon {
+    font-size: 0.75rem;
+}
+
+/* --- LOGIQUE GRADIENT EXISTANTE --- */
 .posterContainer::after {
     content: "";
     position: absolute;
@@ -57,7 +88,6 @@
     flex-direction: column;
     background-color: #1a1a1a;
     z-index: 2;
-    /* Pour passer au-dessus du dégradé si besoin */
 }
 
 .title {
@@ -73,9 +103,31 @@
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 5px;
+    /* Réduit pour laisser place aux avis */
 }
 
+/* --- AJOUT : RÉSUMÉ DES AVIS --- */
+.reviewSummary {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.reviewCount {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 500;
+}
+
+.noReview {
+    font-size: 0.75rem;
+    color: #444;
+    font-style: italic;
+}
+
+/* --- BOUTONS EXISTANTS --- */
 .buttonGroup {
     display: flex;
     gap: 8px;
@@ -109,7 +161,6 @@
 
 .btnReserve {
     background-color: #f5c518;
-    /* Jaune action */
     color: #000;
 }
 
