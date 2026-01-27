@@ -292,6 +292,10 @@ export const reviewApi = {
             body: JSON.stringify({ showId, comment, stars }),
         });
         return res.json();
+    },
+    getStats: async (): Promise<any> => {
+        const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
+        return res.json();
     }
 };
  

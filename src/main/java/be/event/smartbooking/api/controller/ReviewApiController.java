@@ -41,12 +41,12 @@ public class ReviewApiController {
     public ResponseEntity<?> create(@RequestBody ReviewDTO dto, Principal principal) {
         // 1. Récupérer l'utilisateur connecté via son login (Principal)
         User user = userRepository.findByLogin(principal.getName());
-        Show show = showRepository.findById(dto.getShowId()).orElseThrow();
+        //Show show = showRepository.findById(dto.getShowId()).orElseThrow();
 
         // 2. Créer l'entité
         Review review = Review.builder()
                 .user(user)
-                .show(show)
+                //.show(show)
                 .comment(dto.getComment())
                 .stars(dto.getStars())
                 .validated(true)
@@ -63,7 +63,7 @@ public class ReviewApiController {
                 .comment(r.getComment())
                 .stars(r.getStars())
                 .createdAt(r.getCreatedAt())
-                .showId(r.getShow().getId()) // Ajoute ce champ dans ton ReviewDTO
+              //  .showId(r.getShow().getId()) // Ajoute ce champ dans ton ReviewDTO
                 .build();
     }
 }

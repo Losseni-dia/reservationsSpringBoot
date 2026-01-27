@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
-import { userApi } from "../services/api";
-import { showApi } from "../services/api";
-import { locationApi } from "../services/api";
-import { reservationApi } from "../services/api";
+import {
+  userApi,
+  showApi,
+  locationApi,
+  reservationApi,
+  artistApi,
+  reviewApi,
+} from "../services/api";
 
 interface AdminStats {
   totalUsers: number;
   totalShows: number;
   totalReservations: number;
   totalLocations: number;
+  totalArtists: number;
+  reviewStats: any;
 }
 
 interface UseAdminStatsResult {
@@ -24,6 +30,8 @@ export const useAdminStats = (): UseAdminStatsResult => {
     totalShows: 0,
     totalReservations: 0,
     totalLocations: 0,
+    totalArtists: 0,
+    reviewStats: null,
   });
 
   const [loading, setLoading] = useState(true);
@@ -34,18 +42,32 @@ export const useAdminStats = (): UseAdminStatsResult => {
       setLoading(true);
       setError(null);
 
-      const [users, shows, locations, reservations] = await Promise.all([
-        userApi.getAll(),
-        showApi.getAll(),
-        locationApi.getAll(),
-        reservationApi.getMyBookings(),
-      ]);
+      // Récupérer les données principales
+      const [users, shows, locations, reservations, artists] =
+        await Promise.all([
+          userApi.getAll(),
+          showApi.getAll(),
+          locationApi.getAll(),
+          reservationApi.getMyBookings(),
+          artistApi.getAll(),
+        ]);
+
+      // Essayer de récupérer les stats des reviews (optionnel)
+      let reviewStats = null;
+      try {
+        reviewStats = await reviewApi.getStats();
+      } catch (reviewError) {
+        console.warn("Endpoint review stats non disponible:", reviewError);
+        // On continue sans les stats des reviews
+      }
 
       setStats({
         totalUsers: users.length,
         totalShows: shows.length,
         totalLocations: locations.length,
         totalReservations: reservations.length,
+        totalArtists: artists.length,
+        reviewStats: reviewStats,
       });
     } catch (err) {
       const errorMessage =
