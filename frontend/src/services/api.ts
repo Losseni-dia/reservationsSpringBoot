@@ -283,6 +283,15 @@ export const reviewApi = {
     getByShow: async (showId: number): Promise<Review[]> => {
         const res = await secureFetch(`${API_BASE}/reviews/show/${showId}`);
         return res.json();
+    },
+
+    create: async (showId: number, comment: string, stars: number): Promise<Review> => {
+        const res = await secureFetch(`${API_BASE}/reviews`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ showId, comment, stars }),
+        });
+        return res.json();
     }
 };
  
