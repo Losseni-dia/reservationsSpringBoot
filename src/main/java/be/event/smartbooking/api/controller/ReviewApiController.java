@@ -37,8 +37,12 @@ public class ReviewApiController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> create(@RequestBody ReviewDTO dto, Principal principal) {
-        User user = userRepository.findByLogin(principal.getName());
-        Show show = showRepository.findById(dto.getShowId())
+           User user = userRepository.findByLogin(principal.getName());
+           if (user == null) {
+               return ResponseEntity.status(401).body("Utilisateur non trouvé");
+           }
+            
+           Show show = showRepository.findById(dto.getShowId())
                 .orElseThrow(() -> new RuntimeException("Spectacle non trouvé"));
 
         Review review = Review.builder()

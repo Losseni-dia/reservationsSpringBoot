@@ -47,7 +47,7 @@ public class SpringSecurityConfig {
                                                 // 2. Seuls les utilisateurs connectés peuvent poster un avis
                                                 .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()
                                                 // 2. Seuls les utilisateurs connectés peuvent poster un avis
-                                                .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()
+                                               
 
                                                 
 
