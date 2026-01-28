@@ -41,11 +41,11 @@ public class ShowService {
      * Action de l'ADMIN : Confirmer un spectacle.
      */
     @Transactional
-    public void confirmShow(Long id) {
+    public Show confirmShow(Long id) { // Change ShowDTO en Show
         Show show = repository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Spectacle non trouvé"));
+            .orElseThrow(() -> new RuntimeException("Spectacle non trouvé"));
         show.setStatus(ShowStatus.CONFIRME);
-        // Le save est automatique grâce au @Transactional (Dirty Checking)
+        return repository.save(show); // On retourne l'entité directement
     }
 
     @Transactional(readOnly = true)
@@ -109,11 +109,10 @@ public class ShowService {
         );
     }
     @Transactional
-public void revokeShow(Long id) {
-    Show show = repository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Spectacle " + id + " introuvable"));
-    
-    show.setStatus(ShowStatus.A_CONFIRMER);
-    repository.save(show);
+    public Show revokeShow(Long id) {
+        Show show = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Spectacle non trouvé"));
+        show.setStatus(ShowStatus.A_CONFIRMER);
+    return repository.save(show);
 }
-}
+}  

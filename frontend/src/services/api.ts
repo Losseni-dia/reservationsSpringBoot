@@ -197,10 +197,10 @@ export const showApi = {
     confirm: async (id: number): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
             method: 'PUT'
-        });
+         });
         return res.json();
     },
- 
+
     // Récupère par ID
       getById: async (id: number): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/${id}`);

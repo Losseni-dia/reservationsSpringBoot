@@ -153,3 +153,5 @@ export interface Review {
     stars: number;
     createdAt: string; // Les dates JSON arrivent en string ISO
 }
+
+export { ShowStatus };

@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Map;
@@ -87,14 +88,21 @@ public class ShowApiController {
      * PUT /api/shows/{id}/confirm : Action de validation par l'Admin
      */
     @PutMapping("/{id}/confirm")
-    public ResponseEntity<Void> confirmShow(@PathVariable Long id) {
-        try {
-            showService.confirmShow(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+public ResponseEntity<?> confirmShow(@PathVariable Long id) {
+    Show updatedShow = showService.confirmShow(id);
+    
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", updatedShow.getId());
+    response.put("status", updatedShow.getStatus().toString());
+    response.put("title", updatedShow.getTitle()); // Ajoute cette ligne
+    
+    // Si tu as une entité Location, envoie juste son nom ou l'objet simplifié
+    if (updatedShow.getLocation() != null) {
+        response.put("location", updatedShow.getLocation()); 
     }
+    
+    return ResponseEntity.ok(response);
+}
         /**
          * GET /api/shows/{id} : Récupère un spectacle par son ID
          */
@@ -251,10 +259,15 @@ public class ShowApiController {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
         }
-        @PutMapping("/{id}/revoke")
-public ResponseEntity<Void> revokeShow(@PathVariable Long id) {
-    showService.revokeShow(id); // Cette méthode doit mettre le statut à 'A_CONFIRMER'
-    return ResponseEntity.ok().build();
+@PutMapping("/{id}/revoke")
+public ResponseEntity<?> revokeShow(@PathVariable Long id) {
+    Show updatedShow = showService.revokeShow(id);
+    
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", updatedShow.getId());
+    response.put("status", updatedShow.getStatus().toString());
+    
+    return ResponseEntity.ok(response);
 }
         /**
          * DELETE /api/shows/{id} : Supprime un spectacle
