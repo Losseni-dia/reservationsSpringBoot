@@ -186,6 +186,12 @@ export const showApi = {
         return res.json();
     },
 
+    revoke: async (id: number): Promise<void> => {
+        await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
+            method: 'PUT'
+        });
+    },
+
     // NOUVEAU : Valider un spectacle
     confirm: async (id: number): Promise<void> => {
         await secureFetch(`${API_BASE}/shows/${id}/confirm`, {

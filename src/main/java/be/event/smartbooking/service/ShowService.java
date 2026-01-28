@@ -108,4 +108,12 @@ public class ShowService {
                 ShowStatus.CONFIRME
         );
     }
+    @Transactional
+public void revokeShow(Long id) {
+    Show show = repository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Spectacle " + id + " introuvable"));
+    
+    show.setStatus(ShowStatus.A_CONFIRMER);
+    repository.save(show);
+}
 }

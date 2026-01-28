@@ -251,6 +251,11 @@ public class ShowApiController {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
         }
+        @PutMapping("/{id}/revoke")
+public ResponseEntity<Void> revokeShow(@PathVariable Long id) {
+    showService.revokeShow(id); // Cette méthode doit mettre le statut à 'A_CONFIRMER'
+    return ResponseEntity.ok().build();
+}
         /**
          * DELETE /api/shows/{id} : Supprime un spectacle
          */

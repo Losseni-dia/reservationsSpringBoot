@@ -10,38 +10,31 @@ import styles from "./AdminShowPage.module.css";
 const AdminShowPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // States pour les données
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // States pour les modales et notifications
   const [showToConfirm, setShowToConfirm] = useState<Show | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastType, setToastType] = useState<"success" | "error" | "info">(
-    "info",
-  );
+  const [toastType, setToastType] = useState<"success" | "error" | "info">("info");
 
   const fetchShows = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await showApi.getAll();
+      // NOUVEAU : On utilise la route admin qui bypass les filtres
+      const data = await showApi.getAllForAdmin();
 
-      // Tri des spectacles : non confirmés (bookable=false) d'abord, puis confirmés
+      // Tri : Les "A_CONFIRMER" en premier pour attirer l'attention de l'admin
       const sortedShows = data.sort((a, b) => {
-        if (a.bookable === b.bookable) return 0;
-        return a.bookable ? 1 : -1;
+        if (a.status === b.status) return 0;
+        return a.status === 'A_CONFIRMER' ? -1 : 1;
       });
 
       setShows(sortedShows);
-      setToastMessage("Spectacles chargés avec succès");
-      setToastType("success");
     } catch (err: any) {
-      console.error("Erreur lors du chargement des spectacles:", err);
-      setError("Impossible de charger les spectacles. Veuillez réessayer.");
-      setToastMessage("Erreur lors du chargement des données");
+      setError("Impossible de charger les spectacles.");
       setToastType("error");
     } finally {
       setLoading(false);
@@ -56,52 +49,34 @@ const AdminShowPage: React.FC = () => {
     fetchShows();
   }, [fetchShows]);
 
-
-
-  const handleEditShow = useCallback(
-    (id: number) => {
+  const handleEditShow = useCallback((id: number) => {
       navigate(`/admin/shows/edit/${id}`);
-    },
-    [navigate],
+    }, [navigate]
   );
 
-const handleToggleConfirmShow = useCallback(
-  async (show: Show) => {
+  const handleToggleConfirmShow = useCallback(async (show: Show) => {
     try {
       setLoading(true);
       
-      // 1. Créer l'objet avec la modification
-      const isBookable = !show.bookable;
+      if (show.status === 'CONFIRME') {
+        // Appelle la route PUT /api/shows/{id}/revoke
+        await showApi.revoke(show.id);
+        setToastMessage(`⏳ Spectacle "${show.title}" remis en attente`);
+      } else {
+        // Appelle la route PUT /api/shows/{id}/confirm
+        await showApi.confirm(show.id);
+        setToastMessage(`✓ Spectacle "${show.title}" publié avec succès`);
+      }
 
-      // 2. Transformer en FormData
-      const formData = new FormData();
-      formData.append("bookable", String(isBookable));
-      // On ajoute souvent les autres champs requis par le backend
-      formData.append("title", show.title);
-      formData.append("description", show.description);
-      formData.append("slug", show.slug);
-      if (show.locationId) formData.append("locationId", String(show.locationId));
-
-      // 3. Envoyer le FormData
-      await showApi.update(show.id, formData);
-
-      setToastMessage(
-        isBookable
-          ? `✓ Spectacle "${show.title}" confirmé`
-          : `⏳ Spectacle "${show.title}" révoqué`
-      );
       setToastType("success");
-      await fetchShows();
+      await fetchShows(); // Rafraîchir la liste
     } catch (err: any) {
-      console.error(err);
-      setToastMessage("Erreur lors de la mise à jour");
+      setToastMessage("Erreur lors du changement de statut");
       setToastType("error");
     } finally {
       setLoading(false);
     }
-  },
-  [fetchShows]
-);
+  }, [fetchShows]);
 
   const handleOpenConfirmModal = useCallback((show: Show) => {
     setShowToConfirm(show);
@@ -127,7 +102,6 @@ const handleToggleConfirmShow = useCallback(
         <thead className={styles.tableHeader}>
           <tr>
             <th className={styles.tableHeaderCell}>Titre</th>
-            <th className={styles.tableHeaderCell}>Description</th>
             <th className={styles.tableHeaderCell}>Localité</th>
             <th className={styles.tableHeaderCell}>Statut</th>
             <th className={styles.tableHeaderCell}>Actions</th>
@@ -140,29 +114,17 @@ const handleToggleConfirmShow = useCallback(
                 <div className={styles.showTitle}>{show.title}</div>
               </td>
               <td className={styles.tableCell}>
-                <div
-                  style={{
-                    maxWidth: "300px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {show.description || "-"}
-                </div>
-              </td>
-              <td className={styles.tableCell}>
                 {show.locationDesignation || "-"}
               </td>
               <td className={styles.tableCell}>
                 <span
                   className={`${styles.statusBadge} ${
-                    show.bookable
+                    show.status === 'CONFIRME'
                       ? styles.statusConfirmed
                       : styles.statusPending
                   }`}
                 >
-                  {show.bookable ? "✓ Confirmé" : "⏳ En attente"}
+                  {show.status === 'CONFIRME' ? "✓ Confirmé" : "⏳ À valider"}
                 </span>
               </td>
               <td className={styles.tableCell}>
@@ -178,7 +140,7 @@ const handleToggleConfirmShow = useCallback(
                     onClick={() => handleOpenConfirmModal(show)}
                     disabled={loading}
                   >
-                    {show.bookable ? "Révoquer" : "Confirmer"}
+                    {show.status === 'CONFIRME' ? "Révoquer" : "Confirmer"}
                   </button>
                 </div>
               </td>
@@ -189,38 +151,19 @@ const handleToggleConfirmShow = useCallback(
     );
   };
 
-  if (loading) return <Loader />;
+  if (loading && shows.length === 0) return <Loader />;
 
   return (
     <div className={styles.adminContainer}>
       <div className={styles.adminHeader}>
-        <h1 className={styles.adminTitle}>Gestion des Spectacles</h1>
-        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-
-          <button
-            className={styles.refreshButton}
-            onClick={handleRefresh}
-            disabled={loading}
-          >
-            {loading ? "Chargement..." : "Rafraîchir"}
-          </button>
-        </div>
+        <h1 className={styles.adminTitle}>Modération des Spectacles</h1>
+        <button className={styles.refreshButton} onClick={handleRefresh}>
+          Rafraîchir
+        </button>
       </div>
 
-      {error && <div className={styles.errorMessage}>{error}</div>}
-
       <div className={styles.showsListContainer}>
-        {shows.length > 0 ? (
-          <>
-            <p className={styles.showsCount}>
-              {shows.length} spectacle{shows.length > 1 ? "s" : ""} trouvé
-              {shows.length > 1 ? "s" : ""}
-            </p>
-            {renderShowsTable()}
-          </>
-        ) : (
-          <p className={styles.noShows}>Aucun spectacle trouvé</p>
-        )}
+        {shows.length > 0 ? renderShowsTable() : <p>Aucun spectacle.</p>}
       </div>
 
       {toastMessage && (
@@ -233,13 +176,13 @@ const handleToggleConfirmShow = useCallback(
 
       <ConfirmModal
         isOpen={isConfirmModalOpen}
-        title={showToConfirm?.bookable ? "Révoquer le spectacle ?" : "Confirmer le spectacle ?"}
+        title={showToConfirm?.status === 'CONFIRME' ? "Révoquer ?" : "Confirmer ?"}
         message={
-          showToConfirm?.bookable
-            ? `Êtes-vous sûr de vouloir retirer le spectacle "${showToConfirm?.title}" de la visibilité publique ? Les clients ne pourront plus voir ce spectacle.`
-            : `Êtes-vous sûr de vouloir confirmer le spectacle "${showToConfirm?.title}" ? Il sera visible par tous les clients et réservable.`
+          showToConfirm?.status === 'CONFIRME'
+            ? `Retirer "${showToConfirm?.title}" du catalogue public ?`
+            : `Rendre "${showToConfirm?.title}" visible et réservable par les clients ?`
         }
-        confirmButtonClass={showToConfirm?.bookable ? "danger" : "success"}
+        confirmButtonClass={showToConfirm?.status === 'CONFIRME' ? "danger" : "success"}
         onConfirm={handleConfirmModalConfirm}
         onCancel={handleConfirmModalCancel}
       />
