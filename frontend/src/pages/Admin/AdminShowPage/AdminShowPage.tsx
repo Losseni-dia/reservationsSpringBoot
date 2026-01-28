@@ -55,28 +55,34 @@ const AdminShowPage: React.FC = () => {
   );
 
   const handleToggleConfirmShow = useCallback(async (show: Show) => {
-    try {
-      setLoading(true);
-      
-      if (show.status === 'CONFIRME') {
-        // Appelle la route PUT /api/shows/{id}/revoke
-        await showApi.revoke(show.id);
-        setToastMessage(`⏳ Spectacle "${show.title}" remis en attente`);
-      } else {
-        // Appelle la route PUT /api/shows/{id}/confirm
-        await showApi.confirm(show.id);
-        setToastMessage(`✓ Spectacle "${show.title}" publié avec succès`);
-      }
+  try {
+    setLoading(true);
+    
+    let updatedShow: Show; // On prépare une variable pour stocker le retour
 
-      setToastType("success");
-      await fetchShows(); // Rafraîchir la liste
+    if (show.status === 'CONFIRME') {
+      // On récupère le spectacle mis à jour par l'API
+      updatedShow = await showApi.revoke(show.id);
+      setToastMessage(`⏳ "${show.title}" remis en attente`);
+    } else {
+      updatedShow = await showApi.confirm(show.id);
+      setToastMessage(`✓ "${show.title}" publié`);
+    }
+
+    setToastType("success");
+
+    // OPTIMISATION : Au lieu de fetchShows(), on met à jour le state localement
+    setShows(prevShows => 
+      prevShows.map(s => s.id === updatedShow.id ? updatedShow : s)
+    );
+
     } catch (err: any) {
       setToastMessage("Erreur lors du changement de statut");
       setToastType("error");
     } finally {
       setLoading(false);
     }
-  }, [fetchShows]);
+  }, [setShows]);
 
   const handleOpenConfirmModal = useCallback((show: Show) => {
     setShowToConfirm(show);

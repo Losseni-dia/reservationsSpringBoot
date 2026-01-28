@@ -186,17 +186,19 @@ export const showApi = {
         return res.json();
     },
 
-    revoke: async (id: number): Promise<void> => {
-        await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
+    revoke: async (id: number): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
             method: 'PUT'
         });
+        return res.json();
     },
 
     // NOUVEAU : Valider un spectacle
-    confirm: async (id: number): Promise<void> => {
-        await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
+    confirm: async (id: number): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
             method: 'PUT'
         });
+        return res.json();
     },
  
     // Récupère par ID
