@@ -34,6 +34,8 @@ public class User {
 
     private String langue; // ex: "fr", "en", "nl"
 
+    @Column(name = "is_active", nullable = false)   
+    private boolean isActive = true;    // Par défaut, un utilisateur est actif
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
