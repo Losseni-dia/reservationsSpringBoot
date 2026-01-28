@@ -113,6 +113,19 @@ public class User {
                 .anyMatch(role -> role.getRole().equalsIgnoreCase(roleName));
     }
 
+    /**
+     * Désactive l'utilisateur (soft delete)
+     */
+    public void deactivate() {
+        this.isActive = false;  
+    }
+    /**
+     * Réactive l'utilisateur
+     */
+    public void activate() {
+        this.isActive = true;  
+    }
+    
     @Override
     public String toString() {
         return login + " (" + firstname + " " + lastname + ")";
