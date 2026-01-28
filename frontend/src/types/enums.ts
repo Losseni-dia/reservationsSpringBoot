@@ -12,3 +12,8 @@ export enum TypePrice {
     REDUIT = "REDUIT",
     PREMIUM = "PREMIUM"
 }
+
+export enum ShowStatus {
+    A_CONFIRMER = "A_CONFIRMER",
+    CONFIRME = "CONFIRME"
+}

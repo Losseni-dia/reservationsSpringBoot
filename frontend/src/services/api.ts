@@ -175,12 +175,32 @@ export const artistTypeApi = {
 };
  
 export const showApi = {
-   // Récupère tous les spectacles
+   // Récupère le catalogue public (CONFIRME uniquement)
     getAll: async (): Promise<Show[]> => {
         const res = await secureFetch(`${API_BASE}/shows`);
         return res.json();
     },
- 
+    // Récupère TOUS les spectacles pour l'admin (A_CONFIRMER + CONFIRME)
+    getAllForAdmin: async (): Promise<Show[]> => {
+        const res = await secureFetch(`${API_BASE}/shows/admin`);
+        return res.json();
+    },
+
+    revoke: async (id: number): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
+            method: 'PUT'
+        });
+        return res.json();
+    },
+
+    // NOUVEAU : Valider un spectacle
+    confirm: async (id: number): Promise<Show> => {
+        const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
+            method: 'PUT'
+         });
+        return res.json();
+    },
+
     // Récupère par ID
       getById: async (id: number): Promise<Show> => {
         const res = await secureFetch(`${API_BASE}/shows/${id}`);

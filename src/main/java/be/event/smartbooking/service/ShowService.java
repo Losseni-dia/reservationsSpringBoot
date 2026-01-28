@@ -2,6 +2,7 @@ package be.event.smartbooking.service;
 
 import be.event.smartbooking.model.Location;
 import be.event.smartbooking.model.Show;
+import be.event.smartbooking.model.enumeration.ShowStatus; // Import de l'enum
 import be.event.smartbooking.repository.ShowRepos;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -20,38 +21,47 @@ public class ShowService {
     private ShowRepos repository;
 
     /**
-     * Récupère tous les spectacles avec leur lieu chargé (JOIN FETCH)
-     * Indispensable pour éviter l'erreur 500 dans le contrôleur API.
+     * Récupère uniquement les spectacles CONFIRMÉS pour le catalogue public.
      */
     @Transactional(readOnly = true)
     public List<Show> getAll() {
-        return repository.findAllWithLocation();
+        // On utilise la nouvelle méthode filtrée du repository
+        return repository.findAllWithLocationAndStatus(ShowStatus.CONFIRME);
     }
 
     /**
-     * Recherche un spectacle par son slug via le Repository (Plus rapide que la
-     * boucle)
+     * Méthode pour l'ADMIN : Récupère TOUS les spectacles, même ceux à confirmer.
      */
+    @Transactional(readOnly = true)
+    public List<Show> getAllForAdmin() {
+        return repository.findAllWithLocationForAdmin();
+    }
+
+    /**
+     * Action de l'ADMIN : Confirmer un spectacle.
+     */
+    @Transactional
+    public Show confirmShow(Long id) { // Change ShowDTO en Show
+        Show show = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Spectacle non trouvé"));
+        show.setStatus(ShowStatus.CONFIRME);
+        return repository.save(show); // On retourne l'entité directement
+    }
+
     @Transactional(readOnly = true)
     public Show findBySlug(String slug) {
         return repository.findBySlug(slug);
     }
 
-    /**
-     * Récupère un spectacle par ID
-     */
     @Transactional(readOnly = true)
     public Show get(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    /**
-     * Retourne uniquement les spectacles réservables
-     */
     @Transactional(readOnly = true)
     public List<Show> getAllBookableShows() {
-        // Version optimisée avec Stream
-        return repository.findAllWithLocation().stream()
+        // On filtre par bookable ET par statut confirmé
+        return repository.findAllWithLocationAndStatus(ShowStatus.CONFIRME).stream()
                 .filter(Show::isBookable)
                 .collect(Collectors.toList());
     }
@@ -63,23 +73,18 @@ public class ShowService {
 
     @Transactional
     public void update(Long id, Show updatedShow) {
-        // 1. On récupère l'entité gérée par Hibernate
         Show existingShow = repository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Spectacle non trouvé"));
 
-        // 2. On met à jour uniquement les champs nécessaires
         existingShow.setTitle(updatedShow.getTitle());
         existingShow.setDescription(updatedShow.getDescription());
         existingShow.setPosterUrl(updatedShow.getPosterUrl());
         existingShow.setBookable(updatedShow.isBookable());
         existingShow.setLocation(updatedShow.getLocation());
+        
 
-        // 3. Gestion des relations (Hibernate gère les jointures ici)
         existingShow.getArtistTypes().clear();
         existingShow.getArtistTypes().addAll(updatedShow.getArtistTypes());
-
-        // Pas besoin de repository.save(existingShow) ! 
-        // Hibernate détecte les changements (Dirty Checking) et fait l'UPDATE tout seul.
     }
 
     @Transactional
@@ -92,17 +97,22 @@ public class ShowService {
         return repository.findByLocation(location);
     }
 
-    //methode de recherche optimisée utilisant la requête définie dans le repository
     @Transactional(readOnly = true)
     public List<Show> search(String title, String location, LocalDateTime start, LocalDateTime end) {
+        // On force le statut CONFIRME pour la recherche publique
         return repository.searchShows(
                 (title != null && !title.isEmpty()) ? title : null,
                 (location != null && !location.isEmpty()) ? location : null,
                 (start != null) ? start : null,
-                (end != null) ? end : null
-                
+                (end != null) ? end : null,
+                ShowStatus.CONFIRME
         );
-    
-                
     }
+    @Transactional
+    public Show revokeShow(Long id) {
+        Show show = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Spectacle non trouvé"));
+        show.setStatus(ShowStatus.A_CONFIRMER);
+    return repository.save(show);
 }
+}  

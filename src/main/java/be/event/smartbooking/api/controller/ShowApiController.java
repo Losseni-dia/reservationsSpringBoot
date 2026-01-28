@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Map;
@@ -50,27 +53,56 @@ public class ShowApiController {
 
 
         /**
-         * GET /api/shows : Récupère tous les spectacles
-         */
-        @GetMapping
-        @Transactional(readOnly = true) // <--- ICI : Indispensable pour charger les relations (Lazy Loading)
-        public ResponseEntity<List<ShowDTO>> getAll() {
-                try {
-                        List<Show> shows = showService.getAll();
-                        List<ShowDTO> dtos = shows.stream()
-                                        .map(this::safeConvertToDto)
-                                        .collect(Collectors.toList());
-                        return ResponseEntity.ok(dtos);
-                } catch (Exception e) {
-                        // En cas d'erreur, on logue précisément le problème
-                        System.err.println("Erreur lors de la récupération des shows: " + e.getMessage());
-                        e.printStackTrace();
-                        // On renvoie une erreur 500 plutôt qu'une liste vide,
-                        // comme ça tu verras l'erreur dans l'onglet "Network" du navigateur
-                        return ResponseEntity.internalServerError().build();
-                }
+     * GET /api/shows : Catalogue public (Uniquement CONFIRME)
+     */
+    @GetMapping
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ShowDTO>> getAll() {
+        try {
+            List<Show> shows = showService.getAll(); // Utilise le filtre CONFIRME du service
+            List<ShowDTO> dtos = shows.stream()
+                    .map(this::safeConvertToDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
-
+    }
+    /**
+     * GET /api/shows/admin : Liste complète pour l'Admin (CONFIRME + A_CONFIRMER)
+     */
+    @GetMapping("/admin")
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ShowDTO>> getAllForAdmin() {
+        try {
+            List<Show> shows = showService.getAllForAdmin();
+            List<ShowDTO> dtos = shows.stream()
+                    .map(this::safeConvertToDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    /**
+     * PUT /api/shows/{id}/confirm : Action de validation par l'Admin
+     */
+    @PutMapping("/{id}/confirm")
+public ResponseEntity<?> confirmShow(@PathVariable Long id) {
+    Show updatedShow = showService.confirmShow(id);
+    
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", updatedShow.getId());
+    response.put("status", updatedShow.getStatus().toString());
+    response.put("title", updatedShow.getTitle()); // Ajoute cette ligne
+    
+    // Si tu as une entité Location, envoie juste son nom ou l'objet simplifié
+    if (updatedShow.getLocation() != null) {
+        response.put("location", updatedShow.getLocation()); 
+    }
+    
+    return ResponseEntity.ok(response);
+}
         /**
          * GET /api/shows/{id} : Récupère un spectacle par son ID
          */
@@ -227,6 +259,16 @@ public class ShowApiController {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
         }
+@PutMapping("/{id}/revoke")
+public ResponseEntity<?> revokeShow(@PathVariable Long id) {
+    Show updatedShow = showService.revokeShow(id);
+    
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", updatedShow.getId());
+    response.put("status", updatedShow.getStatus().toString());
+    
+    return ResponseEntity.ok(response);
+}
         /**
          * DELETE /api/shows/{id} : Supprime un spectacle
          */
@@ -251,6 +293,7 @@ public class ShowApiController {
                                 .description(show.getDescription())
                                 .posterUrl(show.getPosterUrl())
                                 .bookable(show.isBookable())
+                                .status(show.getStatus())
 
                                 // --- DONNÉES POUR LE FORMULAIRE ---
                                 .locationId(show.getLocation() != null ? show.getLocation().getId() : null)
