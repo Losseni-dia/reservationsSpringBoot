@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,27 +52,49 @@ public class ShowApiController {
 
 
         /**
-         * GET /api/shows : Récupère tous les spectacles
-         */
-        @GetMapping
-        @Transactional(readOnly = true) // <--- ICI : Indispensable pour charger les relations (Lazy Loading)
-        public ResponseEntity<List<ShowDTO>> getAll() {
-                try {
-                        List<Show> shows = showService.getAll();
-                        List<ShowDTO> dtos = shows.stream()
-                                        .map(this::safeConvertToDto)
-                                        .collect(Collectors.toList());
-                        return ResponseEntity.ok(dtos);
-                } catch (Exception e) {
-                        // En cas d'erreur, on logue précisément le problème
-                        System.err.println("Erreur lors de la récupération des shows: " + e.getMessage());
-                        e.printStackTrace();
-                        // On renvoie une erreur 500 plutôt qu'une liste vide,
-                        // comme ça tu verras l'erreur dans l'onglet "Network" du navigateur
-                        return ResponseEntity.internalServerError().build();
-                }
+     * GET /api/shows : Catalogue public (Uniquement CONFIRME)
+     */
+    @GetMapping
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ShowDTO>> getAll() {
+        try {
+            List<Show> shows = showService.getAll(); // Utilise le filtre CONFIRME du service
+            List<ShowDTO> dtos = shows.stream()
+                    .map(this::safeConvertToDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
-
+    }
+    /**
+     * GET /api/shows/admin : Liste complète pour l'Admin (CONFIRME + A_CONFIRMER)
+     */
+    @GetMapping("/admin")
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ShowDTO>> getAllForAdmin() {
+        try {
+            List<Show> shows = showService.getAllForAdmin();
+            List<ShowDTO> dtos = shows.stream()
+                    .map(this::safeConvertToDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    /**
+     * PUT /api/shows/{id}/confirm : Action de validation par l'Admin
+     */
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<Void> confirmShow(@PathVariable Long id) {
+        try {
+            showService.confirmShow(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
         /**
          * GET /api/shows/{id} : Récupère un spectacle par son ID
          */
@@ -251,6 +275,7 @@ public class ShowApiController {
                                 .description(show.getDescription())
                                 .posterUrl(show.getPosterUrl())
                                 .bookable(show.isBookable())
+                                .status(show.getStatus())
 
                                 // --- DONNÉES POUR LE FORMULAIRE ---
                                 .locationId(show.getLocation() != null ? show.getLocation().getId() : null)

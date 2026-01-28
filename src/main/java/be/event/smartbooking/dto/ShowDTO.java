@@ -4,6 +4,7 @@ package be.event.smartbooking.dto;
 
 import java.util.List;
 
+import be.event.smartbooking.model.enumeration.ShowStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class ShowDTO {
     private String description;
     private String posterUrl;
     private boolean bookable;
+    private ShowStatus status;
     private Long locationId; // Crucial pour le <select>
     private List<Long> artistTypeIds;
 

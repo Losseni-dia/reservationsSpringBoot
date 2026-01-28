@@ -1,5 +1,5 @@
 // frontend/src/types/models.ts
-import { StatutReservation, TypePrice } from './enums';
+import { StatutReservation, TypePrice, ShowStatus } from './enums';
 
 export interface Artist {
     id: number;
@@ -119,6 +119,7 @@ export interface Show {
     description: string;
     posterUrl: string;
     bookable: boolean;
+    status: ShowStatus; // Ajout du statut via Enum
     locationId?: number; // AJOUTE CETTE LIGNE (indispensable pour ShowSchedule)
     locationDesignation: string;
     averageRating?: number;

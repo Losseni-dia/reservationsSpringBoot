@@ -26,7 +26,7 @@ public class ShowService {
     @Transactional(readOnly = true)
     public List<Show> getAll() {
         // On utilise la nouvelle méthode filtrée du repository
-        return repository.findAllWithLocationAndConfirmed();
+        return repository.findAllWithLocationAndStatus(ShowStatus.CONFIRME);
     }
 
     /**
@@ -34,7 +34,7 @@ public class ShowService {
      */
     @Transactional(readOnly = true)
     public List<Show> getAllForAdmin() {
-        return repository.findAll();
+        return repository.findAllWithLocationForAdmin();
     }
 
     /**
@@ -61,14 +61,13 @@ public class ShowService {
     @Transactional(readOnly = true)
     public List<Show> getAllBookableShows() {
         // On filtre par bookable ET par statut confirmé
-        return repository.findAllWithLocationAndConfirmed().stream()
+        return repository.findAllWithLocationAndStatus(ShowStatus.CONFIRME).stream()
                 .filter(Show::isBookable)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public void add(Show show) {
-        // Le statut sera "A_CONFIRMER" par défaut grâce au @Builder.Default dans l'entité
         repository.save(show);
     }
 
@@ -83,8 +82,6 @@ public class ShowService {
         existingShow.setBookable(updatedShow.isBookable());
         existingShow.setLocation(updatedShow.getLocation());
         
-        // On peut décider si une modification repasse le spectacle en "A_CONFIRMER"
-        // existingShow.setStatus(ShowStatus.A_CONFIRMER); 
 
         existingShow.getArtistTypes().clear();
         existingShow.getArtistTypes().addAll(updatedShow.getArtistTypes());
@@ -102,12 +99,13 @@ public class ShowService {
 
     @Transactional(readOnly = true)
     public List<Show> search(String title, String location, LocalDateTime start, LocalDateTime end) {
-        // La méthode searchShows du repository filtre déjà par statut "CONFIRME"
+        // On force le statut CONFIRME pour la recherche publique
         return repository.searchShows(
                 (title != null && !title.isEmpty()) ? title : null,
                 (location != null && !location.isEmpty()) ? location : null,
                 (start != null) ? start : null,
-                (end != null) ? end : null
+                (end != null) ? end : null,
+                ShowStatus.CONFIRME
         );
     }
 }
