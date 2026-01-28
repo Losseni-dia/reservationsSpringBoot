@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import be.event.smartbooking.model.Location;
 import be.event.smartbooking.model.Show;
+import be.event.smartbooking.model.enumeration.ShowStatus;
 
 public interface ShowRepos extends JpaRepository<Show, Long> {
     Show findBySlug(String slug);
@@ -17,9 +18,11 @@ public interface ShowRepos extends JpaRepository<Show, Long> {
 
     List<Show> findByLocation(Location location);
 
-    @Query("SELECT s FROM Show s LEFT JOIN FETCH s.location")
-    List<Show> findAllWithLocation();
+    // Pour récupérer uniquement les spectacles confirmés (Catalogue simple)
+    List<Show> findByStatus(ShowStatus status);
 
+    @Query("SELECT s FROM Show s LEFT JOIN FETCH s.location WHERE s.status = 'CONFIRME'")
+    List<Show> findAllWithLocationAndConfirmed();
 
     @Query("SELECT DISTINCT s FROM Show s " +
            "LEFT JOIN FETCH s.location l " +
