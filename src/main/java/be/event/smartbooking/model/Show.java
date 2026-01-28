@@ -1,6 +1,8 @@
 package be.event.smartbooking.model;
 
 import com.github.slugify.Slugify;
+
+import be.event.smartbooking.model.enumeration.ShowStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,6 +42,12 @@ public class Show {
 
 	@Column(nullable = false)
 	private boolean bookable = true;
+
+	// --- AJOUT DU STATUT ---
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private ShowStatus status = ShowStatus.A_CONFIRMER;
 
 	// Supprimé le champ "price" → les prix sont maintenant gérés via Price +
 	// Representation !
