@@ -33,7 +33,7 @@ public class User {
     private String email;
 
     private String langue; // ex: "fr", "en", "nl"
-
+    @builder.Default
     @Column(name = "is_active", nullable = false)   
     private boolean isActive = true;    // Par défaut, un utilisateur est actif
     
@@ -125,7 +125,7 @@ public class User {
     public void activate() {
         this.isActive = true;  
     }
-    
+
     @Override
     public String toString() {
         return login + " (" + firstname + " " + lastname + ")";
