@@ -4,6 +4,7 @@ import be.event.smartbooking.dto.ReservationItemRequest;
 import be.event.smartbooking.model.RepresentationReservation;
 import be.event.smartbooking.model.Reservation;
 import be.event.smartbooking.model.User;
+import be.event.smartbooking.repository.RepresentationReservationRepository;
 import be.event.smartbooking.service.ReservationService;
 import be.event.smartbooking.service.StripeService;
 import be.event.smartbooking.service.UserService;
@@ -26,6 +27,9 @@ public class ReservationApiController {
 
     @Autowired
     private StripeService stripeService;
+     
+    @Autowired
+    private RepresentationReservationRepository representationReservationRepository ;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody List<ReservationItemRequest> items, Principal principal) {
@@ -39,7 +43,7 @@ public class ReservationApiController {
         
         try {
             // Simulation d'une méthode pour avoir les détails des items de la résa
-            List<RepresentationReservation> detailedItems = itemRepository.findByReservation(res);
+            List<RepresentationReservation> detailedItems = representationReservationRepository.findByReservation(res);
             
             // 3. On génère l'URL Stripe
             String checkoutUrl = stripeService.createCheckoutSession(res, detailedItems);
