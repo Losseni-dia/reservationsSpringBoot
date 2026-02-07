@@ -285,14 +285,18 @@ export const locationApi = {
 };
  
 export const reservationApi = {
-    create: async (items: ReservationRequest[]): Promise<string> => {
-        const res = await secureFetch(`${API_BASE}/reservations`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(items),
-        });
-        return res.text();
-    },
+   // Dans ton objet de service de réservation
+create: async (items: { representationId: number, places: number }[]): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/reservations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(items),
+    });
+    // res.text() contient l'URL de Stripe renvoyée par ton Backend
+    return res.text();
+},
+
+    
     getMyBookings: async (): Promise<Reservation[]> => {
         const res = await secureFetch(`${API_BASE}/reservations/my-bookings`);
         return res.json();
