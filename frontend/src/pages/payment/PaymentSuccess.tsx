@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import "./PaymentSuccess.css"; // Import du nouveau CSS
+import "./PaymentSuccess.module.css"; // Import du nouveau CSS
 
 const PaymentSuccess: React.FC = () => {
   const navigate = useNavigate();
