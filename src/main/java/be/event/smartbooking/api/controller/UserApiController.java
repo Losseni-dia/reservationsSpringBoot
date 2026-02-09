@@ -164,11 +164,16 @@ public class UserApiController {
         return ResponseEntity.ok(dtos);
     }
 
-    // SUPPRIMER UN USER (Admin seulement)
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")// Sécurité au niveau méthode
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id); // Assure-toi d'avoir cette méthode dans ton service
-        return ResponseEntity.noContent().build();
-    }
+    /**
+ * ENDPOINT DÉSACTIVÉ - Utilisez /deactivate à la place
+ * @deprecated Utilisez PUT /{id}/deactivate pour désactiver un utilisateur
+ */
+@DeleteMapping("/{id}")
+@PreAuthorize("hasRole('ADMIN')")
+@Deprecated
+public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+    return ResponseEntity.status(HttpStatus.GONE)
+            .body("Cet endpoint est désactivé. Utilisez PUT /api/users/{id}/deactivate pour désactiver un utilisateur.");
+}
+
 }
