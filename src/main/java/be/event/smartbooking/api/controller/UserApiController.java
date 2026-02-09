@@ -73,6 +73,8 @@ public class UserApiController {
         dto.setEmail(user.getEmail());
         dto.setLangue(user.getLangue());
         dto.setLogin(user.getLogin());
+        dto.setIsActive(user.getIsActive());
+        
 
         // Sécurité sur les rôles (évite le crash Lazy Loading)
         try {
