@@ -80,10 +80,26 @@ public class UserService {
  */
 @Deprecated
 public void deleteUser(Long id) {
-    java.util.Objects.requireNonNull(id, "id");
+        java.util.Objects.requireNonNull(id, "id");
+        if (!userRepos.existsById(id)) {
+            throw new EntityNotFoundException("Utilisateur introuvable");
+    }
     
-    User user = userRepos.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable"));
+    logger.warn("SUPPRESSION DÉFINITIVE de l'utilisateur: {} (ID: {})", user.getLogin(), id);
+    userRepos.deleteById(id);
+}
+    
+
+   /**
+ * ATTENTION: Suppression définitive d'un utilisateur par login
+ * @deprecated Utilisez plutôt deactivateUser() pour un soft delete
+ */
+@Deprecated
+public void deleteByLogin(String login) {
+    User user = userRepos.findByLogin(login);
+    if (user == null) {
+        throw new EntityNotFoundException("Utilisateur introuvable avec le login: " + login);
+    }
     
     // Vérifier si l'utilisateur a des réservations ou des avis
     if (!user.getReservations().isEmpty() || !user.getReviews().isEmpty()) {
@@ -93,15 +109,9 @@ public void deleteUser(Long id) {
         );
     }
     
-    logger.warn("SUPPRESSION DÉFINITIVE de l'utilisateur: {} (ID: {})", user.getLogin(), id);
-    userRepos.deleteById(id);
+    logger.warn("SUPPRESSION DÉFINITIVE de l'utilisateur: {}", login);
+    userRepos.delete(user);
 }
-    
-
-    public void deleteByLogin(String login) {
-        User user = userRepos.findByLogin(login);
-        userRepos.delete(user);
-    }
 
     public boolean isLoginAndEmailAvailable(String login, String email) {
         return !userRepos.existsByLogin(login) && !userRepos.existsByEmail(email);
@@ -222,6 +232,7 @@ public long countInactiveUsers() {
         }
 
         userRepos.save(user);
+        logger.info("Profil mis à jour pour l'utilisateur: {} (ID: {})", user.getLogin(), user.getId());
     }
 
 
