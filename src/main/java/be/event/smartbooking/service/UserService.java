@@ -15,8 +15,14 @@ import be.event.smartbooking.repository.RoleRepos;
 import be.event.smartbooking.repository.UserRepos;
 import jakarta.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private UserRepos userRepos;
 
@@ -49,6 +55,7 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setLangue(dto.getLangue());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setIsActive(true); // L'utilisateur est actif dès la création
 
         Role memberRole = roleRepos.findByRole("MEMBER"); // récupérer l'objet Role depuis la BD
         List<Role> roles = new ArrayList<>();
@@ -83,7 +90,107 @@ public class UserService {
     public boolean isLoginAndEmailAvailable(String login, String email) {
         return !userRepos.existsByLogin(login) && !userRepos.existsByEmail(email);
     }
+    /**
+ * Récupère tous les utilisateurs actifs uniquement
+ */
+public List<User> getAllActiveUsers() {
+    return userRepos.findByIsActiveTrue();
+}
+
+/**
+ * Récupère tous les utilisateurs inactifs uniquement
+ */
+public List<User> getAllInactiveUsers() {
+    return userRepos.findByIsActiveFalse();
+}
+
+/**
+ * Récupère un utilisateur actif par son ID
+ */
+public Optional<User> getActiveUserById(Long id) {
+    return userRepos.findByIdAndIsActiveTrue(id);
+}
+
+/**
+ * Récupère un utilisateur actif par son email
+ */
+public Optional<User> findActiveUserByEmail(String email) {
+    return userRepos.findByEmailAndIsActiveTrue(email);
+}
+
+/**
+ * Récupère un utilisateur actif par son login
+ */
+public Optional<User> findActiveUserByLogin(String login) {
+    return userRepos.findByLoginAndIsActiveTrue(login);
+}
+
+/**
+ * Vérifie si un login et un email sont disponibles parmi les utilisateurs actifs
+ */
+public boolean isLoginAndEmailAvailableForActiveUsers(String login, String email) {
+    return !userRepos.existsByLoginAndIsActiveTrue(login) 
+        && !userRepos.existsByEmailAndIsActiveTrue(email);
+}
+
+/**
+ * Désactive un utilisateur (soft delete) au lieu de le supprimer
+ * @param userId L'ID de l'utilisateur à désactiver
+ * @throws EntityNotFoundException Si l'utilisateur n'existe pas
+ */
+public void deactivateUser(Long userId) {
+    User user = userRepos.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID: " + userId));
     
+    logger.info("Désactivation de l'utilisateur: {} (ID: {})", user.getLogin(), userId);
+    
+    user.deactivate();
+    userRepos.save(user);
+}
+
+/**
+ * Réactive un utilisateur désactivé
+ * @param userId L'ID de l'utilisateur à réactiver
+ * @throws EntityNotFoundException Si l'utilisateur n'existe pas
+ */
+public void activateUser(Long userId) {
+    User user = userRepos.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID: " + userId));
+    
+    logger.info("Réactivation de l'utilisateur: {} (ID: {})", user.getLogin(), userId);
+    
+    user.activate();
+    userRepos.save(user);
+}
+
+/**
+ * Bascule le statut d'un utilisateur (actif <-> inactif)
+ * @param userId L'ID de l'utilisateur
+ */
+public void toggleUserStatus(Long userId) {
+    User user = userRepos.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID: " + userId));
+    
+    if (user.getIsActive()) {
+        deactivateUser(userId);
+    } else {
+        activateUser(userId);
+    }
+}
+
+/**
+ * Compte le nombre total d'utilisateurs actifs
+ */
+public long countActiveUsers() {
+    return userRepos.countByIsActiveTrue();
+}
+
+/**
+ * Compte le nombre total d'utilisateurs inactifs
+ */
+public long countInactiveUsers() {
+    return userRepos.countByIsActiveFalse();
+}
         public void updateUserFromDto(UserProfileDto dto) {
         User user = userRepos.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
