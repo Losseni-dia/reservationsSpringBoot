@@ -28,6 +28,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User " + username + " not found");
         }
+        // Vérifier si l'utilisateur est actif
+if (user.getIsActive() == null || !user.getIsActive()) {
+    throw new DisabledException("Ce compte a été désactivé. Veuillez contacter l'administrateur.");
+}
 
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
