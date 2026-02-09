@@ -74,7 +74,7 @@ public class UserApiController {
         dto.setLangue(user.getLangue());
         dto.setLogin(user.getLogin());
         dto.setIsActive(user.getIsActive());
-        
+
 
         // Sécurité sur les rôles (évite le crash Lazy Loading)
         try {
@@ -154,6 +154,7 @@ public class UserApiController {
             dto.setEmail(user.getEmail());
             dto.setLogin(user.getLogin());
             dto.setLangue(user.getLangue());
+            dto.setIsActive(user.getIsActive());
             if (user.getRoles() != null && !user.getRoles().isEmpty()) {
                 dto.setRole(user.getRoles().get(0).getRole());
             }
