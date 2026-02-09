@@ -73,13 +73,29 @@ public class UserService {
         return userRepos.findByLogin(login);
     }
 
-    public void deleteUser(Long id) {
-        java.util.Objects.requireNonNull(id, "id");
-        if (!userRepos.existsById(id)) {
-            throw new EntityNotFoundException("Utilisateur introuvable");
-        }
-        userRepos.deleteById(id);
+    /**
+ * ATTENTION: Suppression définitive d'un utilisateur
+ * À utiliser uniquement pour les cas RGPD ou les comptes sans données liées
+ * @deprecated Utilisez plutôt deactivateUser() pour un soft delete
+ */
+@Deprecated
+public void deleteUser(Long id) {
+    java.util.Objects.requireNonNull(id, "id");
+    
+    User user = userRepos.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable"));
+    
+    // Vérifier si l'utilisateur a des réservations ou des avis
+    if (!user.getReservations().isEmpty() || !user.getReviews().isEmpty()) {
+        throw new IllegalStateException(
+            "Impossible de supprimer un utilisateur avec des réservations ou des avis. " +
+            "Utilisez la désactivation à la place."
+        );
     }
+    
+    logger.warn("SUPPRESSION DÉFINITIVE de l'utilisateur: {} (ID: {})", user.getLogin(), id);
+    userRepos.deleteById(id);
+}
     
 
     public void deleteByLogin(String login) {
