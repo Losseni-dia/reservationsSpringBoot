@@ -8,6 +8,7 @@ import be.event.smartbooking.service.EmailService;
 import be.event.smartbooking.service.PasswordResetTokenService;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.persistence.EntityNotFOundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
