@@ -53,14 +53,17 @@ const AdminShowPage: React.FC = () => {
     }
   }, []);
 
+  // Load shows when the component mounts (and when fetchShows reference changes)
   useEffect(() => {
     fetchShows();
   }, [fetchShows]);
 
+  // Refetch shows when user clicks the refresh button
   const handleRefresh = useCallback(() => {
     fetchShows();
   }, [fetchShows]);
 
+  // Navigate to the edit page for the given show id
   const handleEditShow = useCallback((id: number) => {
       navigate(`/admin/shows/edit/${id}`);
     }, [navigate]
