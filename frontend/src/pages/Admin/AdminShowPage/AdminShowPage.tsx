@@ -19,10 +19,12 @@ import styles from "./AdminShowPage.module.css";
 const AdminShowPage: React.FC = () => {
   const navigate = useNavigate();
 
+  // List data and request state: shows list, loading flag, error message
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Modal and toast UI state: show being confirmed/revoked, modal open, toast content and type
   const [showToConfirm, setShowToConfirm] = useState<Show | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
