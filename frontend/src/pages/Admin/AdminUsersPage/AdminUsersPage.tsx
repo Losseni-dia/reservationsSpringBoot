@@ -79,11 +79,11 @@ const AdminUsersPage: React.FC = () => {
                                     </td>
                                     <td>
                                         <button 
-                                            onClick={() => handleDelete(user.id, user.login)}
-                                            className={styles.deleteBtn}
-                                        >
-                                            Supprimer
-                                        </button>
+                                                onClick={() => handleToggleStatus(user.id, user.isActive || false)}
+                                                 className={user.isActive ? 'btn btn-warning' : 'btn btn-success'}
+                                                            >
+                                                     {user.isActive ? '🔴 Désactiver' : '✅ Activer'}
+                                            </button>
                                     </td>
                                 </tr>
                             ))
