@@ -314,5 +314,54 @@ export const reviewApi = {
         const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
         return res.json();
     }
+
+    /**
+ * Désactive un utilisateur (soft delete)
+ */
+export const deactivateUser = async (userId: number): Promise<void> => {
+  await api.put(`/api/users/${userId}/deactivate`);
+};
+
+/**
+ * Réactive un utilisateur
+ */
+export const activateUser = async (userId: number): Promise<void> => {
+  await api.put(`/api/users/${userId}/activate`);
+};
+
+/**
+ * Bascule le statut d'un utilisateur
+ */
+export const toggleUserStatus = async (userId: number): Promise<void> => {
+  await api.put(`/api/users/${userId}/toggle-status`);
+};
+
+/**
+ * Récupère uniquement les utilisateurs actifs
+ */
+export const getActiveUsers = async (): Promise<UserProfileDto[]> => {
+  const response = await api.get('/api/users/active');
+  return response.data;
+};
+
+/**
+ * Récupère uniquement les utilisateurs inactifs
+ */
+export const getInactiveUsers = async (): Promise<UserProfileDto[]> => {
+  const response = await api.get('/api/users/inactive');
+  return response.data;
+};
+
+/**
+ * Récupère les statistiques des utilisateurs
+ */
+export const getUserStatistics = async (): Promise<{
+  totalUsers: number;
+  activeUsers: number;
+  inactiveUsers: number;
+}> => {
+  const response = await api.get('/api/users/stats');
+  return response.data;
+};
 };
  
