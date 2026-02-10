@@ -1,12 +1,21 @@
+// React hooks for state and side effects
 import React, { useCallback, useEffect, useState } from "react";
+// Navigation for redirecting to edit page
 import { useNavigate } from "react-router-dom";
+// API client for admin show operations (list, confirm, revoke)
 import { showApi } from "../../../services/api";
+// Show model and status type
 import { Show, ShowStatus } from "../../../types/models";
+// Loading spinner while fetching data
 import Loader from "../../../components/ui/loader/Loader";
+// Modal for confirming confirm/revoke actions
 import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
+// Toast notifications for success/error feedback
 import Toast from "../../../components/ui/toast/Toast";
+// Component styles
 import styles from "./AdminShowPage.module.css";
 
+/** Admin page: list all shows and moderate their status (confirm / revoke). */
 const AdminShowPage: React.FC = () => {
   const navigate = useNavigate();
 
