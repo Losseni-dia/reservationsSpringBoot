@@ -9,6 +9,8 @@ import be.event.smartbooking.service.PasswordResetTokenService;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.persistence.EntityNotFOundException;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -175,5 +177,146 @@ public ResponseEntity<String> deleteUser(@PathVariable Long id) {
     return ResponseEntity.status(HttpStatus.GONE)
             .body("Cet endpoint est désactivé. Utilisez PUT /api/users/{id}/deactivate pour désactiver un utilisateur.");
 }
+// ====================================================================
+// ENDPOINTS ADMIN - GESTION DES UTILISATEURS ACTIFS/INACTIFS
+// ====================================================================
 
+/**
+ * LISTER UNIQUEMENT LES UTILISATEURS ACTIFS (Admin seulement)
+ */
+@GetMapping("/active")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<List<UserProfileDto>> getAllActiveUsers() {
+    List<User> users = userService.getAllActiveUsers();
+
+    List<UserProfileDto> dtos = users.stream().map(user -> {
+        UserProfileDto dto = new UserProfileDto();
+        dto.setId(user.getId());
+        dto.setFirstname(user.getFirstname());
+        dto.setLastname(user.getLastname());
+        dto.setEmail(user.getEmail());
+        dto.setLogin(user.getLogin());
+        dto.setLangue(user.getLangue());
+        dto.setIsActive(user.getIsActive());
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            dto.setRole(user.getRoles().get(0).getRole());
+        }
+        return dto;
+    }).toList();
+
+    return ResponseEntity.ok(dtos);
+}
+
+/**
+ * LISTER UNIQUEMENT LES UTILISATEURS INACTIFS (Admin seulement)
+ */
+@GetMapping("/inactive")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<List<UserProfileDto>> getAllInactiveUsers() {
+    List<User> users = userService.getAllInactiveUsers();
+
+    List<UserProfileDto> dtos = users.stream().map(user -> {
+        UserProfileDto dto = new UserProfileDto();
+        dto.setId(user.getId());
+        dto.setFirstname(user.getFirstname());
+        dto.setLastname(user.getLastname());
+        dto.setEmail(user.getEmail());
+        dto.setLogin(user.getLogin());
+        dto.setLangue(user.getLangue());
+        dto.setIsActive(user.getIsActive());
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            dto.setRole(user.getRoles().get(0).getRole());
+        }
+        return dto;
+    }).toList();
+
+    return ResponseEntity.ok(dtos);
+}
+
+/**
+ * DÉSACTIVER UN UTILISATEUR (Admin seulement)
+ */
+@PutMapping("/{id}/deactivate")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
+    try {
+        userService.deactivateUser(id);
+        return ResponseEntity.ok("Utilisateur désactivé avec succès");
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erreur lors de la désactivation : " + e.getMessage());
+    }
+}
+
+/**
+ * RÉACTIVER UN UTILISATEUR (Admin seulement)
+ */
+@PutMapping("/{id}/activate")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<String> activateUser(@PathVariable Long id) {
+    try {
+        userService.activateUser(id);
+        return ResponseEntity.ok("Utilisateur réactivé avec succès");
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erreur lors de la réactivation : " + e.getMessage());
+    }
+}
+
+/**
+ * BASCULER LE STATUT D'UN UTILISATEUR (Admin seulement)
+ */
+@PutMapping("/{id}/toggle-status")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<String> toggleUserStatus(@PathVariable Long id) {
+    try {
+        userService.toggleUserStatus(id);
+        return ResponseEntity.ok("Statut de l'utilisateur modifié avec succès");
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erreur lors de la modification du statut : " + e.getMessage());
+    }
+}
+
+/**
+ * OBTENIR LES STATISTIQUES DES UTILISATEURS (Admin seulement)
+ */
+@GetMapping("/stats")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<Map<String, Long>> getUserStatistics() {
+    Map<String, Long> stats = Map.of(
+        "totalUsers", (long) userService.getAllUsers().size(),
+        "activeUsers", userService.countActiveUsers(),
+        "inactiveUsers", userService.countInactiveUsers()
+    );
+    return ResponseEntity.ok(stats);
+}
+
+/**
+ * SUPPRIMER DÉFINITIVEMENT UN UTILISATEUR (Admin seulement)
+ * ⚠️ ATTENTION : Suppression définitive et irréversible
+ */
+@DeleteMapping("/{id}/permanent")
+@PreAuthorize("hasRole('ADMIN')")
+@Deprecated
+public ResponseEntity<String> permanentlyDeleteUser(@PathVariable Long id) {
+    try {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("Utilisateur supprimé définitivement");
+    } catch (IllegalStateException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Impossible de supprimer : " + e.getMessage());
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erreur lors de la suppression : " + e.getMessage());
+    }
+}
 }
