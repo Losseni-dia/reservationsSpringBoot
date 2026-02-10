@@ -69,30 +69,29 @@ const AdminShowPage: React.FC = () => {
     }, [navigate]
   );
 
+/** Toggles show status between CONFIRME and A_CONFIRMER; calls API then updates local state and toast. */
 const handleToggleConfirmShow = useCallback(async (show: Show) => {
     try {
         setLoading(true);
 
-        // 1. Déterminer le nouveau statut
+        // Determine the new status (flip current one)
         const newStatus = show.status === 'CONFIRME' ? 'A_CONFIRMER' : 'CONFIRME';
 
-        // 2. Appeler l'API
+        // Call API: revoke or confirm depending on current status
         if (show.status === 'CONFIRME') {
             await showApi.revoke(show.id);
         } else {
             await showApi.confirm(show.id);
         }
 
-        // 3. Mise à jour intelligente du state
+        // Update list: revoked at top, confirmed at bottom (keeps sort order consistent)
         setShows((prevShows) => {
             const updatedShow = { ...show, status: newStatus as any };
             const otherShows = prevShows.filter((s) => s.id !== show.id);
             
             if (newStatus === 'A_CONFIRMER') {
-                // Si on révoque, on le met tout en haut (début du tableau)
                 return [updatedShow, ...otherShows];
             } else {
-                // Si on confirme, on le met tout en bas (fin du tableau)
                 return [...otherShows, updatedShow];
             }
         });
