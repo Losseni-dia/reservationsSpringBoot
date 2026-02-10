@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.security.authentication.DisabledException;;;
 import be.event.smartbooking.model.Role;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.repository.UserRepos;
@@ -28,6 +28,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User " + username + " not found");
         }
+        // Vérifier si l'utilisateur est actif
+if (user.getIsActive() == null || !user.getIsActive()) {
+    throw new DisabledException("Ce compte a été désactivé. Veuillez contacter l'administrateur.");
+}
 
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),

@@ -33,7 +33,10 @@ public class User {
     private String email;
 
     private String langue; // ex: "fr", "en", "nl"
-
+    @builder.Default
+    @Column(name = "is_active", nullable = false)   
+    private boolean isActive = true;    // Par défaut, un utilisateur est actif
+    
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -108,6 +111,19 @@ public class User {
     public boolean hasRole(String roleName) {
         return roles.stream()
                 .anyMatch(role -> role.getRole().equalsIgnoreCase(roleName));
+    }
+
+    /**
+     * Désactive l'utilisateur (soft delete)
+     */
+    public void deactivate() {
+        this.isActive = false;  
+    }
+    /**
+     * Réactive l'utilisateur
+     */
+    public void activate() {
+        this.isActive = true;  
     }
 
     @Override

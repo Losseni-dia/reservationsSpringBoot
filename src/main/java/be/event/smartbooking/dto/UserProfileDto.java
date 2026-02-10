@@ -27,7 +27,7 @@ public class UserProfileDto {
 
     private String login; // visible mais non modifiable
     private String role; // visible mais non modifiable
-
+    private Boolean isActive; // statut actif/inactif de l'utilisateur
     @StrongPassword
     private String password; // nouveau mot de passe (optionnel)
 
