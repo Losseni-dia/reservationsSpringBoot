@@ -30,14 +30,15 @@ const AdminShowPage: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<"success" | "error" | "info">("info");
 
+  /** Fetches all shows for admin (no filters), sorts by status, updates state. */
   const fetchShows = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      // NOUVEAU : On utilise la route admin qui bypass les filtres
+      // Admin route that bypasses public filters (returns all shows)
       const data = await showApi.getAllForAdmin();
 
-      // Tri : Les "A_CONFIRMER" en premier pour attirer l'attention de l'admin
+      // Sort so "A_CONFIRMER" (pending) appear first to draw admin attention
       const sortedShows = data.sort((a, b) => {
         if (a.status === b.status) return 0;
         return a.status === 'A_CONFIRMER' ? -1 : 1;
