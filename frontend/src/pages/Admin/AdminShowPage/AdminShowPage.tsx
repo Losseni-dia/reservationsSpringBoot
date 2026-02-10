@@ -129,6 +129,7 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
     setShowToConfirm(null);
   }, []); 
 
+  /** Renders the table of shows: title, location, status badge, edit and confirm/revoke actions. */
   const renderShowsTable = () => {
     return (
       <table className={styles.showsTable}>
