@@ -185,10 +185,12 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
     );
   };
 
+  // Show loader only on initial load (no shows yet)
   if (loading && shows.length === 0) return <Loader />;
 
   return (
     <div className={styles.adminContainer}>
+      {/* Page header: title and refresh button */}
       <div className={styles.adminHeader}>
         <h1 className={styles.adminTitle}>Modération des Spectacles</h1>
         <button className={styles.refreshButton} onClick={handleRefresh}>
@@ -196,10 +198,12 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
         </button>
       </div>
 
+      {/* Shows list: table or empty state message */}
       <div className={styles.showsListContainer}>
         {shows.length > 0 ? renderShowsTable() : <p>Aucun spectacle.</p>}
       </div>
 
+      {/* Toast for success/error feedback */}
       {toastMessage && (
         <Toast
           message={toastMessage}
@@ -208,6 +212,7 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
         />
       )}
 
+      {/* Confirm/revoke confirmation modal */}
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         title={showToConfirm?.status === 'CONFIRME' ? "Révoquer ?" : "Confirmer ?"}
