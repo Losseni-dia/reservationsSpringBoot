@@ -107,11 +107,14 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
         setLoading(false);
     }
 }, [setShows]);
+
+  // Open confirm/revoke modal and store the show to act on
   const handleOpenConfirmModal = useCallback((show: Show) => {
     setShowToConfirm(show);
     setIsConfirmModalOpen(true);
   }, []);
 
+  // User confirmed in modal: close modal, toggle show status, clear selection
   const handleConfirmModalConfirm = useCallback(async () => {
     if (showToConfirm) {
       setIsConfirmModalOpen(false);
@@ -120,6 +123,7 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
     }
   }, [showToConfirm, handleToggleConfirmShow]);
 
+  // User cancelled: close modal and clear selected show
   const handleConfirmModalCancel = useCallback(() => {
     setIsConfirmModalOpen(false);
     setShowToConfirm(null);
