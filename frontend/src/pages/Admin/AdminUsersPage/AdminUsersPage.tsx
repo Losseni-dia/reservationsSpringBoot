@@ -3,7 +3,7 @@ import { userApi } from '../../../services/api';
 import { UserProfileDto } from '../../../types/models'; // Vérifie que ton DTO est bien ici
 import Loader from '../../../components/ui/loader/Loader';
 import styles from './AdminUsersPage.module.css';
-
+import { deactivateUser, activateUser } from '../../../services/api';
 const AdminUsersPage: React.FC = () => {
     const [users, setUsers] = useState<UserProfileDto[]>([]);
     const [loading, setLoading] = useState(true);
