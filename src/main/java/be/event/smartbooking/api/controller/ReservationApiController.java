@@ -33,7 +33,7 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody List<ReservationItemRequest> items, Principal principal) {
-        User user = userService.findByEmail(principal.getName());
+        User user = userService.findByLogin(principal.getName());
         
         // 1. On crée la réservation en PENDING (ton code actuel)
         Reservation res = reservationService.createReservation(user, items);
