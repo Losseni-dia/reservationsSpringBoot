@@ -5,7 +5,10 @@ import be.event.smartbooking.dto.ReservationItemRequest;
 import be.event.smartbooking.model.*;
 import be.event.smartbooking.model.enumeration.StatutReservation;
 import be.event.smartbooking.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,26 +90,34 @@ public class ReservationService {
     /**
      * Annule une réservation (seulement si elle est PENDING ou CONFIRMED)
      */
-    @Transactional
-    public boolean cancelReservation(Long reservationId, User currentUser) {
-        Reservation reservation = getByIdAndUser(reservationId, currentUser.getId());
 
-        if (reservation == null) {
-            return false;
-        }
 
-        if (reservation.getStatut() == StatutReservation.CANCELLED) {
-            return false; // déjà annulée
-        }
 
-        if (reservation.getStatut() == StatutReservation.PENDING ||
-                reservation.getStatut() == StatutReservation.CONFIRMED) {
+    // Dans ton ReservationService.java
 
-            reservation.setStatut(StatutReservation.CANCELLED);
-            reservationRepository.save(reservation);
-            return true;
-        }
+@Transactional
+public void cancelReservation(Long reservationId) {
+    Reservation res = reservationRepository.findById(reservationId)
+        .orElseThrow(() -> new EntityNotFoundException("Réservation non trouvée"));
+    
+    // On passe le statut à ANNULÉ (ou on supprime la ligne)
+    res.setStatut(StatutReservation.CANCELLED);
+    reservationRepository.save(res);
+    
+    // Optionnel : remettre les places en stock si tu as un compteur
+}
 
-        return false; // statut non annulable (ex: déjà passée)
+// Ta méthode actuelle qui nécessite un User (probablement pour le contrôleur Front)
+@Transactional
+public void cancelReservation(Long reservationId, User user) {
+    Reservation res = reservationRepository.findById(reservationId)
+        .orElseThrow(() -> new EntityNotFoundException("Réservation non trouvée"));
+
+    // Vérification de sécurité : l'utilisateur est-il le propriétaire ?
+    if (!res.getUser().getId().equals(user.getId())) {
+        throw new AccessDeniedException("Vous n'avez pas le droit d'annuler cette réservation");
     }
+
+    cancelReservation(reservationId); // On appelle la méthode simplifiée ci-dessus
+}
 }

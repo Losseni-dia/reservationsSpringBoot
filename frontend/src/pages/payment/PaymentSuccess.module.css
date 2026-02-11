@@ -1,0 +1,89 @@
+.successContainer {
+    min-height: 100vh;
+    background-color: #121212; /* Ton fond sombre */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+}
+
+.successCard {
+    width: 100%;
+    max-width: 480px;
+    padding: 3rem;
+    background-color: #1e1e1e;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    border: 1px solid #2a2a2a;
+    text-align: center;
+    animation: slideUp 0.6s ease-out;
+}
+
+.checkCircle {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(106, 13, 173, 0.2); /* Ton violet transparent */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 2rem;
+    color: #FFD700; /* Ton doré */
+    font-size: 3rem;
+    border: 2px solid #6A0DAD;
+    animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s both;
+}
+
+.successTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.successMessage {
+    color: #9ca3af;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.orderId {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background-color: #2a2a2a;
+    color: #6A0DAD;
+    border-radius: 0.4rem;
+    font-weight: 600;
+}
+
+.homeButton {
+    width: 100%;
+    padding: 1rem;
+    background-color: #6A0DAD; /* Ton violet fétiche */
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.homeButton:hover {
+    background-color: #8b20db;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(106, 13, 173, 0.4);
+}
+
+/* Animations pour un effet "Waouh" */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0); }
+    to { opacity: 1; transform: scale(1); }
+}

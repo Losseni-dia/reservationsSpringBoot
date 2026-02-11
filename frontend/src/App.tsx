@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Context
@@ -28,6 +27,8 @@ import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
 import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
+import PaymentSuccess from "./pages/payment/PaymentSuccess";
+import ReservationPage from "./pages/ReservationPage";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -56,16 +57,20 @@ function App() {
                 path="/admin/shows/:id/schedule"
                 element={<ShowSchedule />}
               />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/admin/reviews" element={<AdminReviewPage />} />
-              <Route path="/producer/dashboard" element={<ProducerDashboard />} />
+              <Route path="/reservation/:slug" element={<ReservationPage />} />
+              <Route
+                path="/producer/dashboard"
+                element={<ProducerDashboard />}
+              />
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
-            
             </Routes>
           </main>
 

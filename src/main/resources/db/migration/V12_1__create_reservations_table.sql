@@ -13,9 +13,6 @@ CREATE TABLE `reservations` (
 ALTER TABLE `reservations`
   ADD KEY `reservations_user_id` (`user_id`);
 
-ALTER TABLE `reservations`
-  ADD KEY `reservations_representation_id` (`representation_id`);
-
 --
 -- Contraintes pour la table `reservations`
 --

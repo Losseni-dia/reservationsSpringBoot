@@ -40,4 +40,9 @@ public class Reservation {
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    // AJOUTE CECI :
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "representation_id", nullable = false)
+    private Representation representation;
 }
