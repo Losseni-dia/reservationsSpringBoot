@@ -10,13 +10,13 @@ export interface Artist {
 
 
 export interface Representation {
-    id: number;
-    showId: number;
-    showTitle?: string; // Utile si inclus dans le DTO
-    when: string;       // Format ISO: "2025-12-25T20:00:00"
-    locationId?: number;
-    locationDesignation?: string;
-    prices: Price[];
+  id: number;
+  showId: number;
+  showTitle?: string;
+  when: string; // Format ISO: "2025-12-25T20:00:00"
+  locationId?: number;
+  locationDesignation?: string;
+  prices: Price[]; // Lié à la table 'prices' en Java
 }
 
 /**
@@ -107,7 +107,7 @@ export interface RepresentationReservation {
 export interface ReservationRequest {
     representationId: number;
     priceId: number;
-    quantity: number;
+    places: number;
 }
 
 
