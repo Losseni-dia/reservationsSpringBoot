@@ -1,0 +1,128 @@
+.reservationContainer {
+    min-height: 100vh;
+    background-color: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.reservationCard {
+    width: 100%;
+    max-width: 450px;
+    background-color: #1e1e1e;
+    padding: 2.5rem;
+    border-radius: 1.25rem;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.title {
+    color: white;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #9ca3af;
+    margin-bottom: 2rem;
+}
+
+.highlight {
+    color: #6A0DAD;
+    font-weight: bold;
+}
+
+.fieldGroup {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    display: block;
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.input {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #2a2a2a;
+    border: 1px solid #3f3f46;
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1rem;
+}
+
+.priceInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #2a2a2a;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+.totalAmount {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 1rem;
+    background-color: #FF3B3F; /* Ton rouge */
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submitButton:hover {
+    background-color: #e63539;
+    transform: translateY(-2px);
+}
+
+.cancelLink {
+    display: block;
+    margin-top: 1.5rem;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.875rem;
+}
+
+.errorMessage {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid #eee;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.totalAmount {
+  color: #27ae60;
+  font-size: 1.5rem;
+}
