@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Context
@@ -29,6 +28,7 @@ import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
+import ReservationPage from "./pages/ReservationPage";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -62,6 +62,7 @@ function App() {
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/admin/reviews" element={<AdminReviewPage />} />
+              <Route path="/reservation/:slug" element={<ReservationPage />} />
               <Route
                 path="/producer/dashboard"
                 element={<ProducerDashboard />}
