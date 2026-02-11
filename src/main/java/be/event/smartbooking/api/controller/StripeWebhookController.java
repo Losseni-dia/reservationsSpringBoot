@@ -20,6 +20,7 @@ import be.event.smartbooking.service.ReservationService;
 @RequestMapping("/api/webhooks")
 public class StripeWebhookController {
 
+    // Cette variable DOIT être ici, au niveau de la classe
     @Value("${stripe.webhook.secret}")
     private String endpointSecret;
 
@@ -27,21 +28,40 @@ public class StripeWebhookController {
     private ReservationService reservationService;
 
     @PostMapping("/stripe")
-    public ResponseEntity<String> handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
-        try {
-            Event event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
+public ResponseEntity<String> handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
+    try {
+        Event event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
+        Session session = (Session) event.getDataObjectDeserializer().getObject().get();
+        String reservationIdStr = session.getMetadata().get("reservation_id");
 
-            if ("checkout.session.completed".equals(event.getType())) {
-                Session session = (Session) event.getDataObjectDeserializer().getObject().get();
-                Long reservationId = Long.parseLong(session.getMetadata().get("reservation_id"));
-                
-                // On passe le statut à CONFIRMED
+        if (reservationIdStr == null) return ResponseEntity.ok(""); // Sécurité
+        Long reservationId = Long.parseLong(reservationIdStr);
+
+        switch (event.getType()) {
+            case "checkout.session.completed":
+                // Le paiement est réussi
                 reservationService.confirmReservation(reservationId);
-            }
+                break;
 
-            return ResponseEntity.ok("");
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body("Webhook Error");
+            case "checkout.session.expired":
+                // L'utilisateur a abandonné la page ou le temps est écoulé
+                // On annule la réservation pour libérer les places
+                reservationService.cancelReservation(reservationId);
+                break;
+
+            case "payment_intent.payment_failed":
+                // Le paiement a été tenté mais a échoué (ex: solde insuffisant)
+                reservationService.cancelReservation(reservationId);
+                break;
+
+            default:
+                // Type d'événement non géré
+                break;
         }
+
+        return ResponseEntity.ok("");
+    } catch (Exception e) {
+        return ResponseEntity.status(400).body("Webhook Error: " + e.getMessage());
     }
+}
 }
