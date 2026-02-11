@@ -42,6 +42,8 @@ export interface User {
     langue: string;
     roles: Role[];
     createdAt: string;
+    isActive: boolean;
+    roles?: Role[]; // Ajouté pour faciliter l'accès aux rôles de l'utilisateur
 }
 
 
