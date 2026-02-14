@@ -51,12 +51,12 @@ public class ShowService {
      * @throws BusinessException 404 si non trouvé
      */
     @Transactional(readOnly = true)
-    public Optional<Show> findBySlug(String slug) {
-        return repository.findBySlug(slug);
-        // Hypothèse : Ton repository doit retourner Optional<Show> pour utiliser
-        // orElseThrow
+    public Show findBySlug(String slug) {
+        // On suppose ici que le repository renvoie soit un Show (nullable), soit un
+        // Optional
         return Optional.ofNullable(repository.findBySlug(slug))
-                .orElseThrow(() -> new BusinessException("Spectacle introuvable (slug: " + slug + ")",
+                .orElseThrow(() -> new BusinessException(
+                        "Spectacle introuvable (slug: " + slug + ")",
                         HttpStatus.NOT_FOUND));
     }
 
@@ -96,8 +96,7 @@ public class ShowService {
     public void delete(Long id) {
         Show show = get(id); // On vérifie qu'il existe avant de supprimer
 
-        // Sécurité supplémentaire : On peut empêcher la suppression s'il y a des
-        // réservations
+        // Sécurité : empêcher la suppression s'il y a des représentations associées
         if (!show.getRepresentations().isEmpty()) {
             throw new BusinessException("Impossible de supprimer un spectacle ayant des représentations associées.",
                     HttpStatus.CONFLICT);

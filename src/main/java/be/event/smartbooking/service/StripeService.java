@@ -67,7 +67,7 @@ public class StripeService {
             return session.getUrl();
 
         } catch (StripeException e) {
-            log.error("Erreur Stripe lors de la création de la session: {}", e.getMessage());
+            log.error("Erreur Stripe lors de la création de la session: {}", e.getMessage(),e);
             throw new BusinessException("Erreur lors de la préparation du paiement en ligne.",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
