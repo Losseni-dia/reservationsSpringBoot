@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import be.event.smartbooking.model.User;
 
 public interface UserRepos extends CrudRepository<User, Long> {
-    User findById(long id);
+    Optional<User> findById(long id);
 
     User findByLogin(String login);
 
