@@ -14,7 +14,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "be.event.smartbooking.api.controller") // S'applique uniquement aux API (pas aux controllers classiques)
 @Slf4j // Pour logger les erreurs côté serveur
 public class GlobalExceptionHandler {
 

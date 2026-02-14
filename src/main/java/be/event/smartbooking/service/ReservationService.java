@@ -97,26 +97,26 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    // --- DANS ReservationService.java ---
+
+    /**
+     * VERSION SYSTÈME : Annulation automatique (Stripe, Admin, etc.)
+     */
     @Transactional
-    public void cancelReservation(Long reservationId, User user) {
+    public void cancelReservation(Long reservationId) {
         Reservation res = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
 
-        // Sécurité : On ne peut pas annuler la réservation de quelqu'un d'autre
-        if (!res.getUser().getId().equals(user.getId())) {
-            throw new BusinessException("Action interdite : vous n'êtes pas le propriétaire de cette réservation.",
-                    HttpStatus.FORBIDDEN);
-        }
-
-        // Métier : On ne peut pas annuler une réservation déjà annulée
         if (res.getStatut() == StatutReservation.CANCELLED) {
-            throw new BusinessException("Cette réservation est déjà annulée.", HttpStatus.BAD_REQUEST);
+            return; // Déjà annulée, on ne fait rien pour éviter les erreurs inutiles
         }
 
         res.setStatut(StatutReservation.CANCELLED);
         reservationRepository.save(res);
-        log.info("Réservation #{} annulée par l'utilisateur {}", reservationId, user.getLogin());
+        log.info("Réservation #{} annulée par le SYSTÈME (Stripe/Admin).", reservationId);
     }
+
+
 
     public List<Reservation> getUserReservations(User user) {
         return reservationRepository.findByUserOrderByCreatedAtDesc(user);
