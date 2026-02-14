@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -88,8 +89,14 @@ public class UserService {
         }
         user.getRoles().add(memberRole);
 
+       try {
         userRepos.save(user);
         logger.info("Nouvel utilisateur enregistré : {}", user.getLogin());
+    } catch (DataIntegrityViolationException e) {
+        // 2. La sécurité ultime contre les "Race Conditions"
+        logger.warn("Conflit détecté lors de l'insertion de l'utilisateur {} (Doublon email/login)", user.getLogin());
+        throw new BusinessException("Ce login ou cet email est déjà utilisé par un autre compte.", HttpStatus.CONFLICT);
+    }
     }
 
 
