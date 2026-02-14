@@ -51,7 +51,8 @@ public class ShowService {
      * @throws BusinessException 404 si non trouvé
      */
     @Transactional(readOnly = true)
-    public Show findBySlug(String slug) {
+    public Optional<Show> findBySlug(String slug) {
+        return repository.findBySlug(slug);
         // Hypothèse : Ton repository doit retourner Optional<Show> pour utiliser
         // orElseThrow
         return Optional.ofNullable(repository.findBySlug(slug))

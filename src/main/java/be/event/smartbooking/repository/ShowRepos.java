@@ -2,6 +2,7 @@ package be.event.smartbooking.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,7 @@ import be.event.smartbooking.model.Show;
 import be.event.smartbooking.model.enumeration.ShowStatus;
 
 public interface ShowRepos extends JpaRepository<Show, Long> {
-    Show findBySlug(String slug);
+    Optional<Show> findBySlug(String slug);
 
     Show findByTitle(String title);
 

@@ -43,7 +43,7 @@ public class StripeService {
                             SessionCreateParams.LineItem.PriceData.builder()
                                     .setCurrency("eur")
                                     // Stripe travaille en centimes (ex: 10.00€ -> 1000)
-                                    .setUnitAmount((long) (item.getPrice().getAmount() * 100))
+                                    .setUnitAmount(Math.round(item.getPrice().getAmount() * 100))
                                     .setProductData(
                                             SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                                     .setName(item.getRepresentation().getShow().getTitle())
