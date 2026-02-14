@@ -2,6 +2,7 @@ package be.event.smartbooking.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,7 +56,7 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setLangue(dto.getLangue());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setIsActive(true); // L'utilisateur est actif dès la création
+        user.activate(); // L'utilisateur est actif dès la création
 
         Role memberRole = roleRepos.findByRole("MEMBER"); // récupérer l'objet Role depuis la BD
         List<Role> roles = new ArrayList<>();
@@ -85,6 +86,7 @@ public void deleteUser(Long id) {
             throw new EntityNotFoundException("Utilisateur introuvable");
     }
     
+    User user = userRepos.findById(id).orElse(null);
     logger.warn("SUPPRESSION DÉFINITIVE de l'utilisateur: {} (ID: {})", user.getLogin(), id);
     userRepos.deleteById(id);
 }
@@ -197,7 +199,7 @@ public void toggleUserStatus(Long userId) {
     User user = userRepos.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID: " + userId));
     
-    if (user.getIsActive()) {
+    if (user.isActive()) {
         deactivateUser(userId);
     } else {
         activateUser(userId);
