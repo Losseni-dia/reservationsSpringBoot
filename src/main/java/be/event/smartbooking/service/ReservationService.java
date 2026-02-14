@@ -1,21 +1,20 @@
-// ReservationService.java (extrait clé)
 package be.event.smartbooking.service;
 
 import be.event.smartbooking.dto.ReservationItemRequest;
+import be.event.smartbooking.errorHandler.BusinessException;
 import be.event.smartbooking.model.*;
 import be.event.smartbooking.model.enumeration.StatutReservation;
 import be.event.smartbooking.repository.*;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.security.access.AccessDeniedException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,8 +25,15 @@ public class ReservationService {
     private final PriceRepository priceRepository;
     private final RepresentationRepos representationRepository;
 
+    /**
+     * Crée une réservation avec ses articles.
+     */
     @Transactional
     public Reservation createReservation(User user, List<ReservationItemRequest> items) {
+        if (items == null || items.isEmpty()) {
+            throw new BusinessException("La liste de réservation ne peut pas être vide.", HttpStatus.BAD_REQUEST);
+        }
+
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .reservationDate(LocalDateTime.now())
@@ -38,10 +44,17 @@ public class ReservationService {
 
         for (ReservationItemRequest itemReq : items) {
             Representation repr = representationRepository.findById(itemReq.representationId())
-                    .orElseThrow(() -> new RuntimeException("Représentation non trouvée"));
+                    .orElseThrow(() -> new BusinessException(
+                            "Représentation introuvable (ID: " + itemReq.representationId() + ")",
+                            HttpStatus.NOT_FOUND));
 
             Price price = priceRepository.findById(itemReq.priceId())
-                    .orElseThrow(() -> new RuntimeException("Prix non trouvé"));
+                    .orElseThrow(() -> new BusinessException("Prix introuvable (ID: " + itemReq.priceId() + ")",
+                            HttpStatus.NOT_FOUND));
+
+            // Logique de stock (Exemple à adapter selon ton modèle) :
+            // if (repr.getPlacesRestantes() < itemReq.quantity()) throw new
+            // BusinessException("Plus de places disponibles", HttpStatus.CONFLICT);
 
             RepresentationReservation item = RepresentationReservation.builder()
                     .reservation(reservation)
@@ -53,71 +66,59 @@ public class ReservationService {
             itemRepository.save(item);
         }
 
+        log.info("Réservation #{} créée pour l'utilisateur {}", reservation.getId(), user.getLogin());
+        return reservation;
+    }
+
+    /**
+     * Récupère une réservation et vérifie les droits d'accès.
+     */
+    public Reservation getByIdAndUser(Long reservationId, Long userId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
+
+        if (!reservation.getUser().getId().equals(userId)) {
+            log.warn("Tentative d'accès illégal : User {} a tenté d'accéder à la Réservation #{}", userId,
+                    reservationId);
+            throw new BusinessException("Vous n'êtes pas autorisé à consulter cette réservation.",
+                    HttpStatus.FORBIDDEN);
+        }
+
         return reservation;
     }
 
     @Transactional
     public Reservation confirmReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new RuntimeException("Réservation non trouvée"));
+                .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
 
         reservation.setStatut(StatutReservation.CONFIRMED);
+        log.info("Réservation #{} confirmée (Payée).", reservationId);
         return reservationRepository.save(reservation);
+    }
+
+    @Transactional
+    public void cancelReservation(Long reservationId, User user) {
+        Reservation res = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
+
+        // Sécurité : On ne peut pas annuler la réservation de quelqu'un d'autre
+        if (!res.getUser().getId().equals(user.getId())) {
+            throw new BusinessException("Action interdite : vous n'êtes pas le propriétaire de cette réservation.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        // Métier : On ne peut pas annuler une réservation déjà annulée
+        if (res.getStatut() == StatutReservation.CANCELLED) {
+            throw new BusinessException("Cette réservation est déjà annulée.", HttpStatus.BAD_REQUEST);
+        }
+
+        res.setStatut(StatutReservation.CANCELLED);
+        reservationRepository.save(res);
+        log.info("Réservation #{} annulée par l'utilisateur {}", reservationId, user.getLogin());
     }
 
     public List<Reservation> getUserReservations(User user) {
         return reservationRepository.findByUserOrderByCreatedAtDesc(user);
     }
-
-
-
-    /**
-     * Récupère une réservation par ID uniquement si elle appartient bien à
-     * l'utilisateur
-     */
-    public Reservation getByIdAndUser(Long reservationId, Long userId) {
-        Optional<Reservation> optional = reservationRepository.findById(reservationId);
-
-        if (optional.isPresent()) {
-            Reservation reservation = optional.get();
-            if (reservation.getUser().getId().equals(userId)) {
-                return reservation;
-            }
-        }
-        return null; // soit pas trouvée, soit pas à cet utilisateur
-    }
-
-    /**
-     * Annule une réservation (seulement si elle est PENDING ou CONFIRMED)
-     */
-
-
-
-    // Dans ton ReservationService.java
-
-@Transactional
-public void cancelReservation(Long reservationId) {
-    Reservation res = reservationRepository.findById(reservationId)
-        .orElseThrow(() -> new EntityNotFoundException("Réservation non trouvée"));
-    
-    // On passe le statut à ANNULÉ (ou on supprime la ligne)
-    res.setStatut(StatutReservation.CANCELLED);
-    reservationRepository.save(res);
-    
-    // Optionnel : remettre les places en stock si tu as un compteur
-}
-
-// Ta méthode actuelle qui nécessite un User (probablement pour le contrôleur Front)
-@Transactional
-public void cancelReservation(Long reservationId, User user) {
-    Reservation res = reservationRepository.findById(reservationId)
-        .orElseThrow(() -> new EntityNotFoundException("Réservation non trouvée"));
-
-    // Vérification de sécurité : l'utilisateur est-il le propriétaire ?
-    if (!res.getUser().getId().equals(user.getId())) {
-        throw new AccessDeniedException("Vous n'avez pas le droit d'annuler cette réservation");
-    }
-
-    cancelReservation(reservationId); // On appelle la méthode simplifiée ci-dessus
-}
 }
