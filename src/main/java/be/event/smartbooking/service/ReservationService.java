@@ -92,6 +92,13 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
 
+        if (reservation.getStatut() != StatutReservation.PENDING) {
+            throw new BusinessException(
+                    "Seule une réservation en attente peut être confirmée (statut actuel : " + reservation.getStatut()
+                            + ")",
+                    HttpStatus.BAD_REQUEST);
+        }
+
         reservation.setStatut(StatutReservation.CONFIRMED);
         log.info("Réservation #{} confirmée (Payée).", reservationId);
         return reservationRepository.save(reservation);
@@ -115,8 +122,6 @@ public class ReservationService {
         reservationRepository.save(res);
         log.info("Réservation #{} annulée par le SYSTÈME (Stripe/Admin).", reservationId);
     }
-
-
 
     public List<Reservation> getUserReservations(User user) {
         return reservationRepository.findByUserOrderByCreatedAtDesc(user);
