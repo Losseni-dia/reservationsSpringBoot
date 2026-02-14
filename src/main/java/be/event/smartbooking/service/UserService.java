@@ -92,6 +92,13 @@ public class UserService {
         logger.info("Nouvel utilisateur enregistré : {}", user.getLogin());
     }
 
+
+    public void updateUser(long id, User user) {
+
+        userRepos.save(user);
+
+    }
+
     public void updateUserFromDto(UserProfileDto dto) {
         User user = getUserById(dto.getId());
 
@@ -142,6 +149,12 @@ public class UserService {
 
         logger.warn("SUPPRESSION DÉFINITIVE de l'utilisateur: {}", login);
         userRepos.delete(user);
+    }
+
+    public boolean isLoginAndEmailAvailable(String login, String email) {
+
+        return !userRepos.existsByLogin(login) && !userRepos.existsByEmail(email);
+
     }
 
     // --- STATISTIQUES ---
