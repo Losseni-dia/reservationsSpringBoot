@@ -6,6 +6,8 @@ import be.event.smartbooking.model.Review;
 import be.event.smartbooking.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,21 +28,26 @@ public class ReviewService {
      * 
      * @throws BusinessException 409 si l'utilisateur a déjà voté pour ce spectacle.
      */
-    @Transactional
-    public Review addReview(Review review) {
-        // 1. Vérification de doublon
-        if (reviewRepository.existsByUserIdAndShowId(review.getUser().getId(), review.getShow().getId())) {
-            log.warn("Tentative de doublon d'avis : User {} sur Show {}", review.getUser().getId(),
-                    review.getShow().getId());
-            throw new BusinessException("Vous avez déjà posté un avis sur ce spectacle.", HttpStatus.CONFLICT);
-        }
-
-        // 2. Par défaut : en attente de modération
-        review.setValidated(false);
-
-        log.info("Nouvel avis créé (en attente) pour le spectacle ID: {}", review.getShow().getId());
-        return reviewRepository.save(review);
+   @Transactional
+public Review addReview(Review review) {
+    // 1. "Fast-fail" : Vérification rapide pour éviter de solliciter la DB inutilement
+    if (reviewRepository.existsByUserIdAndShowId(review.getUser().getId(), review.getShow().getId())) {
+        throw new BusinessException("Vous avez déjà posté un avis sur ce spectacle.", HttpStatus.CONFLICT);
     }
+
+    // 2. Par défaut : en attente de modération
+    review.setValidated(false);
+
+    try {
+        log.info("Tentative de création d'avis pour le spectacle ID: {}", review.getShow().getId());
+        return reviewRepository.save(review);
+    } catch (DataIntegrityViolationException e) {
+        // 3. Gestion de la concurrence : Si une autre requête a inséré l'avis 
+        // juste entre notre check (étape 1) et notre sauvegarde (étape 2).
+        log.warn("Doublon détecté par la base de données (Race Condition) pour l'utilisateur {}", review.getUser().getId());
+        throw new BusinessException("Vous avez déjà posté un avis sur ce spectacle.", HttpStatus.CONFLICT);
+    }
+}
 
     public List<Review> getValidatedReviewsByShow(Long showId) {
         return reviewRepository.findByShowIdAndValidatedTrueOrderByCreatedAtDesc(showId);
