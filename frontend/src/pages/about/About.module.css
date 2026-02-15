@@ -1,0 +1,58 @@
+.container {
+  background: #1a1a1a;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+/* HERO AVEC SALLE DE SPECTACLE */
+.hero {
+  height: 70vh;
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)),
+    url("https://images.unsplash.com/photo-1503095396549-807a8bc3667c?q=80&w=2071") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.title { font-size: 3.5rem; font-weight: 800; margin-bottom: 10px; }
+.title span { color: #f5c518; }
+.subtitle { font-size: 1.2rem; color: #ccc; margin-bottom: 30px; }
+
+.ctaPrimary {
+  background: #f5c518;
+  color: #000;
+  padding: 15px 35px;
+  border: none;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* SECTIONS */
+.sectionDark { padding: 80px 10%; background: #1a1a1a; }
+.sectionLight { padding: 80px 10%; background: #f4f4f4; color: #1a1a1a; }
+.sectionTitle { color: white; font-size: 2.2rem; margin-bottom: 40px; }
+.sectionTitleDark { color: #1a1a1a; font-size: 2.2rem; margin-bottom: 40px; text-align: center; }
+
+/* VALEURS CARDS */
+.cardGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+.valueCard { background: #262626; padding: 30px; border-radius: 10px; text-align: center; transition: 0.3s; }
+.activeCard { border-bottom: 4px solid #f5c518; transform: translateY(-5px); }
+.icon { font-size: 2.5rem; margin-bottom: 15px; }
+
+/* AVIS CARDS */
+.reviewGrid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.reviewCard { background: white; padding: 30px; border-radius: 10px; width: 250px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.reviewCardWide { background: white; display: flex; border-radius: 10px; overflow: hidden; width: 450px; }
+.reviewImage { width: 150px; background: #333; }
+.reviewContent { padding: 20px; flex: 1; }
+.stars { color: #f5c518; margin: 10px 0; }
+
+/* COUPS DE COEUR */
+.showGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+.showCard { background: #000; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
+.showImagePlaceholder { height: 200px; background: #333; transition: 0.5s; }
+.showCard:hover .showImagePlaceholder { background: #444; }
+.showInfo { padding: 20px; }
+.btnOutline { background: transparent; border: 1px solid #f5c518; color: #f5c518; padding: 8px 15px; cursor: pointer; margin-top: 10px; }
