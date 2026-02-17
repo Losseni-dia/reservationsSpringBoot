@@ -137,5 +137,74 @@
     "preparePayment": "Preparing payment...",
     "proceedToPayment": "Proceed to payment",
     "back": "Back"
+  },
+  "admin": {
+    "home": {
+      "title": "Administrator Space",
+      "titleError": "Administrator Dashboard",
+      "retry": "Retry",
+      "statUsers": "Registered users",
+      "statShows": "Published shows",
+      "statReservations": "Reservations",
+      "statPendingReviews": "Pending reviews",
+      "statArtists": "Artists",
+      "statLocations": "Locations",
+      "statTotalRevenue": "Total revenue",
+      "statAverageRating": "Average rating"
+    },
+    "users": {
+      "title": "Manage",
+      "titleHighlight": "Users",
+      "subtitle": "Administration interface • {{count}} registered accounts",
+      "colIdentity": "Identity",
+      "colLogin": "Username",
+      "colEmail": "Email",
+      "colStatus": "Status / Role",
+      "colActions": "Actions",
+      "deactivate": "🔴 Deactivate",
+      "activate": "✅ Activate",
+      "empty": "No users found.",
+      "confirmDelete": "⚠️ WARNING: Permanently delete user \"{{name}}\"?",
+      "errorDelete": "Error during deletion. The user may have linked data (reservations, etc.)."
+    },
+    "shows": {
+      "errorLoad": "Unable to load shows.",
+      "title": "Show Moderation",
+      "refresh": "Refresh",
+      "colTitle": "Title",
+      "colLocation": "Location",
+      "colStatus": "Status",
+      "colActions": "Actions",
+      "statusConfirmed": "✓ Confirmed",
+      "statusPending": "⏳ Pending",
+      "edit": "Edit",
+      "revoke": "Revoke",
+      "confirm": "Confirm",
+      "empty": "No shows.",
+      "toastConfirmed": "Show confirmed!",
+      "toastRevoked": "Show revoked!",
+      "toastError": "Error during update",
+      "modalRevokeTitle": "Revoke?",
+      "modalConfirmTitle": "Confirm?",
+      "modalRevokeMessage": "Remove \"{{title}}\" from the public catalogue?",
+      "modalConfirmMessage": "Make \"{{title}}\" visible and bookable by customers?"
+    },
+    "reviews": {
+      "title": "Moderation of",
+      "titleHighlight": "Reviews",
+      "subtitle": "{{count}} reviews pending moderation",
+      "approve": "APPROVE",
+      "delete": "DELETE",
+      "empty": "🎉 All reviews have been moderated!",
+      "confirmDelete": "Permanently delete this review?",
+      "errorValidate": "Error during validation",
+      "errorDelete": "Error during deletion"
+    },
+    "locations": {
+      "loading": "Loading locations...",
+      "title": "Our",
+      "titleHighlight": "Locations",
+      "visitWebsite": "Visit website →"
+    }
   }
 }

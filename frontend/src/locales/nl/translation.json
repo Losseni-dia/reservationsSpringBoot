@@ -137,5 +137,74 @@
     "preparePayment": "Betaling voorbereiden...",
     "proceedToPayment": "Doorgaan naar betaling",
     "back": "Terug"
+  },
+  "admin": {
+    "home": {
+      "title": "Beheerdersruimte",
+      "titleError": "Beheerdersdashboard",
+      "retry": "Opnieuw proberen",
+      "statUsers": "Geregistreerde gebruikers",
+      "statShows": "Gepubliceerde voorstellingen",
+      "statReservations": "Reserveringen",
+      "statPendingReviews": "Beoordelingen in behandeling",
+      "statArtists": "Artiesten",
+      "statLocations": "Locaties",
+      "statTotalRevenue": "Totale omzet",
+      "statAverageRating": "Gemiddelde beoordeling"
+    },
+    "users": {
+      "title": "Beheer van",
+      "titleHighlight": "Gebruikers",
+      "subtitle": "Beheersinterface • {{count}} geregistreerde accounts",
+      "colIdentity": "Identiteit",
+      "colLogin": "Gebruikersnaam",
+      "colEmail": "E-mail",
+      "colStatus": "Status / Rol",
+      "colActions": "Acties",
+      "deactivate": "🔴 Deactiveren",
+      "activate": "✅ Activeren",
+      "empty": "Geen gebruikers gevonden.",
+      "confirmDelete": "⚠️ WAARSCHUWING: Gebruiker \"{{name}}\" definitief verwijderen?",
+      "errorDelete": "Fout bij het verwijderen. De gebruiker heeft mogelijk gekoppelde gegevens (reserveringen, enz.)."
+    },
+    "shows": {
+      "errorLoad": "Kan voorstellingen niet laden.",
+      "title": "Moderatiewerking voorstellingen",
+      "refresh": "Vernieuwen",
+      "colTitle": "Titel",
+      "colLocation": "Locatie",
+      "colStatus": "Status",
+      "colActions": "Acties",
+      "statusConfirmed": "✓ Bevestigd",
+      "statusPending": "⏳ Te valideren",
+      "edit": "Wijzigen",
+      "revoke": "Intrekken",
+      "confirm": "Bevestigen",
+      "empty": "Geen voorstellingen.",
+      "toastConfirmed": "Voorstelling bevestigd!",
+      "toastRevoked": "Voorstelling ingetrokken!",
+      "toastError": "Fout bij het bijwerken",
+      "modalRevokeTitle": "Intrekken?",
+      "modalConfirmTitle": "Bevestigen?",
+      "modalRevokeMessage": "\"{{title}}\" uit de openbare catalogus verwijderen?",
+      "modalConfirmMessage": "\"{{title}}\" zichtbaar en reserverbaar maken voor klanten?"
+    },
+    "reviews": {
+      "title": "Moderatiewerking",
+      "titleHighlight": "Beoordelingen",
+      "subtitle": "{{count}} beoordelingen in afwachting van controle",
+      "approve": "GOEDKEUREN",
+      "delete": "VERWIJDEREN",
+      "empty": "🎉 Alle beoordelingen zijn gemodereerd!",
+      "confirmDelete": "Deze beoordeling definitief verwijderen?",
+      "errorValidate": "Fout bij de validatie",
+      "errorDelete": "Fout bij het verwijderen"
+    },
+    "locations": {
+      "loading": "Locaties laden...",
+      "title": "Onze",
+      "titleHighlight": "Locaties",
+      "visitWebsite": "Website bezoeken →"
+    }
   }
 }

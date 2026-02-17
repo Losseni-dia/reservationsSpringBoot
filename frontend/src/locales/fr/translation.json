@@ -137,5 +137,74 @@
     "preparePayment": "Préparation du paiement...",
     "proceedToPayment": "Procéder au paiement",
     "back": "Retour"
+  },
+  "admin": {
+    "home": {
+      "title": "Espace Administrateur",
+      "titleError": "Tableau de Bord Administrateur",
+      "retry": "Réessayer",
+      "statUsers": "Utilisateurs inscrits",
+      "statShows": "Spectacles publiés",
+      "statReservations": "Réservations",
+      "statPendingReviews": "Avis en attente",
+      "statArtists": "Artistes",
+      "statLocations": "Lieux",
+      "statTotalRevenue": "Revenus totaux",
+      "statAverageRating": "Note moyenne"
+    },
+    "users": {
+      "title": "Gestion des",
+      "titleHighlight": "Utilisateurs",
+      "subtitle": "Interface d'administration • {{count}} comptes enregistrés",
+      "colIdentity": "Identité",
+      "colLogin": "Identifiant",
+      "colEmail": "Email",
+      "colStatus": "Statut / Rôle",
+      "colActions": "Actions",
+      "deactivate": "🔴 Désactiver",
+      "activate": "✅ Activer",
+      "empty": "Aucun utilisateur trouvé.",
+      "confirmDelete": "⚠️ ATTENTION : Supprimer définitivement l'utilisateur \"{{name}}\" ?",
+      "errorDelete": "Erreur lors de la suppression. L'utilisateur a peut-être des données liées (réservations, etc.)."
+    },
+    "shows": {
+      "errorLoad": "Impossible de charger les spectacles.",
+      "title": "Modération des Spectacles",
+      "refresh": "Rafraîchir",
+      "colTitle": "Titre",
+      "colLocation": "Localité",
+      "colStatus": "Statut",
+      "colActions": "Actions",
+      "statusConfirmed": "✓ Confirmé",
+      "statusPending": "⏳ À valider",
+      "edit": "Modifier",
+      "revoke": "Révoquer",
+      "confirm": "Confirmer",
+      "empty": "Aucun spectacle.",
+      "toastConfirmed": "Spectacle confirmé !",
+      "toastRevoked": "Spectacle révoqué !",
+      "toastError": "Erreur lors de la mise à jour",
+      "modalRevokeTitle": "Révoquer ?",
+      "modalConfirmTitle": "Confirmer ?",
+      "modalRevokeMessage": "Retirer \"{{title}}\" du catalogue public ?",
+      "modalConfirmMessage": "Rendre \"{{title}}\" visible et réservable par les clients ?"
+    },
+    "reviews": {
+      "title": "Modération des",
+      "titleHighlight": "Avis",
+      "subtitle": "{{count}} avis en attente de relecture",
+      "approve": "APPROUVER",
+      "delete": "SUPPRIMER",
+      "empty": "🎉 Tous les avis ont été modérés !",
+      "confirmDelete": "Supprimer définitivement cet avis ?",
+      "errorValidate": "Erreur lors de la validation",
+      "errorDelete": "Erreur lors de la suppression"
+    },
+    "locations": {
+      "loading": "Chargement des lieux...",
+      "title": "Nos",
+      "titleHighlight": "Lieux",
+      "visitWebsite": "Visiter le site web →"
+    }
   }
 }
