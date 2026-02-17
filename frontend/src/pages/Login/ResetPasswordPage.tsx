@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authApi } from '../../services/api';
 import styles from './LoginPage.module.css';
 
 const ResetPasswordPage: React.FC = () => {
+    const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const token = searchParams.get('token');
     const navigate = useNavigate();
@@ -18,12 +20,12 @@ const ResetPasswordPage: React.FC = () => {
         setError('');
 
         if (!token) {
-            setError("Token manquant ou invalide.");
+            setError(t('auth.resetPassword.tokenMissing'));
             return;
         }
 
         if (password !== confirmPassword) {
-            setError("Les mots de passe ne correspondent pas.");
+            setError(t('auth.resetPassword.errorPasswordMismatch'));
             return;
         }
 
@@ -33,10 +35,10 @@ const ResetPasswordPage: React.FC = () => {
             await authApi.resetPassword(token, password);
             // Redirection vers le login avec un message de succès
             navigate('/login', { 
-                state: { message: "Mot de passe réinitialisé avec succès. Vous pouvez vous connecter." } 
+                state: { message: t('auth.resetPassword.success') } 
             });
         } catch (err: any) {
-            setError(err.message || "Le lien a expiré ou est invalide.");
+            setError(err.message || t('auth.resetPassword.errorExpired'));
         } finally {
             setIsLoading(false);
         }
@@ -46,9 +48,9 @@ const ResetPasswordPage: React.FC = () => {
         return (
             <div className={styles.pageContainer}>
                 <div className={styles.loginCard}>
-                    <h2 className={styles.cardTitle} style={{color: '#ff4444'}}>Lien invalide</h2>
-                    <p style={{color: '#ccc', textAlign: 'center'}}>Le lien de réinitialisation est manquant.</p>
-                    <Link to="/login" className={styles.submitButton} style={{textAlign: 'center', textDecoration: 'none'}}>Retour au login</Link>
+                    <h2 className={styles.cardTitle} style={{color: '#ff4444'}}>{t('auth.resetPassword.invalidLinkTitle')}</h2>
+                    <p style={{color: '#ccc', textAlign: 'center'}}>{t('auth.resetPassword.invalidLinkMessage')}</p>
+                    <Link to="/login" className={styles.submitButton} style={{textAlign: 'center', textDecoration: 'none'}}>{t('auth.backToLogin')}</Link>
                 </div>
             </div>
         );
@@ -61,36 +63,36 @@ const ResetPasswordPage: React.FC = () => {
             </div>
 
             <div className={styles.loginCard}>
-                <h2 className={styles.cardTitle}>Nouveau mot de passe</h2>
+                <h2 className={styles.cardTitle}>{t('auth.resetPassword.title')}</h2>
                 
                 {error && <div className={styles.errorMessage}>{error}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.fieldGroup}>
-                        <label className={styles.label}>Nouveau mot de passe</label>
+                        <label className={styles.label}>{t('auth.resetPassword.newPassword')}</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className={styles.input}
-                            placeholder="••••••••"
+                            placeholder={t('auth.placeholderPassword')}
                             required
                         />
                     </div>
                     <div className={styles.fieldGroup}>
-                        <label className={styles.label}>Confirmer</label>
+                        <label className={styles.label}>{t('auth.confirm')}</label>
                         <input
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className={styles.input}
-                            placeholder="••••••••"
+                            placeholder={t('auth.placeholderPassword')}
                             required
                         />
                     </div>
 
                     <button type="submit" disabled={isLoading} className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ''}`}>
-                        {isLoading ? 'Réinitialiser...' : 'Valider'}
+                        {isLoading ? t('auth.resetPassword.submitLoading') : t('auth.resetPassword.submit')}
                     </button>
                 </form>
             </div>
