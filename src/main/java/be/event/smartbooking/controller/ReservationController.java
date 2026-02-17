@@ -60,7 +60,7 @@ public class ReservationController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            reservationService.cancelReservation(id, currentUser);
+            reservationService.cancelReservation(id);
             redirectAttributes.addFlashAttribute("successMessage", "Réservation annulée avec succès.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
