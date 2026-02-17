@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 // API client for admin show operations (list, confirm, revoke)
 import { showApi } from "../../../services/api";
 // Show model and status type
-import { Show, ShowStatus } from "../../../types/models";
+import { Show } from "../../../types/models";
 // Loading spinner while fetching data
 import Loader from "../../../components/ui/loader/Loader";
 // Modal for confirming confirm/revoke actions
@@ -22,7 +22,7 @@ const AdminShowPage: React.FC = () => {
   // List data and request state: shows list, loading flag, error message
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   // Modal and toast UI state: show being confirmed/revoked, modal open, toast content and type
   const [showToConfirm, setShowToConfirm] = useState<Show | null>(null);
@@ -39,7 +39,7 @@ const AdminShowPage: React.FC = () => {
       const data = await showApi.getAllForAdmin();
 
       // Sort so "A_CONFIRMER" (pending) appear first to draw admin attention
-      const sortedShows = data.sort((a, b) => {
+      const sortedShows = data.sort((a: Show, b: Show) => {
         if (a.status === b.status) return 0;
         return a.status === 'A_CONFIRMER' ? -1 : 1;
       });

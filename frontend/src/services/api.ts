@@ -159,6 +159,10 @@ export const showApi = {
     const res = await secureFetch(`${API_BASE}/shows`);
     return res.json();
   },
+  getAllForAdmin: async (): Promise<Show[]> => {
+    const res = await secureFetch(`${API_BASE}/shows/admin`);
+    return res.json();
+  },
   getById: async (id: number): Promise<Show> => {
     const res = await secureFetch(`${API_BASE}/shows/${id}`);
     return res.json();
@@ -183,6 +187,18 @@ export const showApi = {
   },
   deleteById: async (id: number): Promise<void> => {
     await secureFetch(`${API_BASE}/shows/${id}`, { method: "DELETE" });
+  },
+  confirm: async (id: number): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
+      method: "PUT",
+    });
+    return res.json();
+  },
+  revoke: async (id: number): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
+      method: "PUT",
+    });
+    return res.json();
   },
 };
 
