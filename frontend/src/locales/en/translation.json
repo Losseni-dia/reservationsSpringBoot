@@ -1,3 +1,35 @@
 {
-  "welcome": "Welcome"
+  "layout": {
+    "header": {
+      "welcome": "Welcome",
+      "shows": "Shows",
+      "producerSpace": "Producer Space",
+      "dashboard": "Dashboard",
+      "administration": "Administration",
+      "dashboardGlobal": "Global Dashboard",
+      "usersManagement": "User Management",
+      "showsModeration": "Show Moderation",
+      "reviewsModeration": "Review Moderation",
+      "locationsManagement": "Location Management",
+      "logout": "Log out",
+      "register": "Register",
+      "login": "Log in"
+    },
+    "footer": {
+      "allRightsReserved": "All rights reserved.",
+      "privacy": "Privacy",
+      "terms": "Terms of Use"
+    }
+  },
+  "home": {
+    "programming": "Programme",
+    "searchPlaceholder": "Search for a show or venue...",
+    "noResults": "No results for \"{{term}}\"",
+    "noPoster": "No poster",
+    "reviewsCount": "{{count}} reviews",
+    "noReviews": "No reviews",
+    "details": "Details",
+    "reserve": "Book",
+    "full": "Sold out"
+  }
 }
