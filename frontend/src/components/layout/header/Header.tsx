@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import LanguageSwitcher from '../../ui/languageSwitcher/LanguageSwitcher';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
@@ -73,6 +74,7 @@ const Header: React.FC = () => {
                 </nav>
 
                 <div className={styles.actions}>
+                    <LanguageSwitcher />
                     {user ? (
                         <div className={styles.userActions}>
                             <Link to="/profile" className={styles.profileLink}>👤 {user.firstname}</Link>
