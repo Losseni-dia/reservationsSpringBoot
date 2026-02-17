@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -24,6 +25,7 @@ public class ReservationService {
     private final RepresentationReservationRepository itemRepository;
     private final PriceRepository priceRepository;
     private final RepresentationRepos representationRepository;
+    private final EmailService emailService;
 
     /**
      * Crée une réservation avec ses articles.
@@ -102,8 +104,13 @@ public class ReservationService {
         }
 
         reservation.setStatut(StatutReservation.CONFIRMED);
+        Reservation confirmed = reservationRepository.save(reservation);
+        List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(confirmed);
+        Locale locale = (confirmed.getUser().getLangue() != null && !confirmed.getUser().getLangue().isBlank())
+                ? Locale.forLanguageTag(confirmed.getUser().getLangue()) : Locale.FRENCH;
+        emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed, items, locale);
         log.info("Réservation #{} confirmée (Payée).", reservationId);
-        return reservationRepository.save(reservation);
+        return confirmed;
     }
 
     // --- DANS ReservationService.java ---
