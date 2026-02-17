@@ -8,6 +8,7 @@ import {
   UserProfileDto,
   UserRegistrationDto,
 } from "../types/models";
+import i18n from "../i18n";
 
 const API_BASE = "/api";
 export const IMAGE_STORAGE_BASE = "";
@@ -23,7 +24,8 @@ async function secureFetch(url: string, options: RequestInit = {}) {
   const method = options.method?.toUpperCase() || "GET";
   const headers = new Headers(options.headers);
 
-  headers.set("Accept", "application/json"); // Utilisation de .set (conseil CodeRabbit)
+  headers.set("Accept", "application/json");
+  headers.set("Accept-Language", i18n.language || "fr");
 
   if (["POST", "PUT", "DELETE"].includes(method)) {
     const token = getCsrfToken();
@@ -61,6 +63,7 @@ export const authApi = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
+        "Accept-Language": i18n.language || "fr",
       },
       body: params,
       credentials: "include",
