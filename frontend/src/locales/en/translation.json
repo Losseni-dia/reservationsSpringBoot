@@ -32,5 +32,71 @@
     "details": "Details",
     "reserve": "Book",
     "full": "Sold out"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirm": "Confirm",
+    "firstname": "First name",
+    "lastname": "Last name",
+    "loginId": "Username (Login)",
+    "loginOrEmail": "Username / Email",
+    "language": "Language",
+    "placeholderLogin": "Your username",
+    "placeholderPassword": "••••••••",
+    "placeholderFirstname": "Your first name",
+    "placeholderLastname": "Your last name",
+    "placeholderChooseLogin": "Choose a username",
+    "placeholderEmail": "example@email.com",
+    "passwordRules": "8 chars min, 1 uppercase, 1 lowercase, 1 digit, 1 special (@$!%*?&)",
+    "langFr": "Français",
+    "langEn": "English",
+    "langNl": "Nederlands",
+    "loading": "Loading...",
+    "backToLogin": "Back to login",
+    "login": {
+      "title": "Log in",
+      "subtitle": "The show starts here",
+      "forgotPassword": "Forgot password?",
+      "submit": "Log in",
+      "submitLoading": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "errorCredentials": "Invalid credentials or server unavailable."
+    },
+    "register": {
+      "title": "Create an account",
+      "submit": "Sign up",
+      "submitLoading": "Creating...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Log in",
+      "errorPasswordMismatch": "Passwords do not match.",
+      "errorGeneric": "An error occurred during registration."
+    },
+    "profile": {
+      "title": "My Profile",
+      "save": "Save",
+      "success": "Profile updated!"
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "description": "Enter your email address to receive a reset link.",
+      "submit": "Send link",
+      "submitLoading": "Sending...",
+      "success": "If an account exists with this email, you will receive a reset link.",
+      "errorGeneric": "An error occurred. Please try again."
+    },
+    "resetPassword": {
+      "title": "New password",
+      "newPassword": "New password",
+      "invalidLinkTitle": "Invalid link",
+      "invalidLinkMessage": "The reset link is missing.",
+      "tokenMissing": "Token missing or invalid.",
+      "submit": "Confirm",
+      "submitLoading": "Resetting...",
+      "success": "Password reset successfully. You can now log in.",
+      "errorExpired": "The link has expired or is invalid.",
+      "errorPasswordMismatch": "Passwords do not match."
+    }
   }
 }
