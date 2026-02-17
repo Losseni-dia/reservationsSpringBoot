@@ -32,5 +32,71 @@
     "details": "Details",
     "reserve": "Reserveren",
     "full": "Uitverkocht"
+  },
+  "auth": {
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "confirm": "Bevestigen",
+    "firstname": "Voornaam",
+    "lastname": "Achternaam",
+    "loginId": "Gebruikersnaam (Login)",
+    "loginOrEmail": "Gebruikersnaam / E-mail",
+    "language": "Taal",
+    "placeholderLogin": "Uw gebruikersnaam",
+    "placeholderPassword": "••••••••",
+    "placeholderFirstname": "Uw voornaam",
+    "placeholderLastname": "Uw achternaam",
+    "placeholderChooseLogin": "Kies een gebruikersnaam",
+    "placeholderEmail": "voorbeeld@email.com",
+    "passwordRules": "8 tekens min, 1 hoofdletter, 1 kleine letter, 1 cijfer, 1 speciaal (@$!%*?&)",
+    "langFr": "Français",
+    "langEn": "English",
+    "langNl": "Nederlands",
+    "loading": "Laden...",
+    "backToLogin": "Terug naar inloggen",
+    "login": {
+      "title": "Inloggen",
+      "subtitle": "Het spektakel begint hier",
+      "forgotPassword": "Wachtwoord vergeten?",
+      "submit": "Inloggen",
+      "submitLoading": "Bezig met inloggen...",
+      "noAccount": "Nog geen account?",
+      "signUp": "Registreren",
+      "errorCredentials": "Ongeldige gegevens of server niet beschikbaar."
+    },
+    "register": {
+      "title": "Account aanmaken",
+      "submit": "Registreren",
+      "submitLoading": "Bezig met aanmaken...",
+      "hasAccount": "Al een account?",
+      "signIn": "Inloggen",
+      "errorPasswordMismatch": "De wachtwoorden komen niet overeen.",
+      "errorGeneric": "Er is een fout opgetreden tijdens de registratie."
+    },
+    "profile": {
+      "title": "Mijn profiel",
+      "save": "Opslaan",
+      "success": "Profiel bijgewerkt!"
+    },
+    "forgotPassword": {
+      "title": "Wachtwoord vergeten",
+      "description": "Voer uw e-mailadres in om een resetlink te ontvangen.",
+      "submit": "Link verzenden",
+      "submitLoading": "Verzenden...",
+      "success": "Als er een account bestaat met dit e-mailadres, ontvangt u een resetlink.",
+      "errorGeneric": "Er is een fout opgetreden. Probeer het opnieuw."
+    },
+    "resetPassword": {
+      "title": "Nieuw wachtwoord",
+      "newPassword": "Nieuw wachtwoord",
+      "invalidLinkTitle": "Ongeldige link",
+      "invalidLinkMessage": "De resetlink ontbreekt.",
+      "tokenMissing": "Token ontbreekt of is ongeldig.",
+      "submit": "Bevestigen",
+      "submitLoading": "Bezig met resetten...",
+      "success": "Wachtwoord succesvol gereset. U kunt nu inloggen.",
+      "errorExpired": "De link is verlopen of is ongeldig.",
+      "errorPasswordMismatch": "De wachtwoorden komen niet overeen."
+    }
   }
 }
