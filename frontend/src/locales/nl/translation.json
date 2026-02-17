@@ -98,5 +98,44 @@
       "errorExpired": "De link is verlopen of is ongeldig.",
       "errorPasswordMismatch": "De wachtwoorden komen niet overeen."
     }
+  },
+  "show": {
+    "errorLoad": "Kan de voorstellingsgegevens niet laden.",
+    "locationUndefined": "Locatie niet opgegeven",
+    "about": "Over",
+    "availableDates": "Beschikbare data",
+    "artists": "Artiesten",
+    "reviews": "Publieksbeoordelingen",
+    "reviewPrompt": "Uw mening is belangrijk voor ons",
+    "reviewPlaceholder": "Deel uw ervaring met andere bezoekers...",
+    "reviewErrorAlready": "Fout: U heeft waarschijnlijk al een beoordeling geplaatst voor deze voorstelling.",
+    "reviewSuccess": "Bedankt! Uw beoordeling is opgeslagen.",
+    "reviewSubmit": "Beoordeling publiceren",
+    "reviewSubmitting": "Verzenden...",
+    "loginToReview": "Log in om een beoordeling achter te laten voor deze voorstelling.",
+    "noReviewsYet": "Nog geen beoordelingen. Wees de eerste die deelt!",
+    "booking": "Reservering",
+    "sessionDate": "Voorstelling op",
+    "reserve": "Reserveren",
+    "full": "Uitverkocht",
+    "noRepresentation": "Geen voorstelling beschikbaar."
+  },
+  "booking": {
+    "errorLoad": "Kan de voorstellingsgegevens niet laden.",
+    "selectDateAndPrice": "Selecteer een datum en tarief.",
+    "errorPaymentLink": "De betaallink is ongeldig.",
+    "errorReservation": "Fout tijdens het reserveren.",
+    "loadingShow": "Voorstelling laden...",
+    "title": "Reserveer uw plaatsen",
+    "showLabel": "Voorstelling:",
+    "chooseDate": "Kies een datum",
+    "noDateAvailable": "Geen datum beschikbaar",
+    "priceType": "Tariefsoort",
+    "quantity": "Aantal plaatsen",
+    "unitPrice": "Eenheidsprijs ({{type}}):",
+    "totalToPay": "Totaal te betalen:",
+    "preparePayment": "Betaling voorbereiden...",
+    "proceedToPayment": "Doorgaan naar betaling",
+    "back": "Terug"
   }
 }
