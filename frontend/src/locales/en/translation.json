@@ -98,5 +98,44 @@
       "errorExpired": "The link has expired or is invalid.",
       "errorPasswordMismatch": "Passwords do not match."
     }
+  },
+  "show": {
+    "errorLoad": "Unable to load show details.",
+    "locationUndefined": "Location not specified",
+    "about": "About",
+    "availableDates": "Available dates",
+    "artists": "Artists",
+    "reviews": "Audience reviews",
+    "reviewPrompt": "We value your opinion",
+    "reviewPlaceholder": "Share your experience with other visitors...",
+    "reviewErrorAlready": "Error: You may have already posted a review for this show.",
+    "reviewSuccess": "Thank you! Your review has been saved.",
+    "reviewSubmit": "Publish review",
+    "reviewSubmitting": "Sending...",
+    "loginToReview": "Log in to leave a review for this show.",
+    "noReviewsYet": "No reviews yet. Be the first to share yours!",
+    "booking": "Booking",
+    "sessionDate": "Session on",
+    "reserve": "Book",
+    "full": "Sold out",
+    "noRepresentation": "No representation available."
+  },
+  "booking": {
+    "errorLoad": "Unable to load show details.",
+    "selectDateAndPrice": "Please select a date and price type.",
+    "errorPaymentLink": "The payment link is invalid.",
+    "errorReservation": "Error during reservation.",
+    "loadingShow": "Loading show...",
+    "title": "Book your tickets",
+    "showLabel": "Show:",
+    "chooseDate": "Choose a date",
+    "noDateAvailable": "No date available",
+    "priceType": "Price type",
+    "quantity": "Number of tickets",
+    "unitPrice": "Unit price ({{type}}):",
+    "totalToPay": "Total to pay:",
+    "preparePayment": "Preparing payment...",
+    "proceedToPayment": "Proceed to payment",
+    "back": "Back"
   }
 }
