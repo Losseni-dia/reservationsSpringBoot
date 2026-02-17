@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { userApi } from '../../../services/api';
-import { UserProfileDto } from '../../../types/models'; // Vérifie que ton DTO est bien ici
+import { UserProfileDto } from '../../../types/models';
 import Loader from '../../../components/ui/loader/Loader';
 import styles from './AdminUsersPage.module.css';
 import { deactivateUser, activateUser } from '../../../services/api';
+
 const AdminUsersPage: React.FC = () => {
+    const { t } = useTranslation();
     const [users, setUsers] = useState<UserProfileDto[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -24,13 +27,13 @@ const AdminUsersPage: React.FC = () => {
     }, []);
 
     const handleDelete = async (id: number, name: string) => {
-        if (!window.confirm(`⚠️ ATTENTION : Supprimer définitivement l'utilisateur "${name}" ?`)) return;
+        if (!window.confirm(t("admin.users.confirmDelete", { name }))) return;
         
         try {
             await userApi.delete(id);
             setUsers(prevUsers => prevUsers.filter(u => u.id !== id));
         } catch (err) {
-            alert("Erreur lors de la suppression. L'utilisateur a peut-être des données liées (réservations, etc.).");
+            alert(t("admin.users.errorDelete"));
         }
     };
 
@@ -46,19 +49,19 @@ const AdminUsersPage: React.FC = () => {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1>Gestion des <span className={styles.yellow}>Utilisateurs</span></h1>
-                <p>Interface d'administration • {users.length} comptes enregistrés</p>
+                <h1>{t("admin.users.title")} <span className={styles.yellow}>{t("admin.users.titleHighlight")}</span></h1>
+                <p>{t("admin.users.subtitle", { count: users.length })}</p>
             </header>
 
             <div className={styles.tableWrapper}>
                 <table className={styles.userTable}>
                     <thead>
                         <tr>
-                            <th>Identité</th>
-                            <th>Identifiant</th>
-                            <th>Email</th>
-                            <th>Statut / Rôle</th>
-                            <th>Actions</th>
+                            <th>{t("admin.users.colIdentity")}</th>
+                            <th>{t("admin.users.colLogin")}</th>
+                            <th>{t("admin.users.colEmail")}</th>
+                            <th>{t("admin.users.colStatus")}</th>
+                            <th>{t("admin.users.colActions")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,14 +85,14 @@ const AdminUsersPage: React.FC = () => {
                                                 onClick={() => handleToggleStatus(user.id, user.isActive || false)}
                                                  className={user.isActive ? 'btn btn-warning' : 'btn btn-success'}
                                                             >
-                                                     {user.isActive ? '🔴 Désactiver' : '✅ Activer'}
+                                                     {user.isActive ? t("admin.users.deactivate") : t("admin.users.activate")}
                                             </button>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={5} className={styles.empty}>Aucun utilisateur trouvé.</td>
+                                <td colSpan={5} className={styles.empty}>{t("admin.users.empty")}</td>
                             </tr>
                         )}
                     </tbody>

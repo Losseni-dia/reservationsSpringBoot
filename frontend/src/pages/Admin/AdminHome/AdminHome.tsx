@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAdminStats } from "../../../hooks/useAdminStats";
 import styles from "./AdminHome.module.css";
 import {
@@ -13,6 +14,7 @@ import {
 } from "react-icons/hi";
 
 const AdminHome = () => {
+  const { t } = useTranslation();
   const { stats, loading, error, retry } = useAdminStats();
 
   const getDisplayNumber = (value: number) => {
@@ -22,11 +24,11 @@ const AdminHome = () => {
   if (error) {
     return (
       <div className={styles.adminContainer}>
-        <h1>Tableau de Bord Administrateur</h1>
+        <h1>{t("admin.home.titleError")}</h1>
         <div className={styles.errorContainer}>
           <p className={styles.errorText}>⚠️ {error}</p>
           <button onClick={retry} className={styles.retryButton}>
-            Réessayer
+            {t("admin.home.retry")}
           </button>
         </div>
       </div>
@@ -35,7 +37,7 @@ const AdminHome = () => {
 
   return (
     <div className={styles.adminContainer}>
-      <h1>Espace Administrateur</h1>
+      <h1>{t("admin.home.title")}</h1>
       <div className={styles.dashboardGrid}>
         {/* Utilisateurs inscrits */}
         <Link to="/admin/users" className={styles.statCard}>
@@ -45,7 +47,7 @@ const AdminHome = () => {
           <p className={styles.statNumber}>
             {getDisplayNumber(stats.totalUsers)}
           </p>
-          <h2>Utilisateurs inscrits</h2>
+          <h2>{t("admin.home.statUsers")}</h2>
         </Link>
 
         {/* Spectacles publiés */}
@@ -56,7 +58,7 @@ const AdminHome = () => {
           <p className={styles.statNumber}>
             {getDisplayNumber(stats.totalShows)}
           </p>
-          <h2>Spectacles publiés</h2>
+          <h2>{t("admin.home.statShows")}</h2>
         </Link>
 
         {/* Réservations */}
@@ -67,7 +69,7 @@ const AdminHome = () => {
           <p className={styles.statNumber}>
             {getDisplayNumber(stats.totalReservations)}
           </p>
-          <h2>Réservations</h2>
+          <h2>{t("admin.home.statReservations")}</h2>
         </Link>
 
         {/* Avis en attente */}
@@ -78,7 +80,7 @@ const AdminHome = () => {
           <p className={styles.statNumber}>
             {getDisplayNumber(stats.reviewStats?.pending || 0)}
           </p>
-          <h2>Avis en attente</h2>
+          <h2>{t("admin.home.statPendingReviews")}</h2>
         </Link>
 
         {/* Artistes */}
@@ -89,7 +91,7 @@ const AdminHome = () => {
           <p className={styles.statNumber}>
             {getDisplayNumber(stats.totalArtists)}
           </p>
-          <h2>Artistes</h2>
+          <h2>{t("admin.home.statArtists")}</h2>
         </Link>
 
         {/* Lieux */}
@@ -100,7 +102,7 @@ const AdminHome = () => {
           <p className={styles.statNumber}>
             {getDisplayNumber(stats.totalLocations)}
           </p>
-          <h2>Lieux</h2>
+          <h2>{t("admin.home.statLocations")}</h2>
         </Link>
 
         {/* Revenus totaux */}
@@ -111,7 +113,7 @@ const AdminHome = () => {
           <p className={styles.statNumber}>
             {loading ? "..." : stats.reviewStats?.totalRevenue || 0} €
           </p>
-          <h2>Revenus totaux</h2>
+          <h2>{t("admin.home.statTotalRevenue")}</h2>
         </div>
 
         {/* Note moyenne */}
@@ -124,7 +126,7 @@ const AdminHome = () => {
               ? "..."
               : (stats.reviewStats?.averageRating || 0).toFixed(1)}
           </p>
-          <h2>Note moyenne</h2>
+          <h2>{t("admin.home.statAverageRating")}</h2>
         </div>
       </div>
     </div>

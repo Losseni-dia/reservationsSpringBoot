@@ -1,7 +1,6 @@
-// React hooks for state and side effects
 import React, { useCallback, useEffect, useState } from "react";
-// Navigation for redirecting to edit page
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 // API client for admin show operations (list, confirm, revoke)
 import { showApi } from "../../../services/api";
 // Show model and status type
@@ -15,8 +14,8 @@ import Toast from "../../../components/ui/toast/Toast";
 // Component styles
 import styles from "./AdminShowPage.module.css";
 
-/** Admin page: list all shows and moderate their status (confirm / revoke). */
 const AdminShowPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   // List data and request state: shows list, loading flag, error message
@@ -46,12 +45,12 @@ const AdminShowPage: React.FC = () => {
 
       setShows(sortedShows);
     } catch (err: any) {
-      setError("Impossible de charger les spectacles.");
+      setError(t("admin.shows.errorLoad"));
       setToastType("error");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   // Load shows when the component mounts (and when fetchShows reference changes)
   useEffect(() => {
@@ -96,17 +95,17 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
             }
         });
 
-        setToastMessage(newStatus === 'CONFIRME' ? "Spectacle confirmé !" : "Spectacle révoqué !");
+        setToastMessage(newStatus === 'CONFIRME' ? t("admin.shows.toastConfirmed") : t("admin.shows.toastRevoked"));
         setToastType("success");
 
     } catch (err) {
         console.error("Erreur API:", err);
-        setToastMessage("Erreur lors de la mise à jour");
+        setToastMessage(t("admin.shows.toastError"));
         setToastType("error");
     } finally {
         setLoading(false);
     }
-}, [setShows]);
+}, [t]);
 
   // Open confirm/revoke modal and store the show to act on
   const handleOpenConfirmModal = useCallback((show: Show) => {
@@ -135,10 +134,10 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
       <table className={styles.showsTable}>
         <thead className={styles.tableHeader}>
           <tr>
-            <th className={styles.tableHeaderCell}>Titre</th>
-            <th className={styles.tableHeaderCell}>Localité</th>
-            <th className={styles.tableHeaderCell}>Statut</th>
-            <th className={styles.tableHeaderCell}>Actions</th>
+            <th className={styles.tableHeaderCell}>{t("admin.shows.colTitle")}</th>
+            <th className={styles.tableHeaderCell}>{t("admin.shows.colLocation")}</th>
+            <th className={styles.tableHeaderCell}>{t("admin.shows.colStatus")}</th>
+            <th className={styles.tableHeaderCell}>{t("admin.shows.colActions")}</th>
           </tr>
         </thead>
         <tbody>
@@ -158,7 +157,7 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
                       : styles.statusPending
                   }`}
                 >
-                  {show.status === 'CONFIRME' ? "✓ Confirmé" : "⏳ À valider"}
+                  {show.status === 'CONFIRME' ? t("admin.shows.statusConfirmed") : t("admin.shows.statusPending")}
                 </span>
               </td>
               <td className={styles.tableCell}>
@@ -167,14 +166,14 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
                     className={`${styles.actionButton} ${styles.editButton}`}
                     onClick={() => handleEditShow(show.id)}
                   >
-                    Modifier
+                    {t("admin.shows.edit")}
                   </button>
                   <button
                     className={`${styles.actionButton} ${styles.confirmButton}`}
                     onClick={() => handleOpenConfirmModal(show)}
                     disabled={loading}
                   >
-                    {show.status === 'CONFIRME' ? "Révoquer" : "Confirmer"}
+                    {show.status === 'CONFIRME' ? t("admin.shows.revoke") : t("admin.shows.confirm")}
                   </button>
                 </div>
               </td>
@@ -192,15 +191,15 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
     <div className={styles.adminContainer}>
       {/* Page header: title and refresh button */}
       <div className={styles.adminHeader}>
-        <h1 className={styles.adminTitle}>Modération des Spectacles</h1>
+        <h1 className={styles.adminTitle}>{t("admin.shows.title")}</h1>
         <button className={styles.refreshButton} onClick={handleRefresh}>
-          Rafraîchir
+          {t("admin.shows.refresh")}
         </button>
       </div>
 
       {/* Shows list: table or empty state message */}
       <div className={styles.showsListContainer}>
-        {shows.length > 0 ? renderShowsTable() : <p>Aucun spectacle.</p>}
+        {shows.length > 0 ? renderShowsTable() : <p>{t("admin.shows.empty")}</p>}
       </div>
 
       {/* Toast for success/error feedback */}
@@ -215,11 +214,11 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
       {/* Confirm/revoke confirmation modal */}
       <ConfirmModal
         isOpen={isConfirmModalOpen}
-        title={showToConfirm?.status === 'CONFIRME' ? "Révoquer ?" : "Confirmer ?"}
+        title={showToConfirm?.status === 'CONFIRME' ? t("admin.shows.modalRevokeTitle") : t("admin.shows.modalConfirmTitle")}
         message={
           showToConfirm?.status === 'CONFIRME'
-            ? `Retirer "${showToConfirm?.title}" du catalogue public ?`
-            : `Rendre "${showToConfirm?.title}" visible et réservable par les clients ?`
+            ? t("admin.shows.modalRevokeMessage", { title: showToConfirm?.title })
+            : t("admin.shows.modalConfirmMessage", { title: showToConfirm?.title })
         }
         confirmButtonClass={showToConfirm?.status === 'CONFIRME' ? "danger" : "success"}
         onConfirm={handleConfirmModalConfirm}
