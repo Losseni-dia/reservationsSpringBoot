@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -24,6 +25,7 @@ public class ReservationService {
     private final RepresentationReservationRepository itemRepository;
     private final PriceRepository priceRepository;
     private final RepresentationRepos representationRepository;
+    private final EmailService emailService;
 
     /**
      * Crée une réservation avec ses articles.
@@ -31,7 +33,7 @@ public class ReservationService {
     @Transactional
     public Reservation createReservation(User user, List<ReservationItemRequest> items) {
         if (items == null || items.isEmpty()) {
-            throw new BusinessException("La liste de réservation ne peut pas être vide.", HttpStatus.BAD_REQUEST);
+            throw new BusinessException("error.reservation.empty", HttpStatus.BAD_REQUEST);
         }
 
         Reservation reservation = Reservation.builder()
@@ -45,12 +47,15 @@ public class ReservationService {
         for (ReservationItemRequest itemReq : items) {
             Representation repr = representationRepository.findById(itemReq.representationId())
                     .orElseThrow(() -> new BusinessException(
-                            "Représentation introuvable (ID: " + itemReq.representationId() + ")",
-                            HttpStatus.NOT_FOUND));
+                            "error.representation.notfound",
+                            HttpStatus.NOT_FOUND,
+                            itemReq.representationId()));
 
             Price price = priceRepository.findById(itemReq.priceId())
-                    .orElseThrow(() -> new BusinessException("Prix introuvable (ID: " + itemReq.priceId() + ")",
-                            HttpStatus.NOT_FOUND));
+                    .orElseThrow(() -> new BusinessException(
+                            "error.price.notfound",
+                            HttpStatus.NOT_FOUND,
+                            itemReq.priceId()));
 
             // Logique de stock (Exemple à adapter selon ton modèle) :
             // if (repr.getPlacesRestantes() < itemReq.quantity()) throw new
@@ -75,13 +80,12 @@ public class ReservationService {
      */
     public Reservation getByIdAndUser(Long reservationId, Long userId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException("error.reservation.notfound", HttpStatus.NOT_FOUND));
 
         if (!reservation.getUser().getId().equals(userId)) {
             log.warn("Tentative d'accès illégal : User {} a tenté d'accéder à la Réservation #{}", userId,
                     reservationId);
-            throw new BusinessException("Vous n'êtes pas autorisé à consulter cette réservation.",
-                    HttpStatus.FORBIDDEN);
+            throw new BusinessException("error.reservation.forbidden", HttpStatus.FORBIDDEN);
         }
 
         return reservation;
@@ -90,18 +94,23 @@ public class ReservationService {
     @Transactional
     public Reservation confirmReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException("error.reservation.notfound", HttpStatus.NOT_FOUND));
 
         if (reservation.getStatut() != StatutReservation.PENDING) {
             throw new BusinessException(
-                    "Seule une réservation en attente peut être confirmée (statut actuel : " + reservation.getStatut()
-                            + ")",
-                    HttpStatus.BAD_REQUEST);
+                    "error.reservation.confirm.pending",
+                    HttpStatus.BAD_REQUEST,
+                    reservation.getStatut());
         }
 
         reservation.setStatut(StatutReservation.CONFIRMED);
+        Reservation confirmed = reservationRepository.save(reservation);
+        List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(confirmed);
+        Locale locale = (confirmed.getUser().getLangue() != null && !confirmed.getUser().getLangue().isBlank())
+                ? Locale.forLanguageTag(confirmed.getUser().getLangue()) : Locale.FRENCH;
+        emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed, items, locale);
         log.info("Réservation #{} confirmée (Payée).", reservationId);
-        return reservationRepository.save(reservation);
+        return confirmed;
     }
 
     // --- DANS ReservationService.java ---
@@ -112,7 +121,7 @@ public class ReservationService {
     @Transactional
     public void cancelReservation(Long reservationId) {
         Reservation res = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new BusinessException("Réservation introuvable", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException("error.reservation.notfound", HttpStatus.NOT_FOUND));
 
         if (res.getStatut() == StatutReservation.CANCELLED) {
             return; // Déjà annulée, on ne fait rien pour éviter les erreurs inutiles

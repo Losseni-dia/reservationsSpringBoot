@@ -8,6 +8,7 @@ import {
   UserProfileDto,
   UserRegistrationDto,
 } from "../types/models";
+import i18n from "../i18n";
 
 const API_BASE = "/api";
 export const IMAGE_STORAGE_BASE = "";
@@ -23,7 +24,8 @@ async function secureFetch(url: string, options: RequestInit = {}) {
   const method = options.method?.toUpperCase() || "GET";
   const headers = new Headers(options.headers);
 
-  headers.set("Accept", "application/json"); // Utilisation de .set (conseil CodeRabbit)
+  headers.set("Accept", "application/json");
+  headers.set("Accept-Language", i18n.language || "fr");
 
   if (["POST", "PUT", "DELETE"].includes(method)) {
     const token = getCsrfToken();
@@ -61,6 +63,7 @@ export const authApi = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
+        "Accept-Language": i18n.language || "fr",
       },
       body: params,
       credentials: "include",
@@ -159,6 +162,10 @@ export const showApi = {
     const res = await secureFetch(`${API_BASE}/shows`);
     return res.json();
   },
+  getAllForAdmin: async (): Promise<Show[]> => {
+    const res = await secureFetch(`${API_BASE}/shows/admin`);
+    return res.json();
+  },
   getById: async (id: number): Promise<Show> => {
     const res = await secureFetch(`${API_BASE}/shows/${id}`);
     return res.json();
@@ -183,6 +190,18 @@ export const showApi = {
   },
   deleteById: async (id: number): Promise<void> => {
     await secureFetch(`${API_BASE}/shows/${id}`, { method: "DELETE" });
+  },
+  confirm: async (id: number): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
+      method: "PUT",
+    });
+    return res.json();
+  },
+  revoke: async (id: number): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
+      method: "PUT",
+    });
+    return res.json();
   },
 };
 
@@ -240,10 +259,8 @@ export const reviewApi = {
     const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
     return res.json();
   },
-}; // ✅ bien fermé ici
+};
 
-
-// ✅ Nouveau bloc séparé
 export const locationApi = {
   getAll: async (): Promise<Location[]> => {
     const res = await secureFetch(`${API_BASE}/locations`);

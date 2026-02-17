@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import "./PaymentSuccess.module.css"; // Import du nouveau CSS
+import { useTranslation } from "react-i18next";
+import "./PaymentSuccess.module.css";
 
 const PaymentSuccess: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const reservationId = searchParams.get("reservationId");
 
   useEffect(() => {
-    // Optionnel : vider le panier local
     localStorage.removeItem("cart");
   }, []);
 
@@ -17,23 +18,23 @@ const PaymentSuccess: React.FC = () => {
       <div className="successCard">
         <div className="checkCircle">✓</div>
 
-        <h1 className="successTitle">Paiement Réussi !</h1>
+        <h1 className="successTitle">{t("payment.title")}</h1>
 
         <p className="successMessage">
-          Merci pour votre achat. Votre réservation{" "}
+          {t("payment.message")}{" "}
           {reservationId && <span className="orderId">#{reservationId}</span>}{" "}
-          est maintenant confirmée.
+          {t("payment.isNowConfirmed")}.
         </p>
 
         <p
           className="successMessage"
           style={{ fontSize: "0.9rem", opacity: 0.7 }}
         >
-          Un récapitulatif a été envoyé à votre adresse email.
+          {t("payment.summaryEmail")}
         </p>
 
         <button onClick={() => navigate("/")} className="homeButton">
-          Retour à l'accueil
+          {t("payment.backHome")}
         </button>
       </div>
     </div>
