@@ -28,12 +28,12 @@ const Header: React.FC = () => {
             <div className="container d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-2">
                     <Link to="/" className={styles.logo}>SMART<span className={styles.yellow}>BOOKING</span></Link>
-                    <span className={styles.welcome}>{t('welcome')}</span>
+                    <span className={styles.welcome}>{t('layout.header.welcome')}</span>
                 </div>
                 <nav className={styles.nav}>
-                    <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Spectacles</NavLink>
+                    <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>{t('layout.header.shows')}</NavLink>
                     <NavLink to="/about" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
-                        À propos
+                        {t('layout.header.about')}
                     </NavLink>
 
                     {/* ESPACE PRODUCTEUR */}
@@ -49,11 +49,11 @@ const Header: React.FC = () => {
                                     if (e.key === 'Enter') setIsAffiliateOpen(v => !v);
                                 if (e.key === 'Escape') setIsAffiliateOpen(false); }}
                                 >
-                                Espace Producteur ▼
+                                {t('layout.header.producerSpace')} ▼
                                 </button>
                                                             {isAffiliateOpen && (
                                 <div className={styles.dropdownMenu}>
-                                    <NavLink to="/producer/dashboard" className={styles.dropdownItem}>📊 Dashboard</NavLink>
+                                    <NavLink to="/producer/dashboard" className={styles.dropdownItem}>📊 {t('layout.header.dashboard')}</NavLink>
                                    
                                 </div>
                             )}
@@ -63,14 +63,14 @@ const Header: React.FC = () => {
                     {/* ESPACE ADMIN */}
                     {user && user.role === 'admin' && (
                         <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsAdminOpen, adminTimeout)} onMouseLeave={() => handleLeave(setIsAdminOpen, adminTimeout)}>
-                            <button className={`${styles.dropdownBtn} ${styles.adminBtn}`}>Administration ▼</button>
+                            <button className={`${styles.dropdownBtn} ${styles.adminBtn}`}>{t('layout.header.administration')} ▼</button>
                             {isAdminOpen && (
                                 <div className={styles.dropdownMenu}>
-                                    <NavLink to="/admin" end className={styles.dropdownItem}>📊 Dashboard Global</NavLink>
-                                    <NavLink to="/admin/users" className={styles.dropdownItem}>👥 Gestion Utilisateurs</NavLink>
-                                    <NavLink to="/admin/shows" className={styles.dropdownItem}>🎭 Modération Spectacles</NavLink>
-                                    <NavLink to="/admin/reviews" className={styles.dropdownItem}>⭐ Modération Avis</NavLink>
-                                    <NavLink to="/admin/locations" className={styles.dropdownItem}>📍 Gestion Lieux</NavLink>
+                                    <NavLink to="/admin" end className={styles.dropdownItem}>📊 {t('layout.header.dashboardGlobal')}</NavLink>
+                                    <NavLink to="/admin/users" className={styles.dropdownItem}>👥 {t('layout.header.usersManagement')}</NavLink>
+                                    <NavLink to="/admin/shows" className={styles.dropdownItem}>🎭 {t('layout.header.showsModeration')}</NavLink>
+                                    <NavLink to="/admin/reviews" className={styles.dropdownItem}>⭐ {t('layout.header.reviewsModeration')}</NavLink>
+                                    <NavLink to="/admin/locations" className={styles.dropdownItem}>📍 {t('layout.header.locationsManagement')}</NavLink>
                                 </div>
                             )}
                         </div>
@@ -82,12 +82,12 @@ const Header: React.FC = () => {
                     {user ? (
                         <div className={styles.userActions}>
                             <Link to="/profile" className={styles.profileLink}>👤 {user.firstname}</Link>
-                            <button onClick={logout} className={styles.logoutBtn}>Déconnexion</button>
+                            <button onClick={logout} className={styles.logoutBtn}>{t('layout.header.logout')}</button>
                         </div>
                     ) : (
                         <div className={styles.authButtons}>
-                            <Link to="/register" className={styles.registerBtn}>Inscription</Link>
-                            <Link to="/login" className={styles.loginBtn}>Connexion</Link>
+                            <Link to="/register" className={styles.registerBtn}>{t('layout.header.register')}</Link>
+                            <Link to="/login" className={styles.loginBtn}>{t('layout.header.login')}</Link>
                         </div>
                     )}
                 </div>
