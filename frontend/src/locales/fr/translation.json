@@ -1,3 +1,35 @@
 {
-  "welcome": "Bienvenue"
+  "layout": {
+    "header": {
+      "welcome": "Bienvenue",
+      "shows": "Spectacles",
+      "producerSpace": "Espace Producteur",
+      "dashboard": "Dashboard",
+      "administration": "Administration",
+      "dashboardGlobal": "Dashboard Global",
+      "usersManagement": "Gestion Utilisateurs",
+      "showsModeration": "Modération Spectacles",
+      "reviewsModeration": "Modération Avis",
+      "locationsManagement": "Gestion Lieux",
+      "logout": "Déconnexion",
+      "register": "Inscription",
+      "login": "Connexion"
+    },
+    "footer": {
+      "allRightsReserved": "Tous droits réservés.",
+      "privacy": "Confidentialité",
+      "terms": "Conditions d'utilisation"
+    }
+  },
+  "home": {
+    "programming": "Programmation",
+    "searchPlaceholder": "Rechercher un spectacle ou un lieu...",
+    "noResults": "Aucun résultat pour \"{{term}}\"",
+    "noPoster": "Pas d'affiche",
+    "reviewsCount": "{{count}} avis",
+    "noReviews": "Aucun avis",
+    "details": "Détails",
+    "reserve": "Réserver",
+    "full": "Complet"
+  }
 }
