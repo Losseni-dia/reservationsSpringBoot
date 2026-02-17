@@ -27,7 +27,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
-        return buildErrorResponse(ex.getStatus(), ex.getMessage(), request);
+        String message;
+        if (ex.getMessageKey() != null) {
+            String defaultMsg = ex.getMessage() != null ? ex.getMessage() : "An error occurred";
+            message = messageSource.getMessage(ex.getMessageKey(), ex.getMessageArgs(), defaultMsg, getLocale());
+        } else {
+            message = ex.getMessage() != null ? ex.getMessage() : "An error occurred";
+        }
+        return buildErrorResponse(ex.getStatus(), message, request);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
