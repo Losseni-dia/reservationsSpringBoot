@@ -119,7 +119,6 @@ public class UserService {
         userRepos.deleteById(id);
     }
 
-  
 
     /**
      * Récupère tous les utilisateurs actifs uniquement
