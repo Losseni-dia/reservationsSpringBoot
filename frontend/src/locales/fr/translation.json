@@ -98,5 +98,44 @@
       "errorExpired": "Le lien a expiré ou est invalide.",
       "errorPasswordMismatch": "Les mots de passe ne correspondent pas."
     }
+  },
+  "show": {
+    "errorLoad": "Impossible de charger les détails du spectacle.",
+    "locationUndefined": "Lieu non défini",
+    "about": "À propos",
+    "availableDates": "Dates disponibles",
+    "artists": "Artistes",
+    "reviews": "Avis des spectateurs",
+    "reviewPrompt": "Votre avis nous intéresse",
+    "reviewPlaceholder": "Partagez votre expérience avec le public...",
+    "reviewErrorAlready": "Erreur : Vous avez probablement déjà posté un avis sur ce spectacle.",
+    "reviewSuccess": "Merci ! Votre avis est enregistré.",
+    "reviewSubmit": "Publier l'avis",
+    "reviewSubmitting": "Envoi...",
+    "loginToReview": "Connectez-vous pour laisser un avis sur ce spectacle.",
+    "noReviewsYet": "Aucun avis pour le moment. Soyez le premier à donner le vôtre !",
+    "booking": "Réservation",
+    "sessionDate": "Séance du",
+    "reserve": "Réserver",
+    "full": "Complet",
+    "noRepresentation": "Aucune représentation disponible."
+  },
+  "booking": {
+    "errorLoad": "Impossible de charger les détails du spectacle.",
+    "selectDateAndPrice": "Veuillez sélectionner une date et un tarif.",
+    "errorPaymentLink": "Le lien de paiement est corrompu.",
+    "errorReservation": "Erreur lors de la réservation.",
+    "loadingShow": "Chargement du spectacle...",
+    "title": "Réserver vos places",
+    "showLabel": "Spectacle :",
+    "chooseDate": "Choisir une date",
+    "noDateAvailable": "Aucune date disponible",
+    "priceType": "Type de tarif",
+    "quantity": "Nombre de places",
+    "unitPrice": "Prix unitaire ({{type}}) :",
+    "totalToPay": "Total à payer :",
+    "preparePayment": "Préparation du paiement...",
+    "proceedToPayment": "Procéder au paiement",
+    "back": "Retour"
   }
 }
