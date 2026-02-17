@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import LanguageSwitcher from '../../ui/languageSwitcher/LanguageSwitcher';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
+    const { t } = useTranslation();
     const { user, logout } = useAuth();
     const [isAffiliateOpen, setIsAffiliateOpen] = useState(false);
     const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -24,8 +26,10 @@ const Header: React.FC = () => {
     return (
         <header className={styles.header}>
             <div className="container d-flex justify-content-between align-items-center">
-                <Link to="/" className={styles.logo}>SMART<span className={styles.yellow}>BOOKING</span></Link>
-                
+                <div className="d-flex align-items-center gap-2">
+                    <Link to="/" className={styles.logo}>SMART<span className={styles.yellow}>BOOKING</span></Link>
+                    <span className={styles.welcome}>{t('welcome')}</span>
+                </div>
                 <nav className={styles.nav}>
                     <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Spectacles</NavLink>
                     <NavLink to="/about" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
