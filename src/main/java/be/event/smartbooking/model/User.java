@@ -33,7 +33,7 @@ public class User {
     private String email;
 
     private String langue; // ex: "fr", "en", "nl"
-    @builder.Default
+    @Builder.Default
     @Column(name = "is_active", nullable = false)   
     private boolean isActive = true;    // Par défaut, un utilisateur est actif
     

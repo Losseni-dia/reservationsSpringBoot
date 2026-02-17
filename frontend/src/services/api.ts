@@ -106,6 +106,11 @@ export const userApi = {
     const res = await secureFetch("/api/users");
     return res.json();
   },
+  getAllInactive: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users/inactive");
+    return res.json();
+  },
+  
   delete: async (id: number) => {
     return await secureFetch(`/api/users/${id}`, { method: "DELETE" });
   },
