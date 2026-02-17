@@ -110,6 +110,14 @@ const ShowDetailPage: React.FC = () => {
                 <p className={styles.descriptionText}>{data.description}</p>
               </div>
 
+              <div className={styles.editorialNote}>
+                <h3>⭐ L'avis de l'équipe</h3>
+                <p>
+                  "Un spectacle poignant qui redéfinit les codes du théâtre contemporain. 
+                  À ne pas manquer pour la performance incroyable des acteurs."
+                </p>
+              </div>
+
               <div className={styles.infoSection}>
                 <h3>Dates disponibles</h3>
                 <div className="d-flex flex-wrap gap-2 mt-3">

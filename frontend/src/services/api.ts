@@ -190,6 +190,14 @@ export const representationApi = {
   },
 };
 
+export const artistTypeApi = {
+  getAll: async (): Promise<any[]> => {
+    const res = await secureFetch(`${API_BASE}/artist-types`);
+    return res.json();
+  },
+};
+
+
 export const reservationApi = {
   create: async (items: ReservationRequest[]): Promise<{ url: string }> => {
     const res = await secureFetch(`${API_BASE}/reservations`, {
@@ -204,12 +212,12 @@ export const reservationApi = {
     return res.json();
   },
 };
-
 export const reviewApi = {
   getByShow: async (showId: number): Promise<Review[]> => {
     const res = await secureFetch(`${API_BASE}/reviews/show/${showId}`);
     return res.json();
   },
+
   create: async (
     showId: number,
     comment: string,
@@ -222,8 +230,47 @@ export const reviewApi = {
     });
     return res.json();
   },
+
   getStats: async (): Promise<any> => {
     const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
     return res.json();
+  },
+}; // ✅ bien fermé ici
+
+
+// ✅ Nouveau bloc séparé
+export const locationApi = {
+  getAll: async (): Promise<Location[]> => {
+    const res = await secureFetch(`${API_BASE}/locations`);
+    return res.json();
+  },
+
+  getById: async (id: number): Promise<Location> => {
+    const res = await secureFetch(`${API_BASE}/locations/${id}`);
+    return res.json();
+  },
+
+  create: async (location: Partial<Location>): Promise<Location> => {
+    const res = await secureFetch(`${API_BASE}/locations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(location),
+    });
+    return res.json();
+  },
+
+  update: async (id: number, location: Partial<Location>): Promise<Location> => {
+    const res = await secureFetch(`${API_BASE}/locations/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(location),
+    });
+    return res.json();
+  },
+
+  deleteById: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/locations/${id}`, {
+      method: "DELETE",
+    });
   },
 };

@@ -27,6 +27,9 @@ const Header: React.FC = () => {
                 
                 <nav className={styles.nav}>
                     <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>Spectacles</NavLink>
+                    <NavLink to="/about" className={({isActive}) => isActive ? styles.activeLink : styles.link}>
+                        À propos
+                    </NavLink>
 
                     {/* ESPACE PRODUCTEUR */}
                     {user && (user.role === 'producer' || user.role === 'admin') && (
