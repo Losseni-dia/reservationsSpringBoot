@@ -206,5 +206,84 @@
       "titleHighlight": "Locaties",
       "visitWebsite": "Website bezoeken →"
     }
+  },
+  "producer": {
+    "dashboard": {
+      "errorLoad": "Kan gegevens niet laden. Probeer het later opnieuw.",
+      "title": "Producentendashboard",
+      "addShow": "+ Voorstelling toevoegen",
+      "statTotalShows": "Totaal voorstellingen",
+      "statTotalRevenue": "Totale omzet (Demo)",
+      "statTicketsSold": "Verkochte tickets (Demo)",
+      "statUpcomingEvents": "Komende evenementen",
+      "chartTitle": "Voorstellingsprestaties (Verkochte tickets)",
+      "chartLabel": "Verkochte tickets",
+      "colImage": "Afbeelding",
+      "colTitle": "Titel",
+      "colCreatedAt": "Aanmaakdatum",
+      "colTicketsSold": "Verkochte tickets (Demo)",
+      "colActions": "Acties",
+      "scheduleButton": "📅 Voorstellingen",
+      "scheduleButtonTitle": "Agenda en prijzen beheren",
+      "edit": "Wijzigen",
+      "view": "Bekijken",
+      "delete": "Verwijderen",
+      "empty": "Geen voorstellingen om weer te geven.",
+      "modalTitle": "Verwijdering bevestigen",
+      "modalMessage": "Weet u zeker dat u de voorstelling \"{{title}}\" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+      "confirmText": "Verwijderen",
+      "cancelText": "Annuleren",
+      "toastDeleteSuccess": "De voorstelling \"{{title}}\" is succesvol verwijderd.",
+      "errorDeleteGeneric": "Er is een fout opgetreden bij het verwijderen.",
+      "errorDeleteReservations": "Kan \"{{title}}\" niet verwijderen: deze voorstelling heeft actieve reserveringen. Annuleer alle reserveringen voordat u de voorstelling verwijdert.",
+      "errorNetwork": "Verbindingsfout. Controleer uw internetverbinding en probeer het opnieuw."
+    },
+    "addShow": {
+      "title": "Nieuwe voorstelling",
+      "successCreate": "Voorstelling succesvol aangemaakt!",
+      "errorCreate": "Fout bij het aanmaken"
+    },
+    "editShow": {
+      "manageSchedule": "📅 Voorstellingen & prijzen beheren",
+      "loading": "Laden...",
+      "successUpdate": "Voorstelling succesvol bijgewerkt!",
+      "errorUpdate": "Fout bij het bijwerken",
+      "errorLoad": "Kan voorstelling niet laden"
+    },
+    "schedule": {
+      "back": "← Terug",
+      "title": "Programma: {{title}}",
+      "scheduledSessions": "Geplande voorstellingen",
+      "empty": "Geen voorstellingen.",
+      "addSession": "Voorstelling toevoegen",
+      "locationLabel": "Speellocatie",
+      "selectLocation": "-- Selecteer een locatie --",
+      "dateTimeLabel": "Datum en tijd",
+      "priceGridLabel": "Prijslijst (€)",
+      "submitting": "Opslaan...",
+      "addToCalendar": "Toevoegen aan agenda",
+      "loading": "Laden...",
+      "showNotFound": "Voorstelling niet gevonden.",
+      "alertFillDateLocation": "Vul de datum in en selecteer een locatie.",
+      "successAdd": "Voorstelling toegevoegd!",
+      "errorSave": "Fout bij het opslaan. Controleer of de locatie correct is ingesteld.",
+      "confirmDelete": "Deze voorstelling verwijderen?",
+      "errorDelete": "Fout bij verwijderen"
+    },
+    "showForm": {
+      "titleEdit": "Voorstelling wijzigen",
+      "titleAdd": "Nieuwe voorstelling",
+      "formInfo": "Vul de onderstaande gegevens in om het programma bij te werken.",
+      "labelTitle": "Titel van de voorstelling",
+      "labelDescription": "Beschrijving",
+      "labelLocation": "Speellocatie",
+      "selectLocation": "-- Selecteer een locatie --",
+      "labelCasting": "Cast & team",
+      "labelPoster": "Affiche",
+      "posterAlt": "Voorvertoning",
+      "submitting": "Verwerken...",
+      "submitUpdate": "Bijwerken",
+      "submitCreate": "Voorstelling aanmaken"
+    }
   }
 }
