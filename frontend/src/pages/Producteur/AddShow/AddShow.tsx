@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // On enlève Link qui ne sert plus ici
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AddShowForm from '../ShowForm/ShowForm';
 import { showApi } from '../../../services/api';
 import styles from '../UpdateShow/EditShow.module.css';
 
 const AddShow = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
@@ -14,7 +16,7 @@ const AddShow = () => {
             // Ton API devrait renvoyer le spectacle créé avec son nouvel ID
             const newShow = await showApi.create(formData);
             
-            alert("Spectacle créé avec succès !");
+            alert(t("producer.addShow.successCreate"));
             
             // REDIRECTION INTELLIGENTE :
             // On envoie Bob sur la page de modification du spectacle qu'il vient de créer
@@ -22,7 +24,7 @@ const AddShow = () => {
             navigate(`/producer/dashboard`); 
             
         } catch (err) {
-            alert("Erreur lors de la création");
+            alert(t("producer.addShow.errorCreate"));
         } finally { 
             setLoading(false); 
         }
@@ -32,7 +34,7 @@ const AddShow = () => {
         <div className={styles.container}>
             <div className={styles.wrapper}>
                 {/* On a enlevé le headerFlex avec le bouton calendrier car l'ID n'existe pas encore */}
-                <h1 className={styles.header}>Nouveau Spectacle</h1>
+                <h1 className={styles.header}>{t("producer.addShow.title")}</h1>
                 <AddShowForm mode="add" onSubmit={handleCreate} isSubmitting={loading} />
             </div>
         </div>

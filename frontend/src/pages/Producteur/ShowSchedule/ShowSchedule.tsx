@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { showApi, representationApi, locationApi } from '../../../services/api';
+import { formatDate, formatTime, formatCurrency } from '../../../utils/format';
 import { TypePrice } from '../../../types/enums';
 import { Show, Location } from '../../../types/models';
 import styles from './ShowSchedule.module.css';
 
 const ShowSchedule: React.FC = () => {
+    const { t, i18n } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     
@@ -60,7 +63,7 @@ const ShowSchedule: React.FC = () => {
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!id || !newRep.when || !newRep.locationId) {
-            alert("Veuillez remplir la date et choisir un lieu.");
+            alert(t("producer.schedule.alertFillDateLocation"));
             return;
         }
 
@@ -69,56 +72,56 @@ const ShowSchedule: React.FC = () => {
             await representationApi.create(Number(id), newRep);
             setNewRep(prev => ({ ...prev, when: "" })); // Reset date
             loadInitialData(); // Recharger pour voir la nouvelle séance dans la liste
-            alert("Séance ajoutée !");
+            alert(t("producer.schedule.successAdd"));
         } catch (err) {
-            alert("Erreur lors de l'enregistrement. Vérifiez que le lieu est bien défini.");
+            alert(t("producer.schedule.errorSave"));
         } finally {
             setSubmitting(false);
         }
     };
 
     const handleDeleteRep = async (repId: number) => {
-        if (!window.confirm("Supprimer cette séance ?")) return;
+        if (!window.confirm(t("producer.schedule.confirmDelete"))) return;
         try {
             await representationApi.delete(repId);
             loadInitialData();
         } catch (err) {
-            alert("Erreur de suppression");
+            alert(t("producer.schedule.errorDelete"));
         }
     };
 
-    if (loading) return <div className={styles.loader}>Chargement...</div>;
-    if (!show) return <div>Spectacle introuvable.</div>;
+    if (loading) return <div className={styles.loader}>{t("producer.schedule.loading")}</div>;
+    if (!show) return <div>{t("producer.schedule.showNotFound")}</div>;
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <button onClick={() => navigate(-1)} className={styles.backBtn}>← Retour</button>
-                <h1>Programmation : {show.title}</h1>
+                <button onClick={() => navigate(-1)} className={styles.backBtn}>{t("producer.schedule.back")}</button>
+                <h1>{t("producer.schedule.title", { title: show.title })}</h1>
             </div>
 
             <div className={styles.grid}>
                 {/* Liste à gauche */}
                 <div className={styles.listSection}>
-                    <h3 className={styles.sectionTitle}>Séances programmées</h3>
+                    <h3 className={styles.sectionTitle}>{t("producer.schedule.scheduledSessions")}</h3>
                     {show.representations?.length === 0 ? (
-                        <p className={styles.empty}>Aucune séance.</p>
+                        <p className={styles.empty}>{t("producer.schedule.empty")}</p>
                     ) : (
                         <div className={styles.repCardList}>
                             {show.representations?.map((rep) => (
                                 <div key={rep.id} className={styles.repItem}>
                                     <div className={styles.repInfo}>
                                         <span className={styles.date}>
-                                            🗓 {new Date(rep.when).toLocaleDateString('fr-BE', { day: '2-digit', month: 'long' })}
+                                            🗓 {formatDate(rep.when, i18n.language, { day: "2-digit", month: "long" })}
                                         </span>
                                         <span className={styles.time}>
-                                            🕒 {new Date(rep.when).toLocaleTimeString('fr-BE', { hour: '2-digit', minute: '2-digit' })}
+                                            🕒 {formatTime(rep.when, i18n.language)}
                                         </span>
                                         <small style={{color: '#888'}}>{rep.locationDesignation}</small>
                                     </div>
                                     <div className={styles.priceBadges}>
                                         {rep.prices?.map(p => (
-                                            <span key={p.id} className={styles.badge}>{p.type}: {p.amount}€</span>
+                                            <span key={p.id} className={styles.badge}>{p.type}: {formatCurrency(p.amount, i18n.language)}</span>
                                         ))}
                                     </div>
                                     <button onClick={() => handleDeleteRep(rep.id)} className={styles.deleteBtn}>×</button>
@@ -131,16 +134,16 @@ const ShowSchedule: React.FC = () => {
                 {/* Formulaire à droite */}
                 <div className={styles.formSection}>
                     <form className={styles.repForm} onSubmit={handleSave}>
-                        <h3 className={styles.sectionTitle}>Ajouter une séance</h3>
+                        <h3 className={styles.sectionTitle}>{t("producer.schedule.addSession")}</h3>
                         
                         <div className={styles.field}>
-                            <label>Lieu de la représentation</label>
+                            <label>{t("producer.schedule.locationLabel")}</label>
                             <select 
                                 value={newRep.locationId}
                                 onChange={e => setNewRep({...newRep, locationId: Number(e.target.value)})}
                                 required
                             >
-                                <option value="">-- Sélectionner un lieu --</option>
+                                <option value="">{t("producer.schedule.selectLocation")}</option>
                                 {locations.map(l => (
                                     <option key={l.id} value={l.id}>{l.designation}</option>
                                 ))}
@@ -148,7 +151,7 @@ const ShowSchedule: React.FC = () => {
                         </div>
 
                         <div className={styles.field}>
-                            <label>Date et Heure</label>
+                            <label>{t("producer.schedule.dateTimeLabel")}</label>
                             <input 
                                 type="datetime-local" 
                                 value={newRep.when} 
@@ -158,7 +161,7 @@ const ShowSchedule: React.FC = () => {
                         </div>
 
                         <div className={styles.priceGrid}>
-                            <label className={styles.fullWidth}>Grille Tarifaire (€)</label>
+                            <label className={styles.fullWidth}>{t("producer.schedule.priceGridLabel")}</label>
                             {newRep.prices.map((p, index) => (
                                 <div key={p.type} className={styles.priceInputGroup}>
                                     <span>{p.type}</span>
@@ -173,7 +176,7 @@ const ShowSchedule: React.FC = () => {
                         </div>
 
                         <button type="submit" className={styles.saveBtn} disabled={submitting}>
-                            {submitting ? "Enregistrement..." : "Ajouter au calendrier"}
+                            {submitting ? t("producer.schedule.submitting") : t("producer.schedule.addToCalendar")}
                         </button>
                     </form>
                 </div>

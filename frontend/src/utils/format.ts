@@ -32,6 +32,18 @@ export function formatDate(
 }
 
 /**
+ * Formats a time (hour:minute) according to the given locale.
+ */
+export function formatTime(date: string | Date, locale: string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  const intlLocale = toLocale(locale);
+  return new Intl.DateTimeFormat(intlLocale, {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+}
+
+/**
  * Formats a date and time according to the given locale.
  */
 export function formatDateTime(
