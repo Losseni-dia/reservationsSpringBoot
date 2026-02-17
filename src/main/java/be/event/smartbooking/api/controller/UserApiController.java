@@ -118,7 +118,8 @@ public class UserApiController {
         User user = userService.findByEmail(email);
         if (user != null) {
             PasswordResetToken token = tokenService.createTokenForUser(user);
-            emailService.sendPasswordResetMail(user.getEmail(), token.getToken());
+            Locale locale = toLocale(user.getLangue());
+            emailService.sendPasswordResetMail(user.getEmail(), token.getToken(), locale);
         }
         return ResponseEntity.ok("Si un compte existe avec cet email, un lien a été envoyé.");
     }
