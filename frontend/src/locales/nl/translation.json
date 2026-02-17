@@ -1,3 +1,35 @@
 {
-  "welcome": "Welkom"
+  "layout": {
+    "header": {
+      "welcome": "Welkom",
+      "shows": "Voorstellingen",
+      "producerSpace": "Producentenruimte",
+      "dashboard": "Dashboard",
+      "administration": "Beheer",
+      "dashboardGlobal": "Globaal dashboard",
+      "usersManagement": "Gebruikersbeheer",
+      "showsModeration": "Moderatiewerking voorstellingen",
+      "reviewsModeration": "Moderatiewerking beoordelingen",
+      "locationsManagement": "Locatiebeheer",
+      "logout": "Uitloggen",
+      "register": "Registreren",
+      "login": "Inloggen"
+    },
+    "footer": {
+      "allRightsReserved": "Alle rechten voorbehouden.",
+      "privacy": "Privacy",
+      "terms": "Gebruiksvoorwaarden"
+    }
+  },
+  "home": {
+    "programming": "Programma",
+    "searchPlaceholder": "Zoek een voorstelling of locatie...",
+    "noResults": "Geen resultaten voor \"{{term}}\"",
+    "noPoster": "Geen affiche",
+    "reviewsCount": "{{count}} beoordelingen",
+    "noReviews": "Geen beoordelingen",
+    "details": "Details",
+    "reserve": "Reserveren",
+    "full": "Uitverkocht"
+  }
 }
