@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { reservationApi, showApi } from "../services/api";
 import { Show, Representation, Price } from "../types/models";
+import { formatDateTime, formatCurrency } from "../utils/format";
 import styles from "./ReservationPage.module.css";
 
 const ReservationPage: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
@@ -35,10 +38,10 @@ const ReservationPage: React.FC = () => {
           }
         })
         .catch(() =>
-          setError("Impossible de charger les détails du spectacle."),
+          setError(t("booking.errorLoad")),
         );
     }
-  }, [slug]);
+  }, [slug, t]);
 
   // 2. Gérer le changement de représentation (date)
 const handleRepChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -65,7 +68,7 @@ const handleRepChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   // 4. Soumission de la réservation
 const handleConfirmReservation = async () => {
   if (!selectedRep || !selectedPrice) {
-    setError("Veuillez sélectionner une date et un tarif.");
+    setError(t("booking.selectDateAndPrice"));
     return;
   }
 
@@ -89,31 +92,31 @@ const handleConfirmReservation = async () => {
       window.location.href = finalUrl;
     } else {
       console.error("URL Stripe invalide :", finalUrl);
-      setError("Le lien de paiement est corrompu.");
+      setError(t("booking.errorPaymentLink"));
       setLoading(false);
     }
   } catch (err) {
-    setError("Erreur lors de la réservation.");
+    setError(t("booking.errorReservation"));
     setLoading(false);
   }
 };
 
   if (!show && !error)
-    return <div className={styles.loading}>Chargement du spectacle...</div>;
+    return <div className={styles.loading}>{t("booking.loadingShow")}</div>;
 
   return (
     <div className={styles.reservationContainer}>
       <div className={styles.reservationCard}>
-        <h2 className={styles.title}>Réserver vos places</h2>
+        <h2 className={styles.title}>{t("booking.title")}</h2>
         <p className={styles.subtitle}>
-          Spectacle : <span className={styles.highlight}>{show?.title}</span>
+          {t("booking.showLabel")} <span className={styles.highlight}>{show?.title}</span>
         </p>
 
         {error && <div className={styles.errorMessage}>{error}</div>}
 
         {/* Sélection de la Date */}
         <div className={styles.fieldGroup}>
-          <label className={styles.label}>Choisir une date</label>
+          <label className={styles.label}>{t("booking.chooseDate")}</label>
           <select
             className={styles.input}
             value={selectedRep?.id || ""}
@@ -121,24 +124,24 @@ const handleConfirmReservation = async () => {
           >
             {show?.representations?.map((rep) => (
               <option key={rep.id} value={rep.id}>
-                {new Date(rep.when).toLocaleString()}
+                {formatDateTime(rep.when, i18n.language)}
               </option>
-            )) ?? <option disabled>Aucune date disponible</option>}
+            )) ?? <option disabled>{t("booking.noDateAvailable")}</option>}
                         
           </select>
         </div>
 
         {/* Sélection du Tarif (Standard, VIP...) */}
         <div className={styles.fieldGroup}>
-          <label className={styles.label}>Type de tarif</label>
+          <label className={styles.label}>{t("booking.priceType")}</label>
           <select
             className={styles.input}
             value={selectedPrice?.id || ""}
             onChange={handlePriceChange}
           >
-            {selectedRep?.prices.map((p) => (
+            {selectedRep?.prices?.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.type} - {p.amount} €
+                {p.type} - {formatCurrency(p.amount, i18n.language)}
               </option>
             ))}
           </select>
@@ -146,7 +149,7 @@ const handleConfirmReservation = async () => {
 
         {/* Nombre de places */}
         <div className={styles.fieldGroup}>
-          <label className={styles.label}>Nombre de places</label>
+          <label className={styles.label}>{t("booking.quantity")}</label>
           <input
             type="number"
             min="1"
@@ -161,14 +164,14 @@ const handleConfirmReservation = async () => {
 
         {/* Résumé du prix */}
         <div className={styles.priceInfo}>
-          <span>Prix unitaire ({selectedPrice?.type}) :</span>
-          <span>{selectedPrice?.amount || 0} €</span>
+          <span>{t("booking.unitPrice", { type: selectedPrice?.type ?? "" })}</span>
+          <span>{formatCurrency(selectedPrice?.amount ?? 0, i18n.language)}</span>
         </div>
 
         <div className={styles.totalRow}>
-          <span>Total à payer :</span>
+          <span>{t("booking.totalToPay")}</span>
           <span className={styles.totalAmount}>
-            {(selectedPrice?.amount || 0) * nbPlaces} €
+            {formatCurrency((selectedPrice?.amount ?? 0) * nbPlaces, i18n.language)}
           </span>
         </div>
 
@@ -177,11 +180,11 @@ const handleConfirmReservation = async () => {
           disabled={loading || !selectedPrice}
           className={styles.submitButton}
         >
-          {loading ? "Préparation du paiement..." : "PROCÉDER AU PAIEMENT"}
+          {loading ? t("booking.preparePayment") : t("booking.proceedToPayment").toUpperCase()}
         </button>
 
         <button onClick={() => navigate(-1)} className={styles.cancelLink}>
-          Retour
+          {t("booking.back")}
         </button>
       </div>
     </div>
