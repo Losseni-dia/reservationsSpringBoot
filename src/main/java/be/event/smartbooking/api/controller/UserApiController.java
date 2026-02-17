@@ -8,7 +8,6 @@ import be.event.smartbooking.service.EmailService;
 import be.event.smartbooking.service.PasswordResetTokenService;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.persistence.EntityNotFOundException;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +74,7 @@ public class UserApiController {
         dto.setEmail(user.getEmail());
         dto.setLangue(user.getLangue());
         dto.setLogin(user.getLogin());
-        dto.setIsActive(user.getIsActive());
+        dto.setIsActive(user.isActive());
 
 
         // Sécurité sur les rôles (évite le crash Lazy Loading)
@@ -156,7 +155,7 @@ public class UserApiController {
             dto.setEmail(user.getEmail());
             dto.setLogin(user.getLogin());
             dto.setLangue(user.getLangue());
-            dto.setIsActive(user.getIsActive());
+            dto.setIsActive(user.isActive());
             if (user.getRoles() != null && !user.getRoles().isEmpty()) {
                 dto.setRole(user.getRoles().get(0).getRole());
             }
@@ -197,7 +196,7 @@ public ResponseEntity<List<UserProfileDto>> getAllActiveUsers() {
         dto.setEmail(user.getEmail());
         dto.setLogin(user.getLogin());
         dto.setLangue(user.getLangue());
-        dto.setIsActive(user.getIsActive());
+        dto.setIsActive(user.isActive());
         if (user.getRoles() != null && !user.getRoles().isEmpty()) {
             dto.setRole(user.getRoles().get(0).getRole());
         }
@@ -223,7 +222,7 @@ public ResponseEntity<List<UserProfileDto>> getAllInactiveUsers() {
         dto.setEmail(user.getEmail());
         dto.setLogin(user.getLogin());
         dto.setLangue(user.getLangue());
-        dto.setIsActive(user.getIsActive());
+        dto.setIsActive(user.isActive());
         if (user.getRoles() != null && !user.getRoles().isEmpty()) {
             dto.setRole(user.getRoles().get(0).getRole());
         }
