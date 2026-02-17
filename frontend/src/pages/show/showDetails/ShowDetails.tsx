@@ -114,10 +114,9 @@ const ShowDetailPage: React.FC = () => {
               </div>
 
               <div className={styles.editorialNote}>
-                <h3>⭐ L'avis de l'équipe</h3>
+                <h3>⭐ {t("show.editorialNoteTitle")}</h3>
                 <p>
-                  "Un spectacle poignant qui redéfinit les codes du théâtre contemporain. 
-                  À ne pas manquer pour la performance incroyable des acteurs."
+                  {t("show.editorialNoteText")}
                 </p>
               </div>
 

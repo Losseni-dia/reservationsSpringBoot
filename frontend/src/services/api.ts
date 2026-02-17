@@ -259,10 +259,8 @@ export const reviewApi = {
     const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
     return res.json();
   },
-}; // ✅ bien fermé ici
+};
 
-
-// ✅ Nouveau bloc séparé
 export const locationApi = {
   getAll: async (): Promise<Location[]> => {
     const res = await secureFetch(`${API_BASE}/locations`);

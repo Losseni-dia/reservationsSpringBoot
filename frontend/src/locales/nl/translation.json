@@ -33,6 +33,44 @@
     "reserve": "Reserveren",
     "full": "Uitverkocht"
   },
+  "about": {
+    "heroTitle": "De ",
+    "heroTitleBrand": "SmartBooking",
+    "heroTitleSuffix": " ervaring",
+    "heroSubtitle": "Waar het podium emotie ontmoet. Beleef kunst, intens.",
+    "ctaDiscover": "Ontdek onze voorstellingen",
+    "sectionValues": "Onze Waarden",
+    "valuePassion": "Artistieke Passie",
+    "valuePassionDesc": "Een doordachte selectie die het publiek raakt.",
+    "valueTalents": "Opkomend Talent",
+    "valueTalentsDesc": "De stemmen van morgen in de spotlight.",
+    "valueCommunity": "Gemeenschap",
+    "valueCommunityDesc": "Deel uw ervaringen met andere liefhebbers.",
+    "valueDiversity": "Diversiteit",
+    "valueDiversityDesc": "Alle kunstvormen hebben hier hun plaats.",
+    "sectionReviews": "Wat onze bezoekers zeggen",
+    "review1": "\"Een vloeiend en inspirerend platform voor mijn uitjes.\"",
+    "author1": "Marc D.",
+    "review2": "\"Ik heb deze seizoen ongelooflijke artistieke pareltjes ontdekt.\"",
+    "author2": "Clara J.",
+    "reserve": "Reserveren",
+    "sectionFavorites": "Onze favorieten",
+    "showEvent": "Uitgelichte voorstelling",
+    "theatreNational": "Nationale Schouwburg - 20u00",
+    "seeMore": "Meer info"
+  },
+  "payment": {
+    "title": "Betaling Geslaagd!",
+    "message": "Bedankt voor uw aankoop. Uw reservering",
+    "isNowConfirmed": "is nu bevestigd.",
+    "summaryEmail": "Een samenvatting is naar uw e-mailadres verzonden.",
+    "backHome": "Terug naar home"
+  },
+  "forbidden": {
+    "title": "Toegang Geweigerd",
+    "message": "Sorry, u heeft niet de vereiste rechten om deze pagina te bekijken.",
+    "backHome": "Terug naar home"
+  },
   "auth": {
     "email": "E-mail",
     "password": "Wachtwoord",
@@ -118,6 +156,8 @@
     "sessionDate": "Voorstelling op",
     "reserve": "Reserveren",
     "full": "Uitverkocht",
+    "editorialNoteTitle": "Beoordeling van het team",
+    "editorialNoteText": "Een ontroerende voorstelling die de codes van het hedendaagse theater herdefinieert. Niet te missen voor de indrukwekkende acteerprestaties.",
     "noRepresentation": "Geen voorstelling beschikbaar."
   },
   "booking": {

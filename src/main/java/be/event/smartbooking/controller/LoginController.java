@@ -57,7 +57,6 @@ public class LoginController {
     @PostMapping("/forgot-password")
     public String handleForgotPassword(@RequestParam("email") @NotBlank @Email String email, Model model) {
         User user = userService.findByEmail(email);
-        System.out.println(user);   //DEBUG
 
         if (user != null) {
             var token = tokenService.createTokenForUser(user);

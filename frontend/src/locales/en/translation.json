@@ -33,6 +33,44 @@
     "reserve": "Book",
     "full": "Sold out"
   },
+  "about": {
+    "heroTitle": "The ",
+    "heroTitleBrand": "SmartBooking",
+    "heroTitleSuffix": " experience",
+    "heroSubtitle": "Where the stage meets emotion. Live art, intensely.",
+    "ctaDiscover": "Discover our shows",
+    "sectionValues": "Our Values",
+    "valuePassion": "Artistic Passion",
+    "valuePassionDesc": "A curated selection that moves audiences.",
+    "valueTalents": "Emerging Talents",
+    "valueTalentsDesc": "Spotlighting the voices of tomorrow.",
+    "valueCommunity": "Community",
+    "valueCommunityDesc": "Share your experiences with fellow enthusiasts.",
+    "valueDiversity": "Diversity",
+    "valueDiversityDesc": "All art forms have their place here.",
+    "sectionReviews": "What our audiences say",
+    "review1": "\"A smooth and inspiring platform for my outings.\"",
+    "author1": "Marc D.",
+    "review2": "\"I discovered incredible artistic gems this season.\"",
+    "author2": "Clara J.",
+    "reserve": "Book",
+    "sectionFavorites": "Our favourites",
+    "showEvent": "Featured Show",
+    "theatreNational": "National Theatre - 8pm",
+    "seeMore": "See more"
+  },
+  "payment": {
+    "title": "Payment Successful!",
+    "message": "Thank you for your purchase. Your reservation",
+    "isNowConfirmed": "is now confirmed.",
+    "summaryEmail": "A summary has been sent to your email address.",
+    "backHome": "Back to home"
+  },
+  "forbidden": {
+    "title": "Access Denied",
+    "message": "Sorry, you do not have the required permissions to access this page.",
+    "backHome": "Back to home"
+  },
   "auth": {
     "email": "Email",
     "password": "Password",
@@ -118,6 +156,8 @@
     "sessionDate": "Session on",
     "reserve": "Book",
     "full": "Sold out",
+    "editorialNoteTitle": "Team's review",
+    "editorialNoteText": "A poignant show that redefines the codes of contemporary theatre. Not to be missed for the incredible performance of the actors.",
     "noRepresentation": "No representation available."
   },
   "booking": {

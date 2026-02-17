@@ -4,7 +4,6 @@ import { userApi } from '../../../services/api';
 import { UserProfileDto } from '../../../types/models';
 import Loader from '../../../components/ui/loader/Loader';
 import styles from './AdminUsersPage.module.css';
-import { deactivateUser, activateUser } from '../../../services/api';
 
 const AdminUsersPage: React.FC = () => {
     const { t } = useTranslation();
@@ -32,6 +31,19 @@ const AdminUsersPage: React.FC = () => {
         try {
             await userApi.delete(id);
             setUsers(prevUsers => prevUsers.filter(u => u.id !== id));
+        } catch (err) {
+            alert(t("admin.users.errorDelete"));
+        }
+    };
+
+    const handleToggleStatus = async (id: number, isActive: boolean) => {
+        try {
+            if (isActive) {
+                await userApi.deactivate(id);
+            } else {
+                await userApi.activate(id);
+            }
+            await loadUsers();
         } catch (err) {
             alert(t("admin.users.errorDelete"));
         }

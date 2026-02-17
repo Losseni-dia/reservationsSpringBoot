@@ -88,7 +88,6 @@ const handleConfirmReservation = async () => {
     const finalUrl = typeof response === "object" ? response.url : response;
 
     if (finalUrl && finalUrl.includes("stripe.com")) {
-      console.log("Redirection vers :", finalUrl);
       window.location.href = finalUrl;
     } else {
       console.error("URL Stripe invalide :", finalUrl);

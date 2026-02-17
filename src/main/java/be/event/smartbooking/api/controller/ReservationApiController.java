@@ -58,7 +58,7 @@ public class ReservationApiController {
     // Historique des réservations de l'utilisateur
     @GetMapping("/my-bookings")
     public List<Reservation> getMyReservations(Principal principal) {
-        User user = userService.findByEmail(principal.getName());
+        User user = userService.findByLogin(principal.getName());
         return reservationService.getUserReservations(user);
     }
 }

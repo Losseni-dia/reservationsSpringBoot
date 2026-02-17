@@ -33,6 +33,44 @@
     "reserve": "Réserver",
     "full": "Complet"
   },
+  "about": {
+    "heroTitle": "L'expérience ",
+    "heroTitleBrand": "SmartBooking",
+    "heroTitleSuffix": "",
+    "heroSubtitle": "Là où la scène rencontre l'émotion. Vivez l'art, intensément.",
+    "ctaDiscover": "Découvrir nos spectacles",
+    "sectionValues": "Nos Valeurs",
+    "valuePassion": "Passion Artistique",
+    "valuePassionDesc": "Une sélection pointue qui fait vibrer les publics.",
+    "valueTalents": "Talents Émergents",
+    "valueTalentsDesc": "Mettre en lumière les voix de demain.",
+    "valueCommunity": "Communauté",
+    "valueCommunityDesc": "Partagez vos expériences avec d'autres passionnés.",
+    "valueDiversity": "Diversité",
+    "valueDiversityDesc": "Toutes les formes d'art ont leur place ici.",
+    "sectionReviews": "Ce que disent nos spectateurs",
+    "review1": "\"Une plateforme fluide et inspirante pour mes sorties.\"",
+    "author1": "Marc D.",
+    "review2": "\"J'ai découvert des pépites artistiques incroyables cette saison.\"",
+    "author2": "Clara J.",
+    "reserve": "Réserver",
+    "sectionFavorites": "Nos coups de cœur",
+    "showEvent": "Spectacle Événement",
+    "theatreNational": "Théâtre National - 20h00",
+    "seeMore": "Voir plus"
+  },
+  "payment": {
+    "title": "Paiement Réussi !",
+    "message": "Merci pour votre achat. Votre réservation",
+    "isNowConfirmed": "est maintenant confirmée.",
+    "summaryEmail": "Un récapitulatif a été envoyé à votre adresse email.",
+    "backHome": "Retour à l'accueil"
+  },
+  "forbidden": {
+    "title": "Accès Interdit",
+    "message": "Désolé, vous n'avez pas les permissions nécessaires pour accéder aux coulisses de cette page.",
+    "backHome": "Retour à l'accueil"
+  },
   "auth": {
     "email": "Email",
     "password": "Mot de passe",
@@ -118,6 +156,8 @@
     "sessionDate": "Séance du",
     "reserve": "Réserver",
     "full": "Complet",
+    "editorialNoteTitle": "L'avis de l'équipe",
+    "editorialNoteText": "Un spectacle poignant qui redéfinit les codes du théâtre contemporain. À ne pas manquer pour la performance incroyable des acteurs.",
     "noRepresentation": "Aucune représentation disponible."
   },
   "booking": {

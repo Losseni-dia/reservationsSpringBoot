@@ -28,7 +28,6 @@ const Header: React.FC = () => {
             <div className="container d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-2">
                     <Link to="/" className={styles.logo}>SMART<span className={styles.yellow}>BOOKING</span></Link>
-                    <span className={styles.welcome}>{t('layout.header.welcome')}</span>
                 </div>
                 <nav className={styles.nav}>
                     <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link}>{t('layout.header.shows')}</NavLink>
