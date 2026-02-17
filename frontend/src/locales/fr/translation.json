@@ -32,5 +32,71 @@
     "details": "Détails",
     "reserve": "Réserver",
     "full": "Complet"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirm": "Confirmer",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "loginId": "Identifiant (Login)",
+    "loginOrEmail": "Identifiant / Email",
+    "language": "Langue",
+    "placeholderLogin": "Votre login",
+    "placeholderPassword": "••••••••",
+    "placeholderFirstname": "Votre prénom",
+    "placeholderLastname": "Votre nom",
+    "placeholderChooseLogin": "Choisissez un identifiant",
+    "placeholderEmail": "exemple@email.com",
+    "passwordRules": "8 car. min, 1 maj, 1 min, 1 chiffre, 1 spécial (@$!%*?&)",
+    "langFr": "Français",
+    "langEn": "English",
+    "langNl": "Nederlands",
+    "loading": "Chargement...",
+    "backToLogin": "Retour à la connexion",
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Le spectacle commence ici",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Se Connecter",
+      "submitLoading": "Connexion en cours...",
+      "noAccount": "Pas encore de compte ?",
+      "signUp": "S'inscrire",
+      "errorCredentials": "Identifiants incorrects ou serveur indisponible."
+    },
+    "register": {
+      "title": "Créer un compte",
+      "submit": "S'inscrire",
+      "submitLoading": "Création...",
+      "hasAccount": "Déjà un compte ?",
+      "signIn": "Se connecter",
+      "errorPasswordMismatch": "Les mots de passe ne correspondent pas.",
+      "errorGeneric": "Une erreur est survenue lors de l'inscription."
+    },
+    "profile": {
+      "title": "Mon Profil",
+      "save": "Enregistrer",
+      "success": "Profil mis à jour !"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "description": "Entrez votre adresse email pour recevoir un lien de réinitialisation.",
+      "submit": "Envoyer le lien",
+      "submitLoading": "Envoi...",
+      "success": "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.",
+      "errorGeneric": "Une erreur est survenue. Veuillez réessayer."
+    },
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "invalidLinkTitle": "Lien invalide",
+      "invalidLinkMessage": "Le lien de réinitialisation est manquant.",
+      "tokenMissing": "Token manquant ou invalide.",
+      "submit": "Valider",
+      "submitLoading": "Réinitialiser...",
+      "success": "Mot de passe réinitialisé avec succès. Vous pouvez vous connecter.",
+      "errorExpired": "Le lien a expiré ou est invalide.",
+      "errorPasswordMismatch": "Les mots de passe ne correspondent pas."
+    }
   }
 }
