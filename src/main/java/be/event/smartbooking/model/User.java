@@ -130,4 +130,21 @@ public class User {
     public String toString() {
         return login + " (" + firstname + " " + lastname + ")";
     }
+
+    // =================================================================
+    // API KEYS
+    // =================================================================
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ApiKey> apiKeys = new ArrayList<>();
+
+    public void addApiKey(ApiKey key) {
+        apiKeys.add(key);
+        key.setUser(this);
+    }
+
+    public void removeApiKey(ApiKey key) {
+        apiKeys.remove(key);
+        key.setUser(null);
+    }
 }
