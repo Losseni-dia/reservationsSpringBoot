@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../components/context/AuthContext'; // Ajuste le chemin selon ta structure
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../components/context/AuthContext';
 import styles from './LoginPage.module.css';
 
 const LoginPage: React.FC = () => {
+  const { t } = useTranslation();
   const [loginIdentifier, setLoginIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +36,7 @@ const LoginPage: React.FC = () => {
       navigate('/');
     } catch (err: any) {
       console.error("Erreur de connexion:", err);
-      setError(err.message || "Identifiants incorrects ou serveur indisponible.");
+      setError(err.message || t('auth.login.errorCredentials'));
     } finally {
       setIsLoading(false);
     }
@@ -46,11 +48,11 @@ const LoginPage: React.FC = () => {
         <h1 className={styles.logoTitle}>
           SMART<span className={styles.logoAccent}>BOOKING</span>
         </h1>
-        <p className={styles.logoSubtitle}>Le spectacle commence ici</p>
+        <p className={styles.logoSubtitle}>{t('auth.login.subtitle')}</p>
       </div>
 
       <div className={styles.loginCard}>
-        <h2 className={styles.cardTitle}>Connexion</h2>
+        <h2 className={styles.cardTitle}>{t('auth.login.title')}</h2>
         
         {successMessage && (
           <div className="alert alert-success text-center" style={{ fontSize: '0.9rem', padding: '10px', marginBottom: '1.5rem' }}>
@@ -66,31 +68,30 @@ const LoginPage: React.FC = () => {
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Identifiant / Email</label>
+            <label className={styles.label}>{t('auth.loginOrEmail')}</label>
             <input
               type="text"
               value={loginIdentifier}
               onChange={(e) => setLoginIdentifier(e.target.value)}
               className={styles.input}
-              placeholder="Votre login"
-
-                />
+              placeholder={t('auth.placeholderLogin')}
+            />
           </div>
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Mot de passe</label>
+            <label className={styles.label}>{t('auth.password')}</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={styles.input}
-              placeholder="••••••••"
+              placeholder={t('auth.placeholderPassword')}
               required
             />
           </div>
 
           <div className={styles.forgotPasswordWrapper}>
             <Link to="/forgot-password" className={styles.forgotPasswordLink}>
-              Mot de passe oublié ?
+              {t('auth.login.forgotPassword')}
             </Link>
           </div>
 
@@ -99,14 +100,14 @@ const LoginPage: React.FC = () => {
             disabled={isLoading}
             className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ''}`}
           >
-            {isLoading ? 'Connexion en cours...' : 'Se Connecter'}
+            {isLoading ? t('auth.login.submitLoading') : t('auth.login.submit')}
           </button>
         </form>
 
         <p className={styles.footerText}>
-          Pas encore de compte ?{' '}
+          {t('auth.login.noAccount')}{' '}
           <Link to="/register" className={styles.signupLink}>
-            S'inscrire
+            {t('auth.login.signUp')}
           </Link>
         </p>
       </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Show } from '../../types/models';
 import { IMAGE_STORAGE_BASE } from '../../services/api';
 import styles from './ShowCard.module.css';
@@ -10,9 +11,10 @@ interface ShowCardProps {
 
 const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const getImageUrl = (posterPath: string | null) => {
-        if (!posterPath) return 'https://placehold.co/400x600/1a1a1a/ffffff?text=Pas+d\'affiche';
+        if (!posterPath) return `https://placehold.co/400x600/1a1a1a/ffffff?text=${encodeURIComponent(t('home.noPoster'))}`;
         if (posterPath.startsWith('http')) return posterPath;
         const cleanPath = posterPath.startsWith('/') ? posterPath : `/${posterPath}`;
         return `${IMAGE_STORAGE_BASE}${cleanPath}`;
@@ -43,10 +45,10 @@ const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
                 <div className={styles.reviewSummary}>
                     {show.reviewCount && show.reviewCount > 0 ? (
                         <span className={styles.reviewCount}>
-                            ({show.reviewCount} avis)
+                            ({t('home.reviewsCount', { count: show.reviewCount })})
                         </span>
                     ) : (
-                        <span className={styles.noReview}>Aucun avis</span>
+                        <span className={styles.noReview}>{t('home.noReviews')}</span>
                     )}
                 </div>
 
@@ -56,7 +58,7 @@ const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
                         className={styles.btnDetails}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        Détails
+                        {t('home.details')}
                     </Link>
                     <button 
                         className={styles.btnReserve} 
@@ -66,7 +68,7 @@ const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
                             navigate(`/show/${show.slug}`);
                         }}
                     >
-                        {show.bookable ? 'Réserver' : 'Complet'}
+                        {show.bookable ? t('home.reserve') : t('home.full')}
                     </button>
                 </div>
             </div>

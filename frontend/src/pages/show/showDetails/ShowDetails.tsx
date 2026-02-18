@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { showApi, reviewApi, IMAGE_STORAGE_BASE } from '../../../services/api';
 import { useAuth } from '../../../components/context/AuthContext';
+import { formatDate, formatDateTime, formatCurrency } from '../../../utils/format';
 import Loader from '../../../components/ui/loader/Loader';
 import styles from './ShowDetails.module.css';
 
 const ShowDetailPage: React.FC = () => {
+    const { t, i18n } = useTranslation();
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
     const { user } = useAuth(); // Pour vérifier si l'utilisateur est connecté
@@ -31,11 +34,11 @@ const ShowDetailPage: React.FC = () => {
                 setData(json);
                 setLoading(false);
             })
-            .catch(err => {
-                setError("Impossible de charger les détails du spectacle.");
+            .catch(() => {
+                setError(t('show.errorLoad'));
                 setLoading(false);
             });
-    }, [slug]);
+    }, [slug, t]);
 
     useEffect(() => {
         loadData();
@@ -58,7 +61,7 @@ const ShowDetailPage: React.FC = () => {
             loadData();
             setTimeout(() => setSubmitSuccess(false), 5000);
         } catch (err: any) {
-            setSubmitError("Erreur : Vous avez probablement déjà posté un avis sur ce spectacle.");
+            setSubmitError(t('show.reviewErrorAlready'));
         } finally {
             setSubmitting(false);
         }
@@ -87,14 +90,14 @@ const ShowDetailPage: React.FC = () => {
           <div className="container">
             <h1 className={styles.title}>{data.title}</h1>
             <p className={styles.locationTag}>
-              📍 {data.locationDesignation || "Lieu non défini"}
+              📍 {data.locationDesignation || t('show.locationUndefined')}
             </p>
             {data.averageRating > 0 && (
               <div className={styles.ratingHero}>
                 <span className={styles.starIcon}>★</span>
                 <span className="fw-bold">{data.averageRating.toFixed(1)}</span>
                 <span className="text-muted ms-2">
-                  ({data.reviewCount} avis)
+                  ({t('home.reviewsCount', { count: data.reviewCount })})
                 </span>
               </div>
             )}
@@ -106,20 +109,19 @@ const ShowDetailPage: React.FC = () => {
             {/* COLONNE GAUCHE */}
             <div className="col-lg-8">
               <div className={styles.infoSection}>
-                <h3>À propos</h3>
+                <h3>{t('show.about')}</h3>
                 <p className={styles.descriptionText}>{data.description}</p>
               </div>
 
               <div className={styles.editorialNote}>
-                <h3>⭐ L'avis de l'équipe</h3>
+                <h3>⭐ {t("show.editorialNoteTitle")}</h3>
                 <p>
-                  "Un spectacle poignant qui redéfinit les codes du théâtre contemporain. 
-                  À ne pas manquer pour la performance incroyable des acteurs."
+                  {t("show.editorialNoteText")}
                 </p>
               </div>
 
               <div className={styles.infoSection}>
-                <h3>Dates disponibles</h3>
+                <h3>{t('show.availableDates')}</h3>
                 <div className="d-flex flex-wrap gap-2 mt-3">
                   {data.representations?.map((rep: any, index: number) => (
                     <button
@@ -132,19 +134,14 @@ const ShowDetailPage: React.FC = () => {
                           : {}
                       }
                     >
-                      {new Date(rep.when).toLocaleString("fr-FR", {
-                        day: "2-digit",
-                        month: "long",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {formatDateTime(rep.when, i18n.language)}
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className={styles.infoSection}>
-                <h3>Artistes</h3>
+                <h3>{t('show.artists')}</h3>
                 <div className="mt-3">
                   {data.artists?.map((artist: any) => (
                     <div key={artist.id} className="text-light mb-2">
@@ -163,7 +160,7 @@ const ShowDetailPage: React.FC = () => {
 
               {/* SECTION AVIS */}
               <div className={styles.infoSection}>
-                <h3 className="text-white mb-4">Avis des spectateurs</h3>
+                <h3 className="text-white mb-4">{t('show.reviews')}</h3>
 
                 {/* FORMULAIRE D'AVIS */}
                 <div className={styles.reviewFormContainer}>
@@ -173,7 +170,7 @@ const ShowDetailPage: React.FC = () => {
                       className={styles.reviewForm}
                     >
                       <h5 className="text-white mb-3">
-                        Votre avis nous intéresse
+                        {t('show.reviewPrompt')}
                       </h5>
                       <div className="mb-3">
                         <div className={styles.starPicker}>
@@ -194,7 +191,7 @@ const ShowDetailPage: React.FC = () => {
                       </div>
                       <textarea
                         className={styles.reviewTextarea}
-                        placeholder="Partagez votre expérience avec le public..."
+                        placeholder={t('show.reviewPlaceholder')}
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         required
@@ -206,7 +203,7 @@ const ShowDetailPage: React.FC = () => {
                       )}
                       {submitSuccess && (
                         <div className="text-success mt-2 small">
-                          ✓ Merci ! Votre avis est enregistré.
+                          ✓ {t('show.reviewSuccess')}
                         </div>
                       )}
                       <button
@@ -214,12 +211,12 @@ const ShowDetailPage: React.FC = () => {
                         className={styles.submitReviewBtn}
                         disabled={submitting}
                       >
-                        {submitting ? "ENVOI..." : "PUBLIER L'AVIS"}
+                        {submitting ? t('show.reviewSubmitting').toUpperCase() : t('show.reviewSubmit').toUpperCase()}
                       </button>
                     </form>
                   ) : (
                     <div className={styles.loginPrompt}>
-                      Connectez-vous pour laisser un avis sur ce spectacle.
+                      {t('show.loginToReview')}
                     </div>
                   )}
                 </div>
@@ -234,7 +231,7 @@ const ShowDetailPage: React.FC = () => {
                             @{rev.authorLogin}
                           </strong>
                           <span className="text-muted small">
-                            {new Date(rev.createdAt).toLocaleDateString()}
+                            {formatDate(rev.createdAt, i18n.language)}
                           </span>
                         </div>
                         <div className={styles.starsDisplay}>
@@ -246,8 +243,7 @@ const ShowDetailPage: React.FC = () => {
                     ))
                   ) : (
                     <p className="text-muted italic">
-                      Aucun avis pour le moment. Soyez le premier à donner le
-                      vôtre !
+                      {t('show.noReviewsYet')}
                     </p>
                   )}
                 </div>
@@ -258,12 +254,12 @@ const ShowDetailPage: React.FC = () => {
             {/* COLONNE DROITE (RÉSERVATION) */}
             <div className="col-lg-4">
               <div className={styles.bookingCard}>
-                <h4 className="text-white mb-4 text-center">Réservation</h4>
+                <h4 className="text-white mb-4 text-center">{t('show.booking')}</h4>
                 {selectedRep ? (
                   <>
                     <p className="small text-muted mb-3">
-                      Séance du{" "}
-                      {new Date(selectedRep.when).toLocaleDateString()}
+                      {t('show.sessionDate')}{" "}
+                      {formatDate(selectedRep.when, i18n.language)}
                     </p>
                     <div className="mb-4">
                       {selectedRep.prices?.map((p: any) => (
@@ -272,7 +268,7 @@ const ShowDetailPage: React.FC = () => {
                           className={`${styles.priceItem} d-flex justify-content-between p-3 rounded`}
                         >
                           <span className="fw-bold">{p.type}</span>
-                          <span className="text-warning">{p.amount} €</span>
+                          <span className="text-warning">{formatCurrency(p.amount, i18n.language)}</span>
                         </div>
                       ))}
                     </div>
@@ -281,12 +277,12 @@ const ShowDetailPage: React.FC = () => {
                       disabled={!data.bookable}
                       onClick={handleBookingRedirect} // AJOUTE CET ÉVÉNEMENT ICI
                     >
-                      {data.bookable ? "🎟️ RÉSERVER" : "COMPLET"}
+                      {data.bookable ? `🎟️ ${t('show.reserve').toUpperCase()}` : t('show.full').toUpperCase()}
                     </button>
                   </>
                 ) : (
                   <p className="text-center text-danger">
-                    Aucune représentation disponible.
+                    {t('show.noRepresentation')}
                   </p>
                 )}
               </div>

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Locale;
+
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.service.EmailService;
 import be.event.smartbooking.service.PasswordResetTokenService;
@@ -55,12 +57,12 @@ public class LoginController {
     @PostMapping("/forgot-password")
     public String handleForgotPassword(@RequestParam("email") @NotBlank @Email String email, Model model) {
         User user = userService.findByEmail(email);
-        System.out.println(user);   //DEBUG
 
         if (user != null) {
             var token = tokenService.createTokenForUser(user);
-            System.out.println(token.getToken());   //DEBUG
-            emailService.sendPasswordResetMail(user.getEmail(), token.getToken());
+            Locale locale = (user.getLangue() != null && !user.getLangue().isBlank())
+                    ? Locale.forLanguageTag(user.getLangue()) : Locale.FRENCH;
+            emailService.sendPasswordResetMail(user.getEmail(), token.getToken(), locale);
         }
         // Toujours montrer le même message
         model.addAttribute("successMessage", "Si un compte existe pour cet e-mail, tu recevras un lien de réinitialisation.");

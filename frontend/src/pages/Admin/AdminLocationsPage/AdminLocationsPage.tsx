@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { locationApi } from '../../../services/api';
 import styles from './AdminLocationsPage.module.css';
 
@@ -11,6 +12,7 @@ interface Location {
 }
 
 const LocationList: React.FC = () => {
+    const { t } = useTranslation();
     const [locations, setLocations] = useState<Location[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -21,11 +23,11 @@ const LocationList: React.FC = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <div className={styles.loader}>Chargement des lieux...</div>;
+    if (loading) return <div className={styles.loader}>{t("admin.locations.loading")}</div>;
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Nos <span className={styles.yellow}>Lieux</span></h1>
+            <h1 className={styles.title}>{t("admin.locations.title")} <span className={styles.yellow}>{t("admin.locations.titleHighlight")}</span></h1>
             <div className={styles.grid}>
                 {locations.map(loc => (
                     <div key={loc.id} className={styles.card}>
@@ -37,7 +39,7 @@ const LocationList: React.FC = () => {
                             <p className={styles.address}>📍 {loc.address}</p>
                             {loc.website && (
                                 <a href={loc.website} target="_blank" rel="noopener noreferrer" className={styles.webLink}>
-                                    Visiter le site web →
+                                    {t("admin.locations.visitWebsite")}
                                 </a>
                             )}
                         </div>

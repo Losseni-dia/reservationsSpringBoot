@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { reviewApi } from '../../../services/api';
 import { Review } from '../../../types/models';
 import Loader from '../../../components/ui/loader/Loader';
+import { formatDate } from '../../../utils/format';
 import styles from './AdminReviewPage.module.css';
 
 const AdminReviewPage: React.FC = () => {
+    const { t, i18n } = useTranslation();
     const [pendingReviews, setPendingReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -25,15 +28,15 @@ const AdminReviewPage: React.FC = () => {
         try {
             await reviewApi.validate(id);
             setPendingReviews(prev => prev.filter(r => r.id !== id));
-        } catch (err) { alert("Erreur lors de la validation"); }
+        } catch (err) { alert(t("admin.reviews.errorValidate")); }
     };
 
     const handleDelete = async (id: number) => {
-        if (!window.confirm("Supprimer définitivement cet avis ?")) return;
+        if (!window.confirm(t("admin.reviews.confirmDelete"))) return;
         try {
             await reviewApi.delete(id);
             setPendingReviews(prev => prev.filter(r => r.id !== id));
-        } catch (err) { alert("Erreur lors de la suppression"); }
+        } catch (err) { alert(t("admin.reviews.errorDelete")); }
     };
 
     if (loading) return <Loader />;
@@ -41,8 +44,8 @@ const AdminReviewPage: React.FC = () => {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1>Modération des <span className={styles.yellow}>Avis</span></h1>
-                <p>{pendingReviews.length} avis en attente de relecture</p>
+                <h1>{t("admin.reviews.title")} <span className={styles.yellow}>{t("admin.reviews.titleHighlight")}</span></h1>
+                <p>{t("admin.reviews.subtitle", { count: pendingReviews.length })}</p>
             </header>
 
             <div className={styles.list}>
@@ -52,19 +55,19 @@ const AdminReviewPage: React.FC = () => {
                             <div className={styles.cardHeader}>
                                 <div>
                                     <strong className="text-warning">@{rev.authorLogin}</strong>
-                                    <span className="text-muted ms-2">le {new Date(rev.createdAt).toLocaleDateString()}</span>
+                                    <span className="text-muted ms-2">le {formatDate(rev.createdAt, i18n.language)}</span>
                                 </div>
                                 <div className={styles.stars}>{"★".repeat(rev.stars)}</div>
                             </div>
                             <p className={styles.comment}>"{rev.comment}"</p>
                             <div className={styles.actions}>
-                                <button onClick={() => handleApprove(rev.id)} className={styles.approveBtn}>APPROUVER</button>
-                                <button onClick={() => handleDelete(rev.id)} className={styles.rejectBtn}>SUPPRIMER</button>
+                                <button onClick={() => handleApprove(rev.id)} className={styles.approveBtn}>{t("admin.reviews.approve")}</button>
+                                <button onClick={() => handleDelete(rev.id)} className={styles.rejectBtn}>{t("admin.reviews.delete")}</button>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className={styles.empty}>🎉 Tous les avis ont été modérés !</div>
+                    <div className={styles.empty}>{t("admin.reviews.empty")}</div>
                 )}
             </div>
         </div>
