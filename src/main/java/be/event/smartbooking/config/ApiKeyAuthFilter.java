@@ -7,11 +7,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority; // Import important
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
@@ -25,22 +28,27 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. Chercher le header "X-API-KEY"
         String apiKey = request.getHeader("X-API-KEY");
 
-        // 2. Si présent, on valide
         if (apiKey != null && !apiKey.isBlank()) {
             Optional<User> userOpt = apiKeyService.validateKey(apiKey);
 
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
-                // 3. On connecte l'utilisateur virtuellement pour cette requête
-                var auth = new UsernamePasswordAuthenticationToken(user, null, user.getRoles()); // Utilise tes rôles existants
+
+                // --- CORRECTION ICI ---
+                // On convertit ta liste de 'Role' en liste de 'SimpleGrantedAuthority'
+                List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getRole())) // Suppose que ta classe Role a une méthode getRole() ou getName() qui renvoie le string (ex: "ROLE_ADMIN")
+                        .collect(Collectors.toList());
+
+                var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                // ----------------------
+
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
 
-        // 4. On laisse passer la requête (Spring Security décidera si c'est autorisé ou non après)
         filterChain.doFilter(request, response);
     }
 }
