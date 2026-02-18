@@ -69,6 +69,7 @@ public class SpringSecurityConfig {
                                                 .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/representations/*")
                                                 .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
+                                                .requestMatchers("/api/rss").permitAll()
                                                 // Tout le reste nécessite d'être connecté
                                                 .anyRequest().authenticated())
 
