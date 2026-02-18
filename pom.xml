@@ -122,6 +122,13 @@
             <version>24.0.0</version>
         </dependency>
 
+         <!-- Ajout de la dépendance Rome pour gérer le Flux RSS -->
+        <dependency>
+            <groupId>com.rometools</groupId>
+            <artifactId>rome</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
