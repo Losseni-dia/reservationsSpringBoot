@@ -1,6 +1,7 @@
 // Chemin : src/components/layout/Footer.tsx
 import React from 'react';
 import styles from './Footer.module.css';
+import { FaRss } from "react-icons/fa";
 
 const Footer: React.FC = () => {
     const rssUrl = "http://localhost:8080/api/rss";
@@ -19,13 +20,15 @@ const Footer: React.FC = () => {
             <a href="#">Confidentialité</a>
             <a href="#">Conditions d'utilisation</a>
 
-            // --- AJOUT DU LIEN RSS ---
             <a
               href={rssUrl}
               target="_blank"
               rel="noopener noreferrer"
               title="S'abonner au flux RSS"
+              style={{display: 'inline-flex', alignItems: 'center', color: 'orange' }} 
             >
+              <FaRss size={18} />
+            
               Flux RSS
             </a>
           </div>
