@@ -33,10 +33,16 @@ public class ApiKeyService {
     }
 
     // Vérifie si une clé est valide
+    @Transactional(readOnly = true)
     public Optional<User> validateKey(String key) {
         return repository.findByKeyValue(key)
                 .filter(ApiKey::isActive) // Vérifie qu'elle est active
-                .map(ApiKey::getUser);
+                .map(apiKey -> {
+                    User user = apiKey.getUser();
+                    // FORCE le chargement des rôles tant que la connexion DB est ouverte (Le Fix est ici !)
+                    user.getRoles().size(); 
+                    return user;
+                });
     }
 
     private String generateRandomString(int length) {
