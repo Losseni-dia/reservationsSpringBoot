@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -39,4 +41,12 @@ import org.springframework.context.annotation.Configuration;
         paramName = "X-API-KEY" // C'est exactement le nom attendu par ton ApiKeyAuthFilter !
 )
 public class OpenApiConfig {
+        // On dit à Swagger de n'afficher QUE les routes B2B
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("b2b-api")
+                .pathsToMatch("/api/public/**") // Seules les URL commençant par /api/public apparaîtront !
+                .build();
+    }
 }
