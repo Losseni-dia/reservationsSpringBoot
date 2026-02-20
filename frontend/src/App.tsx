@@ -31,7 +31,7 @@ import PaymentSuccess from "./pages/payment/PaymentSuccess";
 import ReservationPage from "./pages/ReservationPage";
 import About from "./pages/about/About";
 import DeveloperPage from "./pages/Developer/DeveloperPage";
-
+import ApiDocPage from "./pages/ApiDoc/ApiDocPage";
 
 
 function App() {
@@ -77,7 +77,8 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
-              <Route path="/developers" element={<DeveloperPage />} />;
+              <Route path="/developers" element={<DeveloperPage />} />
+              <Route path="/api-documentation" element={<ApiDocPage />} />
             </Routes>
           </main>
 
