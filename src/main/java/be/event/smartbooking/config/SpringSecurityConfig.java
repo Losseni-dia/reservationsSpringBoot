@@ -41,6 +41,7 @@ public class SpringSecurityConfig {
                 // 2. Désactivation du CSRF pour autoriser les requêtes POST/Multipart de React
                 .csrf(csrf -> csrf.disable())
 
+
                 // --- AJOUT DU FILTRE API KEY AVANT LE FILTRE LOGIN CLASSIQUE ---
                 .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
 

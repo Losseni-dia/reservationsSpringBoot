@@ -1,5 +1,126 @@
-.container {
-    background-color: #ffffff; /* ReDoc a besoin d'un fond blanc */
+/* --- Structure de la page --- */
+.pageContainer {
+    background-color: #000000;
     min-height: 100vh;
-    padding-top: 80px; /* Ajuste cette valeur selon la hauteur de ta navbar */
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; /* Empêche le scroll horizontal au niveau racine */
+}
+
+.swaggerSection {
+    background-color: #ffffff;
+    padding: 40px 0;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden; /* Pas de scroll ici non plus */
+}
+
+.centeredContent {
+    width: 95%;
+    max-width: 1400px;
+    background-color: #ffffff;
+    /* Supprimé : overflow-x: auto — c'était la source d'une des deux scrollbars */
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* --- Nettoyage de l'entête Swagger --- */
+:global(.swagger-ui .topbar),
+:global(.swagger-ui .info .version),
+:global(.swagger-ui .info .version-stamp),
+:global(.swagger-ui .info .url),
+:global(.swagger-ui .info .title small) {
+    display: none !important;
+}
+
+/* --- Swagger UI : conteneur principal --- */
+:global(.swagger-ui) {
+    max-width: 100%;
+    /* Supprimé : overflow-x: hidden — conflictait avec centeredContent */
+}
+
+:global(.swagger-ui .wrapper) {
+    max-width: 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* --- Corrections des Tableaux --- */
+:global(.swagger-ui table) {
+    table-layout: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+:global(.swagger-ui table td),
+:global(.swagger-ui .parameters-col_description),
+:global(.swagger-ui .response-col_description) {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    vertical-align: top;
+}
+
+/* --- Tableaux de réponse : layout fixe pour maîtriser les colonnes --- */
+:global(.swagger-ui .responses-table),
+:global(.swagger-ui .live-responses-table) {
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+
+/* Colonne status : compacte */
+:global(.swagger-ui .response-col_status) {
+    width: 100px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    word-break: keep-all !important;
+    padding-right: 15px;
+}
+
+/* Colonne description : prend le reste de l'espace */
+:global(.swagger-ui .response-col_description) {
+    /* Supprimé : max-width: 0 — causait des débordements imprévisibles */
+    width: auto !important;
+    min-width: 0 !important;
+    overflow: hidden;
+}
+
+/* --- Blocs de code et JSON --- */
+:global(.swagger-ui .model-box),
+:global(.swagger-ui pre) {
+    word-break: break-all;
+    white-space: pre-wrap !important;
+    overflow-x: auto !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* --- Response Body (JSON / highlight-code) --- */
+:global(.swagger-ui .highlight-code),
+:global(.swagger-ui .highlight-code pre),
+:global(.swagger-ui .microlight),
+:global(.swagger-ui .responses-inner .highlight-code pre),
+:global(.swagger-ui .live-responses-table .highlight-code pre),
+:global(.swagger-ui textarea.curl) {
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    max-height: 400px !important;
+    overflow-x: hidden !important; /* Pas de scroll horizontal ici, le texte wrape */
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    border: 1px solid #eee !important;
+}
+
+/* --- Curl command --- */
+:global(.swagger-ui .curl-command pre),
+:global(.swagger-ui .curl) {
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    max-height: 200px !important;
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }

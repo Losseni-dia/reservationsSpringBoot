@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
 import styles from "./DeveloperPage.module.css";
 import ApiKeyManager from "../../components/apikeymanager/ApiKeyManager";
+import { Link } from "react-router-dom";
 
 const DeveloperPage: React.FC = () => {
   const { user } = useAuth();
@@ -283,6 +284,9 @@ else:
             >
               Ouvrir le dictionnaire visuel (Swagger)
             </a>
+            <Link to="/api-documentation" className={styles.docLinkBtn}>
+              Ouvrir la documentation interactive
+            </Link>
           </div>
         </div>
       </section>

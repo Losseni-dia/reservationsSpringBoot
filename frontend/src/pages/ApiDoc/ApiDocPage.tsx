@@ -1,29 +1,18 @@
 import React from "react";
-import { RedocStandalone } from "redoc";
+import SwaggerUI from "swagger-ui-react";
+import "swagger-ui-react/swagger-ui.css";
 import styles from "./ApiDocPage.module.css";
 
 const ApiDocPage: React.FC = () => {
   return (
-    <div className={styles.container}>
-      <RedocStandalone
-        specUrl="http://localhost:8080/v3/api-docs"
-        options={{
-          theme: {
-            colors: {
-              primary: { main: "#f5c518" }, // Le jaune de ton site
-            },
-            typography: {
-              fontFamily:
-                'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-              headings: {
-                fontFamily:
-                  'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                fontWeight: "bold",
-              },
-            },
-          },
-        }}
-      />
+    /* On ne met QUE le contenu de la page, car le Layout global s'occupe du reste */
+    <div className={styles.swaggerSection}>
+      <div className={styles.centeredContent}>
+        <SwaggerUI
+          url="http://localhost:8080/v3/api-docs/b2b-api"
+          docExpansion="list"
+        />
+      </div>
     </div>
   );
 };
