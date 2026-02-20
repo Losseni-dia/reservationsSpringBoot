@@ -64,7 +64,7 @@ public class SpringSecurityConfig {
                         .requestMatchers("/api/public/**").authenticated()
 
                         // Gestion des clés API (Nécessite d'être connecté)
-                        .requestMatchers("/api/users/keys").authenticated()
+                        .requestMatchers("/api/users/keys/**").authenticated()
 
                         // 2. Seuls les utilisateurs connectés peuvent poster un avis
                         .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()
