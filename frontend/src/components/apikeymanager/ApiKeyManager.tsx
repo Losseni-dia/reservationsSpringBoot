@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import styles from "./ApiKeyManager.module.css"; // Import de ton fichier CSS Module
+import styles from "./ApiKeyManager.module.css";
 
-// Définition de la structure d'une clé API pour TypeScript
 interface ApiKey {
   id: number;
   name: string;
@@ -23,14 +22,14 @@ const ApiKeyManager: React.FC = () => {
     try {
       const response = await fetch("http://localhost:8080/api/users/keys", {
         method: "GET",
-        credentials: "include", // Indispensable pour l'authentification Spring Security
+        credentials: "include",
       });
       if (response.ok) {
         const data = await response.json();
         setKeys(data);
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des clés:", error);
+      console.error("Erreur:", error);
     }
   };
 
@@ -61,15 +60,43 @@ const ApiKeyManager: React.FC = () => {
         setNewKeyName("");
         setMessage({ text: "Clé générée avec succès !", type: "success" });
       } else {
-        setMessage({
-          text: "Erreur lors de la génération de la clé.",
-          type: "error",
-        });
+        setMessage({ text: "Erreur lors de la génération.", type: "error" });
       }
     } catch (error) {
-      setMessage({ text: "Erreur de connexion au serveur.", type: "error" });
+      setMessage({ text: "Erreur de connexion.", type: "error" });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // --- NOUVELLE FONCTION DE SUPPRESSION ---
+  const handleDeleteKey = async (id: number) => {
+    if (
+      !window.confirm(
+        "Êtes-vous sûr de vouloir supprimer cette clé ? Elle ne fonctionnera plus.",
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/users/keys/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      if (response.ok) {
+        // Met à jour la liste en retirant la clé supprimée
+        setKeys(keys.filter((k) => k.id !== id));
+        setMessage({ text: "Clé supprimée définitivement.", type: "success" });
+      } else {
+        setMessage({ text: "Erreur lors de la suppression.", type: "error" });
+      }
+    } catch (error) {
+      setMessage({ text: "Erreur de connexion.", type: "error" });
     }
   };
 
@@ -118,12 +145,20 @@ const ApiKeyManager: React.FC = () => {
                 <span className={styles.keyHeader}>{key.name}</span>
                 <div className={styles.keyCodeContainer}>
                   <code className={styles.keyCode}>{key.keyValue}</code>
-                  <button
-                    onClick={() => copyToClipboard(key.keyValue)}
-                    className={styles.copyBtn}
-                  >
-                    Copier
-                  </button>
+                  <div className={styles.actionButtons}>
+                    <button
+                      onClick={() => copyToClipboard(key.keyValue)}
+                      className={styles.copyBtn}
+                    >
+                      Copier
+                    </button>
+                    <button
+                      onClick={() => handleDeleteKey(key.id)}
+                      className={styles.deleteBtn}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
                 </div>
                 <small className={styles.date}>
                   Créée le : {new Date(key.createdAt).toLocaleDateString()}
@@ -135,18 +170,38 @@ const ApiKeyManager: React.FC = () => {
       </div>
 
       <div className={styles.docSection}>
-        <h4>💡 Comment l'utiliser ?</h4>
-        <p>Ajoutez ce header dans vos requêtes HTTP :</p>
-        <code style={{ color: "#0dcaf0" }}>X-API-KEY: votre_cle_ici</code>
-        <p style={{ marginTop: "10px", fontSize: "0.85rem" }}>
-          Documentation détaillée disponible sur{" "}
+        <h4>💡 À quoi sert cette clé ?</h4>
+        <p className={styles.docText}>
+          Cette clé agit comme un <strong>mot de passe secret</strong>. Elle
+          permet à d'autres sites (comme votre site vitrine, un blog ou une
+          application partenaire) de se connecter de manière sécurisée à notre
+          plateforme pour récupérer automatiquement les informations des
+          spectacles.
+        </p>
+
+        <h5 className={styles.docSubTitle}>Comment l'utiliser ?</h5>
+        <ul className={styles.docList}>
+          <li className={styles.docListItem}>
+            <strong>Pour les utilisateurs réguliers :</strong> Copiez simplement
+            votre clé ci-dessus et collez-la dans le champ "Clé API" de l'outil
+            que vous souhaitez relier.
+          </li>
+          <li>
+            <strong>Pour les développeurs :</strong> Incluez cette clé dans
+            l'en-tête HTTP <code className={styles.inlineCode}>X-API-KEY</code>{" "}
+            lors de vos requêtes.
+          </li>
+        </ul>
+
+        <p className={styles.docFooter}>
+          👉 Découvrez toutes les données disponibles sur notre{" "}
           <a
             href="http://localhost:8080/swagger-ui/index.html"
             target="_blank"
             rel="noreferrer"
-            style={{ color: "#0d6efd" }}
+            className={styles.docLink}
           >
-            Swagger UI
+            documentation interactive
           </a>
           .
         </p>
