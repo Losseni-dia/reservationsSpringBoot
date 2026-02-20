@@ -36,16 +36,22 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
 
-                // --- CORRECTION ICI ---
-                // On convertit ta liste de 'Role' en liste de 'SimpleGrantedAuthority'
+                // On convertit la liste de 'Role' en liste de 'SimpleGrantedAuthority'
                 List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getRole())) // Suppose que ta classe Role a une méthode getRole() ou getName() qui renvoie le string (ex: "ROLE_ADMIN")
+                        .map(role -> new SimpleGrantedAuthority(role.getRole()))
                         .collect(Collectors.toList());
 
                 var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
-                // ----------------------
-
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+            else {
+                // Si une clé est fournie mais qu'elle n'est pas en base de données (ou supprimée)
+                // On bloque immédiatement la requête avec une Erreur 401 (Non Autorisé)
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"error\": \"Clé API invalide ou supprimée.\"}");
+                return;
             }
         }
 
