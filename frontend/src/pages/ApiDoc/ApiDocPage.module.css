@@ -1,0 +1,5 @@
+.container {
+    background-color: #ffffff; /* ReDoc a besoin d'un fond blanc */
+    min-height: 100vh;
+    padding-top: 80px; /* Ajuste cette valeur selon la hauteur de ta navbar */
+}
