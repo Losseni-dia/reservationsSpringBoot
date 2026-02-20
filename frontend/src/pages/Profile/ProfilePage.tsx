@@ -4,6 +4,7 @@ import { useAuth } from '../../components/context/AuthContext';
 import { authApi } from '../../services/api';
 import { UserProfileDto } from '../../types/models';
 import styles from './ProfilePage.module.css';
+import ApiKeyManager from "../../components/apikeymanager/ApiKeyManager";
 
 const ProfilePage: React.FC = () => {
     const { t } = useTranslation();
@@ -44,33 +45,77 @@ const ProfilePage: React.FC = () => {
     if (!user) return <div className="text-white text-center mt-5">{t('auth.loading')}</div>;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.card}>
-                <h2 className="text-white mb-4">{t('auth.profile.title')}</h2>
-                {message.text && <div className={message.type === 'success' ? styles.success : styles.error}>{message.text}</div>}
-                <form onSubmit={handleSubmit} className={styles.form}>
-                    <div className="row mb-3">
-                        <div className="col"><label className={styles.label}>{t('auth.firstname')}</label>
-                        <input className={styles.input} type="text" name="firstname" value={formData.firstname} onChange={handleChange}/></div>
-                        <div className="col"><label className={styles.label}>{t('auth.lastname')}</label>
-                        <input className={styles.input} type="text" name="lastname" value={formData.lastname} onChange={handleChange}/></div>
-                    </div>
-                    <div className="mb-3"><label className={styles.label}>{t('auth.email')}</label>
-                    <input className={styles.input} type="email" name="email" value={formData.email} onChange={handleChange}/></div>
-
-                    <div className="mb-3">
-                        <label className={styles.label}>{t('auth.language')}</label>
-                        <select className={styles.input} name="langue" value={formData.langue} onChange={handleChange}>
-                            <option value="fr">{t('auth.langFr')}</option>
-                            <option value="en">{t('auth.langEn')}</option>
-                            <option value="nl">{t('auth.langNl')}</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" className={styles.btn}>{t('auth.profile.save')}</button>
-                </form>
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <h2 className="text-white mb-4">{t("auth.profile.title")}</h2>
+          {message.text && (
+            <div
+              className={
+                message.type === "success" ? styles.success : styles.error
+              }
+            >
+              {message.text}
             </div>
+          )}
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className="row mb-3">
+              <div className="col">
+                <label className={styles.label}>{t("auth.firstname")}</label>
+                <input
+                  className={styles.input}
+                  type="text"
+                  name="firstname"
+                  value={formData.firstname}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col">
+                <label className={styles.label}>{t("auth.lastname")}</label>
+                <input
+                  className={styles.input}
+                  type="text"
+                  name="lastname"
+                  value={formData.lastname}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <label className={styles.label}>{t("auth.email")}</label>
+              <input
+                className={styles.input}
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className={styles.label}>{t("auth.language")}</label>
+              <select
+                className={styles.input}
+                name="langue"
+                value={formData.langue}
+                onChange={handleChange}
+              >
+                <option value="fr">{t("auth.langFr")}</option>
+                <option value="en">{t("auth.langEn")}</option>
+                <option value="nl">{t("auth.langNl")}</option>
+              </select>
+            </div>
+
+            <button type="submit" className={styles.btn}>
+              {t("auth.profile.save")}
+            </button>
+          </form>
         </div>
+
+        {/* --- NOUVEAU BLOC : GESTION DES CLÉS API --- */}
+        <div style={{ marginTop: "2rem" }}>
+          <ApiKeyManager />
+        </div>
+      </div>
     );
 };
 
