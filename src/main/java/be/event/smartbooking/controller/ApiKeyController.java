@@ -39,4 +39,18 @@ public class ApiKeyController {
         User user = userRepository.findByLogin(principal.getName());
         return user.getApiKeys();
     }
+
+    // Supprimer une clé API
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteKey(@PathVariable Long id, Principal principal) {
+        User user = userRepository.findByLogin(principal.getName());
+        if (user == null) return ResponseEntity.status(401).build();
+
+        try {
+            apiKeyService.deleteApiKey(id, user);
+            return ResponseEntity.ok().build(); // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

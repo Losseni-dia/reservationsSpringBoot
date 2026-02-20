@@ -51,4 +51,15 @@ public class ApiKeyService {
         random.nextBytes(bytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
+
+    // Supprime une clé API en vérifiant qu'elle appartient bien à l'utilisateur
+    @Transactional
+    public void deleteApiKey(Long keyId, User user) {
+        Optional<ApiKey> keyOpt = repository.findById(keyId);
+        if (keyOpt.isPresent() && keyOpt.get().getUser().getId().equals(user.getId())) {
+            repository.delete(keyOpt.get());
+        } else {
+            throw new RuntimeException("Clé introuvable ou non autorisée");
+        }
+    }
 }
