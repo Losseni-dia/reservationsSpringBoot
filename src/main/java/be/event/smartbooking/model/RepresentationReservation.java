@@ -28,6 +28,7 @@ public class RepresentationReservation {
     @JoinColumn(name = "price_id", nullable = false)
     private Price price;
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer quantity = 1; // nombre de places pour ce prix
 }

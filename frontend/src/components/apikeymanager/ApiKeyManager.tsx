@@ -161,7 +161,7 @@ const ApiKeyManager: React.FC = () => {
                   </div>
                 </div>
                 <small className={styles.date}>
-                  Créée le : {new Date(key.createdAt).toLocaleDateString()}
+                  Créée le : {new Date(key.createdAt).toLocaleString()}
                 </small>
               </li>
             ))}

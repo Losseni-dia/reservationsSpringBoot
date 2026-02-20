@@ -40,6 +40,7 @@ public class Show {
 	@JoinColumn(name = "location_id")
 	private Location location;
 
+	@Builder.Default
 	@Column(nullable = false)
 	private boolean bookable = true;
 

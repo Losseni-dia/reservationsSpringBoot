@@ -46,6 +46,7 @@ public class User {
     // =================================================================
     // ROLES
     // =================================================================
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
@@ -53,6 +54,7 @@ public class User {
     // =================================================================
     // RÉSERVATIONS (relation principale)
     // =================================================================
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -60,6 +62,7 @@ public class User {
     // =================================================================
     // AVIS (reviews)
     // =================================================================
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
