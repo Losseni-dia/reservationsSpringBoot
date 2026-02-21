@@ -301,6 +301,12 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                 String sourceLang = "fr";
                 String title = translateIfNeeded(show.getTitle(), sourceLang, targetLang);
                 String description = translateIfNeeded(show.getDescription(), sourceLang, targetLang);
+                String locationDesignation = translateIfNeeded(
+                                show.getLocation() != null ? show.getLocation().getDesignation() : null,
+                                sourceLang, targetLang);
+                if (locationDesignation == null || locationDesignation.isBlank()) {
+                        locationDesignation = translateIfNeeded("Lieu non défini", sourceLang, targetLang);
+                }
 
                 return ShowDTO.builder()
                                 .id(show.getId())
@@ -318,13 +324,12 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                                 : new ArrayList<>())
                                 // ----------------------------------
 
-                                .locationDesignation(show.getLocation() != null ? show.getLocation().getDesignation()
-                                                : "Lieu non défini")
+                                .locationDesignation(locationDesignation)
                                 .averageRating(show.getAverageRating())
                                 .reviewCount(show.getReviewCount())
 
                                 .representations(show.getRepresentations() != null ? show.getRepresentations().stream()
-                                                .map(rep -> convertRepToDto(rep, title))
+                                                .map(rep -> convertRepToDto(rep, title, sourceLang, targetLang))
                                                 .toList() : new ArrayList<>())
 
                                   .reviews(show.getReviews() != null 
@@ -349,7 +354,7 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                 .build();
         }
 
-        private RepresentationDTO convertRepToDto(Representation rep, String title) {
+        private RepresentationDTO convertRepToDto(Representation rep, String title, String sourceLang, String targetLang) {
                 String locationName = "Lieu non défini";
 
                 // 1. On vérifie d'abord si la séance a un lieu spécifique
@@ -361,11 +366,13 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                         locationName = rep.getShow().getLocation().getDesignation();
                 }
 
+                locationName = translateIfNeeded(locationName, sourceLang, targetLang);
+
                 return RepresentationDTO.builder()
                                 .id(rep.getId())
                                 .when(rep.getWhen())
                                 .showTitle(title)
-                                .locationName(locationName) // Utilise la logique de priorité
+                                .locationName(locationName)
                                 .prices(rep.getPrices() != null
                                                 ? rep.getPrices().stream()
                                                                 .map(this::convertPriceToDto)
