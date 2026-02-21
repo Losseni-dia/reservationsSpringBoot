@@ -9,5 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record TranslationProperties(
     boolean enabled,
     String apiKey,
-    String apiUrl
+    String apiUrl,
+    long dailyLimit,
+    long monthlyLimit
 ) {}

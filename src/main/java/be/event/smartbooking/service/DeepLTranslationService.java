@@ -27,10 +27,13 @@ public class DeepLTranslationService implements TranslationService {
 
     private final TranslationProperties properties;
     private final RestTemplate restTemplate;
+    private final TranslationUsageService usageService;
 
-    public DeepLTranslationService(TranslationProperties properties, RestTemplate restTemplate) {
+    public DeepLTranslationService(TranslationProperties properties, RestTemplate restTemplate,
+            TranslationUsageService usageService) {
         this.properties = properties;
         this.restTemplate = restTemplate;
+        this.usageService = usageService;
     }
 
     @Override
@@ -58,6 +61,12 @@ public class DeepLTranslationService implements TranslationService {
             return Optional.of(text);
         }
 
+        int charCount = text.length();
+        if (wouldExceedLimit(charCount)) {
+            log.debug("Translation skipped: would exceed daily/monthly limit");
+            return Optional.of(text);
+        }
+
         try {
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("text", text);
@@ -82,6 +91,7 @@ public class DeepLTranslationService implements TranslationService {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> translations = (List<Map<String, Object>>) response.get("translations");
                 if (translations != null && !translations.isEmpty() && translations.get(0).containsKey("text")) {
+                    usageService.recordUsage(charCount);
                     String translated = (String) translations.get(0).get("text");
                     return Optional.ofNullable(translated);
                 }
@@ -91,6 +101,21 @@ public class DeepLTranslationService implements TranslationService {
         }
 
         return Optional.of(text);
+    }
+
+    private boolean wouldExceedLimit(int additionalChars) {
+        long dailyLimit = properties.dailyLimit();
+        long monthlyLimit = properties.monthlyLimit();
+        if (dailyLimit <= 0 && monthlyLimit <= 0) {
+            return false;
+        }
+        if (dailyLimit > 0 && usageService.getCharactersToday() + additionalChars > dailyLimit) {
+            return true;
+        }
+        if (monthlyLimit > 0 && usageService.getCharactersThisMonth() + additionalChars > monthlyLimit) {
+            return true;
+        }
+        return false;
     }
 
     /**
