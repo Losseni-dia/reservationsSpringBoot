@@ -158,7 +158,8 @@
     "full": "Uitverkocht",
     "editorialNoteTitle": "Beoordeling van het team",
     "editorialNoteText": "Een ontroerende voorstelling die de codes van het hedendaagse theater herdefinieert. Niet te missen voor de indrukwekkende acteerprestaties.",
-    "noRepresentation": "Geen voorstelling beschikbaar."
+    "noRepresentation": "Geen voorstelling beschikbaar.",
+    "translate": "Vertalen"
   },
   "booking": {
     "errorLoad": "Kan de voorstellingsgegevens niet laden.",
