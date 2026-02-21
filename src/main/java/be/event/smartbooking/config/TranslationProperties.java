@@ -11,5 +11,8 @@ public record TranslationProperties(
     String apiKey,
     String apiUrl,
     long dailyLimit,
-    long monthlyLimit
+    long monthlyLimit,
+    boolean cacheEnabled,
+    int cacheMaxSize,
+    int cacheTtlHours
 ) {}

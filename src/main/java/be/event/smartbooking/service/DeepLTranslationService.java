@@ -3,6 +3,7 @@ package be.event.smartbooking.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,14 @@ public class DeepLTranslationService implements TranslationService {
             return Optional.of(text);
         }
 
+        String cacheKey = buildCacheKey(text, normalizedSource, normalizedTarget);
+        if (properties.cacheEnabled()) {
+            String cached = getFromCache(cacheKey);
+            if (cached != null) {
+                return Optional.of(cached);
+            }
+        }
+
         try {
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("text", text);
@@ -93,6 +102,9 @@ public class DeepLTranslationService implements TranslationService {
                 if (translations != null && !translations.isEmpty() && translations.get(0).containsKey("text")) {
                     translationCostService.logUsage(charCount);
                     String translated = (String) translations.get(0).get("text");
+                    if (translated != null && properties.cacheEnabled()) {
+                        putInCache(cacheKey, translated);
+                    }
                     return Optional.ofNullable(translated);
                 }
             }
@@ -116,6 +128,49 @@ public class DeepLTranslationService implements TranslationService {
             return true;
         }
         return false;
+    }
+
+    private static final class CachedEntry {
+        final String translated;
+        final long expiresAt;
+
+        CachedEntry(String translated, long expiresAt) {
+            this.translated = translated;
+            this.expiresAt = expiresAt;
+        }
+    }
+
+    private final Map<String, CachedEntry> translationCache = new ConcurrentHashMap<>();
+
+    private String buildCacheKey(String text, String sourceLang, String targetLang) {
+        return (sourceLang != null ? sourceLang : "") + "|" + targetLang + "|" + text;
+    }
+
+    private String getFromCache(String key) {
+        CachedEntry entry = translationCache.get(key);
+        if (entry == null) return null;
+        if (System.currentTimeMillis() > entry.expiresAt) {
+            translationCache.remove(key);
+            return null;
+        }
+        return entry.translated;
+    }
+
+    private void putInCache(String key, String translated) {
+        evictIfNeeded();
+        long ttlMs = properties.cacheTtlHours() * 3600L * 1000;
+        translationCache.put(key, new CachedEntry(translated, System.currentTimeMillis() + ttlMs));
+    }
+
+    private void evictIfNeeded() {
+        int maxSize = Math.max(100, properties.cacheMaxSize());
+        if (translationCache.size() >= maxSize) {
+            long now = System.currentTimeMillis();
+            translationCache.entrySet().removeIf(e -> e.getValue().expiresAt <= now);
+            if (translationCache.size() >= maxSize) {
+                translationCache.clear();
+            }
+        }
     }
 
     /**
