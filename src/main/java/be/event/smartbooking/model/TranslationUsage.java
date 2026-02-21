@@ -20,6 +20,9 @@ public class TranslationUsage {
     @Column(nullable = false)
     private Integer charactersTranslated;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
