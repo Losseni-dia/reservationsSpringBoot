@@ -3,7 +3,9 @@ package be.event.smartbooking.api.controller;
 import be.event.smartbooking.dto.LocationDTO;
 import be.event.smartbooking.model.Location;
 import be.event.smartbooking.service.LocationService;
+import be.event.smartbooking.service.TranslationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,9 @@ public class LocationApiController {
     @Autowired
     private LocationService locationService;
 
+    @Autowired
+    private TranslationService translationService;
+
     @GetMapping
     public List<LocationDTO> getAll() {
         // 1. On récupère la liste des entités
@@ -27,15 +32,29 @@ public class LocationApiController {
                 .collect(Collectors.toList());
     }
 
-    // Méthode utilitaire de conversion
     private LocationDTO convertToDTO(Location loc) {
+        String sourceLang = "fr";
+        String targetLang = LocaleContextHolder.getLocale().getLanguage();
+        String designation = translateIfNeeded(loc.getDesignation(), sourceLang, targetLang);
+        String localityName = loc.getLocality() != null ? loc.getLocality().getLocality() : "Ville inconnue";
+        localityName = translateIfNeeded(localityName, sourceLang, targetLang);
+
         return LocationDTO.builder()
                 .id(loc.getId())
-                .designation(loc.getDesignation())
+                .designation(designation)
                 .address(loc.getAddress())
                 .website(loc.getWebsite())
-                // On récupère le nom de la ville depuis l'objet Locality
-                .localityName(loc.getLocality() != null ? loc.getLocality().getLocality() : "Ville inconnue")
+                .localityName(localityName)
                 .build();
+    }
+
+    private String translateIfNeeded(String text, String sourceLang, String targetLang) {
+        if (text == null || text.isBlank()) {
+            return text;
+        }
+        if (sourceLang.equalsIgnoreCase(targetLang)) {
+            return text;
+        }
+        return translationService.translate(text, sourceLang, targetLang).orElse(text);
     }
 }
