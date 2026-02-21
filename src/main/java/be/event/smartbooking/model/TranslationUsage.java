@@ -17,13 +17,13 @@ public class TranslationUsage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "characters_translated", nullable = false)
     private Integer charactersTranslated;
 
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
