@@ -6,12 +6,14 @@ import be.event.smartbooking.model.Review;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.service.ReviewService;
+import be.event.smartbooking.service.TranslationService;
 import be.event.smartbooking.repository.UserRepos;
 import be.event.smartbooking.repository.ShowRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.security.Principal;
 import java.util.List;
@@ -26,6 +28,9 @@ public class ReviewApiController {
     private UserRepos userRepository;
     @Autowired
     private ShowRepos showRepository;
+
+    @Autowired
+    private TranslationService translationService;
 
     @GetMapping("/show/{showId}")
     public List<ReviewDTO> getByShow(@PathVariable Long showId) {
@@ -86,14 +91,27 @@ public class ReviewApiController {
     }
 
     private ReviewDTO convertToDTO(Review r) {
+        String sourceLang = "fr";
+        String targetLang = LocaleContextHolder.getLocale().getLanguage();
+        String comment = translateIfNeeded(r.getComment(), sourceLang, targetLang);
         return ReviewDTO.builder()
                 .id(r.getId())
-                .authorLogin(r.getUser().getLogin())
-                .comment(r.getComment())
+                .authorLogin(r.getUser() != null ? r.getUser().getLogin() : "Anonyme")
+                .comment(comment)
                 .stars(r.getStars())
                 .createdAt(r.getCreatedAt())
-                .showId(r.getShow().getId())
+                .showId(r.getShow() != null ? r.getShow().getId() : null)
                 .build();
+    }
+
+    private String translateIfNeeded(String text, String sourceLang, String targetLang) {
+        if (text == null || text.isBlank()) {
+            return text;
+        }
+        if (sourceLang.equalsIgnoreCase(targetLang)) {
+            return text;
+        }
+        return translationService.translate(text, sourceLang, targetLang).orElse(text);
     }
 
     @GetMapping("/admin/stats")

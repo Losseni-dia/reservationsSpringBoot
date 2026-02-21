@@ -335,7 +335,7 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                   .reviews(show.getReviews() != null 
                                               ? show.getReviews().stream()
                                                         .filter(Review::getValidated)
-                                                        .map(this::convertToReviewDTO)
+                                                        .map(rev -> convertToReviewDTO(rev, sourceLang, targetLang))
                                                         .toList() 
                                                 : new ArrayList<>())
                                 .artists(show.getArtistTypes() != null ? show.getArtistTypes().stream()
@@ -381,12 +381,13 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                 .build();
         }
 
-        private ReviewDTO convertToReviewDTO(Review rev) {
+        private ReviewDTO convertToReviewDTO(Review rev, String sourceLang, String targetLang) {
+                String comment = translateIfNeeded(rev.getComment(), sourceLang, targetLang);
                 return ReviewDTO.builder()
                                 .id(rev.getId())
                                 .authorLogin(rev.getUser() != null ? rev.getUser().getFirstname() : "Anonyme")
                                 .stars(rev.getStars())
-                                .comment(rev.getComment())
+                                .comment(comment)
                                 .createdAt(rev.getCreatedAt())
                                 
                                 .build();
