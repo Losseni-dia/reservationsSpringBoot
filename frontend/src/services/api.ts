@@ -242,6 +242,19 @@ export const reviewApi = {
     return res.json();
   },
 
+  getPending: async (): Promise<Review[]> => {
+    const res = await secureFetch(`${API_BASE}/reviews/pending`);
+    return res.json();
+  },
+
+  validate: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}/validate`, { method: "PUT" });
+  },
+
+  delete: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}`, { method: "DELETE" });
+  },
+
   create: async (
     showId: number,
     comment: string,
@@ -258,6 +271,22 @@ export const reviewApi = {
   getStats: async (): Promise<any> => {
     const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
     return res.json();
+  },
+};
+
+export const translateApi = {
+  translate: async (text: string, targetLang: string, sourceLang?: string): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text,
+        targetLang,
+        sourceLang: sourceLang || "fr",
+      }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
   },
 };
 
