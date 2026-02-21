@@ -3,7 +3,7 @@ package be.event.smartbooking.api.controller;
 import be.event.smartbooking.config.TranslationProperties;
 import be.event.smartbooking.dto.TranslationUsageDTO;
 import be.event.smartbooking.service.TranslationService;
-import be.event.smartbooking.service.TranslationUsageService;
+import be.event.smartbooking.service.TranslationCostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TranslationAdminApiController {
 
     @Autowired
-    private TranslationUsageService usageService;
+    private TranslationCostService translationCostService;
 
     @Autowired
     private TranslationService translationService;
@@ -28,8 +28,8 @@ public class TranslationAdminApiController {
     @GetMapping("/usage")
     public ResponseEntity<TranslationUsageDTO> getUsage() {
         TranslationUsageDTO dto = TranslationUsageDTO.builder()
-                .charactersToday(usageService.getCharactersToday())
-                .charactersThisMonth(usageService.getCharactersThisMonth())
+                .charactersToday(translationCostService.getCharactersToday())
+                .charactersThisMonth(translationCostService.getCharactersThisMonth())
                 .dailyLimit(translationProperties.dailyLimit())
                 .monthlyLimit(translationProperties.monthlyLimit())
                 .translationAvailable(translationService.isAvailable())

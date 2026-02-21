@@ -27,13 +27,13 @@ public class DeepLTranslationService implements TranslationService {
 
     private final TranslationProperties properties;
     private final RestTemplate restTemplate;
-    private final TranslationUsageService usageService;
+    private final TranslationCostService translationCostService;
 
     public DeepLTranslationService(TranslationProperties properties, RestTemplate restTemplate,
-            TranslationUsageService usageService) {
+            TranslationCostService translationCostService) {
         this.properties = properties;
         this.restTemplate = restTemplate;
-        this.usageService = usageService;
+        this.translationCostService = translationCostService;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class DeepLTranslationService implements TranslationService {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> translations = (List<Map<String, Object>>) response.get("translations");
                 if (translations != null && !translations.isEmpty() && translations.get(0).containsKey("text")) {
-                    usageService.recordUsage(charCount);
+                    translationCostService.logUsage(charCount);
                     String translated = (String) translations.get(0).get("text");
                     return Optional.ofNullable(translated);
                 }
@@ -109,10 +109,10 @@ public class DeepLTranslationService implements TranslationService {
         if (dailyLimit <= 0 && monthlyLimit <= 0) {
             return false;
         }
-        if (dailyLimit > 0 && usageService.getCharactersToday() + additionalChars > dailyLimit) {
+        if (dailyLimit > 0 && translationCostService.getCharactersToday() + additionalChars > dailyLimit) {
             return true;
         }
-        if (monthlyLimit > 0 && usageService.getCharactersThisMonth() + additionalChars > monthlyLimit) {
+        if (monthlyLimit > 0 && translationCostService.getCharactersThisMonth() + additionalChars > monthlyLimit) {
             return true;
         }
         return false;
