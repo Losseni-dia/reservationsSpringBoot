@@ -261,6 +261,22 @@ export const reviewApi = {
   },
 };
 
+export const translateApi = {
+  translate: async (text: string, targetLang: string, sourceLang?: string): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text,
+        targetLang,
+        sourceLang: sourceLang || "fr",
+      }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
+  },
+};
+
 export const locationApi = {
   getAll: async (): Promise<Location[]> => {
     const res = await secureFetch(`${API_BASE}/locations`);
