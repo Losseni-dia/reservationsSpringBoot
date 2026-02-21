@@ -242,6 +242,19 @@ export const reviewApi = {
     return res.json();
   },
 
+  getPending: async (): Promise<Review[]> => {
+    const res = await secureFetch(`${API_BASE}/reviews/pending`);
+    return res.json();
+  },
+
+  validate: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}/validate`, { method: "PUT" });
+  },
+
+  delete: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}`, { method: "DELETE" });
+  },
+
   create: async (
     showId: number,
     comment: string,
