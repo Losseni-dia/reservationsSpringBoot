@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin/translation")
+@RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class TranslationAdminApiController {
 
@@ -25,7 +25,7 @@ public class TranslationAdminApiController {
     @Autowired
     private TranslationProperties translationProperties;
 
-    @GetMapping("/usage")
+    @GetMapping(value = { "translation/usage", "translation-usage" })
     public ResponseEntity<TranslationUsageDTO> getUsage() {
         TranslationUsageDTO dto = TranslationUsageDTO.builder()
                 .charactersToday(translationCostService.getCharactersToday())
