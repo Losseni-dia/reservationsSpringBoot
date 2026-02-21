@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import be.event.smartbooking.dto.ArtistDTO;
 import be.event.smartbooking.dto.PriceDTO;
@@ -40,6 +41,7 @@ import be.event.smartbooking.repository.ArtistTypeRepos;
 import be.event.smartbooking.repository.LocationRepos;
 import be.event.smartbooking.service.FileService;
 import be.event.smartbooking.service.ShowService;
+import be.event.smartbooking.service.TranslationService;
 
 @RestController
 @RequestMapping("/api/shows")
@@ -57,7 +59,8 @@ public class ShowApiController {
         @Autowired
         private FileService fileService;
 
-
+        @Autowired
+        private TranslationService translationService;
 
         /**
      * GET /api/shows : Catalogue public (Uniquement CONFIRME)
@@ -290,14 +293,20 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
         }
 
         /**
-         * Transformation sécurisée de l'entité Show vers ShowDTO
+         * Transformation sécurisée de l'entité Show vers ShowDTO.
+         * Translates title and description to the request locale when translation is available.
          */
         private ShowDTO safeConvertToDto(Show show) {
+                String targetLang = LocaleContextHolder.getLocale().getLanguage();
+                String sourceLang = "fr";
+                String title = translateIfNeeded(show.getTitle(), sourceLang, targetLang);
+                String description = translateIfNeeded(show.getDescription(), sourceLang, targetLang);
+
                 return ShowDTO.builder()
                                 .id(show.getId())
                                 .slug(show.getSlug())
-                                .title(show.getTitle())
-                                .description(show.getDescription())
+                                .title(title)
+                                .description(description)
                                 .posterUrl(show.getPosterUrl())
                                 .bookable(show.isBookable())
                                 .status(show.getStatus())
@@ -315,7 +324,7 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                 .reviewCount(show.getReviewCount())
 
                                 .representations(show.getRepresentations() != null ? show.getRepresentations().stream()
-                                                .map(rep -> convertRepToDto(rep, show.getTitle()))
+                                                .map(rep -> convertRepToDto(rep, title))
                                                 .toList() : new ArrayList<>())
 
                                   .reviews(show.getReviews() != null 
@@ -384,9 +393,13 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                 .build();
         }
 
-
-        
-
-
-       
+        private String translateIfNeeded(String text, String sourceLang, String targetLang) {
+                if (text == null || text.isBlank()) {
+                        return text;
+                }
+                if (sourceLang.equalsIgnoreCase(targetLang)) {
+                        return text;
+                }
+                return translationService.translate(text, sourceLang, targetLang).orElse(text);
+        }
 }
