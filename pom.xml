@@ -122,6 +122,13 @@
             <version>24.0.0</version>
         </dependency>
 
+        <! -- OpenCSV pour l'import/export CSV -->
+        <dependency>
+            <groupId>com.opencsv</groupId>  
+            <artifactId>opencsv</artifactId>    
+            <version>5.9</version>
+        </dependency>   
+
          <!-- Ajout de la dépendance Rome pour gérer le Flux RSS -->
         <dependency>
             <groupId>com.rometools</groupId>
