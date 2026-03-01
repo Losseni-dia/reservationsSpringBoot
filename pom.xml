@@ -122,7 +122,7 @@
             <version>24.0.0</version>
         </dependency>
 
-        <! -- OpenCSV pour l'import/export CSV -->
+        <!-- OpenCSV pour l'import/export CSV -->
         <dependency>
             <groupId>com.opencsv</groupId>  
             <artifactId>opencsv</artifactId>    
