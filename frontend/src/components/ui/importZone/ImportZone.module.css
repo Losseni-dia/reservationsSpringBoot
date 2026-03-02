@@ -1,0 +1,78 @@
+.wrapper { display: flex; flex-direction: column; gap: 1rem; }
+
+.dropZone {
+  border: 2px dashed #444;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: rgba(255,255,255,0.03);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropZone:hover, .dropZone.dragging {
+  border-color: #f5a623;
+  background: rgba(245,166,35,0.08);
+}
+
+.dropZone.loading { cursor: not-allowed; opacity: 0.7; }
+.hiddenInput { display: none; }
+
+.idleContent, .loadingContent {
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+}
+
+.uploadIcon { font-size: 2rem; }
+.dropText { font-size: 0.95rem; color: #c0c0c0; margin: 0; }
+.orText { font-size: 0.8rem; color: #666; margin: 0; }
+
+.spinner {
+  display: inline-block;
+  width: 24px; height: 24px;
+  border: 3px solid rgba(245,166,35,0.3);
+  border-top-color: #f5a623;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.errorBanner {
+  padding: 0.75rem 1rem;
+  background: rgba(220,53,69,0.15);
+  border: 1px solid rgba(220,53,69,0.4);
+  border-radius: 6px;
+  color: #ff6b6b;
+}
+
+.report {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.reportHeader { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.75rem; }
+.successCount { color: #4caf50; font-weight: 600; }
+.skippedCount { color: #ff9800; font-weight: 600; }
+.errorCount   { color: #f44336; font-weight: 600; }
+
+.errorDetails summary { cursor: pointer; font-size: 0.85rem; color: #aaa; }
+.errorDetails summary:hover { color: #f5a623; }
+
+.errorList {
+  list-style: none; padding: 0.5rem 0 0; margin: 0;
+  display: flex; flex-direction: column; gap: 0.25rem;
+  max-height: 200px; overflow-y: auto;
+}
+
+.errorList li {
+  font-size: 0.8rem; color: #ff6b6b;
+  padding: 0.2rem 0.4rem;
+  background: rgba(220,53,69,0.08);
+  border-radius: 4px;
+}
