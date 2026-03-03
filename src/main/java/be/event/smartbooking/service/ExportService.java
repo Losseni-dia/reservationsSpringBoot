@@ -71,7 +71,7 @@ public class ExportService {
                             s.getDescription(),
                             s.getStatus() != null ? s.getStatus().name() : "",
                             String.valueOf(s.isBookable()),
-                            s.getLocation() != null ? s.getLocation().toString() : "",
+                            s.getLocation() != null ? s.getLocation().getDesignation() : "",
                             s.getCreatedAt() != null ? s.getCreatedAt().toString() : ""
                     });
             }
