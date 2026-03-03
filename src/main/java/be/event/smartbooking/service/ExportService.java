@@ -1,6 +1,7 @@
 package be.event.smartbooking.service;
 
 import be.event.smartbooking.model.Reservation;
+import be.event.smartbooking.model.Role;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.repository.ReservationRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -118,6 +120,10 @@ public class ExportService {
         return mapper;
     }
 
+    /**
+     * @return
+     * @throws IOException
+     */
     public String exportUsersJson() throws IOException {
         List<User> users = StreamSupport
                 .stream(userRepos.findAll().spliterator(), false)
@@ -131,7 +137,10 @@ public class ExportService {
             put("langue", u.getLangue());
             put("isActive", u.isActive());
             put("createdAt", u.getCreatedAt() != null ? u.getCreatedAt().toString() : null);
-            put("roles", u.getRoles().stream().map(r -> r.getRole()).collect(Collectors.toList()));
+            java.util.List<be.event.smartbooking.model.Role> roles = 
+        u.getRoles() != null ? u.getRoles() : java.util.Collections.emptyList();
+            put("roles", roles.stream().map(r -> r.getRole()).collect(Collectors.toList()));
+
         }}).collect(Collectors.toList());
         return buildObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(projections);
     }

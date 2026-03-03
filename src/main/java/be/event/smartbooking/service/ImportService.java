@@ -2,7 +2,7 @@ package be.event.smartbooking.service;
 
 import be.event.smartbooking.dto.importexport.ShowImportDto;
 import be.event.smartbooking.dto.importexport.UserImportDto;
-// removed unresolved import; using nested ImportResult below
+import be.event.smartbooking.dto.importexport.ImportResult;
 import be.event.smartbooking.errorHandler.BusinessException;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.model.User;
