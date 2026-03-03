@@ -6,9 +6,11 @@ import be.event.smartbooking.dto.importexport.UserImportDto;
 import be.event.smartbooking.errorHandler.BusinessException;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.model.User;
+import be.event.smartbooking.model.Location;
 import be.event.smartbooking.model.enumeration.ShowStatus;
 import be.event.smartbooking.repository.ShowRepos;
 import be.event.smartbooking.repository.UserRepos;
+import be.event.smartbooking.repository.LocationRepos;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
@@ -34,6 +36,7 @@ public class ImportService {
 
     private final UserRepos userRepos;
     private final ShowRepos showRepos;
+    private final LocationRepos locationRepos;
     private final PasswordEncoder passwordEncoder;
     private final Validator validator;
 
@@ -186,9 +189,6 @@ public class ImportService {
     }
 
     // ===================================================================
-    // HELPERS
-    // ===================================================================
-
     private Show buildShowFromDto(ShowImportDto dto) {
         ShowStatus status;
         try {
@@ -196,9 +196,20 @@ public class ImportService {
                     ? ShowStatus.valueOf(dto.getStatus().toUpperCase()) : ShowStatus.A_CONFIRMER;
         } catch (IllegalArgumentException e) { status = ShowStatus.A_CONFIRMER; }
         boolean bookable = dto.getBookable() == null || !"false".equalsIgnoreCase(dto.getBookable());
-        return Show.builder().title(dto.getTitle()).description(dto.getDescription())
-                .status(status).bookable(bookable).build();
+       
+        Location location = null;
+    if (dto.getLocationName() != null && !dto.getLocationName().isBlank()) {
+        location = locationRepos.findByDesignation(dto.getLocationName());
     }
+    
+    return Show.builder()
+            .title(dto.getTitle())
+            .description(dto.getDescription())
+            .status(status)
+            .bookable(bookable)
+            .location(location)
+            .build();
+}
 
     private Map<String, Integer> buildColumnIndex(String[] headers) {
         Map<String, Integer> map = new HashMap<>();
@@ -255,5 +266,6 @@ public class ImportService {
             public Builder errors(List<String> errors) { instance.errors = errors; return this; }
             public ImportResult build() { return instance; }
         }
-    }
+    
+}
 }
