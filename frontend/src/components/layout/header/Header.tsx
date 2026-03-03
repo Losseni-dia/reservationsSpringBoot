@@ -8,10 +8,10 @@ import styles from './Header.module.css';
 const Header: React.FC = () => {
     const { t } = useTranslation();
     const { user, logout } = useAuth();
-    const [isAffiliateOpen, setIsAffiliateOpen] = useState(false);
+    const [isProducerOpen, setIsProducerOpen] = useState(false);
     const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-    const affiliateTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const producerTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const adminTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const handleEnter = (setter: (v: boolean) => void, timer: React.MutableRefObject<any>) => {
@@ -36,24 +36,23 @@ const Header: React.FC = () => {
                     </NavLink>
 
                     {/* ESPACE PRODUCTEUR */}
-                    {user && (user.role === 'producer' || user.role === 'admin') && (
-                        <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsAffiliateOpen, affiliateTimeout)} onMouseLeave={() => handleLeave(setIsAffiliateOpen, affiliateTimeout)}>
+                    {user && user.role === 'producer' && (
+                        <div className={styles.dropdown} onMouseEnter={() => handleEnter(setIsProducerOpen, producerTimeout)} onMouseLeave={() => handleLeave(setIsProducerOpen, producerTimeout)}>
                                 <button
                                 type="button"
                                 className={`${styles.dropdownBtn} ${styles.producerBtn}`}
                                 aria-haspopup="menu"
-                                aria-expanded={isAffiliateOpen}
-                                onClick={() => setIsAffiliateOpen(v => !v)}
+                                aria-expanded={isProducerOpen}
+                                onClick={() => setIsProducerOpen(v => !v)}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter') setIsAffiliateOpen(v => !v);
-                                if (e.key === 'Escape') setIsAffiliateOpen(false); }}
+                                    if (e.key === 'Enter') setIsProducerOpen(v => !v);
+                                if (e.key === 'Escape') setIsProducerOpen(false); }}
                                 >
                                 {t('layout.header.producerSpace')} ▼
                                 </button>
-                                                            {isAffiliateOpen && (
+                                {isProducerOpen && (
                                 <div className={styles.dropdownMenu}>
                                     <NavLink to="/producer/dashboard" className={styles.dropdownItem}>📊 {t('layout.header.dashboard')}</NavLink>
-                                   
                                 </div>
                             )}
                         </div>
