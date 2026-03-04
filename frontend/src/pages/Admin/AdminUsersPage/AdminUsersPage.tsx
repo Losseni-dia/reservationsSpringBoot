@@ -89,7 +89,7 @@ const AdminUsersPage: React.FC = () => {
                                     <td>{user.email}</td>
                                     <td>
                                         <span className={`${styles.roleBadge} ${getRoleClass(user.role)}`}>
-                                            {user.role.replace('ROLE_', '')}
+                                            {user.role?.replace('ROLE_', '') || 'MEMBRE'} 
                                         </span>
                                     </td>
                                     <td>

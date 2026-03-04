@@ -58,6 +58,7 @@ export interface UserRegistrationDto {
 }
 
 export interface UserProfileDto {
+    isActive: boolean;
     id: number;
     firstname: string;
     lastname: string;
