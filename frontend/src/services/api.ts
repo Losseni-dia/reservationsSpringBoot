@@ -324,4 +324,40 @@ export const locationApi = {
       method: "DELETE",
     });
   },
+
+   adminApi: {
+  exportData: async (type: string, format: "csv" | "json" = "csv"): Promise<void> => {
+    const res = await secureFetch(`${API_BASE}/admin/export/${type}?format=${format}`);
+    const blob = await res.blob();
+    const extension = format === "json" ? ".json" : ".csv";
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${type}_export_${new Date().toISOString().split("T")[0]}${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  },
+
+  importData: async (
+    type: string,
+    format: "csv" | "json",
+    file: File
+  ): Promise<{ imported: number; skipped: number; errors: string[] }> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const headers = new Headers();
+    const csrfToken = `; ${document.cookie}`.split(`; XSRF-TOKEN=`).pop()?.split(";").shift();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+    const res = await fetch(`${API_BASE}/admin/import/${type}?format=${format}`, {
+      method: "POST", headers, body: formData, credentials: "include", cache: "no-cache",
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || `Erreur ${res.status}`);
+    }
+    return res.json();
+  },
+},
 };
