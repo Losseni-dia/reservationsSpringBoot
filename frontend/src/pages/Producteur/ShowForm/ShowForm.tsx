@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { locationApi, artistTypeApi } from "../../../services/api";
 import styles from "./ShowForm.module.css";
 
@@ -10,6 +11,8 @@ interface Props {
 }
 
 const ShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isSubmitting }) => {
+    const { t } = useTranslation();
+
     // 1. État principal
     const [show, setShow] = useState({
         title: "",
@@ -87,11 +90,11 @@ const ShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isSubm
 
     return (
         <form className={styles["add-show-form"]} onSubmit={handleSubmit}>
-            <h2>{mode === "edit" ? "Modifier le spectacle" : "Nouveau Spectacle"}</h2>
-            <p className={styles["form-info"]}>Remplissez les informations ci-dessous pour mettre à jour la programmation.</p>
+            <h2>{mode === "edit" ? t("producer.showForm.titleEdit") : t("producer.showForm.titleAdd")}</h2>
+            <p className={styles["form-info"]}>{t("producer.showForm.formInfo")}</p>
 
             <div className={styles["form-group"]}>
-                <label>Titre du spectacle</label>
+                <label>{t("producer.showForm.labelTitle")}</label>
                 <input 
                     type="text" 
                     value={show.title} 
@@ -101,7 +104,7 @@ const ShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isSubm
             </div>
 
             <div className={styles["form-group"]}>
-                <label>Description</label>
+                <label>{t("producer.showForm.labelDescription")}</label>
                 <textarea 
                     value={show.description} 
                     onChange={e => setShow({...show, description: e.target.value})} 
@@ -110,19 +113,19 @@ const ShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isSubm
             </div>
 
             <div className={styles["form-group"]}>
-                <label>Lieu de représentation</label>
+                <label>{t("producer.showForm.labelLocation")}</label>
                 <select 
                     value={show.locationId} 
                     onChange={e => setShow({...show, locationId: e.target.value === "" ? "" : Number(e.target.value)})}
                     required
                 >
-                    <option value="">-- Sélectionner un lieu --</option>
+                    <option value="">{t("producer.showForm.selectLocation")}</option>
                     {locations.map(l => <option key={l.id} value={l.id}>{l.designation}</option>)}
                 </select>
             </div>
 
             <div className={styles["form-group"]}>
-                <label>Casting & Équipe</label>
+                <label>{t("producer.showForm.labelCasting")}</label>
                 <div className={styles.artistGrid}>
                     {availableArtists.map(a => (
                         <label key={a.id} className={styles.checkboxItem}>
@@ -138,14 +141,14 @@ const ShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isSubm
             </div>
 
             <div className={styles["form-group"]}>
-                <label>Affiche (Poster)</label>
+                <label>{t("producer.showForm.labelPoster")}</label>
                 <input type="file" accept="image/*" onChange={handleFileChange} />
             </div>
 
             {posterPreview && (
                 <div className={styles["poster-preview"]}>
                     <div style={{ position: 'relative', display: 'inline-block' }}>
-                        <img src={posterPreview} alt="Aperçu" />
+                        <img src={posterPreview} alt={t("producer.showForm.posterAlt")} />
                         <button 
                             type="button" 
                             onClick={handleRemoveCurrentPoster}
@@ -162,7 +165,7 @@ const ShowForm: React.FC<Props> = ({ mode = "add", initialData, onSubmit, isSubm
             )}
 
             <button type="submit" className={styles["submit-btn"]} disabled={isSubmitting}>
-                {isSubmitting ? "Traitement..." : mode === "edit" ? "Mettre à jour" : "Créer le spectacle"}
+                {isSubmitting ? t("producer.showForm.submitting") : mode === "edit" ? t("producer.showForm.submitUpdate") : t("producer.showForm.submitCreate")}
             </button>
         </form>
     );

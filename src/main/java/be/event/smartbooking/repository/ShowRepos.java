@@ -15,6 +15,7 @@ public interface ShowRepos extends JpaRepository<Show, Long> {
     Show findBySlug(String slug);
 
     Show findByTitle(String title);
+    boolean existsByTitle(String title);
 
     List<Show> findByLocation(Location location);
 

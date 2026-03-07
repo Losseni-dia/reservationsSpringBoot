@@ -8,6 +8,7 @@ import {
   UserProfileDto,
   UserRegistrationDto,
 } from "../types/models";
+import i18n from "../i18n";
 
 const API_BASE = "/api";
 export const IMAGE_STORAGE_BASE = "";
@@ -23,7 +24,8 @@ async function secureFetch(url: string, options: RequestInit = {}) {
   const method = options.method?.toUpperCase() || "GET";
   const headers = new Headers(options.headers);
 
-  headers.set("Accept", "application/json"); // Utilisation de .set (conseil CodeRabbit)
+  headers.set("Accept", "application/json");
+  headers.set("Accept-Language", i18n.language || "fr");
 
   if (["POST", "PUT", "DELETE"].includes(method)) {
     const token = getCsrfToken();
@@ -61,6 +63,7 @@ export const authApi = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
+        "Accept-Language": i18n.language || "fr",
       },
       body: params,
       credentials: "include",
@@ -159,6 +162,10 @@ export const showApi = {
     const res = await secureFetch(`${API_BASE}/shows`);
     return res.json();
   },
+  getAllForAdmin: async (): Promise<Show[]> => {
+    const res = await secureFetch(`${API_BASE}/shows/admin`);
+    return res.json();
+  },
   getById: async (id: number): Promise<Show> => {
     const res = await secureFetch(`${API_BASE}/shows/${id}`);
     return res.json();
@@ -183,6 +190,18 @@ export const showApi = {
   },
   deleteById: async (id: number): Promise<void> => {
     await secureFetch(`${API_BASE}/shows/${id}`, { method: "DELETE" });
+  },
+  confirm: async (id: number): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
+      method: "PUT",
+    });
+    return res.json();
+  },
+  revoke: async (id: number): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
+      method: "PUT",
+    });
+    return res.json();
   },
 };
 
@@ -223,6 +242,19 @@ export const reviewApi = {
     return res.json();
   },
 
+  getPending: async (): Promise<Review[]> => {
+    const res = await secureFetch(`${API_BASE}/reviews/pending`);
+    return res.json();
+  },
+
+  validate: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}/validate`, { method: "PUT" });
+  },
+
+  delete: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}`, { method: "DELETE" });
+  },
+
   create: async (
     showId: number,
     comment: string,
@@ -240,10 +272,24 @@ export const reviewApi = {
     const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
     return res.json();
   },
-}; // ✅ bien fermé ici
+};
 
+export const translateApi = {
+  translate: async (text: string, targetLang: string, sourceLang?: string): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text,
+        targetLang,
+        sourceLang: sourceLang || "fr",
+      }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
+  },
+};
 
-// ✅ Nouveau bloc séparé
 export const locationApi = {
   getAll: async (): Promise<Location[]> => {
     const res = await secureFetch(`${API_BASE}/locations`);
@@ -278,4 +324,40 @@ export const locationApi = {
       method: "DELETE",
     });
   },
+
+   adminApi: {
+  exportData: async (type: string, format: "csv" | "json" = "csv"): Promise<void> => {
+    const res = await secureFetch(`${API_BASE}/admin/export/${type}?format=${format}`);
+    const blob = await res.blob();
+    const extension = format === "json" ? ".json" : ".csv";
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${type}_export_${new Date().toISOString().split("T")[0]}${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  },
+
+  importData: async (
+    type: string,
+    format: "csv" | "json",
+    file: File
+  ): Promise<{ imported: number; skipped: number; errors: string[] }> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const headers = new Headers();
+    const csrfToken = `; ${document.cookie}`.split(`; XSRF-TOKEN=`).pop()?.split(";").shift();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+    const res = await fetch(`${API_BASE}/admin/import/${type}?format=${format}`, {
+      method: "POST", headers, body: formData, credentials: "include", cache: "no-cache",
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || `Erreur ${res.status}`);
+    }
+    return res.json();
+  },
+},
 };

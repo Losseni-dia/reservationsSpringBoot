@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authApi } from '../../services/api';
-import styles from './LoginPage.module.css'; // On réutilise le style du login pour la cohérence
+import styles from './LoginPage.module.css';
 
 const ForgotPasswordPage: React.FC = () => {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -17,13 +19,13 @@ const ForgotPasswordPage: React.FC = () => {
             await authApi.forgotPassword(email);
             setMessage({
                 type: 'success',
-                text: 'Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.'
+                text: t('auth.forgotPassword.success')
             });
             setEmail(''); // Vider le champ
         } catch (err: any) {
             setMessage({
                 type: 'error',
-                text: err.message || "Une erreur est survenue. Veuillez réessayer."
+                text: err.message || t('auth.forgotPassword.errorGeneric')
             });
         } finally {
             setIsLoading(false);
@@ -39,9 +41,9 @@ const ForgotPasswordPage: React.FC = () => {
             </div>
 
             <div className={styles.loginCard}>
-                <h2 className={styles.cardTitle}>Mot de passe oublié</h2>
+                <h2 className={styles.cardTitle}>{t('auth.forgotPassword.title')}</h2>
                 <p style={{ color: '#aaa', textAlign: 'center', marginBottom: '20px', fontSize: '0.9rem' }}>
-                    Entrez votre adresse email pour recevoir un lien de réinitialisation.
+                    {t('auth.forgotPassword.description')}
                 </p>
 
                 {message && (
@@ -52,24 +54,24 @@ const ForgotPasswordPage: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.fieldGroup}>
-                        <label className={styles.label}>Email</label>
+                        <label className={styles.label}>{t('auth.email')}</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className={styles.input}
-                            placeholder="exemple@email.com"
+                            placeholder={t('auth.placeholderEmail')}
                             required
                         />
                     </div>
 
                     <button type="submit" disabled={isLoading} className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ''}`}>
-                        {isLoading ? 'Envoi...' : 'Envoyer le lien'}
+                        {isLoading ? t('auth.forgotPassword.submitLoading') : t('auth.forgotPassword.submit')}
                     </button>
                 </form>
 
                 <div className={styles.footerText} style={{ marginTop: '20px' }}>
-                    <Link to="/login" className={styles.signupLink}>Retour à la connexion</Link>
+                    <Link to="/login" className={styles.signupLink}>{t('auth.backToLogin')}</Link>
                 </div>
             </div>
         </div>

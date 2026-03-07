@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +13,7 @@ import {
 import { Bar } from "react-chartjs-2";
 
 import { showApi, IMAGE_STORAGE_BASE } from "../../../services/api";
+import { formatDate, formatCurrency } from "../../../utils/format";
 import { Show, Reservation } from "../../../types/models";
 import Loader from "../../../components/ui/loader/Loader";
 import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
@@ -48,6 +50,7 @@ const StatCard: React.FC<StatCardProps> = ({ label, value }) => (
 );
 
 const ProducerDashboard: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -72,38 +75,32 @@ const ProducerDashboard: React.FC = () => {
         setError(null);
       } catch (err: any) {
         console.error("Erreur chargement dashboard:", err);
-        setError(
-          "Impossible de charger les données. Veuillez réessayer plus tard.",
-        );
+        setError(t("producer.dashboard.errorLoad"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [t]);
 
   const calculateStats = (showsData: Show[], showStatsData: ShowStats[]) => {
     const totalShows = showsData.length;
-
-    // Calculate total revenue and tickets sold based on simulated stats
     const ticketsSoldThisMonth = showStatsData.reduce(
       (sum, stat) => sum + stat.ticketsSold,
       0,
     );
-    // Simulate revenue: assume an average ticket price of $35.5
     const totalRevenue = ticketsSoldThisMonth * 35.5;
-
     const upcomingEvents = showsData.filter((show) => show.bookable).length;
 
     setStats([
-      { label: "Spectacles au total", value: totalShows },
+      { label: t("producer.dashboard.statTotalShows"), value: totalShows },
       {
-        label: "Revenu Total (Démo)",
-        value: `$${totalRevenue.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        label: t("producer.dashboard.statTotalRevenue"),
+        value: formatCurrency(totalRevenue, i18n.language),
       },
-      { label: "Billets Vendus (Démo)", value: ticketsSoldThisMonth },
-      { label: "Événements à Venir", value: upcomingEvents },
+      { label: t("producer.dashboard.statTicketsSold"), value: ticketsSoldThisMonth },
+      { label: t("producer.dashboard.statUpcomingEvents"), value: upcomingEvents },
     ]);
   };
 
@@ -128,9 +125,6 @@ const ProducerDashboard: React.FC = () => {
     setShowsStats(result);
     return result;
   };
-
-  const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString("fr-FR");
 
   const handleDeleteShow = (show: Show) => {
     setShowToDelete(show);
@@ -170,9 +164,7 @@ const ProducerDashboard: React.FC = () => {
       await showApi.deleteById(showToDelete.id);
 
       // Succès : afficher toast
-      setToastMessage(
-        `Le spectacle "${deletedShowTitle}" a été supprimé avec succès.`,
-      );
+      setToastMessage(t("producer.dashboard.toastDeleteSuccess", { title: deletedShowTitle }));
     } catch (err: any) {
       // Erreur : rollback de l'état
       setShows(previousShows);
@@ -180,9 +172,8 @@ const ProducerDashboard: React.FC = () => {
       calculateStats(previousShows, previousShowsStats);
 
       // Déterminer le type d'erreur et afficher message approprié
-      let errorMessage = "Une erreur est survenue lors de la suppression.";
+      let errorMessage = t("producer.dashboard.errorDeleteGeneric");
 
-      // Vérifier si c'est une erreur de contrainte (spectacle avec réservations)
       const errorText = err.message?.toLowerCase() || "";
       if (
         errorText.includes("reservation") ||
@@ -192,10 +183,9 @@ const ProducerDashboard: React.FC = () => {
         errorText.includes("référencé") ||
         errorText.includes("référence")
       ) {
-        errorMessage = `Impossible de supprimer "${deletedShowTitle}" : ce spectacle possède des réservations actives. Veuillez annuler toutes les réservations avant de supprimer le spectacle.`;
+        errorMessage = t("producer.dashboard.errorDeleteReservations", { title: deletedShowTitle });
       } else if (errorText.includes("network") || errorText.includes("fetch")) {
-        errorMessage =
-          "Erreur de connexion. Vérifiez votre connexion internet et réessayez.";
+        errorMessage = t("producer.dashboard.errorNetwork");
       } else if (err.message) {
         errorMessage = err.message;
       }
@@ -211,7 +201,7 @@ const ProducerDashboard: React.FC = () => {
     labels: showsStats.map((s) => s.showTitle),
     datasets: [
       {
-        label: "Billets Vendus",
+        label: t("producer.dashboard.chartLabel"),
         data: showsStats.map((s) => s.ticketsSold),
         backgroundColor: "rgba(0, 172, 193, 0.6)",
         borderColor: "rgba(0, 172, 193, 1)",
@@ -231,7 +221,7 @@ const ProducerDashboard: React.FC = () => {
       },
       title: {
         display: true,
-        text: "Performance des Spectacles (Billets Vendus)",
+        text: t("producer.dashboard.chartTitle"),
         color: "#e0e0e0",
         font: {
           size: 18,
@@ -267,12 +257,12 @@ const ProducerDashboard: React.FC = () => {
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
-        <h1 className={styles.dashboardTitle}>Tableau de bord du Producteur</h1>
+        <h1 className={styles.dashboardTitle}>{t("producer.dashboard.title")}</h1>
         <button
           onClick={() => navigate("/producer/shows/add")}
           className={styles.addShowButton}
         >
-          + Ajouter un spectacle
+          {t("producer.dashboard.addShow")}
         </button>
       </header>
 
@@ -296,11 +286,11 @@ const ProducerDashboard: React.FC = () => {
         <table className={styles.showsTable}>
           <thead>
             <tr>
-              <th>Image</th>
-              <th>Titre</th>
-              <th>Date de Création</th>
-              <th>Billets Vendus (Démo)</th>
-              <th className={styles.actionsHeader}>Actions</th>
+              <th>{t("producer.dashboard.colImage")}</th>
+              <th>{t("producer.dashboard.colTitle")}</th>
+              <th>{t("producer.dashboard.colCreatedAt")}</th>
+              <th>{t("producer.dashboard.colTicketsSold")}</th>
+              <th className={styles.actionsHeader}>{t("producer.dashboard.colActions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -317,7 +307,7 @@ const ProducerDashboard: React.FC = () => {
                       />
                     </td>
                     <td>{show.title}</td>
-                    <td>{formatDate(show.createdAt)}</td>
+                    <td>{formatDate(show.createdAt, i18n.language)}</td>
                     <td>{showStat?.ticketsSold || 0}</td>
                     <td>
                       <div className={styles.actionsContainer}>
@@ -326,9 +316,9 @@ const ProducerDashboard: React.FC = () => {
                         <button
                           onClick={() => navigate(`/admin/shows/${show.id}/schedule`)}
                           className={`${styles.actionButton} ${styles.scheduleButton}`}
-                          title="Gérer le calendrier et les prix"
+                          title={t("producer.dashboard.scheduleButtonTitle")}
                         >
-                          📅 Séances
+                          {t("producer.dashboard.scheduleButton")}
                         </button>
 
 
@@ -338,7 +328,7 @@ const ProducerDashboard: React.FC = () => {
                           }
                           className={`${styles.actionButton} ${styles.editButton}`}
                         >
-                          Modifier
+                          {t("producer.dashboard.edit")}
                         </button>
 
 
@@ -346,7 +336,7 @@ const ProducerDashboard: React.FC = () => {
                           onClick={() => navigate(`/show/${show.id}`)}
                           className={`${styles.actionButton} ${styles.viewButton}`}
                         >
-                          Voir
+                          {t("producer.dashboard.view")}
                         </button>
 
 
@@ -366,7 +356,7 @@ const ProducerDashboard: React.FC = () => {
             ) : (
               <tr>
                 <td colSpan={5} className={styles.noShows}>
-                  Aucun spectacle à afficher.
+                  {t("producer.dashboard.empty")}
                 </td>
               </tr>
             )}
@@ -376,12 +366,12 @@ const ProducerDashboard: React.FC = () => {
 
       <ConfirmModal
         isOpen={isDeleteModalOpen}
-        title="Confirmer la suppression"
-        message={`Êtes-vous sûr de vouloir supprimer le spectacle "${showToDelete?.title}" ? Cette action est irréversible.`}
+        title={t("producer.dashboard.modalTitle")}
+        message={t("producer.dashboard.modalMessage", { title: showToDelete?.title })}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-        confirmText="Supprimer"
-        cancelText="Annuler"
+        confirmText={t("producer.dashboard.confirmText")}
+        cancelText={t("producer.dashboard.cancelText")}
       />
 
       {toastMessage && (

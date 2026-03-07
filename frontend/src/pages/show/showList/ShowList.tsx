@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { showApi } from '../../../services/api';
 import { Show } from '../../../types/models';
 import ShowCard from '../../../components/showcard/ShowCard';
@@ -6,6 +7,7 @@ import Loader from '../../../components/ui/loader/Loader';
 import styles from './ShowList.module.css';
 
 const ShowListPage: React.FC = () => {
+    const { t } = useTranslation();
     const [shows, setShows] = useState<Show[]>([]);
     const [filteredShows, setFilteredShows] = useState<Show[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -38,13 +40,13 @@ const ShowListPage: React.FC = () => {
         <div className={styles.pageWrapper}>
             <div className="container">
                 <div className="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
-                    <h1 className={styles.sectionTitle}>Programmation</h1>
+                    <h1 className={styles.sectionTitle}>{t('home.programming')}</h1>
                     
                     {/* BARRE DE RECHERCHE */}
                     <div className={styles.searchContainer}>
                         <input 
                             type="text" 
-                            placeholder="Rechercher un spectacle ou un lieu..." 
+                            placeholder={t('home.searchPlaceholder')} 
                             className={styles.searchInput}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -55,7 +57,7 @@ const ShowListPage: React.FC = () => {
 
                 {filteredShows.length === 0 ? (
                     <div className="text-center mt-5">
-                        <p className="text-white opacity-50">Aucun résultat pour "{searchTerm}"</p>
+                        <p className="text-white opacity-50">{t('home.noResults', { term: searchTerm })}</p>
                     </div>
                 ) : (
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 g-4">

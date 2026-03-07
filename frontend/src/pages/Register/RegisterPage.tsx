@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authApi } from '../../services/api';
 import { useAuth } from '../../components/context/AuthContext';
 import { UserRegistrationDto } from '../../types/models';
 import styles from './RegisterPage.module.css';
 
 const RegisterPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<UserRegistrationDto>({
     login: '',
@@ -32,7 +34,7 @@ const RegisterPage: React.FC = () => {
     setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Les mots de passe ne correspondent pas.");
+      setError(t('auth.register.errorPasswordMismatch'));
       return;
     }
 
@@ -51,11 +53,10 @@ const RegisterPage: React.FC = () => {
     } catch (err: any) {
       console.error("Erreur d'inscription:", err);
       
-      let errorMessage = "Une erreur est survenue lors de l'inscription.";
+      let errorMessage = t('auth.register.errorGeneric');
 
-      // Gestion spécifique de l'erreur 401 (UNAUTHORIZED) renvoyée par secureFetch
       if (err === "UNAUTHORIZED") {
-        errorMessage = "Erreur 401 : L'inscription est bloquée par le serveur. Vérifiez la configuration Spring Security (permitAll).";
+        errorMessage = t('auth.register.errorGeneric');
       } else if (typeof err === 'string') {
         errorMessage = err;
       } else if (err && err.message) {
@@ -86,100 +87,100 @@ const RegisterPage: React.FC = () => {
       </div>
 
       <div className={styles.registerCard}>
-        <h2 className={styles.cardTitle}>Créer un compte</h2>
+        <h2 className={styles.cardTitle}>{t('auth.register.title')}</h2>
         
         {error && <div className={styles.errorMessage}>{error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>Prénom</label>
+              <label className={styles.label}>{t('auth.firstname')}</label>
               <input
                 name="firstname"
                 type="text"
                 value={formData.firstname}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="Votre prénom"
+                placeholder={t('auth.placeholderFirstname')}
                 required
               />
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>Nom</label>
+              <label className={styles.label}>{t('auth.lastname')}</label>
               <input
                 name="lastname"
                 type="text"
                 value={formData.lastname}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="Votre nom"
+                placeholder={t('auth.placeholderLastname')}
                 required
               />
             </div>
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Identifiant (Login)</label>
+            <label className={styles.label}>{t('auth.loginId')}</label>
             <input
               name="login"
               type="text"
               value={formData.login}
               onChange={handleChange}
               className={styles.input}
-              placeholder="Choisissez un identifiant"
+              placeholder={t('auth.placeholderChooseLogin')}
               required
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Email</label>
+            <label className={styles.label}>{t('auth.email')}</label>
             <input
               name="email"
               type="email"
               value={formData.email}
               onChange={handleChange}
               className={styles.input}
-              placeholder="exemple@email.com"
+              placeholder={t('auth.placeholderEmail')}
               required
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Langue</label>
+            <label className={styles.label}>{t('auth.language')}</label>
             <select
               name="langue"
               value={formData.langue}
               onChange={handleChange}
               className={styles.input}
             >
-              <option value="fr">Français</option>
-              <option value="en">English</option>
-              <option value="nl">Nederlands</option>
+              <option value="fr">{t('auth.langFr')}</option>
+              <option value="en">{t('auth.langEn')}</option>
+              <option value="nl">{t('auth.langNl')}</option>
             </select>
           </div>
 
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>Mot de passe</label>
-              <input name="password" type="password" value={formData.password} onChange={handleChange} className={styles.input} placeholder="••••••••" required />
+              <label className={styles.label}>{t('auth.password')}</label>
+              <input name="password" type="password" value={formData.password} onChange={handleChange} className={styles.input} placeholder={t('auth.placeholderPassword')} required />
               <small style={{ color: '#888', fontSize: '0.75rem', marginTop: '4px' }}>
-                8 car. min, 1 maj, 1 min, 1 chiffre, 1 spécial (@$!%*?&)
+                {t('auth.passwordRules')}
               </small>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>Confirmer</label>
-              <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} className={styles.input} placeholder="••••••••" required />
+              <label className={styles.label}>{t('auth.confirm')}</label>
+              <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} className={styles.input} placeholder={t('auth.placeholderPassword')} required />
             </div>
           </div>
 
           <button type="submit" disabled={isLoading} className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ''}`}>
-            {isLoading ? 'Création...' : "S'inscrire"}
+            {isLoading ? t('auth.register.submitLoading') : t('auth.register.submit')}
           </button>
         </form>
 
         <p className={styles.footerText}>
-          Déjà un compte ?
-          <Link to="/login" className={styles.loginLink}>Se connecter</Link>
+          {t('auth.register.hasAccount')}{' '}
+          <Link to="/login" className={styles.loginLink}>{t('auth.register.signIn')}</Link>
         </p>
       </div>
     </div>

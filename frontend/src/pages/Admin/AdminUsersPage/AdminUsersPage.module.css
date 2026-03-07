@@ -128,3 +128,23 @@
     padding: 3rem !important;
     color: #666;
 }
+
+.dataActions {
+  display: flex; flex-wrap: wrap; align-items: flex-start;
+  gap: 1rem; margin-top: 1rem;
+}
+
+.importDetails {
+  border: 1px solid #333; border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.03);
+  min-width: 280px;
+}
+
+.importDetails summary {
+  cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  color: #f5a623; user-select: none; list-style: none;
+}
+
+.importDetails summary::-webkit-details-marker { display: none; }
+.importDetails[open] summary { margin-bottom: 0.75rem; }

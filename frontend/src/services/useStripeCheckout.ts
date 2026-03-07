@@ -1,4 +1,5 @@
 import { useState } from "react";
+import i18n from "../i18n";
 
 export const useStripeCheckout = () => {
   const [loading, setLoading] = useState(false);
@@ -16,7 +17,8 @@ export const useStripeCheckout = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // À adapter selon ta sécurité
+          "Accept-Language": i18n.language || "fr",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(items),
       });

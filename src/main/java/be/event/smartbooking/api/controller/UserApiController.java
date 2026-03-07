@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -44,6 +45,9 @@ public class UserApiController {
             return ResponseEntity.badRequest().body("Login ou Email déjà utilisé");
         }
         userService.registerFromDto(registrationDto);
+        User user = userService.findByLogin(registrationDto.getLogin());
+        Locale locale = toLocale(registrationDto.getLangue());
+        emailService.sendRegistrationConfirmationMail(user, locale);
         return ResponseEntity.ok("Utilisateur enregistré avec succès");
     }
 
@@ -114,7 +118,8 @@ public class UserApiController {
         User user = userService.findByEmail(email);
         if (user != null) {
             PasswordResetToken token = tokenService.createTokenForUser(user);
-            emailService.sendPasswordResetMail(user.getEmail(), token.getToken());
+            Locale locale = toLocale(user.getLangue());
+            emailService.sendPasswordResetMail(user.getEmail(), token.getToken(), locale);
         }
         return ResponseEntity.ok("Si un compte existe avec cet email, un lien a été envoyé.");
     }
@@ -318,4 +323,8 @@ public ResponseEntity<String> permanentlyDeleteUser(@PathVariable Long id) {
                 .body("Erreur lors de la suppression : " + e.getMessage());
     }
 }
+
+    private Locale toLocale(String langue) {
+        return (langue != null && !langue.isBlank()) ? Locale.forLanguageTag(langue) : Locale.FRENCH;
+    }
 }
