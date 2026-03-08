@@ -1,33 +1,26 @@
 package be.event.smartbooking.dto.externalApi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class ExternalLocationDTO {
-
-    // On utilise @JsonProperty si le nom dans le JSON est différent du nom Java
-    @JsonProperty("venue_name")
+    // L'API utilise souvent ces noms de champs
+    @JsonProperty("nom")
     private String name;
 
-    @JsonProperty("official_website")
+    @JsonProperty("site_web")
     private String url;
 
-    @JsonProperty("full_address")
+    @JsonProperty("adresse")
     private String street;
 
-    @JsonProperty("city_name")
+    @JsonProperty("localite")
     private String city;
 
-    @JsonProperty("postal_code")
+    @JsonProperty("code_postal")
     private String zipCode;
 
-    @JsonProperty("contact_phone")
+    @JsonProperty("telephone")
     private String phone;
 }
