@@ -10,4 +10,6 @@ public interface LocationRepos extends CrudRepository<Location, Long> {
     Location findByDesignation(String designation);
 
     Optional<Location> findById(Long id);
+
+    boolean existsByDesignation(String designation);
 }
