@@ -38,7 +38,7 @@ public class LocationSyncService {
         log.info(">>> DÉMARRAGE DE LA SYNCHRONISATION AUTOMATIQUE (Bimensuelle)");
         try {
             // On tente d'importer les 50 premiers lieux
-            int added = syncLocations(50);
+            int added = syncLocations(10);
             log.info(">>> SYNCHRONISATION TERMINÉE : {} nouveaux lieux ajoutés.", added);
         } catch (Exception e) {
             log.error(">>> ERREUR lors de la synchronisation automatique : {}", e.getMessage());
