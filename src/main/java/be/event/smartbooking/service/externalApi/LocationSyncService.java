@@ -36,10 +36,10 @@ public class LocationSyncService {
         if (response != null && response.getResults() != null) {
             for (ExternalLocationDTO dto : response.getResults()) {
 
-                // On ignore si le nom est vide ou si le lieu existe déjà
+                // On vérifie le nom (denomination dans le JSON)
                 if (dto.getName() != null && !locationRepository.existsByDesignation(dto.getName())) {
 
-                    // 1. Gestion de la localité
+                    // 1. Localité
                     String cityName = (dto.getCity() != null) ? dto.getCity() : "Inconnu";
                     Locality city = localityRepository.findByLocality(cityName)
                             .orElseGet(() -> {
@@ -49,17 +49,16 @@ public class LocationSyncService {
                                     try {
                                         newCity.setPostalCode(Long.parseLong(dto.getZipCode()));
                                     } catch (Exception e) {
-                                        /* ignore format error */ }
+                                        /* Format invalide */ }
                                 }
                                 return localityRepository.save(newCity);
                             });
 
-                    // 2. Création de la Location avec ses vraies infos
+                    // 2. Création de la Location
                     Location loc = new Location();
                     loc.setDesignation(dto.getName());
                     loc.setAddress((dto.getStreet() != null) ? dto.getStreet() : "Adresse non communiquée");
                     loc.setWebsite(dto.getUrl());
-                    loc.setPhone(dto.getPhone());
                     loc.setLocality(city);
 
                     locationRepository.save(loc);
