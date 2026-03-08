@@ -2,20 +2,18 @@ package be.event.smartbooking.dto.externalApi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import java.util.Map;
 
 @Data
 public class ExternalLocationDTO {
 
-    // 'entite' contient le nom du Centre Culturel dans ce dataset
-    @JsonProperty("entite")
+    @JsonProperty("denomination") // C'était le "coupable" !
     private String name;
 
-    // 'adresse' pour la rue et le numéro
-    @JsonProperty("adresse")
+    @JsonProperty("rue")
     private String street;
 
-    // 'commune' ou 'localite' pour la ville
-    @JsonProperty("commune")
+    @JsonProperty("localite")
     private String city;
 
     @JsonProperty("code_postal")
@@ -24,6 +22,9 @@ public class ExternalLocationDTO {
     @JsonProperty("site_web")
     private String url;
 
-    @JsonProperty("telephone")
-    private String phone;
+    @JsonProperty("courriel") // On peut aussi stocker l'email si besoin
+    private String email;
+
+    @JsonProperty("geolocalisation")
+    private Map<String, Double> geolocation;
 }

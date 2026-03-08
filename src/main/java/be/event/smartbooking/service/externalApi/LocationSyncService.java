@@ -1,5 +1,7 @@
 package be.event.smartbooking.service.externalApi;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,43 +17,47 @@ import be.event.smartbooking.repository.LocationRepos;
 @Service
 public class LocationSyncService {
 
+    private static final Logger log = LoggerFactory.getLogger(LocationSyncService.class);
+
     @Autowired
     private LocationClient locationClient;
+
     @Autowired
     private LocationRepos locationRepository;
+
     @Autowired
     private LocalityRepos localityRepository;
 
     @Transactional
     public int syncLocations(int limit) {
-        // 1. Appel API avec la limite choisie
         LocationApiResponse response = locationClient.fetchAllVenues(limit);
         int addedCount = 0;
 
         if (response != null && response.getResults() != null) {
             for (ExternalLocationDTO dto : response.getResults()) {
 
-                // Vérifier si le lieu existe déjà (bouclier anti-doublons)
+                // On ignore si le nom est vide ou si le lieu existe déjà
                 if (dto.getName() != null && !locationRepository.existsByDesignation(dto.getName())) {
 
-                    // Gestion de la localité
-                    Locality city = localityRepository.findByLocality(dto.getCity())
+                    // 1. Gestion de la localité
+                    String cityName = (dto.getCity() != null) ? dto.getCity() : "Inconnu";
+                    Locality city = localityRepository.findByLocality(cityName)
                             .orElseGet(() -> {
                                 Locality newCity = new Locality();
-                                newCity.setLocality(dto.getCity());
+                                newCity.setLocality(cityName);
                                 if (dto.getZipCode() != null) {
                                     try {
                                         newCity.setPostalCode(Long.parseLong(dto.getZipCode()));
                                     } catch (Exception e) {
-                                        /* Log error */ }
+                                        /* ignore format error */ }
                                 }
                                 return localityRepository.save(newCity);
                             });
 
-                    // Création du lieu
+                    // 2. Création de la Location avec ses vraies infos
                     Location loc = new Location();
                     loc.setDesignation(dto.getName());
-                    loc.setAddress(dto.getStreet());
+                    loc.setAddress((dto.getStreet() != null) ? dto.getStreet() : "Adresse non communiquée");
                     loc.setWebsite(dto.getUrl());
                     loc.setPhone(dto.getPhone());
                     loc.setLocality(city);
