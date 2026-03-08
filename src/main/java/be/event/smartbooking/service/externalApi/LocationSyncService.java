@@ -23,14 +23,15 @@ public class LocationSyncService {
     private LocalityRepos localityRepository;
 
     @Transactional
-    public void syncLocations() {
-        // 1. Appel de l'API (on demande 50 résultats pour tester)
-        LocationApiResponse response = locationClient.fetchAllVenues(50);
+    public int syncLocations(int limit) {
+        // 1. Appel API avec la limite choisie
+        LocationApiResponse response = locationClient.fetchAllVenues(limit);
+        int addedCount = 0;
 
         if (response != null && response.getResults() != null) {
             for (ExternalLocationDTO dto : response.getResults()) {
 
-                // On vérifie si le nom du lieu existe déjà
+                // Vérifier si le lieu existe déjà (bouclier anti-doublons)
                 if (dto.getName() != null && !locationRepository.existsByDesignation(dto.getName())) {
 
                     // Gestion de la localité
@@ -41,14 +42,13 @@ public class LocationSyncService {
                                 if (dto.getZipCode() != null) {
                                     try {
                                         newCity.setPostalCode(Long.parseLong(dto.getZipCode()));
-                                    } catch (NumberFormatException e) {
-                                        // Optionnel : logger l'erreur de format
-                                    }
+                                    } catch (Exception e) {
+                                        /* Log error */ }
                                 }
                                 return localityRepository.save(newCity);
                             });
 
-                    // Création de la location
+                    // Création du lieu
                     Location loc = new Location();
                     loc.setDesignation(dto.getName());
                     loc.setAddress(dto.getStreet());
@@ -57,8 +57,10 @@ public class LocationSyncService {
                     loc.setLocality(city);
 
                     locationRepository.save(loc);
+                    addedCount++;
                 }
             }
         }
+        return addedCount;
     }
 }
