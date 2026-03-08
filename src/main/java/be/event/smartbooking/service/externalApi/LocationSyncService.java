@@ -1,14 +1,12 @@
 package be.event.smartbooking.service.externalApi;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import be.event.smartbooking.api.controller.externalApi.LocationClient;
 import be.event.smartbooking.dto.externalApi.ExternalLocationDTO;
+import be.event.smartbooking.dto.externalApi.LocationApiResponse;
 import be.event.smartbooking.model.Locality;
 import be.event.smartbooking.model.Location;
 import be.event.smartbooking.repository.LocalityRepos;
@@ -17,8 +15,6 @@ import be.event.smartbooking.repository.LocationRepos;
 @Service
 public class LocationSyncService {
 
-    private static final Logger log = LoggerFactory.getLogger(LocationSyncService.class);
-
     @Autowired
     private LocationClient locationClient;
     @Autowired
@@ -26,29 +22,33 @@ public class LocationSyncService {
     @Autowired
     private LocalityRepos localityRepository;
 
-    @Transactional // Sécurité : si un import plante, rien n'est cassé en base
+    @Transactional
     public void syncLocations() {
-        log.info("Démarrage de la synchronisation des lieux...");
+        // 1. Appel de l'API (on demande 50 résultats pour tester)
+        LocationApiResponse response = locationClient.fetchAllVenues(50);
 
-        try {
-            List<ExternalLocationDTO> externalData = locationClient.fetchAllVenues();
-            int count = 0;
+        if (response != null && response.getResults() != null) {
+            for (ExternalLocationDTO dto : response.getResults()) {
 
-            for (ExternalLocationDTO dto : externalData) {
-                // 1. Vérification du doublon
-                if (!locationRepository.existsByDesignation(dto.getName())) {
+                // On vérifie si le nom du lieu existe déjà
+                if (dto.getName() != null && !locationRepository.existsByDesignation(dto.getName())) {
 
-                    // 2. Récupération ou création de la Localité
+                    // Gestion de la localité
                     Locality city = localityRepository.findByLocality(dto.getCity())
                             .orElseGet(() -> {
                                 Locality newCity = new Locality();
                                 newCity.setLocality(dto.getCity());
-                                // Si ton DTO a le code postal, ajoute-le ici :
-                                // newCity.setPostalCode(Long.parseLong(dto.getZipCode()));
+                                if (dto.getZipCode() != null) {
+                                    try {
+                                        newCity.setPostalCode(Long.parseLong(dto.getZipCode()));
+                                    } catch (NumberFormatException e) {
+                                        // Optionnel : logger l'erreur de format
+                                    }
+                                }
                                 return localityRepository.save(newCity);
                             });
 
-                    // 3. Création du nouveau lieu
+                    // Création de la location
                     Location loc = new Location();
                     loc.setDesignation(dto.getName());
                     loc.setAddress(dto.getStreet());
@@ -57,12 +57,8 @@ public class LocationSyncService {
                     loc.setLocality(city);
 
                     locationRepository.save(loc);
-                    count++;
                 }
             }
-            log.info("Synchronisation terminée : {} nouveaux lieux ajoutés.", count);
-        } catch (Exception e) {
-            log.error("Erreur lors de la synchronisation : {}", e.getMessage());
         }
     }
 }
