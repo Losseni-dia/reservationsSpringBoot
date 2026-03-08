@@ -3,6 +3,7 @@ package be.event.smartbooking.service.externalApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled; // Import nécessaire
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,22 @@ public class LocationSyncService {
     @Autowired
     private LocalityRepos localityRepository;
 
+    /**
+     * Tâche planifiée : s'exécute le 1er et le 16 de chaque mois à 03:00 AM.
+     * Cron : "seconde minute heure jour mois jour_semaine"
+     */
+    @Scheduled(cron = "0 0 3 1,16 * *")
+    public void scheduledSync() {
+        log.info(">>> DÉMARRAGE DE LA SYNCHRONISATION AUTOMATIQUE (Bimensuelle)");
+        try {
+            // On tente d'importer les 50 premiers lieux
+            int added = syncLocations(50);
+            log.info(">>> SYNCHRONISATION TERMINÉE : {} nouveaux lieux ajoutés.", added);
+        } catch (Exception e) {
+            log.error(">>> ERREUR lors de la synchronisation automatique : {}", e.getMessage());
+        }
+    }
+
     @Transactional
     public int syncLocations(int limit) {
         LocationApiResponse response = locationClient.fetchAllVenues(limit);
@@ -49,7 +66,8 @@ public class LocationSyncService {
                                     try {
                                         newCity.setPostalCode(Long.parseLong(dto.getZipCode()));
                                     } catch (Exception e) {
-                                        /* Format invalide */ }
+                                        log.warn("Code postal invalide pour {} : {}", cityName, dto.getZipCode());
+                                    }
                                 }
                                 return localityRepository.save(newCity);
                             });
@@ -63,6 +81,7 @@ public class LocationSyncService {
 
                     locationRepository.save(loc);
                     addedCount++;
+                    log.info("Lieu ajouté : {}", dto.getName());
                 }
             }
         }
