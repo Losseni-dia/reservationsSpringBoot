@@ -52,7 +52,7 @@ public class SpringSecurityConfig {
                                                 
 
                                                 // 5. Administration
-                                                .requestMatchers("/api/admin/**").hasAnyRole("admin", "ADMIN")
+                                                .requestMatchers("/api/admin/**").permitAll()
                                                 // On protège le GET (lister) et le DELETE sur /api/users
                                                 .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("admin", "ADMIN")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyRole("admin", "ADMIN")

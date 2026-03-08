@@ -5,21 +5,24 @@ import lombok.Data;
 
 @Data
 public class ExternalLocationDTO {
-    // L'API utilise souvent ces noms de champs
-    @JsonProperty("nom")
+
+    // 'entite' contient le nom du Centre Culturel dans ce dataset
+    @JsonProperty("entite")
     private String name;
 
-    @JsonProperty("site_web")
-    private String url;
-
+    // 'adresse' pour la rue et le numéro
     @JsonProperty("adresse")
     private String street;
 
-    @JsonProperty("localite")
+    // 'commune' ou 'localite' pour la ville
+    @JsonProperty("commune")
     private String city;
 
     @JsonProperty("code_postal")
     private String zipCode;
+
+    @JsonProperty("site_web")
+    private String url;
 
     @JsonProperty("telephone")
     private String phone;
