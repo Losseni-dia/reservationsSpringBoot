@@ -30,6 +30,7 @@ import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
 import ReservationPage from "./pages/ReservationPage";
 import About from "./pages/about/About";
+import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -73,6 +74,8 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
+              <Route path="/become-producer" element={<BecomeProducer />} />
+
             </Routes>
           </main>
 
