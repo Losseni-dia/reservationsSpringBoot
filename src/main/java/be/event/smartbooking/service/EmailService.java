@@ -67,6 +67,19 @@ public class EmailService {
         sendHtmlMail(user.getEmail(), subject, html);
     }
 
+    public void sendAccountActivatedMail(User user, Locale locale) {
+        if (locale == null) locale = Locale.FRENCH;
+        String firstName = user.getFirstname() != null ? user.getFirstname() : user.getLogin();
+
+        Context ctx = new Context(locale);
+        ctx.setVariable("firstName", firstName);
+
+        String subject = messageSource.getMessage("email.activation.subject", null, locale);
+        String html = templateEngine.process("emails/account-activated", ctx);
+
+        sendHtmlMail(user.getEmail(), subject, html);
+    }
+
     public void sendReservationSummaryMail(User user, Reservation reservation,
             List<RepresentationReservation> items, Locale locale) {
         if (locale == null) locale = Locale.FRENCH;

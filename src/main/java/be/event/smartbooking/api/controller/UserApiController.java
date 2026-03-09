@@ -267,7 +267,12 @@ public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
 public ResponseEntity<String> activateUser(@PathVariable Long id) {
     try {
         userService.activateUser(id);
-        return ResponseEntity.ok("Utilisateur réactivé avec succès");
+        
+        // Récupérer l'utilisateur pour lui envoyer la notification
+        User user = userService.getUserById(id);
+        emailService.sendAccountActivatedMail(user, toLocale(user.getLangue()));
+
+        return ResponseEntity.ok("Utilisateur activé avec succès et notifié par email.");
     } catch (EntityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     } catch (Exception e) {
