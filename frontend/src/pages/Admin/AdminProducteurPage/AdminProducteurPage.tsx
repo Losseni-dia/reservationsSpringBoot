@@ -47,8 +47,8 @@ const AdminProducteurPage: React.FC = () => {
         try {
             await userApi.delete(id);
             loadPendingUsers(); // Rafraîchir la liste
-        } catch (e) {
-            alert(t('admin.users.errorDelete'));
+        } catch (e: any) {
+            alert(e.message || t('admin.users.errorDelete'));
         }
     };
 

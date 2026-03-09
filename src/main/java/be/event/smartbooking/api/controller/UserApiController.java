@@ -180,16 +180,23 @@ public class UserApiController {
     }
 
     /**
- * ENDPOINT DÉSACTIVÉ - Utilisez /deactivate à la place
- * @deprecated Utilisez PUT /{id}/deactivate pour désactiver un utilisateur
- */
-@DeleteMapping("/{id}")
-@PreAuthorize("hasRole('ADMIN')")
-@Deprecated
-public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-    return ResponseEntity.status(HttpStatus.GONE)
-            .body("Cet endpoint est désactivé. Utilisez PUT /api/users/{id}/deactivate pour désactiver un utilisateur.");
-}
+     * SUPPRIMER UN UTILISATEUR (Admin seulement)
+     * Réactivé pour permettre le rejet des inscriptions (suppression définitive)
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok("Utilisateur supprimé avec succès");
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Impossible de supprimer : l'utilisateur a des données liées (réservations, etc.).");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la suppression : " + e.getMessage());
+        }
+    }
 // ====================================================================
 // ENDPOINTS ADMIN - GESTION DES UTILISATEURS ACTIFS/INACTIFS
 // ====================================================================
