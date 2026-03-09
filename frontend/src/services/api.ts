@@ -118,6 +118,10 @@ export const userApi = {
     const res = await secureFetch("/api/users/inactive");
     return res.json();
   },
+  getPending: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users/pending");
+    return res.json();
+  },
   
   delete: async (id: number) => {
     return await secureFetch(`/api/users/${id}`, { method: "DELETE" });
@@ -129,6 +133,11 @@ export const userApi = {
   },
   activate: async (userId: number) => {
     return await secureFetch(`/api/users/${userId}/activate`, {
+      method: "PUT",
+    });
+  },
+  approve: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/approve`, {
       method: "PUT",
     });
   },

@@ -192,7 +192,8 @@
       "statArtists": "Artistes",
       "statLocations": "Lieux",
       "statTotalRevenue": "Revenus totaux",
-      "statAverageRating": "Note moyenne"
+      "statAverageRating": "Note moyenne",
+      "statPendingProducers": "Producteurs en attente"
     },
     "users": {
       "title": "Gestion des",

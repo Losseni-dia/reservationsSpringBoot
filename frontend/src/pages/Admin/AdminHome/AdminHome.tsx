@@ -1,6 +1,8 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAdminStats } from "../../../hooks/useAdminStats";
+import { userApi } from "../../../services/api";
 import styles from "./AdminHome.module.css";
 import {
   HiUsers,
@@ -11,11 +13,25 @@ import {
   HiLocationMarker,
   HiCurrencyDollar,
   HiStar,
+  HiUserAdd,
 } from "react-icons/hi";
 
 const AdminHome = () => {
   const { t } = useTranslation();
   const { stats, loading, error, retry } = useAdminStats();
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    const loadPendingUsers = async () => {
+      try {
+        const users = await userApi.getPending();
+        setPendingCount(users.length);
+      } catch (e) {
+        console.error("Erreur chargement pending users", e);
+      }
+    };
+    loadPendingUsers();
+  }, []);
 
   const getDisplayNumber = (value: number) => {
     return loading ? "..." : value || "—";
@@ -39,6 +55,17 @@ const AdminHome = () => {
     <div className={styles.adminContainer}>
       <h1>{t("admin.home.title")}</h1>
       <div className={styles.dashboardGrid}>
+        {/* Producteurs en attente (Badge spécial) */}
+        <Link to="/admin/users" className={styles.statCard} style={{ border: '2px solid #f5c518', backgroundColor: 'rgba(245, 197, 24, 0.05)' }}>
+          <div className={styles.cardIcon}>
+            <HiUserAdd style={{ color: '#f5c518' }} />
+          </div>
+          <p className={styles.statNumber} style={{ color: '#f5c518' }}>
+            {pendingCount}
+          </p>
+          <h2 style={{ color: '#f5c518' }}>{t("admin.home.statPendingProducers")}</h2>
+        </Link>
+
         {/* Utilisateurs inscrits */}
         <Link to="/admin/users" className={styles.statCard}>
           <div className={styles.cardIcon}>
