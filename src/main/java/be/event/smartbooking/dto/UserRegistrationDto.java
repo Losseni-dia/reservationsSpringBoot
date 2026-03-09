@@ -33,4 +33,7 @@ public class UserRegistrationDto {
 
     @NotBlank(message = "La langue est obligatoire")
     private String langue;
+
+    @NotBlank(message = "Le rôle est obligatoire")
+    private String role;
 }

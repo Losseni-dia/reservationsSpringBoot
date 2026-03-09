@@ -82,7 +82,22 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setLangue(dto.getLangue());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.isActive(); // L'utilisateur est actif dès la création
+
+        // Gestion de l'approbation en fonction du rôle
+        if ("Producteur".equalsIgnoreCase(dto.getRole())) {
+            user.setApproved(false);
+            user.setActive(false); // Le producteur doit être validé par un admin pour se connecter
+        } else {
+            user.setApproved(true);
+            user.setActive(true); // Le membre est actif immédiatement
+        }
+
+        // Attribution du rôle
+        be.event.smartbooking.model.Role userRole = roleRepos.findByRole(dto.getRole());
+        if (userRole == null) {
+            throw new RuntimeException("Le rôle spécifié n'existe pas : " + dto.getRole());
+        }
+        user.addRole(userRole);
 
         try {
             userRepos.save(user);

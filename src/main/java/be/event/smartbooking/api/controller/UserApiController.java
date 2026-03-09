@@ -47,8 +47,13 @@ public class UserApiController {
         userService.registerFromDto(registrationDto);
         User user = userService.findByLogin(registrationDto.getLogin());
         Locale locale = toLocale(registrationDto.getLangue());
-        emailService.sendRegistrationConfirmationMail(user, locale);
-        return ResponseEntity.ok("Utilisateur enregistré avec succès");
+
+        if (user.isActive()) {
+            emailService.sendRegistrationConfirmationMail(user, locale);
+            return ResponseEntity.ok("Utilisateur enregistré avec succès");
+        } else {
+            return ResponseEntity.ok("Votre compte Producteur a été créé. Il doit être validé par un administrateur avant de pouvoir vous connecter.");
+        }
     }
 
     // RÉCUPÉRER MON PROFIL (Connecté)

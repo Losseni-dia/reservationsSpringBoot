@@ -33,6 +33,11 @@ if (!user.isActive()) {
     throw new DisabledException("Ce compte a été désactivé. Veuillez contacter l'administrateur.");
 }
 
+// Vérifier si l'utilisateur est approuvé
+if (!user.isApproved()) {
+    throw new DisabledException("Votre compte est en attente d'approbation par un administrateur.");
+}
+
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
                 user.getPassword(),
