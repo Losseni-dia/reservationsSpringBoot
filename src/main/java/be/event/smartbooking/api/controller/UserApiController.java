@@ -243,6 +243,32 @@ public ResponseEntity<List<UserProfileDto>> getAllInactiveUsers() {
 }
 
 /**
+ * LISTER LES UTILISATEURS EN ATTENTE D'APPROBATION (Admin seulement)
+ */
+@GetMapping("/pending")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<List<UserProfileDto>> getPendingUsers() {
+    List<User> users = userService.getPendingApprovalUsers();
+
+    List<UserProfileDto> dtos = users.stream().map(user -> {
+        UserProfileDto dto = new UserProfileDto();
+        dto.setId(user.getId());
+        dto.setFirstname(user.getFirstname());
+        dto.setLastname(user.getLastname());
+        dto.setEmail(user.getEmail());
+        dto.setLogin(user.getLogin());
+        dto.setLangue(user.getLangue());
+        dto.setIsActive(user.isActive());
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            dto.setRole(user.getRoles().get(0).getRole());
+        }
+        return dto;
+    }).toList();
+
+    return ResponseEntity.ok(dtos);
+}
+
+/**
  * DÉSACTIVER UN UTILISATEUR (Admin seulement)
  */
 @PutMapping("/{id}/deactivate")
@@ -278,6 +304,29 @@ public ResponseEntity<String> activateUser(@PathVariable Long id) {
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Erreur lors de la réactivation : " + e.getMessage());
+    }
+}
+
+/**
+ * APPROUVER UN UTILISATEUR (Admin seulement)
+ * Spécifique pour valider les comptes Producteurs en attente
+ */
+@PutMapping("/{id}/approve")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<String> approveUser(@PathVariable Long id) {
+    try {
+        userService.approveUser(id);
+        
+        // Notification de validation
+        User user = userService.getUserById(id);
+        emailService.sendAccountActivatedMail(user, toLocale(user.getLangue()));
+
+        return ResponseEntity.ok("Utilisateur approuvé et activé avec succès.");
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erreur lors de l'approbation : " + e.getMessage());
     }
 }
 
