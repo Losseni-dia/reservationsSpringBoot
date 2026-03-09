@@ -56,7 +56,8 @@ const AdminHome = () => {
       <h1>{t("admin.home.title")}</h1>
       <div className={styles.dashboardGrid}>
         {/* Producteurs en attente (Badge spécial) */}
-        <Link to="/admin/users" className={styles.statCard} style={{ border: '2px solid #f5c518', backgroundColor: 'rgba(245, 197, 24, 0.05)' }}>
+        {/* Le lien "to" doit correspondre exactement au "path" dans App.tsx */}
+        <Link to="/admin/pending-producers" className={styles.statCard} style={{ border: '2px solid #f5c518', backgroundColor: 'rgba(245, 197, 24, 0.05)' }}>
           <div className={styles.cardIcon}>
             <HiUserAdd style={{ color: '#f5c518' }} />
           </div>
