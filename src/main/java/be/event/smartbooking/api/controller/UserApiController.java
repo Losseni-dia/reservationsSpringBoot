@@ -9,6 +9,8 @@ import be.event.smartbooking.service.PasswordResetTokenService;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class UserApiController {
+
+    private static final Logger log = LoggerFactory.getLogger(UserApiController.class);
 
     @Autowired
     private UserService userService;
@@ -317,9 +321,13 @@ public ResponseEntity<String> approveUser(@PathVariable Long id) {
     try {
         userService.approveUser(id);
         
-        // Notification de validation
-        User user = userService.getUserById(id);
-        emailService.sendAccountActivatedMail(user, toLocale(user.getLangue()));
+        // Notification de validation (try-catch pour éviter l'erreur 500 si l'email échoue)
+        try {
+            User user = userService.getUserById(id);
+            emailService.sendAccountActivatedMail(user, toLocale(user.getLangue()));
+        } catch (Exception e) {
+            log.error("Échec de l'envoi de l'email d'activation pour l'utilisateur ID {}: {}", id, e.getMessage());
+        }
 
         return ResponseEntity.ok("Utilisateur approuvé et activé avec succès.");
     } catch (EntityNotFoundException e) {

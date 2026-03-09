@@ -73,6 +73,7 @@ public class EmailService {
 
         Context ctx = new Context(locale);
         ctx.setVariable("firstName", firstName);
+        ctx.setVariable("loginUrl", frontendUrl + "/login");
 
         String subject = messageSource.getMessage("email.activation.subject", null, locale);
         String html = templateEngine.process("emails/account-activated", ctx);
@@ -127,10 +128,9 @@ public class EmailService {
             helper.setSubject(subject);
             helper.setText(html, true);
             mailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (MessagingException | MailException e) {
             log.error("Failed to send email to {}: {}", to, e.getMessage());
-        } catch (MailException e) {
-            log.error("Failed to send email to {}: {}", to, e.getMessage());
+            throw new RuntimeException("Échec de l'envoi de l'email à " + to, e);
         }
     }
 }

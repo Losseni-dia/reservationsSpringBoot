@@ -88,7 +88,7 @@ public void registerFromDto(UserRegistrationDto dto) {
     String roleToAssign = (dto.getRole() == null || dto.getRole().isBlank()) ? "member" : dto.getRole();
 
     // 3. Gestion de l'approbation selon le rôle final
-    if ("Producteur".equalsIgnoreCase(roleToAssign)) {
+    if ("producer".equalsIgnoreCase(roleToAssign)) {
         user.setApproved(false);
         user.setActive(false);
     } else {

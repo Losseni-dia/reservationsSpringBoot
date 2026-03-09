@@ -18,7 +18,7 @@ const BecomeProducer: React.FC = () => {
         password: '',
         confirmPassword: '',
         langue: i18n.language || 'fr',
-        role: 'Producteur' // Rôle forcé pour déclencher la validation admin
+        role: 'producer' // Rôle forcé pour déclencher la validation admin
     });
 
     const [error, setError] = useState('');

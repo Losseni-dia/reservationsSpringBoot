@@ -35,8 +35,8 @@ const AdminProducteurPage: React.FC = () => {
         try {
             await userApi.approve(id);
             loadPendingUsers(); // Rafraîchir la liste
-        } catch (e) {
-            alert("Erreur lors de l'approbation");
+        } catch (e: any) {
+            alert(e.message || "Erreur lors de l'approbation");
         }
     };
 
