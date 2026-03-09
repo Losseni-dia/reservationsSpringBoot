@@ -1,4 +1,4 @@
-package be.event.smartbooking.View;
+package be.event.smartbooking.view;
 
 import be.event.smartbooking.model.Show;
 import com.rometools.rome.feed.rss.Channel;

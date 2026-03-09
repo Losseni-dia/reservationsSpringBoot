@@ -61,6 +61,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
+    private boolean isApproved = false;
+
 
     // =================================================================
     // MÉTHODES UTILITAIRES
