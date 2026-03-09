@@ -84,6 +84,8 @@ const Header: React.FC = () => {
                         </div>
                     ) : (
                         <div className={styles.authButtons}>
+                            {/* DEVENIR PRODUCTEUR (Visiteur) */}
+                            <Link to="/become-producer" className={styles.registerBtn}>{t('layout.header.becomeProducer')}</Link>
                             <Link to="/register" className={styles.registerBtn}>{t('layout.header.register')}</Link>
                             <Link to="/login" className={styles.loginBtn}>{t('layout.header.login')}</Link>
                         </div>

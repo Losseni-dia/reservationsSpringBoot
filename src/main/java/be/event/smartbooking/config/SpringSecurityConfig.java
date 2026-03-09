@@ -79,9 +79,16 @@ public class SpringSecurityConfig {
                                                 .usernameParameter("login")
                                                 .successHandler((req, res, auth) -> res
                                                                 .setStatus(HttpServletResponse.SC_OK))
-                                                .failureHandler((req, res, exc) -> res.sendError(
-                                                                HttpServletResponse.SC_UNAUTHORIZED,
-                                                                "Identifiants incorrects")))
+                                                .failureHandler((req, res, exc) -> {
+                            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            res.setContentType("application/json;charset=UTF-8");
+                            String errorMessage = exc.getMessage();
+                            // Si Spring cache l'erreur par défaut, on met un message générique propre
+                            if (errorMessage.equalsIgnoreCase("Bad credentials")) {
+                                errorMessage = "Identifiants incorrects";
+                            }
+                            res.getWriter().write("{\"message\": \"" + errorMessage + "\"}");
+                        }))
 
                                 .exceptionHandling(ex -> ex
                                                 .authenticationEntryPoint((req, res, authEx) -> res

@@ -66,50 +66,51 @@ public class UserService {
 
     // --- INSCRIPTION & MODIFICATION ---
 
-    public void registerFromDto(UserRegistrationDto dto) {
-        // Vérification d'unicité (Trés important pour éviter l'erreur 500 SQL)
-        if (userRepos.existsByLogin(dto.getLogin())) {
-            throw new BusinessException("Ce login est déjà utilisé", HttpStatus.CONFLICT);
-        }
-        if (userRepos.existsByEmail(dto.getEmail())) {
-            throw new BusinessException("Cet email est déjà utilisé", HttpStatus.CONFLICT);
-        }
-
-        User user = new User();
-        user.setFirstname(dto.getFirstname());
-        user.setLastname(dto.getLastname());
-        user.setLogin(dto.getLogin());
-        user.setEmail(dto.getEmail());
-        user.setLangue(dto.getLangue());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-
-        // Gestion de l'approbation en fonction du rôle
-        if ("Producteur".equalsIgnoreCase(dto.getRole())) {
-            user.setApproved(false);
-            user.setActive(false); // Le producteur doit être validé par un admin pour se connecter
-        } else {
-            user.setApproved(true);
-            user.setActive(true); // Le membre est actif immédiatement
-        }
-
-        // Attribution du rôle
-        be.event.smartbooking.model.Role userRole = roleRepos.findByRole(dto.getRole());
-        if (userRole == null) {
-            throw new RuntimeException("Le rôle spécifié n'existe pas : " + dto.getRole());
-        }
-        user.addRole(userRole);
-
-        try {
-            userRepos.save(user);
-            logger.info("Nouvel utilisateur enregistré : {}", user.getLogin());
-        } catch (DataIntegrityViolationException e) {
-            // 2. La sécurité ultime contre les "Race Conditions"
-            logger.warn("Conflit détecté lors de l'insertion de l'utilisateur {} (Doublon email/login)",
-                    user.getLogin());
-            throw new BusinessException("Ce login ou cet email est déjà utilisé par un autre compte.",
-                    HttpStatus.CONFLICT);
-        }
+public void registerFromDto(UserRegistrationDto dto) {
+    // 1. Vérifications d'unicité (Login et Email)
+    if (userRepos.existsByLogin(dto.getLogin())) {
+        throw new BusinessException("Ce login est déjà utilisé", HttpStatus.CONFLICT);
     }
+    if (userRepos.existsByEmail(dto.getEmail())) {
+        throw new BusinessException("Cet email est déjà utilisé", HttpStatus.CONFLICT);
+    }
+
+    User user = new User();
+    user.setFirstname(dto.getFirstname());
+    user.setLastname(dto.getLastname());
+    user.setLogin(dto.getLogin());
+    user.setEmail(dto.getEmail());
+    user.setLangue(dto.getLangue());
+    user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+    // 2. LOGIQUE DU RÔLE PAR DÉFAUT
+    // Si le DTO ne contient pas de rôle, on impose "Membre"
+    String roleToAssign = (dto.getRole() == null || dto.getRole().isBlank()) ? "member" : dto.getRole();
+
+    // 3. Gestion de l'approbation selon le rôle final
+    if ("Producteur".equalsIgnoreCase(roleToAssign)) {
+        user.setApproved(false);
+        user.setActive(false);
+    } else {
+        // C'est un Membre (par défaut ou explicite)
+        user.setApproved(true);
+        user.setActive(true);
+    }
+
+    // 4. Attribution du rôle en base de données
+    be.event.smartbooking.model.Role userRole = roleRepos.findByRole(roleToAssign);
+    if (userRole == null) {
+        throw new BusinessException("Le rôle spécifié n'existe pas : " + roleToAssign, HttpStatus.BAD_REQUEST);
+    }
+    user.addRole(userRole);
+
+    try {
+        userRepos.save(user);
+        logger.info("Nouvel utilisateur enregistré avec le rôle {}: {}", roleToAssign, user.getLogin());
+    } catch (DataIntegrityViolationException e) {
+        throw new BusinessException("Erreur lors de l'enregistrement.", HttpStatus.CONFLICT);
+    }
+}
 
     public void updateUser(long id, User user) {
 
