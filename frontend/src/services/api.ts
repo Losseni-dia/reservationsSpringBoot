@@ -82,17 +82,22 @@ export const authApi = {
     return res.json();
   },
   register: async (userData: UserRegistrationDto) => {
-    const res = await secureFetch(`${API_BASE}/users/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
+    // On n'utilise pas secureFetch ici car on veut gérer les réponses d'erreur (ex: 409) dans le composant.
+    // On retourne la réponse brute pour que le composant puisse vérifier `response.ok` et lire le texte d'erreur.
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Accept-Language": i18n.language || "fr",
     });
-    const text = await res.text();
-    try {
-      return JSON.parse(text);
-    } catch (e) {
-      return text;
-    }
+    const csrfToken = getCsrfToken();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+
+    return fetch(`${API_BASE}/users/register`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(userData),
+      credentials: "include",
+    });
   },
   updateProfile: async (profileData: Partial<UserProfileDto>) => {
     const res = await secureFetch(`${API_BASE}/users/profile`, {
@@ -113,6 +118,10 @@ export const userApi = {
     const res = await secureFetch("/api/users/inactive");
     return res.json();
   },
+  getPending: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users/pending");
+    return res.json();
+  },
   
   delete: async (id: number) => {
     return await secureFetch(`/api/users/${id}`, { method: "DELETE" });
@@ -124,6 +133,11 @@ export const userApi = {
   },
   activate: async (userId: number) => {
     return await secureFetch(`/api/users/${userId}/activate`, {
+      method: "PUT",
+    });
+  },
+  approve: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/approve`, {
       method: "PUT",
     });
   },

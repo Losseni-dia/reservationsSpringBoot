@@ -68,5 +68,7 @@ boolean existsByLoginAndIsActiveTrue(String login);
  * Vérifie si un utilisateur existe et est actif par email
  */
 boolean existsByEmailAndIsActiveTrue(String email);
-    
+
+List<User> findAllByIsApproved(boolean isApproved);
+
 }

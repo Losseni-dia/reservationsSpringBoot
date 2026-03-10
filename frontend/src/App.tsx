@@ -24,12 +24,15 @@ import ShowSchedule from "./pages/Producteur/ShowSchedule/ShowSchedule";
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
+// Assurez-vous que ce chemin correspond exactement à votre dossier (ex: ./pages/Admin/adminproducteur/AdminProducteurPage si le dossier est en minuscule)
+import AdminProducteurPage from "./pages/Admin/AdminProducteurPage/AdminProducteurPage";
 import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
 import ReservationPage from "./pages/ReservationPage";
 import About from "./pages/about/About";
+import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -73,6 +76,10 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
+              {/* C'est cette route qui permet d'afficher la page quand on clique sur le badge */}
+              <Route path="/admin/pending-producers" element={<AdminProducteurPage />} />
+              <Route path="/become-producer" element={<BecomeProducer />} />
+
             </Routes>
           </main>
 

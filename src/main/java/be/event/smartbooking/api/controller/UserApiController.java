@@ -9,6 +9,8 @@ import be.event.smartbooking.service.PasswordResetTokenService;
 import be.event.smartbooking.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class UserApiController {
+
+    private static final Logger log = LoggerFactory.getLogger(UserApiController.class);
 
     @Autowired
     private UserService userService;
@@ -47,8 +51,13 @@ public class UserApiController {
         userService.registerFromDto(registrationDto);
         User user = userService.findByLogin(registrationDto.getLogin());
         Locale locale = toLocale(registrationDto.getLangue());
-        emailService.sendRegistrationConfirmationMail(user, locale);
-        return ResponseEntity.ok("Utilisateur enregistré avec succès");
+
+        if (user.isActive()) {
+            emailService.sendRegistrationConfirmationMail(user, locale);
+            return ResponseEntity.ok("Utilisateur enregistré avec succès");
+        } else {
+            return ResponseEntity.ok("Votre compte Producteur a été créé. Il doit être validé par un administrateur avant de pouvoir vous connecter.");
+        }
     }
 
     // RÉCUPÉRER MON PROFIL (Connecté)
@@ -171,16 +180,23 @@ public class UserApiController {
     }
 
     /**
- * ENDPOINT DÉSACTIVÉ - Utilisez /deactivate à la place
- * @deprecated Utilisez PUT /{id}/deactivate pour désactiver un utilisateur
- */
-@DeleteMapping("/{id}")
-@PreAuthorize("hasRole('ADMIN')")
-@Deprecated
-public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-    return ResponseEntity.status(HttpStatus.GONE)
-            .body("Cet endpoint est désactivé. Utilisez PUT /api/users/{id}/deactivate pour désactiver un utilisateur.");
-}
+     * SUPPRIMER UN UTILISATEUR (Admin seulement)
+     * Réactivé pour permettre le rejet des inscriptions (suppression définitive)
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok("Utilisateur supprimé avec succès");
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Impossible de supprimer : l'utilisateur a des données liées (réservations, etc.).");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la suppression : " + e.getMessage());
+        }
+    }
 // ====================================================================
 // ENDPOINTS ADMIN - GESTION DES UTILISATEURS ACTIFS/INACTIFS
 // ====================================================================
@@ -238,6 +254,32 @@ public ResponseEntity<List<UserProfileDto>> getAllInactiveUsers() {
 }
 
 /**
+ * LISTER LES UTILISATEURS EN ATTENTE D'APPROBATION (Admin seulement)
+ */
+@GetMapping("/pending")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<List<UserProfileDto>> getPendingUsers() {
+    List<User> users = userService.getPendingApprovalUsers();
+
+    List<UserProfileDto> dtos = users.stream().map(user -> {
+        UserProfileDto dto = new UserProfileDto();
+        dto.setId(user.getId());
+        dto.setFirstname(user.getFirstname());
+        dto.setLastname(user.getLastname());
+        dto.setEmail(user.getEmail());
+        dto.setLogin(user.getLogin());
+        dto.setLangue(user.getLangue());
+        dto.setIsActive(user.isActive());
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            dto.setRole(user.getRoles().get(0).getRole());
+        }
+        return dto;
+    }).toList();
+
+    return ResponseEntity.ok(dtos);
+}
+
+/**
  * DÉSACTIVER UN UTILISATEUR (Admin seulement)
  */
 @PutMapping("/{id}/deactivate")
@@ -262,12 +304,44 @@ public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
 public ResponseEntity<String> activateUser(@PathVariable Long id) {
     try {
         userService.activateUser(id);
-        return ResponseEntity.ok("Utilisateur réactivé avec succès");
+        
+        // Récupérer l'utilisateur pour lui envoyer la notification
+        User user = userService.getUserById(id);
+        emailService.sendAccountActivatedMail(user, toLocale(user.getLangue()));
+
+        return ResponseEntity.ok("Utilisateur activé avec succès et notifié par email.");
     } catch (EntityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Erreur lors de la réactivation : " + e.getMessage());
+    }
+}
+
+/**
+ * APPROUVER UN UTILISATEUR (Admin seulement)
+ * Spécifique pour valider les comptes Producteurs en attente
+ */
+@PutMapping("/{id}/approve")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<String> approveUser(@PathVariable Long id) {
+    try {
+        userService.approveUser(id);
+        
+        // Notification de validation (try-catch pour éviter l'erreur 500 si l'email échoue)
+        try {
+            User user = userService.getUserById(id);
+            emailService.sendAccountActivatedMail(user, toLocale(user.getLangue()));
+        } catch (Exception e) {
+            log.error("Échec de l'envoi de l'email d'activation pour l'utilisateur ID {}: {}", id, e.getMessage());
+        }
+
+        return ResponseEntity.ok("Utilisateur approuvé et activé avec succès.");
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erreur lors de l'approbation : " + e.getMessage());
     }
 }
 
