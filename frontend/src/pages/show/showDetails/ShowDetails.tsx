@@ -6,6 +6,7 @@ import { useAuth } from '../../../components/context/AuthContext';
 import { formatDate, formatDateTime, formatCurrency } from '../../../utils/format';
 import Loader from '../../../components/ui/loader/Loader';
 import { TranslatableText } from '../../../components/ui/translatableText/TranslatableText';
+import { TranslatableComment } from '../../../components/ui/translatableComment/TranslatableComment';
 import styles from './ShowDetails.module.css';
 
 const ShowDetailPage: React.FC = () => {
@@ -244,7 +245,7 @@ const ShowDetailPage: React.FC = () => {
                           {"☆".repeat(5 - rev.stars)}
                         </div>
                         <p className={styles.reviewComment}>
-                          "<TranslatableText text={rev.comment} />"
+                          "<TranslatableComment text={rev.comment} />"
                         </p>
                       </div>
                     ))
