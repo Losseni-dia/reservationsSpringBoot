@@ -32,3 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 uploads/
+
+# Local secrets (never commit)
+.env
+application-local.properties

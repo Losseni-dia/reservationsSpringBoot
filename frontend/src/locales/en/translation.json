@@ -159,7 +159,10 @@
     "editorialNoteTitle": "Team's review",
     "editorialNoteText": "A poignant show that redefines the codes of contemporary theatre. Not to be missed for the incredible performance of the actors.",
     "noRepresentation": "No representation available.",
-    "translate": "Translate"
+    "translate": "Translate",
+    "showOriginal": "Show original",
+    "translating": "Translating...",
+    "translationUnavailable": "Translation temporarily unavailable"
   },
   "booking": {
     "errorLoad": "Unable to load show details.",

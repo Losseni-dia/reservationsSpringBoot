@@ -160,7 +160,10 @@
     "editorialNoteTitle": "L'avis de l'équipe",
     "editorialNoteText": "Un spectacle poignant qui redéfinit les codes du théâtre contemporain. À ne pas manquer pour la performance incroyable des acteurs.",
     "noRepresentation": "Aucune représentation disponible.",
-    "translate": "Traduire"
+    "translate": "Traduire",
+    "showOriginal": "Afficher l'original",
+    "translating": "Traduction…",
+    "translationUnavailable": "Traduction temporairement indisponible"
   },
   "booking": {
     "errorLoad": "Impossible de charger les détails du spectacle.",

@@ -1,0 +1,32 @@
+.text {
+  display: inline;
+}
+
+.actions {
+  display: inline-block;
+  margin-left: 0.35rem;
+  vertical-align: baseline;
+  font-size: 0.85em;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #f5c518;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: inherit;
+}
+
+.linkButton:hover {
+  text-decoration: underline;
+}
+
+.status {
+  color: #888;
+}
+
+.error {
+  color: #dc3545;
+}

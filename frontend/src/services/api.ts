@@ -304,6 +304,19 @@ export const translateApi = {
   },
 };
 
+/** Live comment translation via Google Cloud (POST /api/translation/translate). Throws on 503 or other errors. */
+export const translationApi = {
+  translateComment: async (text: string, targetLanguage: string): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translation/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, targetLanguage }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
+  },
+};
+
 export const locationApi = {
   getAll: async (): Promise<Location[]> => {
     const res = await secureFetch(`${API_BASE}/locations`);
