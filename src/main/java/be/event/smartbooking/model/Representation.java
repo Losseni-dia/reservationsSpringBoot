@@ -24,6 +24,7 @@ public class Representation {
     @JoinColumn(name = "show_id", nullable = false)
     private Show show;
 
+    
     @Column(name = "starts_at", nullable = false)
     private LocalDateTime when; // date et heure de la représentation
 
