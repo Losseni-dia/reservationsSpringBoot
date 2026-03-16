@@ -30,7 +30,7 @@ public class SpringSecurityConfig {
                                                 // 2. Les règles spécifiques (POST) DOIVENT être avant les règles
                                                 // générales
                                             
-
+                                                .requestMatchers("/api/admin/sync-locations").permitAll()
                                                 // 3. Les accès publics (GET)
                                                 .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
