@@ -236,7 +236,7 @@
       "modalRevokeMessage": "Retirer \"{{title}}\" du catalogue public ?",
       "modalConfirmMessage": "Rendre \"{{title}}\" visible et réservable par les clients ?",
       "export": "Exporter",
-      "showimport":"📥Importer",
+      "showimport": "📥Importer",
       "importZoneLabel": "Glissez un fichier .csv ou .json ici"
     },
     "reviews": {
