@@ -13,6 +13,9 @@ import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
 import Toast from "../../../components/ui/toast/Toast";
 // Component styles
 import styles from "./AdminShowPage.module.css";
+import ExportButton from '../../../components/ui/exportButton/ExportButton';
+import ImportZone from '../../../components/ui/importZone/ImportZone';
+// Dans adminHeader, ajouter ExportButton + ImportZone collapsible
 
 const AdminShowPage: React.FC = () => {
   const { t } = useTranslation();
