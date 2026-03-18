@@ -65,6 +65,11 @@ const AdminUsersPage: React.FC = () => {
             <header className={styles.header}>
                 <h1>{t("admin.users.title")} <span className={styles.yellow}>{t("admin.users.titleHighlight")}</span></h1>
                 <p>{t("admin.users.subtitle", { count: users.length })}</p>
+                <div className={styles.headerActions}>
+                     <ExportButton type="users" label="Exporter" />
+                    <button onClick={() => setShowImport(prev => !prev)}>Importer</button>
+                </div>
+                {showImport && <ImportZone type="users" onSuccess={() => loadUsers()} />}
             </header>
 
             <div className={styles.tableWrapper}>
