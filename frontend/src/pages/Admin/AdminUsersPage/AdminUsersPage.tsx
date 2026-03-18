@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userApi } from '../../../services/api';
 import { UserProfileDto } from '../../../types/models';
@@ -67,10 +68,21 @@ const AdminUsersPage: React.FC = () => {
                 <h1>{t("admin.users.title")} <span className={styles.yellow}>{t("admin.users.titleHighlight")}</span></h1>
                 <p>{t("admin.users.subtitle", { count: users.length })}</p>
                 <div className={styles.headerActions}>
-                     <ExportButton type="users" label="Exporter" />
-                    <button onClick={() => setShowImport(prev => !prev)}>Importer</button>
+                      <ExportButton type="users" label={t("admin.users.export")} />
+                            <button 
+                                type="button" 
+                                className={styles.importToggleBtn} 
+                                aria-expanded={showImport} 
+                                onClick={() => setShowImport((prev: boolean) => !prev)}
+                            >
+                                {t("admin.users.import")}
+                            </button>
                 </div>
-                {showImport && <ImportZone type="users" onSuccess={() => loadUsers()} />}
+                {showImport && (
+ <div className={styles.importSection}>
+    <ImportZone type="users" onSuccess={loadUsers} />
+  </div>
+)}
             </header>
 
             <div className={styles.tableWrapper}>
