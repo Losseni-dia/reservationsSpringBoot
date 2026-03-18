@@ -11,6 +11,7 @@ const AdminUsersPage: React.FC = () => {
     const { t } = useTranslation();
     const [users, setUsers] = useState<UserProfileDto[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showImport, setShowImport] = useState(false);
 
     const loadUsers = async () => {
         try {
