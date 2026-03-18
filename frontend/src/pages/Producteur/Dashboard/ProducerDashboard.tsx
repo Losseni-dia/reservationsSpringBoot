@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,6 +20,8 @@ import Loader from "../../../components/ui/loader/Loader";
 import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
 import Toast from "../../../components/ui/toast/Toast";
 import styles from "./ProducerDashboard.module.css";
+import ExportButton from '../../../components/ui/exportButton/ExportButton';
+// Ajouter <ExportButton type="shows" label="Exporter mes spectacles" />
 
 // Register Chart.js components
 ChartJS.register(
