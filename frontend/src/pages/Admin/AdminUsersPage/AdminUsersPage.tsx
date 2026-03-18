@@ -75,7 +75,9 @@ const AdminUsersPage: React.FC = () => {
                                 aria-expanded={showImport} 
                                 onClick={() => setShowImport((prev: boolean) => !prev)}
                             >
-                                {t("admin.users.import")}
+                                {showImport
+                                ? t("admin.users.hideImport")
+                                : t("admin.users.showImport")}
                             </button>
                 </div>
                 {showImport && (
