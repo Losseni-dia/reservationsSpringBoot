@@ -50,6 +50,7 @@ const ExportButton: React.FC<Props> = ({ type, label = 'Exporter' }) => {
         {loading ? '...' : `${label} CSV`}
       </button>
       <button
+        type="button"
         disabled={loading}
         onClick={() => handleExport('json')}
         className={styles.btn}
