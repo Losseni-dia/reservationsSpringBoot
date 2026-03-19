@@ -13,7 +13,11 @@ const ImportZone: React.FC<Props> = ({ type, onSuccess }) => {
 
   const upload = async (file: File) => {
     setLoading(true); setError(null); setReport(null);
-    const format = file.name.endsWith('.json') ? 'json' : 'csv';
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    if (ext !== 'csv' && ext !== 'json') { setError('Format de fichier non supporté'); setLoading(false); return; }
+    setError('Format non supporté. Utilisez un fichier CSV ou JSON.'); setLoading(false); return;
+    }
+    const format = ext;
     const formData = new FormData();
     formData.append('file', file);
     try {
