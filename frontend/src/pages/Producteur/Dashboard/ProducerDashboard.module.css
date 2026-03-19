@@ -369,3 +369,9 @@
     color: #888;
     font-size: 1.1rem;
 }
+
+.headerActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
