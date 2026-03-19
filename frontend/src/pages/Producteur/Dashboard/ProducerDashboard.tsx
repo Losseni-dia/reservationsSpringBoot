@@ -260,14 +260,17 @@ const ProducerDashboard: React.FC = () => {
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
-        <h1 className={styles.dashboardTitle}>{t("producer.dashboard.title")}</h1>
-        <button
-          onClick={() => navigate("/producer/shows/add")}
-          className={styles.addShowButton}
-        >
-          {t("producer.dashboard.addShow")}
-        </button>
-      </header>
+  <h1 className={styles.dashboardTitle}>{t("producer.dashboard.title")}</h1>
+  <div className={styles.headerActions}>
+    <button
+      onClick={() => navigate("/producer/shows/add")}
+      className={styles.addShowButton}
+    >
+      {t("producer.dashboard.addShow")}
+    </button>
+    <ExportButton type="shows" label="Exporter mes spectacles" />
+  </div>
+</header>
 
       {error && <div className={styles.errorBanner}>{error}</div>}
 
