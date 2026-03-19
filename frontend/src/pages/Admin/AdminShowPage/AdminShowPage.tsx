@@ -31,7 +31,7 @@ const AdminShowPage: React.FC = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<"success" | "error" | "info">("info");
-
+  const [showImport, setShowImport] = useState<boolean>(false); 
   /** Fetches all shows for admin (no filters), sorts by status, updates state. */
   const fetchShows = useCallback(async () => {
     try {
