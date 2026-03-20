@@ -191,28 +191,27 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
   if (loading && shows.length === 0) return <Loader />;
 
   return (
-    <div className={styles.adminContainer}>
-      {/* Page header: title and refresh button */}
-      <div className={styles.adminHeader}>
+    <div className={styles.adminHeader}>
   <h1 className={styles.adminTitle}>{t("admin.shows.title")}</h1>
-  <div className={styles.headerActions}>
-    <ExportButton type="shows" label={t("admin.shows.export", "Exporter")} />
+  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+    <ExportButton type="shows" label="Exporter" />
     <button
       type="button"
-      className={styles.importToggleBtn}
-      aria-expanded={showImport}
-      onClick={() => setShowImport((prev) => !prev)}
+      className={styles.refreshButton}
+      onClick={() => setShowImport(prev => !prev)}
     >
-      {showImport ? t("admin.shows.hideImport", "Masquer l'import") : t("admin.shows.showImport", "Importer des spectacles")}
+      {showImport ? "Masquer l'import" : "Importer des spectacles"}
     </button>
     <button className={styles.refreshButton} onClick={handleRefresh}>
       {t("admin.shows.refresh")}
     </button>
   </div>
   {showImport && (
-    <div className={styles.importSection}>
+    <div style={{ marginTop: '1rem' }}>
       <ImportZone type="shows" onSuccess={fetchShows} />
     </div>
+  )}
+</div>
   )}
 </div>
 
