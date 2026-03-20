@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,6 +20,7 @@ import Loader from "../../../components/ui/loader/Loader";
 import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
 import Toast from "../../../components/ui/toast/Toast";
 import styles from "./ProducerDashboard.module.css";
+import ExportButton from '../../../components/ui/exportButton/ExportButton';
 
 // Register Chart.js components
 ChartJS.register(
@@ -257,14 +259,14 @@ const ProducerDashboard: React.FC = () => {
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
-        <h1 className={styles.dashboardTitle}>{t("producer.dashboard.title")}</h1>
-        <button
-          onClick={() => navigate("/producer/shows/add")}
-          className={styles.addShowButton}
-        >
-          {t("producer.dashboard.addShow")}
-        </button>
-      </header>
+  <h1 className={styles.dashboardTitle}>{t("producer.dashboard.title")}</h1>
+  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+    <button onClick={() => navigate("/producer/shows/add")} className={styles.addShowButton}>
+      {t("producer.dashboard.addShow")}
+    </button>
+    <ExportButton type="shows" label="Exporter mes spectacles" />
+  </div>
+</header>
 
       {error && <div className={styles.errorBanner}>{error}</div>}
 

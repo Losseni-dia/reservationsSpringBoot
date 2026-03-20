@@ -292,7 +292,30 @@
 }
 
 .headerActions {
-  display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.75rem;
+  display: flex; 
+  flex-wrap: wrap; 
+  align-items: center; 
+  gap: 0.75rem;
+}
+
+.importToggleBtn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #00acc1;
+  color: #00acc1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.importToggleBtn:hover {
+  background: rgba(0, 172, 193, 0.1);
+}
+
+.importSection {
+  margin-top: 1rem;
+  width: 100%;
 }
 
 .importDetails {

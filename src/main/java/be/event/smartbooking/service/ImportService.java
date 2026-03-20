@@ -243,29 +243,4 @@ public class ImportService {
         violations.forEach(v -> messages.add(v.getMessage()));
         return messages;
     }
-
-    // Simple ImportResult DTO to avoid missing external dependency
-    public static class ImportResult {
-        private int imported;
-        private int skipped;
-        private List<String> errors;
-
-        private ImportResult() { }
-
-        public int getImported() { return imported; }
-        public int getSkipped() { return skipped; }
-        public List<String> getErrors() { return errors; }
-
-        public static Builder builder() { return new Builder(); }
-
-        public static class Builder {
-            private final ImportResult instance = new ImportResult();
-
-            public Builder imported(int imported) { instance.imported = imported; return this; }
-            public Builder skipped(int skipped) { instance.skipped = skipped; return this; }
-            public Builder errors(List<String> errors) { instance.errors = errors; return this; }
-            public ImportResult build() { return instance; }
-        }
-    
-}
 }

@@ -49,7 +49,8 @@ public class SpringSecurityConfig {
                                                 // 2. Seuls les utilisateurs connectés peuvent poster un avis
                                                
 
-                                                
+                                                .requestMatchers(HttpMethod.GET, "/api/admin/export/shows")
+                                                        .hasAnyRole("admin", "ADMIN", "affiliate", "AFFILIATE", "PRODUCER")
 
                                                 // 5. Administration
                                                 .requestMatchers("/api/admin/**").hasAnyRole("admin", "ADMIN")
