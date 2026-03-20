@@ -266,6 +266,5 @@ public class ImportService {
             public Builder errors(List<String> errors) { instance.errors = errors; return this; }
             public ImportResult build() { return instance; }
         }
-    
-}
+    }
 }
