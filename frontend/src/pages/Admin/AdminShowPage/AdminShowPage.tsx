@@ -240,7 +240,6 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
         onCancel={handleConfirmModalCancel}
       />
     </div>
-  </div>
   );
 };
 
