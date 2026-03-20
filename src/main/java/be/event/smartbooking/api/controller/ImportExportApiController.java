@@ -1,4 +1,4 @@
-package be.event.smartbooking.controller;
+package be.event.smartbooking.api.controller;
 
 import be.event.smartbooking.dto.importexport.ImportResult;
 import be.event.smartbooking.service.ExportService;
