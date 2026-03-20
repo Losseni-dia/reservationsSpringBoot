@@ -211,7 +211,6 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
       <ImportZone type="shows" onSuccess={fetchShows} />
     </div>
   )}
-</div>
 
       {/* Shows list: table or empty state message */}
       <div className={styles.showsListContainer}>
@@ -241,6 +240,7 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
         onCancel={handleConfirmModalCancel}
       />
     </div>
+  </div>
   );
 };
 
