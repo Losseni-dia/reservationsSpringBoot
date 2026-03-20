@@ -191,7 +191,7 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
   if (loading && shows.length === 0) return <Loader />;
 
   return (
-    <div className={styles.adminHeader}>
+    <div className={styles.adminContainer}>
   <h1 className={styles.adminTitle}>{t("admin.shows.title")}</h1>
   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
     <ExportButton type="shows" label="Exporter" />
@@ -210,8 +210,6 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
     <div style={{ marginTop: '1rem' }}>
       <ImportZone type="shows" onSuccess={fetchShows} />
     </div>
-  )}
-</div>
   )}
 </div>
 
