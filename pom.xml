@@ -20,7 +20,24 @@
         <java.version>17</java.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2024.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
         <!-- Spring Data JPA pour accès aux données -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -121,7 +138,14 @@
             <version>24.0.0</version>
         </dependency>
 
-         <!-- Ajout de la dépendance Rome pour gérer le Flux RSS -->
+        <!-- OpenCSV pour l'import/export CSV -->
+        <dependency>
+            <groupId>com.opencsv</groupId>  
+            <artifactId>opencsv</artifactId>    
+            <version>5.12.0</version>
+        </dependency>
+
+        <!-- Ajout de la dépendance Rome pour gérer le Flux RSS -->
         <dependency>
             <groupId>com.rometools</groupId>
             <artifactId>rome</artifactId>

@@ -65,6 +65,10 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+    @Builder.Default
+    @Column(name = "is_approved", nullable = false)
+    @org.hibernate.annotations.ColumnDefault("1")
+    private boolean isApproved = false;
 
 
     // =================================================================

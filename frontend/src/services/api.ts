@@ -82,17 +82,22 @@ export const authApi = {
     return res.json();
   },
   register: async (userData: UserRegistrationDto) => {
-    const res = await secureFetch(`${API_BASE}/users/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
+    // On n'utilise pas secureFetch ici car on veut gérer les réponses d'erreur (ex: 409) dans le composant.
+    // On retourne la réponse brute pour que le composant puisse vérifier `response.ok` et lire le texte d'erreur.
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Accept-Language": i18n.language || "fr",
     });
-    const text = await res.text();
-    try {
-      return JSON.parse(text);
-    } catch (e) {
-      return text;
-    }
+    const csrfToken = getCsrfToken();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+
+    return fetch(`${API_BASE}/users/register`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(userData),
+      credentials: "include",
+    });
   },
   updateProfile: async (profileData: Partial<UserProfileDto>) => {
     const res = await secureFetch(`${API_BASE}/users/profile`, {
@@ -113,6 +118,10 @@ export const userApi = {
     const res = await secureFetch("/api/users/inactive");
     return res.json();
   },
+  getPending: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users/pending");
+    return res.json();
+  },
   
   delete: async (id: number) => {
     return await secureFetch(`/api/users/${id}`, { method: "DELETE" });
@@ -124,6 +133,11 @@ export const userApi = {
   },
   activate: async (userId: number) => {
     return await secureFetch(`/api/users/${userId}/activate`, {
+      method: "PUT",
+    });
+  },
+  approve: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/approve`, {
       method: "PUT",
     });
   },
@@ -242,6 +256,19 @@ export const reviewApi = {
     return res.json();
   },
 
+  getPending: async (): Promise<Review[]> => {
+    const res = await secureFetch(`${API_BASE}/reviews/pending`);
+    return res.json();
+  },
+
+  validate: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}/validate`, { method: "PUT" });
+  },
+
+  delete: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}`, { method: "DELETE" });
+  },
+
   create: async (
     showId: number,
     comment: string,
@@ -258,6 +285,35 @@ export const reviewApi = {
   getStats: async (): Promise<any> => {
     const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
     return res.json();
+  },
+};
+
+export const translateApi = {
+  translate: async (text: string, targetLang: string, sourceLang?: string): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text,
+        targetLang,
+        sourceLang: sourceLang || "fr",
+      }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
+  },
+};
+
+/** Live comment translation via Google Cloud (POST /api/translation/translate). Throws on 503 or other errors. */
+export const translationApi = {
+  translateComment: async (text: string, targetLanguage: string): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translation/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, targetLanguage }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
   },
 };
 
@@ -295,4 +351,40 @@ export const locationApi = {
       method: "DELETE",
     });
   },
+
+   adminApi: {
+  exportData: async (type: string, format: "csv" | "json" = "csv"): Promise<void> => {
+    const res = await secureFetch(`${API_BASE}/admin/export/${type}?format=${format}`);
+    const blob = await res.blob();
+    const extension = format === "json" ? ".json" : ".csv";
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${type}_export_${new Date().toISOString().split("T")[0]}${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  },
+
+  importData: async (
+    type: string,
+    format: "csv" | "json",
+    file: File
+  ): Promise<{ imported: number; skipped: number; errors: string[] }> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const headers = new Headers();
+    const csrfToken = `; ${document.cookie}`.split(`; XSRF-TOKEN=`).pop()?.split(";").shift();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+    const res = await fetch(`${API_BASE}/admin/import/${type}?format=${format}`, {
+      method: "POST", headers, body: formData, credentials: "include", cache: "no-cache",
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || `Erreur ${res.status}`);
+    }
+    return res.json();
+  },
+},
 };

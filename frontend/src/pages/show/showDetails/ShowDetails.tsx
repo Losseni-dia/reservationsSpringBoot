@@ -5,6 +5,8 @@ import { showApi, reviewApi, IMAGE_STORAGE_BASE } from '../../../services/api';
 import { useAuth } from '../../../components/context/AuthContext';
 import { formatDate, formatDateTime, formatCurrency } from '../../../utils/format';
 import Loader from '../../../components/ui/loader/Loader';
+import { TranslatableText } from '../../../components/ui/translatableText/TranslatableText';
+import { TranslatableComment } from '../../../components/ui/translatableComment/TranslatableComment';
 import styles from './ShowDetails.module.css';
 
 const ShowDetailPage: React.FC = () => {
@@ -110,7 +112,11 @@ const ShowDetailPage: React.FC = () => {
             <div className="col-lg-8">
               <div className={styles.infoSection}>
                 <h3>{t('show.about')}</h3>
-                <p className={styles.descriptionText}>{data.description}</p>
+                <TranslatableText
+                  text={data.description || ''}
+                  className={styles.descriptionText}
+                  as="p"
+                />
               </div>
 
               <div className={styles.editorialNote}>
@@ -238,7 +244,9 @@ const ShowDetailPage: React.FC = () => {
                           {"★".repeat(rev.stars)}
                           {"☆".repeat(5 - rev.stars)}
                         </div>
-                        <p className={styles.reviewComment}>"{rev.comment}"</p>
+                        <p className={styles.reviewComment}>
+                          "<TranslatableComment text={rev.comment} />"
+                        </p>
                       </div>
                     ))
                   ) : (
@@ -250,7 +258,6 @@ const ShowDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* COLONNE DROITE (RÉSERVATION) */}
             {/* COLONNE DROITE (RÉSERVATION) */}
             <div className="col-lg-4">
               <div className={styles.bookingCard}>

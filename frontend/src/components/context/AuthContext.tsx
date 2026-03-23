@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (credentials: { login: string; password: string }) => {
         const res = await authApi.login(credentials);
-        if (!res.ok) throw new Error("Identifiants incorrects");
+        if (!res.ok) throw new Error("Identifiants incorrects ou compte en attente de validation");
         
         // On attend que le profil soit récupéré avant de finir la fonction login
         await refreshProfile();

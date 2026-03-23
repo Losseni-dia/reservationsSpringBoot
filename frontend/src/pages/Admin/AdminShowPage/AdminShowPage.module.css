@@ -290,3 +290,45 @@
     max-width: 150px;
   }
 }
+
+.headerActions {
+  display: flex; 
+  flex-wrap: wrap; 
+  align-items: center; 
+  gap: 0.75rem;
+}
+
+.importToggleBtn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #00acc1;
+  color: #00acc1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.importToggleBtn:hover {
+  background: rgba(0, 172, 193, 0.1);
+}
+
+.importSection {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.importDetails {
+  border: 1px solid #333; border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.03);
+  min-width: 280px;
+}
+
+.importDetails summary {
+  cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  color: #f5a623; user-select: none; list-style: none;
+}
+
+.importDetails summary::-webkit-details-marker { display: none; }
+.importDetails[open] summary { margin-bottom: 0.75rem; }

@@ -1,5 +1,6 @@
 INSERT INTO `roles` (`id`, `role`) VALUES
 (1, 'admin'),
 (2, 'member'),
-(3, 'affiliate');
+(3, 'affiliate'),
+(4, 'producer');
 

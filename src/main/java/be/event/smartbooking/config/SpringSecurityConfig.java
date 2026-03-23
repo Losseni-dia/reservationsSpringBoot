@@ -35,60 +35,70 @@ public class SpringSecurityConfig {
         ApiKeyAuthFilter apiKeyFilter = new ApiKeyAuthFilter(apiKeyService);
 
         return http
-                // 1. Activation de CORS avec notre configuration spécifique (voir méthode plus bas)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                
-                // 2. Désactivation du CSRF pour autoriser les requêtes POST/Multipart de React
                 .csrf(csrf -> csrf.disable())
-
-
-                // --- AJOUT DU FILTRE API KEY AVANT LE FILTRE LOGIN CLASSIQUE ---
+                
+                // --- FILTRE API KEY ---
                 .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth
-                        // 3. Les accès publics (GET)
+                        // 1. Accès publics (Consultation)
                         .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/artist-types/**").permitAll()
-
-                        // 4. Authentification & Profil
-                        .requestMatchers("/api/users/login", "/api/users/register").permitAll()
-                        .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/api/users/reset-password", "/api/users/forgot-password").permitAll()
-                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/rss").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
 
-                        // --- DOCUMENTATION SWAGGER (OPEN API) ---
+                        // 2. Authentification & Mot de passe
+                        .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                        .requestMatchers("/api/users/reset-password", "/api/users/forgot-password").permitAll()
+
+                        // 3. Documentation Swagger (Ton travail)
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                        // --- API EXTERNE SÉCURISÉE ---
-                        .requestMatchers("/api/public/**").authenticated()
+                        // 4. Import / Export (Leur travail)
+                        .requestMatchers(HttpMethod.GET, "/api/admin/export/shows")
+                                .hasAnyRole("admin", "ADMIN", "affiliate", "AFFILIATE", "PRODUCER")
 
-                        // Gestion des clés API (Nécessite d'être connecté)
+                        // 5. API Publique (Ton travail - nécessite clé ou session)
+                        .requestMatchers("/api/public/**").authenticated()
                         .requestMatchers("/api/users/keys/**").authenticated()
 
-                        // 2. Seuls les utilisateurs connectés peuvent poster un avis
-                        .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()
-
-                        // 5. Administration
+                        // 6. Administration & Modération
                         .requestMatchers("/api/admin/**").hasAnyRole("admin", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("admin", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyRole("admin", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").hasAnyRole("admin", "ADMIN")
+                        
+                        // 7. Gestion des Shows & Représentations
                         .requestMatchers(HttpMethod.POST, "/api/shows/**").hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
                         .requestMatchers(HttpMethod.PUT, "/api/shows/**").hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
                         .requestMatchers(HttpMethod.DELETE, "/api/shows/**").hasAnyRole("admin", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/shows/*/representations").hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/representations/*").hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
-                        
-                        // Tout le reste nécessite d'être connecté
+                        .requestMatchers(HttpMethod.POST, "/api/shows/*/representations")
+                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/representations/*")
+                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
+
+                        .requestMatchers(HttpMethod.POST, "/api/translate").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()
+
+                        // Tout le reste
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form
                         .loginProcessingUrl("/api/users/login")
                         .usernameParameter("login")
                         .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
-                        .failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Identifiants incorrects")))
+                        .failureHandler((req, res, exc) -> {
+                            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            res.setContentType("application/json;charset=UTF-8");
+                            String errorMessage = exc.getMessage();
+                            if (errorMessage.equalsIgnoreCase("Bad credentials")) {
+                                errorMessage = "Identifiants incorrects";
+                            }
+                            res.getWriter().write("{\"message\": \"" + errorMessage + "\"}");
+                        }))
 
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, authEx) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Non autorisé")))

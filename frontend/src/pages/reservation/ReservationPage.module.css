@@ -126,3 +126,88 @@
   color: #27ae60;
   font-size: 1.5rem;
 }
+
+.ticketTypeContainer {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.ticketRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #2a2a2a;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #3f3f46;
+}
+
+.ticketInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.ticketTypeName {
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.ticketPrice {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.quantitySelector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.qtyBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #6A0DAD;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.qtyBtn:hover:not(:disabled) {
+    background-color: #6A0DAD;
+}
+
+.qtyBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.qtyDisplay {
+    color: white;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
+
+.totalRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #3f3f46;
+    font-weight: bold;
+    color: white;
+}
+
+.totalAmount {
+    color: #FFD700; /* Jaune doré pour le prix total */
+    font-size: 1.5rem;
+}
