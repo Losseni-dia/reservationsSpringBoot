@@ -30,8 +30,10 @@ import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
-import ReservationPage from "./pages/ReservationPage";
+import ReservationPage from "./pages/reservation/ReservationPage";
 import About from "./pages/about/About";
+import DeveloperPage from "./pages/Developer/DeveloperPage";
+import ApiDocPage from "./pages/ApiDoc/ApiDocPage";
 import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
 function App() {
   return (
@@ -76,6 +78,9 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
+              <Route path="/developers" element={<DeveloperPage />} />
+              <Route path="/api-documentation" element={<ApiDocPage />} />
+
               {/* C'est cette route qui permet d'afficher la page quand on clique sur le badge */}
               <Route path="/admin/pending-producers" element={<AdminProducteurPage />} />
               <Route path="/become-producer" element={<BecomeProducer />} />

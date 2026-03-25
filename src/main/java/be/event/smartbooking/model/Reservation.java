@@ -24,9 +24,12 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     @Column( name="reservation_date", nullable = false)
     private LocalDateTime reservationDate = LocalDateTime.now();
 
+    
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatutReservation statut = StatutReservation.PENDING;

@@ -259,7 +259,6 @@ const ShowDetailPage: React.FC = () => {
             </div>
 
             {/* COLONNE DROITE (RÉSERVATION) */}
-            {/* COLONNE DROITE (RÉSERVATION) */}
             <div className="col-lg-4">
               <div className={styles.bookingCard}>
                 <h4 className="text-white mb-4 text-center">{t('show.booking')}</h4>
