@@ -80,8 +80,6 @@ function App() {
               <Route path="/admin/users" element={<AdminUsersPage />} />
               <Route path="/developers" element={<DeveloperPage />} />
               <Route path="/api-documentation" element={<ApiDocPage />} />
-
-              {/* C'est cette route qui permet d'afficher la page quand on clique sur le badge */}
               <Route path="/admin/pending-producers" element={<AdminProducteurPage />} />
               <Route path="/become-producer" element={<BecomeProducer />} />
 
