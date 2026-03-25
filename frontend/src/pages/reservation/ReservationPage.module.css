@@ -9,7 +9,7 @@
 
 .reservationCard {
     width: 100%;
-    max-width: 450px;
+    max-width: 1200px;
     background-color: #1e1e1e;
     padding: 2.5rem;
     border-radius: 1.25rem;
@@ -20,12 +20,13 @@
 
 .title {
     color: white;
-    font-size: 1.75rem;
+    font-size: 2.75rem;
     margin-bottom: 0.5rem;
 }
 
 .subtitle {
     color: #9ca3af;
+    font-size: 1.2rem;
     margin-bottom: 2rem;
 }
 
@@ -43,17 +44,17 @@
     display: block;
     color: #9ca3af;
     margin-bottom: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 1.2rem;
 }
 
 .input {
     width: 100%;
-    padding: 0.85rem;
+    padding: 1rem;
     background-color: #2a2a2a;
     border: 1px solid #3f3f46;
     border-radius: 0.75rem;
     color: white;
-    font-size: 1rem;
+    font-size: 1.1rem;
 }
 
 .priceInfo {
@@ -74,13 +75,14 @@
 }
 
 .submitButton {
-    width: 100%;
-    padding: 1rem;
-    background-color: #FF3B3F; /* Ton rouge */
+    width: 30%;
+    padding: 1.2rem;
+    background-color: #FF3B3F; 
     color: white;
     border: none;
     border-radius: 0.75rem;
     font-weight: bold;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -98,9 +100,11 @@
     color: #9ca3af;
     cursor: pointer;
     text-decoration: underline;
-    font-size: 0.875rem;
+    font-size: 1.3rem;
 }
-
+.cancelLink:hover {
+    color: white;
+}
 .errorMessage {
     background-color: rgba(239, 68, 68, 0.1);
     color: #f87171;
@@ -151,12 +155,12 @@
 .ticketTypeName {
     color: white;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.6rem;
 }
 
 .ticketPrice {
     color: #9ca3af;
-    font-size: 0.875rem;
+    font-size: 1.1rem;
 }
 
 .quantitySelector {
@@ -166,7 +170,7 @@
 }
 
 .qtyBtn {
-    width: 32px;
+    width: 36px;
     height: 32px;
     border-radius: 50%;
     border: 1px solid #6A0DAD;
@@ -192,8 +196,9 @@
 .qtyDisplay {
     color: white;
     font-weight: bold;
-    min-width: 20px;
+    min-width: 25px;
     text-align: center;
+    font-size: 1.3rem;
 }
 
 .totalRow {
@@ -205,10 +210,11 @@
     border-top: 1px solid #3f3f46;
     font-weight: bold;
     color: white;
+    font-size: 1.5rem;
 }
 
 .totalAmount {
     color: #FFD700; /* Jaune doré pour le prix total */
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 
