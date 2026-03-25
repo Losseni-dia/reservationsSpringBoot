@@ -58,16 +58,19 @@ const ReservationPage: React.FC = () => {
   };
 
   const handleConfirmReservation = async () => {
-    const totalTickets = Object.values(quantities).reduce((a, b) => a + b, 0);
-
-    if (totalTickets === 0) {
-      setError(t("booking.selectAtLeastOne"));
+    const totalPrice = calculateTotal();
+    if (totalPrice <= 0) {
+      setError(
+        "Veuillez sélectionner minimum 1 ticket avant de procéder au paiement",
+      );
+      setTimeout(() => setError(null), 5000);
       return;
     }
 
+    setError(null);
     setLoading(true);
+
     try {
-      // On prépare la liste des items pour le backend
       const items =
         selectedRep?.prices
           .filter((p) => quantities[p.id] > 0)
@@ -167,8 +170,8 @@ const ReservationPage: React.FC = () => {
 
         <button
           onClick={handleConfirmReservation}
-          disabled={loading || calculateTotal() === 0}
-          className={styles.submitButton}
+          disabled={loading}
+          className={`${styles.submitButton} ${calculateTotal() === 0 ? styles.disabledButton : ""}`}
         >
           {loading
             ? t("booking.preparePayment")
