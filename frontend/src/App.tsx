@@ -30,6 +30,7 @@ import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
+import PaymentCancel from "./pages/payment/PaymentCancel";
 import ReservationPage from "./pages/reservation/ReservationPage";
 import About from "./pages/about/About";
 import DeveloperPage from "./pages/Developer/DeveloperPage";
@@ -65,6 +66,7 @@ function App() {
                 element={<ShowSchedule />}
               />
               <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-cancelled" element={<PaymentCancel />} />
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
@@ -80,9 +82,11 @@ function App() {
               <Route path="/admin/users" element={<AdminUsersPage />} />
               <Route path="/developers" element={<DeveloperPage />} />
               <Route path="/api-documentation" element={<ApiDocPage />} />
-              <Route path="/admin/pending-producers" element={<AdminProducteurPage />} />
+              <Route
+                path="/admin/pending-producers"
+                element={<AdminProducteurPage />}
+              />
               <Route path="/become-producer" element={<BecomeProducer />} />
-
             </Routes>
           </main>
 
