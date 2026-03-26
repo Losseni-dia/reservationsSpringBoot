@@ -1,7 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import styles from "./PaymentSuccess.module.css"; // On réutilise ton super CSS !
+import styles from "./PaymentSuccess.module.css";
 
 const PaymentCancel: React.FC = () => {
   const navigate = useNavigate();
@@ -10,7 +10,6 @@ const PaymentCancel: React.FC = () => {
   return (
     <div className={styles.successContainer}>
       <div className={styles.successCard}>
-        {/* Un cercle rouge avec une croix pour l'annulation */}
         <div
           className={styles.checkCircle}
           style={{
@@ -24,14 +23,14 @@ const PaymentCancel: React.FC = () => {
         </div>
 
         <h1 className={styles.successTitle} style={{ color: "#FF3B3F" }}>
-          Paiement annulé
-          {/* Remplace par {t("payment.cancelTitle")} si tu l'ajoutes dans tes traductions */}
+          {t("payment.cancelTitle", "Paiement annulé")}
         </h1>
 
         <p className={styles.successMessage}>
-          Votre session de paiement a été annulée ou a expiré. Aucun montant n'a
-          été débité de votre carte.
-          {/* Remplace par {t("payment.cancelMessage")} */}
+          {t(
+            "payment.cancelMessage",
+            "Votre session de paiement a été annulée ou a expiré. Aucun montant n'a été débité de votre carte.",
+          )}
         </p>
 
         <button
@@ -39,12 +38,16 @@ const PaymentCancel: React.FC = () => {
           className={styles.homeButton}
           style={{ marginBottom: "1rem" }}
         >
-          Réessayer
+          {t("payment.retry", "Réessayer")}
         </button>
 
-        <button onClick={() => navigate("/")} className={styles.cancelLink}>
-          Retour à l'accueil
-        </button>
+        <Link
+          to="/"
+          className={styles.cancelLinkPayment}
+          style={{ display: "block", marginTop: "1rem" }}
+        >
+          {t("payment.backHome", "Retour à l'accueil")}
+        </Link>
       </div>
     </div>
   );
