@@ -13,6 +13,9 @@ import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
 import Toast from "../../../components/ui/toast/Toast";
 // Component styles
 import styles from "./AdminShowPage.module.css";
+import ExportButton from '../../../components/ui/exportButton/ExportButton';
+import ImportZone from '../../../components/ui/importZone/ImportZone';
+// Dans adminHeader, ajouter ExportButton + ImportZone collapsible
 
 const AdminShowPage: React.FC = () => {
   const { t } = useTranslation();
@@ -28,7 +31,7 @@ const AdminShowPage: React.FC = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<"success" | "error" | "info">("info");
-
+  const [showImport, setShowImport] = useState<boolean>(false); 
   /** Fetches all shows for admin (no filters), sorts by status, updates state. */
   const fetchShows = useCallback(async () => {
     try {
@@ -189,13 +192,25 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
 
   return (
     <div className={styles.adminContainer}>
-      {/* Page header: title and refresh button */}
-      <div className={styles.adminHeader}>
-        <h1 className={styles.adminTitle}>{t("admin.shows.title")}</h1>
-        <button className={styles.refreshButton} onClick={handleRefresh}>
-          {t("admin.shows.refresh")}
-        </button>
-      </div>
+  <h1 className={styles.adminTitle}>{t("admin.shows.title")}</h1>
+  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+    <ExportButton type="shows" label="Exporter" />
+    <button
+      type="button"
+      className={styles.refreshButton}
+      onClick={() => setShowImport(prev => !prev)}
+    >
+      {showImport ? "Masquer l'import" : "Importer des spectacles"}
+    </button>
+    <button className={styles.refreshButton} onClick={handleRefresh}>
+      {t("admin.shows.refresh")}
+    </button>
+  </div>
+  {showImport && (
+    <div style={{ marginTop: '1rem' }}>
+      <ImportZone type="shows" onSuccess={fetchShows} />
+    </div>
+  )}
 
       {/* Shows list: table or empty state message */}
       <div className={styles.showsListContainer}>

@@ -160,7 +160,10 @@
     "editorialNoteTitle": "L'avis de l'équipe",
     "editorialNoteText": "Un spectacle poignant qui redéfinit les codes du théâtre contemporain. À ne pas manquer pour la performance incroyable des acteurs.",
     "noRepresentation": "Aucune représentation disponible.",
-    "translate": "Traduire"
+    "translate": "Traduire",
+    "showOriginal": "Afficher l'original",
+    "translating": "Traduction…",
+    "translationUnavailable": "Traduction temporairement indisponible"
   },
   "booking": {
     "errorLoad": "Impossible de charger les détails du spectacle.",
@@ -168,7 +171,7 @@
     "errorPaymentLink": "Le lien de paiement est corrompu.",
     "errorReservation": "Erreur lors de la réservation.",
     "loadingShow": "Chargement du spectacle...",
-    "title": "Réserver vos places",
+    "title": "Réservez vos places",
     "showLabel": "Spectacle :",
     "chooseDate": "Choisir une date",
     "noDateAvailable": "Aucune date disponible",
@@ -208,7 +211,13 @@
       "activate": "✅ Activer",
       "empty": "Aucun utilisateur trouvé.",
       "confirmDelete": "⚠️ ATTENTION : Supprimer définitivement l'utilisateur \"{{name}}\" ?",
-      "errorDelete": "Erreur lors de la suppression. L'utilisateur a peut-être des données liées (réservations, etc.)."
+      "errorDelete": "Erreur lors de la suppression. L'utilisateur a peut-être des données liées (réservations, etc.).",
+      "export": "Exporter",
+      "showImport": "📥 Importer",
+      "hideImport": "✕ Fermer l'import",
+      "importTitle": "Import massif d'utilisateurs",
+      "importHint": "Colonnes CSV requises : login, firstname, lastname, email, password",
+      "importZoneLabel": "Glissez un fichier .csv ou .json ici"
     },
     "shows": {
       "errorLoad": "Impossible de charger les spectacles.",
@@ -230,7 +239,10 @@
       "modalRevokeTitle": "Révoquer ?",
       "modalConfirmTitle": "Confirmer ?",
       "modalRevokeMessage": "Retirer \"{{title}}\" du catalogue public ?",
-      "modalConfirmMessage": "Rendre \"{{title}}\" visible et réservable par les clients ?"
+      "modalConfirmMessage": "Rendre \"{{title}}\" visible et réservable par les clients ?",
+      "export": "Exporter",
+      "showimport": "📥Importer",
+      "importZoneLabel": "Glissez un fichier .csv ou .json ici"
     },
     "reviews": {
       "title": "Modération des",

@@ -5,6 +5,7 @@ import { authApi } from '../../services/api';
 import { useAuth } from '../../components/context/AuthContext';
 import { UserRegistrationDto } from '../../types/models';
 import styles from './RegisterPage.module.css';
+import PasswordInput from "../../components/ui/passwordinput/PasswordInput";
 
 const RegisterPage: React.FC = () => {
   const { t } = useTranslation();
@@ -87,100 +88,124 @@ const RegisterPage: React.FC = () => {
       </div>
 
       <div className={styles.registerCard}>
-        <h2 className={styles.cardTitle}>{t('auth.register.title')}</h2>
-        
+        <h2 className={styles.cardTitle}>{t("auth.register.title")}</h2>
+
         {error && <div className={styles.errorMessage}>{error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>{t('auth.firstname')}</label>
+              <label className={styles.label}>{t("auth.firstname")}</label>
               <input
                 name="firstname"
                 type="text"
                 value={formData.firstname}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder={t('auth.placeholderFirstname')}
+                placeholder={t("auth.placeholderFirstname")}
                 required
               />
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>{t('auth.lastname')}</label>
+              <label className={styles.label}>{t("auth.lastname")}</label>
               <input
                 name="lastname"
                 type="text"
                 value={formData.lastname}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder={t('auth.placeholderLastname')}
+                placeholder={t("auth.placeholderLastname")}
                 required
               />
             </div>
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t('auth.loginId')}</label>
+            <label className={styles.label}>{t("auth.loginId")}</label>
             <input
               name="login"
               type="text"
               value={formData.login}
               onChange={handleChange}
               className={styles.input}
-              placeholder={t('auth.placeholderChooseLogin')}
+              placeholder={t("auth.placeholderChooseLogin")}
               required
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t('auth.email')}</label>
+            <label className={styles.label}>{t("auth.email")}</label>
             <input
               name="email"
               type="email"
               value={formData.email}
               onChange={handleChange}
               className={styles.input}
-              placeholder={t('auth.placeholderEmail')}
+              placeholder={t("auth.placeholderEmail")}
               required
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t('auth.language')}</label>
+            <label className={styles.label}>{t("auth.language")}</label>
             <select
               name="langue"
               value={formData.langue}
               onChange={handleChange}
               className={styles.input}
             >
-              <option value="fr">{t('auth.langFr')}</option>
-              <option value="en">{t('auth.langEn')}</option>
-              <option value="nl">{t('auth.langNl')}</option>
+              <option value="fr">{t("auth.langFr")}</option>
+              <option value="en">{t("auth.langEn")}</option>
+              <option value="nl">{t("auth.langNl")}</option>
             </select>
           </div>
 
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>{t('auth.password')}</label>
-              <input name="password" type="password" value={formData.password} onChange={handleChange} className={styles.input} placeholder={t('auth.placeholderPassword')} required />
-              <small style={{ color: '#888', fontSize: '0.75rem', marginTop: '4px' }}>
-                {t('auth.passwordRules')}
+              <label className={styles.label}>{t("auth.password")}</label>
+              <PasswordInput
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={styles.input}
+                placeholder={t("auth.placeholderPassword")}
+                required
+              />
+              <small
+                style={{ color: "#888", fontSize: "0.75rem", marginTop: "4px" }}
+              >
+                {t("auth.passwordRules")}
               </small>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>{t('auth.confirm')}</label>
-              <input name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} className={styles.input} placeholder={t('auth.placeholderPassword')} required />
+              <label className={styles.label}>{t("auth.confirm")}</label>
+              <PasswordInput
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={styles.input}
+                placeholder={t("auth.placeholderPassword")}
+                required
+              />
             </div>
           </div>
 
-          <button type="submit" disabled={isLoading} className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ''}`}>
-            {isLoading ? t('auth.register.submitLoading') : t('auth.register.submit')}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ""}`}
+          >
+            {isLoading
+              ? t("auth.register.submitLoading")
+              : t("auth.register.submit")}
           </button>
         </form>
 
         <p className={styles.footerText}>
-          {t('auth.register.hasAccount')}{' '}
-          <Link to="/login" className={styles.loginLink}>{t('auth.register.signIn')}</Link>
+          {t("auth.register.hasAccount")}{" "}
+          <Link to="/login" className={styles.loginLink}>
+            {t("auth.register.signIn")}
+          </Link>
         </p>
       </div>
     </div>

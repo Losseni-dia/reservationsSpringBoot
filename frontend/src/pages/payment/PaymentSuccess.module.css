@@ -1,89 +1,120 @@
 .successContainer {
-    min-height: 100vh;
-    background-color: #121212; /* Ton fond sombre */
+    /* Ajusté pour s'intégrer parfaitement entre ton header et footer sans créer de scroll inutile */
+    min-height: 80vh; 
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Inter', sans-serif;
+    padding: 2rem; /* Marge pour ne pas coller aux bords sur téléphone */
 }
 
 .successCard {
     width: 100%;
-    max-width: 480px;
-    padding: 3rem;
+    max-width: 500px;
+    padding: 3.5rem 2.5rem;
     background-color: #1e1e1e;
     border-radius: 1.5rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     border: 1px solid #2a2a2a;
+    /* LE SECRET DU CENTRAGE ABSOLU : */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     animation: slideUp 0.6s ease-out;
 }
 
 .checkCircle {
-    width: 80px;
-    height: 80px;
-    background-color: rgba(106, 13, 173, 0.2); /* Ton violet transparent */
+    width: 85px;
+    height: 85px;
+    background-color: rgba(106, 13, 173, 0.15);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto 2rem;
-    color: #FFD700; /* Ton doré */
-    font-size: 3rem;
+    margin-bottom: 2rem; 
+    color: #FFD700;
+    font-size: 3.5rem;
     border: 2px solid #6A0DAD;
+    box-shadow: 0 0 20px rgba(106, 13, 173, 0.3); 
     animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s both;
 }
 
 .successTitle {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 2.2rem;
+    font-weight: 800;
     color: white;
     margin-bottom: 1rem;
+    letter-spacing: -0.02em;
 }
 
 .successMessage {
     color: #9ca3af;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     line-height: 1.6;
     margin-bottom: 2rem;
+    max-width: 90%; 
 }
 
 .orderId {
     display: inline-block;
-    padding: 0.2rem 0.6rem;
+    padding: 0.3rem 0.8rem;
     background-color: #2a2a2a;
-    color: #6A0DAD;
-    border-radius: 0.4rem;
-    font-weight: 600;
+    color: #a855f7; 
+    border-radius: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin: 0 0.4rem;
 }
 
 .homeButton {
     width: 100%;
-    padding: 1rem;
-    background-color: #6A0DAD; /* Ton violet fétiche */
+    padding: 1.1rem;
+    background-color: #6A0DAD;
     color: white;
     border: none;
     border-radius: 0.75rem;
     font-weight: bold;
+    font-size: 1.05rem;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    margin-top: 1rem;
 }
 
 .homeButton:hover {
     background-color: #8b20db;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(106, 13, 173, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(106, 13, 173, 0.5);
 }
 
-/* Animations pour un effet "Waouh" */
+/* Animations */
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0); }
+    from { opacity: 0; transform: scale(0.5); }
     to { opacity: 1; transform: scale(1); }
+}
+
+
+/* css cancel payment*/
+.cancelLinkPayment {
+    display: block;
+    margin: 1.5rem auto 0;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.2s ease-in-out;
+}
+
+.cancelLinkPayment:hover {
+    color: white;
+    text-decoration: underline;
 }
