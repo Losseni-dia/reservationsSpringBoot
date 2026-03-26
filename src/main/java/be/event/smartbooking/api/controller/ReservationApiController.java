@@ -1,19 +1,18 @@
 package be.event.smartbooking.api.controller;
 
 import be.event.smartbooking.dto.ReservationItemRequest;
-import be.event.smartbooking.model.RepresentationReservation;
 import be.event.smartbooking.model.Reservation;
 import be.event.smartbooking.model.User;
-import be.event.smartbooking.repository.RepresentationReservationRepository;
 import be.event.smartbooking.service.ReservationService;
-import be.event.smartbooking.service.StripeService;
 import be.event.smartbooking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -25,33 +24,27 @@ public class ReservationApiController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private StripeService stripeService;
-     
-    @Autowired
-    private RepresentationReservationRepository representationReservationRepository ;
-
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody List<ReservationItemRequest> items, Principal principal) {
-        User user = userService.findByLogin(principal.getName());
+    public ResponseEntity<?> createReservation(
+            @RequestBody List<ReservationItemRequest> items, 
+            Principal principal) { 
         
-        // 1. On crée la réservation en PENDING (ton code actuel)
-        Reservation res = reservationService.createReservation(user, items);
-        
-        // 2. On récupère les items complets pour calculer le prix dans Stripe
-        // (Tu devras peut-être ajouter une méthode dans ton service pour récupérer les items créés)
-        
+        // Sécurité supplémentaire : si principal est null, c'est un 401
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Utilisateur non connecté"));
+        }
+
         try {
-            // Simulation d'une méthode pour avoir les détails des items de la résa
-            List<RepresentationReservation> detailedItems = representationReservationRepository.findByReservation(res);
+            User currentUser = userService.findByLogin(principal.getName());
+            // On appelle la méthode de paiement qui elle-même appelle createReservation
+            String stripeUrl = reservationService.processStripePayment(items, currentUser);
             
-            // 3. On génère l'URL Stripe
-            String checkoutUrl = stripeService.createCheckoutSession(res, detailedItems);
-            
-            // On renvoie l'URL au frontend React
-            return ResponseEntity.ok(java.util.Collections.singletonMap("url", checkoutUrl));
+            return ResponseEntity.ok(Map.of("url", stripeUrl));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erreur Stripe : " + e.getMessage());
+            // Log l'erreur réelle dans la console pour débugger
+            e.printStackTrace(); 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("message", e.getMessage()));
         }
     }
 

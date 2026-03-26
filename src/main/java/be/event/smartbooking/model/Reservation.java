@@ -39,13 +39,9 @@ public class Reservation {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Optionnel : timestamp de création
+    
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    // AJOUTE CECI :
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "representation_id", nullable = false)
-    private Representation representation;
 }

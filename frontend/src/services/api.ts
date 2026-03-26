@@ -58,7 +58,7 @@ export const authApi = {
     params.append("login", credentials.login);
     params.append("password", credentials.password);
 
-    return await fetch("/api/users/login", {
+    const response = await fetch("/api/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -68,6 +68,11 @@ export const authApi = {
       body: params,
       credentials: "include",
     });
+
+    if (!response.ok) {
+      throw new Error("Identifiants incorrects");
+    }
+    return response;
   },
   logout: async () => {
     try {
@@ -82,11 +87,9 @@ export const authApi = {
     return res.json();
   },
   register: async (userData: UserRegistrationDto) => {
-    // On n'utilise pas secureFetch ici car on veut gérer les réponses d'erreur (ex: 409) dans le composant.
-    // On retourne la réponse brute pour que le composant puisse vérifier `response.ok` et lire le texte d'erreur.
     const headers = new Headers({
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      Accept: "application/json",
       "Accept-Language": i18n.language || "fr",
     });
     const csrfToken = getCsrfToken();
@@ -243,8 +246,18 @@ export const reservationApi = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(items),
     });
-    return res.json();
+
+    // Sécurité : On vérifie le type de contenu avant de parser
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return res.json();
+    } else {
+      // Si le backend renvoie l'URL directement en texte
+      const urlText = await res.text();
+      return { url: urlText };
+    }
   },
+
   getMyBookings: async (): Promise<Reservation[]> => {
     const res = await secureFetch(`${API_BASE}/reservations/my-bookings`);
     return res.json();

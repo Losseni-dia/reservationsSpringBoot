@@ -1,7 +1,6 @@
 package be.event.smartbooking.service;
 
 import be.event.smartbooking.model.Reservation;
-import be.event.smartbooking.model.Role;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.repository.ReservationRepository;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

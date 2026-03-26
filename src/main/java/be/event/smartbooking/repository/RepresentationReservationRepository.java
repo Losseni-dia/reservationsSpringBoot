@@ -1,4 +1,3 @@
-// RepresentationReservationRepository.java
 package be.event.smartbooking.repository;
 
 import be.event.smartbooking.model.RepresentationReservation;

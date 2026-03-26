@@ -26,10 +26,8 @@ public class ReservationService {
     private final PriceRepository priceRepository;
     private final RepresentationRepos representationRepository;
     private final EmailService emailService;
+    private final StripeService stripeService;
 
-    /**
-     * Crée une réservation avec ses articles.
-     */
     @Transactional
     public Reservation createReservation(User user, List<ReservationItemRequest> items) {
         if (items == null || items.isEmpty()) {
@@ -42,53 +40,61 @@ public class ReservationService {
                 .statut(StatutReservation.PENDING)
                 .build();
 
-        reservation = reservationRepository.save(reservation);
+        Reservation savedRes;
+        System.out.println(">>>>>>>> ETAPE 1 : TENTATIVE DE SAUVEGARDE RESERVATION PARENTE");
+        try {
+            savedRes = reservationRepository.saveAndFlush(reservation);
+            System.out.println(">>>>>>>> ETAPE 1 OK ! ID Parente : " + savedRes.getId());
+        } catch (Exception e) {
+            System.out.println("!!!!!!!! CRASH LORS DE LA SAUVEGARDE PARENTE !!!!!!!!");
+            throw e;
+        }
 
         for (ReservationItemRequest itemReq : items) {
             Representation repr = representationRepository.findById(itemReq.representationId())
-                    .orElseThrow(() -> new BusinessException(
-                            "error.representation.notfound",
-                            HttpStatus.NOT_FOUND,
-                            itemReq.representationId()));
+                    .orElseThrow(() -> new BusinessException("Representation non trouvée", HttpStatus.NOT_FOUND));
+            
+            Price pr = priceRepository.findById(itemReq.priceId())
+                    .orElseThrow(() -> new BusinessException("Prix non trouvé", HttpStatus.NOT_FOUND));
 
-            Price price = priceRepository.findById(itemReq.priceId())
-                    .orElseThrow(() -> new BusinessException(
-                            "error.price.notfound",
-                            HttpStatus.NOT_FOUND,
-                            itemReq.priceId()));
+            RepresentationReservation item = new RepresentationReservation();
+            item.setReservation(savedRes);
+            item.setRepresentation(repr);
+            item.setPrice(pr);
+            item.setQuantity(itemReq.quantity());
 
-            // Logique de stock (Exemple à adapter selon ton modèle) :
-            // if (repr.getPlacesRestantes() < itemReq.quantity()) throw new
-            // BusinessException("Plus de places disponibles", HttpStatus.CONFLICT);
-
-            RepresentationReservation item = RepresentationReservation.builder()
-                    .reservation(reservation)
-                    .representation(repr)
-                    .price(price)
-                    .quantity(itemReq.quantity())
-                    .build();
-
-            itemRepository.save(item);
+            System.out.println(">>>>>>>> ETAPE 2 : TENTATIVE SAUVEGARDE ITEM (ReprID=" + repr.getId() + ")");
+            try {
+                itemRepository.saveAndFlush(item);
+                System.out.println(">>>>>>>> ETAPE 2 OK !");
+            } catch (Exception e) {
+                System.out.println("!!!!!!!! CRASH LORS DE LA SAUVEGARDE DE L'ITEM !!!!!!!!");
+                throw e;
+            }
         }
-
-        log.info("Réservation #{} créée pour l'utilisateur {}", reservation.getId(), user.getLogin());
-        return reservation;
+        
+        return savedRes;
     }
 
-    /**
-     * Récupère une réservation et vérifie les droits d'accès.
-     */
+    @Transactional
+    public String processStripePayment(List<ReservationItemRequest> items, User user) {
+        Reservation reservation = this.createReservation(user, items);
+        List<RepresentationReservation> savedItems = itemRepository.findByReservationWithDetails(reservation);
+
+        return stripeService.createCheckoutSession(reservation, savedItems);
+    }
+
     public Reservation getByIdAndUser(Long reservationId, Long userId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
+        // CORRECTION ICI : Utilisation de reservationRepository au lieu de reservation
+        Reservation res = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BusinessException("error.reservation.notfound", HttpStatus.NOT_FOUND));
 
-        if (!reservation.getUser().getId().equals(userId)) {
-            log.warn("Tentative d'accès illégal : User {} a tenté d'accéder à la Réservation #{}", userId,
-                    reservationId);
+        if (!res.getUser().getId().equals(userId)) {
+            log.warn("Tentative d'accès illégal : User {} a tenté d'accéder à la Réservation #{}", userId, reservationId);
             throw new BusinessException("error.reservation.forbidden", HttpStatus.FORBIDDEN);
         }
 
-        return reservation;
+        return res;
     }
 
     @Transactional
@@ -106,25 +112,22 @@ public class ReservationService {
         reservation.setStatut(StatutReservation.CONFIRMED);
         Reservation confirmed = reservationRepository.save(reservation);
         List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(confirmed);
+        
         Locale locale = (confirmed.getUser().getLangue() != null && !confirmed.getUser().getLangue().isBlank())
                 ? Locale.forLanguageTag(confirmed.getUser().getLangue()) : Locale.FRENCH;
+        
         emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed, items, locale);
         log.info("Réservation #{} confirmée (Payée).", reservationId);
         return confirmed;
     }
 
-    // --- DANS ReservationService.java ---
-
-    /**
-     * VERSION SYSTÈME : Annulation automatique (Stripe, Admin, etc.)
-     */
     @Transactional
     public void cancelReservation(Long reservationId) {
         Reservation res = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BusinessException("error.reservation.notfound", HttpStatus.NOT_FOUND));
 
         if (res.getStatut() == StatutReservation.CANCELLED) {
-            return; // Déjà annulée, on ne fait rien pour éviter les erreurs inutiles
+            return;
         }
 
         res.setStatut(StatutReservation.CANCELLED);

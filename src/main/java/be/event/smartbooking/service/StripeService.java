@@ -57,7 +57,7 @@ public class StripeService {
                     .setMode(SessionCreateParams.Mode.PAYMENT)
                     // On utilise frontendUrl pour la redirection
                     .setSuccessUrl(frontendUrl + "/payment-success?session_id={CHECKOUT_SESSION_ID}")
-                    .setCancelUrl(frontendUrl + "/cart")
+                    .setCancelUrl(frontendUrl + "/payment-cancelled")
                     .addAllLineItem(lineItems)
                     // Metadata pour faire le lien avec ta DB après le paiement
                     .putMetadata("reservation_id", reservation.getId().toString())
