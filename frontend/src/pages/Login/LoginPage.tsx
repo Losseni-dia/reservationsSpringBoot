@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../components/context/AuthContext';
 import styles from './LoginPage.module.css';
+import PasswordInput from "../../components/ui/passwordinput/PasswordInput";
 
 const LoginPage: React.FC = () => {
   const { t } = useTranslation();
@@ -48,66 +49,68 @@ const LoginPage: React.FC = () => {
         <h1 className={styles.logoTitle}>
           SMART<span className={styles.logoAccent}>BOOKING</span>
         </h1>
-        <p className={styles.logoSubtitle}>{t('auth.login.subtitle')}</p>
+        <p className={styles.logoSubtitle}>{t("auth.login.subtitle")}</p>
       </div>
 
       <div className={styles.loginCard}>
-        <h2 className={styles.cardTitle}>{t('auth.login.title')}</h2>
-        
+        <h2 className={styles.cardTitle}>{t("auth.login.title")}</h2>
+
         {successMessage && (
-          <div className="alert alert-success text-center" style={{ fontSize: '0.9rem', padding: '10px', marginBottom: '1.5rem' }}>
+          <div
+            className="alert alert-success text-center"
+            style={{
+              fontSize: "0.9rem",
+              padding: "10px",
+              marginBottom: "1.5rem",
+            }}
+          >
             {successMessage}
           </div>
         )}
 
-        {error && (
-          <div className={styles.errorMessage}>
-            {error}
-          </div>
-        )}
+        {error && <div className={styles.errorMessage}>{error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t('auth.loginOrEmail')}</label>
+            <label className={styles.label}>{t("auth.loginOrEmail")}</label>
             <input
               type="text"
               value={loginIdentifier}
               onChange={(e) => setLoginIdentifier(e.target.value)}
               className={styles.input}
-              placeholder={t('auth.placeholderLogin')}
+              placeholder={t("auth.placeholderLogin")}
             />
           </div>
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>{t('auth.password')}</label>
-            <input
-              type="password"
+            <label className={styles.label}>{t("auth.password")}</label>
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={styles.input}
-              placeholder={t('auth.placeholderPassword')}
+              placeholder={t("auth.placeholderPassword")}
               required
             />
           </div>
 
           <div className={styles.forgotPasswordWrapper}>
             <Link to="/forgot-password" className={styles.forgotPasswordLink}>
-              {t('auth.login.forgotPassword')}
+              {t("auth.login.forgotPassword")}
             </Link>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ''}`}
+            className={`${styles.submitButton} ${isLoading ? styles.buttonDisabled : ""}`}
           >
-            {isLoading ? t('auth.login.submitLoading') : t('auth.login.submit')}
+            {isLoading ? t("auth.login.submitLoading") : t("auth.login.submit")}
           </button>
         </form>
 
         <p className={styles.footerText}>
-          {t('auth.login.noAccount')}{' '}
+          {t("auth.login.noAccount")}{" "}
           <Link to="/register" className={styles.signupLink}>
-            {t('auth.login.signUp')}
+            {t("auth.login.signUp")}
           </Link>
         </p>
       </div>
