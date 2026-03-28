@@ -1,6 +1,10 @@
 {
   "dependencies": {
     "i18next": "^25.8.11",
-    "react-i18next": "^16.5.4"
+    "react-i18next": "^16.5.4",
+    "swagger-ui-react": "^5.32.1"
+  },
+  "devDependencies": {
+    "@types/swagger-ui-react": "^5.18.0"
   }
 }

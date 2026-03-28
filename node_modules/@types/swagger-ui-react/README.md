@@ -1,0 +1,15 @@
+# Installation
+> `npm install --save @types/swagger-ui-react`
+
+# Summary
+This package contains type definitions for swagger-ui-react (https://github.com/swagger-api/swagger-ui#readme).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/swagger-ui-react.
+
+### Additional Details
+ * Last updated: Wed, 29 Jan 2025 11:32:18 GMT
+ * Dependencies: [@types/react](https://npmjs.com/package/@types/react)
+
+# Credits
+These definitions were written by [viki.green](https://github.com/VictoriaGreen93), [afrkorsakow](https://github.com/afrkorsakow), and [David Ulrich](https://github.com/davulrich).

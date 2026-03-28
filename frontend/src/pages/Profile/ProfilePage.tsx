@@ -7,7 +7,7 @@ import styles from "./ProfilePage.module.css";
 
 const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const [formData, setFormData] = useState<Partial<UserProfileDto>>({
     firstname: "",
     lastname: "",
@@ -41,6 +41,7 @@ const ProfilePage: React.FC = () => {
 
     try {
       await authApi.updateProfile(formData);
+      await refreshProfile();
       setMessage({ type: "success", text: t("auth.profile.success") });
     } catch (err: any) {
       setMessage({ type: "error", text: err.message });

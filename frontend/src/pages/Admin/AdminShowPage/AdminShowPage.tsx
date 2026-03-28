@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 // API client for admin show operations (list, confirm, revoke)
 import { showApi } from "../../../services/api";
 // Show model and status type
-import { Show } from "../../../types/models";
+import { Show, ShowStatus } from "../../../types/models";
 // Loading spinner while fetching data
 import Loader from "../../../components/ui/loader/Loader";
 // Modal for confirming confirm/revoke actions
@@ -43,7 +43,7 @@ const AdminShowPage: React.FC = () => {
       // Sort so "A_CONFIRMER" (pending) appear first to draw admin attention
       const sortedShows = data.sort((a: Show, b: Show) => {
         if (a.status === b.status) return 0;
-        return a.status === 'A_CONFIRMER' ? -1 : 1;
+        return a.status === ShowStatus.A_CONFIRMER ? -1 : 1; // <-- Modification ici
       });
 
       setShows(sortedShows);
@@ -54,6 +54,7 @@ const AdminShowPage: React.FC = () => {
       setLoading(false);
     }
   }, [t]);
+  
 
   // Load shows when the component mounts (and when fetchShows reference changes)
   useEffect(() => {
@@ -77,10 +78,11 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
         setLoading(true);
 
         // Determine the new status (flip current one)
-        const newStatus = show.status === 'CONFIRME' ? 'A_CONFIRMER' : 'CONFIRME';
-
+const newStatus = show.status === ShowStatus.CONFIRME 
+            ? ShowStatus.A_CONFIRMER 
+            : ShowStatus.CONFIRME;
         // Call API: revoke or confirm depending on current status
-        if (show.status === 'CONFIRME') {
+        if (show.status === ShowStatus.CONFIRME) {
             await showApi.revoke(show.id);
         } else {
             await showApi.confirm(show.id);
@@ -88,17 +90,17 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
 
         // Update list: revoked at top, confirmed at bottom (keeps sort order consistent)
         setShows((prevShows) => {
-            const updatedShow = { ...show, status: newStatus as any };
+            const updatedShow = { ...show, status: newStatus };
             const otherShows = prevShows.filter((s) => s.id !== show.id);
             
-            if (newStatus === 'A_CONFIRMER') {
+            if (newStatus === ShowStatus.A_CONFIRMER) {
                 return [updatedShow, ...otherShows];
             } else {
                 return [...otherShows, updatedShow];
             }
         });
 
-        setToastMessage(newStatus === 'CONFIRME' ? t("admin.shows.toastConfirmed") : t("admin.shows.toastRevoked"));
+        setToastMessage(newStatus === ShowStatus.CONFIRME ? t("admin.shows.toastConfirmed") : t("admin.shows.toastRevoked"));
         setToastType("success");
 
     } catch (err) {
@@ -155,12 +157,12 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
               <td className={styles.tableCell}>
                 <span
                   className={`${styles.statusBadge} ${
-                    show.status === 'CONFIRME'
+                    show.status === ShowStatus.CONFIRME
                       ? styles.statusConfirmed
                       : styles.statusPending
                   }`}
                 >
-                  {show.status === 'CONFIRME' ? t("admin.shows.statusConfirmed") : t("admin.shows.statusPending")}
+                  {show.status === ShowStatus.CONFIRME ? t("admin.shows.statusConfirmed") : t("admin.shows.statusPending")}
                 </span>
               </td>
               <td className={styles.tableCell}>
@@ -176,7 +178,7 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
                     onClick={() => handleOpenConfirmModal(show)}
                     disabled={loading}
                   >
-                    {show.status === 'CONFIRME' ? t("admin.shows.revoke") : t("admin.shows.confirm")}
+                    {show.status === ShowStatus.CONFIRME ? t("admin.shows.revoke") : t("admin.shows.confirm")}
                   </button>
                 </div>
               </td>
@@ -229,13 +231,13 @@ const handleToggleConfirmShow = useCallback(async (show: Show) => {
       {/* Confirm/revoke confirmation modal */}
       <ConfirmModal
         isOpen={isConfirmModalOpen}
-        title={showToConfirm?.status === 'CONFIRME' ? t("admin.shows.modalRevokeTitle") : t("admin.shows.modalConfirmTitle")}
+        title={showToConfirm?.status === ShowStatus.CONFIRME ? t("admin.shows.modalRevokeTitle") : t("admin.shows.modalConfirmTitle")} // <-- 1. Modification ici
         message={
-          showToConfirm?.status === 'CONFIRME'
+          showToConfirm?.status === ShowStatus.CONFIRME // <-- 2. Modification ici
             ? t("admin.shows.modalRevokeMessage", { title: showToConfirm?.title })
             : t("admin.shows.modalConfirmMessage", { title: showToConfirm?.title })
         }
-        confirmButtonClass={showToConfirm?.status === 'CONFIRME' ? "danger" : "success"}
+        confirmButtonClass={showToConfirm?.status === ShowStatus.CONFIRME ? "danger" : "success"} // <-- 3. Modification ici
         onConfirm={handleConfirmModalConfirm}
         onCancel={handleConfirmModalCancel}
       />
