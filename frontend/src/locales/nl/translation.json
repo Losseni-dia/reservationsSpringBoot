@@ -249,6 +249,21 @@
       "title": "Onze",
       "titleHighlight": "Locaties",
       "visitWebsite": "Website bezoeken →"
+    },
+    "artists": {
+      "title": "Overzicht van",
+      "titleHighlight": "Artiesten",
+      "subtitle": "{{count}} geregistreerde artiest(en)",
+      "colId": "ID",
+      "colFirstname": "Voornaam",
+      "colLastname": "Achternaam",
+      "colTypes": "Types / disciplines",
+      "loading": "Artiesten laden...",
+      "error": "Kan artiesten niet laden.",
+      "retry": "Opnieuw proberen",
+      "empty": "Geen artiesten geregistreerd.",
+      "noTypes": "—",
+      "backToDashboard": "← Dashboard"
     }
   },
   "producer": {
