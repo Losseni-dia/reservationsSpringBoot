@@ -36,3 +36,4 @@ uploads/
 # Local secrets (never commit)
 #.env on en a besoin pour le travail de groupe donc il ira sur github
 application-local.properties
+node_modules

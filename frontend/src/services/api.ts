@@ -4,6 +4,7 @@ import {
   Location,
   Review,
   Reservation,
+  ReservationAdminDto,
   ReservationRequest,
   UserProfileDto,
   UserRegistrationDto,
@@ -295,6 +296,11 @@ export const reservationApi = {
     const res = await secureFetch(`${API_BASE}/reservations/my-bookings`);
     return res.json();
   },
+
+  getAllForAdmin: async (): Promise<ReservationAdminDto[]> => {
+    const res = await secureFetch(`${API_BASE}/admin/reservations`);
+    return res.json();
+  },
 };
 export const reviewApi = {
   getByShow: async (showId: number): Promise<Review[]> => {
@@ -409,9 +415,17 @@ export const locationApi = {
   },
 };
 
+/** Réponse de GET /api/admin/stats/summary (compteurs globaux). */
+export interface AdminStatsSummaryDto {
+  totalUsers: number;
+  totalShows: number;
+  totalLocations: number;
+  totalReservations: number;
+}
+
 // ✅ adminApi est maintenant un export indépendant et contient la nouvelle méthode
 export const adminApi = {
-  getStatsSummary: async () => {
+  getStatsSummary: async (): Promise<AdminStatsSummaryDto> => {
     const res = await secureFetch(`${API_BASE}/admin/stats/summary`);
     return res.json();
   },

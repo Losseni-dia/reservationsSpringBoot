@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import be.event.smartbooking.repository.LocationRepos;
 import be.event.smartbooking.repository.ReservationRepository;
@@ -14,6 +15,7 @@ import be.event.smartbooking.repository.UserRepos;
 import lombok.RequiredArgsConstructor;
 
 
+@RestController
 @RequestMapping("/api/admin/stats")
 @RequiredArgsConstructor
 public class AdminStatsController {
