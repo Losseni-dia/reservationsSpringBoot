@@ -13,6 +13,53 @@ function formatCell(
   return value;
 }
 
+/** Date/heure ISO → libellé localisé (FR : 26/03/2026 à 09:25). */
+function formatAdminDateTime(
+  iso: string | null | undefined,
+  language: string | undefined,
+  fallback: string,
+): string {
+  if (iso == null || iso === "") return fallback;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return fallback;
+
+  const primary = (language || "fr").toLowerCase().split("-")[0];
+
+  if (primary === "fr") {
+    const fmt = new Intl.DateTimeFormat("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    const parts = fmt.formatToParts(d);
+    const get = (type: Intl.DateTimeFormatPartTypes) =>
+      parts.find((p) => p.type === type)?.value ?? "";
+    const day = get("day");
+    const month = get("month");
+    const year = get("year");
+    const hour = get("hour");
+    const minute = get("minute");
+    if (!day || !month || !year || hour === "" || minute === "")
+      return fmt.format(d).replace(/,\s*/, " à ");
+    const hh = hour.padStart(2, "0");
+    const mm = minute.padStart(2, "0");
+    return `${day}/${month}/${year} à ${hh}:${mm}`;
+  }
+
+  try {
+    return new Intl.DateTimeFormat(language || "fr-FR", {
+      dateStyle: "short",
+      timeStyle: "short",
+      hour12: false,
+    }).format(d);
+  } catch {
+    return d.toLocaleString("fr-FR");
+  }
+}
+
 export default function AdminReservationPage() {
   const { t, i18n } = useTranslation();
   const { reservations, loading, error, refetch } = useAdminReservations();
@@ -31,10 +78,17 @@ export default function AdminReservationPage() {
 
   const showSessionCell = (row: ReservationAdminDto) => {
     const title = row.showTitle;
-    const when = row.representationWhen;
-    if (!title && !when) return t("admin.reservations.noValue");
-    if (title && when) return `${title} — ${when}`;
-    return title || when || t("admin.reservations.noValue");
+    const whenFormatted = formatAdminDateTime(
+      row.representationWhen,
+      i18n.language,
+      t("admin.reservations.noValue"),
+    );
+    const whenIsEmpty =
+      !row.representationWhen ||
+      whenFormatted === t("admin.reservations.noValue");
+    if (!title && whenIsEmpty) return t("admin.reservations.noValue");
+    if (title && !whenIsEmpty) return `${title} — ${whenFormatted}`;
+    return title || whenFormatted;
   };
 
   if (loading) {
@@ -117,7 +171,11 @@ export default function AdminReservationPage() {
                     <code className={styles.idCode}>{row.id}</code>
                   </td>
                   <td className={styles.mutedCell}>
-                    {formatCell(row.reservationDate, dash)}
+                    {formatAdminDateTime(
+                      row.reservationDate,
+                      i18n.language,
+                      dash,
+                    )}
                   </td>
                   <td>
                     <div className={styles.userCell}>
