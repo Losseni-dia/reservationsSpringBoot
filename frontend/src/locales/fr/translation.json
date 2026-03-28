@@ -260,6 +260,21 @@
       "title": "Nos",
       "titleHighlight": "Lieux",
       "visitWebsite": "Visiter le site web →"
+    },
+    "artists": {
+      "title": "Répertoire des",
+      "titleHighlight": "Artistes",
+      "subtitle": "{{count}} artiste(s) enregistré(s)",
+      "colId": "ID",
+      "colFirstname": "Prénom",
+      "colLastname": "Nom",
+      "colTypes": "Types / disciplines",
+      "loading": "Chargement des artistes...",
+      "error": "Impossible de charger les artistes.",
+      "retry": "Réessayer",
+      "empty": "Aucun artiste enregistré.",
+      "noTypes": "—",
+      "backToDashboard": "← Tableau de bord"
     }
   },
   "producer": {
