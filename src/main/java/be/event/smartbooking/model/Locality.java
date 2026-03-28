@@ -3,6 +3,8 @@ package be.event.smartbooking.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +13,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +31,10 @@ public class Locality {
     
     private String locality;
 
-    @OneToMany( targetEntity=Location.class, mappedBy="locality" )
+    @OneToMany(targetEntity = Location.class, mappedBy = "locality")
+    @ToString.Exclude        // <-- INDISPENSABLE pour Lombok
+    @EqualsAndHashCode.Exclude // <-- INDISPENSABLE pour éviter les boucles de calcul
+    @JsonIgnore
     private List<Location> locations = new ArrayList<>();
 
     public Locality addLocation(Location location) {

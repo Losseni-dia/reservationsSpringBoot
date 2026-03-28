@@ -79,7 +79,7 @@ public class ExportService {
         return sw.toString();
     }
 
-    public String exportReservationsCsv() throws IOException {
+    /*public String exportReservationsCsv() throws IOException {
         List<Reservation> reservations = StreamSupport
                 .stream(reservationRepos.findAll().spliterator(), false)
                 .collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class ExportService {
             }
         }
         return sw.toString();
-    }
+    } */
 
     // ===================================================================
     // EXPORT JSON
@@ -160,7 +160,7 @@ public class ExportService {
         return buildObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(projections);
     }
 
-    public String exportReservationsJson() throws IOException {
+   /**  public String exportReservationsJson() throws IOException {
         List<Reservation> reservations = StreamSupport
                 .stream(reservationRepos.findAll().spliterator(), false)
                 .collect(Collectors.toList());
@@ -176,5 +176,5 @@ public class ExportService {
             put("createdAt", r.getCreatedAt() != null ? r.getCreatedAt().toString() : null);
         }}).collect(Collectors.toList());
         return buildObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(projections);
-    }
+    }*/
 }

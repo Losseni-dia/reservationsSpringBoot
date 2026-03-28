@@ -1,10 +1,12 @@
 package be.event.smartbooking.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.slugify.Slugify;
 
 import jakarta.persistence.Column;
@@ -36,15 +38,19 @@ public class Location {
 
     @ManyToOne
     @JoinColumn(name = "locality_id", nullable = false)
+    @ToString.Exclude
     private Locality locality;
 
     private String website;
     private String phone;
 
-    
+    @JsonIgnore
+    @ToString.Exclude
 	@OneToMany(targetEntity=Show.class, mappedBy="location")
     private List<Show> shows = new ArrayList<>();
     
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(targetEntity = Representation.class, mappedBy = "location")
     private List<Representation> representations = new ArrayList<>();
     

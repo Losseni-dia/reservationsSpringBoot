@@ -1,5 +1,6 @@
 package be.event.smartbooking.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.slugify.Slugify;
 
 import be.event.smartbooking.model.enumeration.ShowStatus;
@@ -68,6 +69,7 @@ public class Show {
 
 	@Builder.Default
 	@OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference // "Je suis le parent, affiche mes enfants"
 	private List<Representation> representations = new ArrayList<>();
 
 	@Builder.Default
