@@ -1,5 +1,8 @@
 package be.event.smartbooking.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,10 +26,9 @@ public class ReservationAdminDto {
     private String showTitle;
     /** Date/heure ISO de la représentation (première ligne). */
     private String representationWhen;
-    /** Somme des quantités sur toutes les lignes (billets). */
-    private Integer totalTickets;
-    /** Libellés des tarifs distincts (ex. "Standard, VIP"). */
-    private String ticketTypes;
+    /** Quantités par type de tarif (ordre d'apparition des lignes). */
+    @Builder.Default
+    private List<TicketDetailDto> ticketDetails = new ArrayList<>();
     /** Somme des (prix unitaire × quantité) sur toutes les lignes. */
     private Double totalAmount;
 }

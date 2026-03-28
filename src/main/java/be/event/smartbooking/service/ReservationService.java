@@ -1,6 +1,8 @@
 package be.event.smartbooking.service;
 
 import be.event.smartbooking.dto.ReservationAdminDto;
+import be.event.smartbooking.dto.TicketDetailDto;
+import be.event.smartbooking.model.enumeration.TypePrice;
 import be.event.smartbooking.dto.ReservationItemRequest;
 import be.event.smartbooking.errorHandler.BusinessException;
 import be.event.smartbooking.model.*;
@@ -15,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -158,13 +160,12 @@ public class ReservationService {
         List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(r);
 
         BigDecimal total = BigDecimal.ZERO;
-        int totalTickets = 0;
-        Set<String> typeLabels = new LinkedHashSet<>();
+        Map<TypePrice, Integer> qtyByType = new LinkedHashMap<>();
         for (RepresentationReservation line : items) {
-            int qty = line.getQuantity() != null ? line.getQuantity() : 0;
-            totalTickets += qty;
             if (line.getPrice() != null && line.getPrice().getType() != null) {
-                typeLabels.add(line.getPrice().getType().getLabel());
+                int qty = line.getQuantity() != null ? line.getQuantity() : 0;
+                TypePrice tp = line.getPrice().getType();
+                qtyByType.merge(tp, qty, Integer::sum);
             }
             if (line.getPrice() != null && line.getPrice().getAmount() != null && line.getQuantity() != null) {
                 total = total.add(
@@ -172,7 +173,12 @@ public class ReservationService {
                                 .multiply(BigDecimal.valueOf(line.getQuantity())));
             }
         }
-        String ticketTypesJoined = typeLabels.isEmpty() ? null : String.join(", ", typeLabels);
+        List<TicketDetailDto> ticketDetails = qtyByType.entrySet().stream()
+                .map(e -> TicketDetailDto.builder()
+                        .category(e.getKey().getLabel())
+                        .quantity(e.getValue())
+                        .build())
+                .collect(Collectors.toList());
 
         String showTitle = null;
         String representationWhen = null;
@@ -196,8 +202,7 @@ public class ReservationService {
                 .userEmail(u != null ? u.getEmail() : null)
                 .showTitle(showTitle)
                 .representationWhen(representationWhen)
-                .totalTickets(totalTickets)
-                .ticketTypes(ticketTypesJoined)
+                .ticketDetails(ticketDetails)
                 .totalAmount(total.doubleValue())
                 .build();
     }

@@ -90,6 +90,11 @@ export interface Reservation {
 }
 
 /** Ligne agrégée renvoyée par GET /api/admin/reservations */
+export interface TicketDetailDto {
+    category: string;
+    quantity: number;
+}
+
 export interface ReservationAdminDto {
     id: number;
     reservationDate: string | null;
@@ -98,8 +103,7 @@ export interface ReservationAdminDto {
     userEmail: string | null;
     showTitle: string | null;
     representationWhen: string | null;
-    totalTickets: number;
-    ticketTypes: string | null;
+    ticketDetails: TicketDetailDto[];
     totalAmount: number;
 }
 

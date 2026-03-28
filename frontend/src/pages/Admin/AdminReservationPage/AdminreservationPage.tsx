@@ -1,9 +1,14 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FaStar, FaTicketAlt } from "react-icons/fa";
 import { useAdminReservations } from "../../../hooks/useAdminReservations";
 import Loader from "../../../components/ui/loader/Loader";
 import styles from "./AdminReservationPage.module.css";
-import type { ReservationAdminDto } from "../../../types/models";
+import type { ReservationAdminDto, TicketDetailDto } from "../../../types/models";
+
+function isVipCategory(category: string): boolean {
+  return category.toUpperCase().includes("VIP");
+}
 
 function formatCell(
   value: string | null | undefined,
@@ -69,6 +74,32 @@ export default function AdminReservationPage() {
       style: "currency",
       currency: "EUR",
     }).format(amount);
+
+  const ticketDetailsCell = (row: ReservationAdminDto) => {
+    const details = row.ticketDetails;
+    if (!details?.length)
+      return <span className="text-secondary small">{dash}</span>;
+    return (
+      <div className="d-flex flex-column gap-1">
+        {details.map((d: TicketDetailDto, i: number) => {
+          const vip = isVipCategory(d.category);
+          return (
+            <div
+              key={`${row.id}-${d.category}-${i}`}
+              className={`d-flex align-items-center gap-2 small ${vip ? styles.ticketLineVip : styles.ticketLineDefault}`}
+            >
+              <span className={styles.ticketIconWrap} aria-hidden>
+                {vip ? <FaStar /> : <FaTicketAlt />}
+              </span>
+              <span className={styles.ticketLineText}>
+                {d.quantity}x {d.category}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   const showSessionCell = (row: ReservationAdminDto) => {
     const title = row.showTitle;
@@ -145,10 +176,7 @@ export default function AdminReservationPage() {
               <th scope="col">{t("admin.reservations.colDate")}</th>
               <th scope="col">{t("admin.reservations.colUser")}</th>
               <th scope="col">{t("admin.reservations.colShowSession")}</th>
-              <th scope="col">{t("admin.reservations.colCategory")}</th>
-              <th scope="col" className="text-end">
-                {t("admin.reservations.colQuantity")}
-              </th>
+              <th scope="col">{t("admin.reservations.colTicketDetails")}</th>
               <th scope="col" className="text-end">
                 {t("admin.reservations.colTotal")}
               </th>
@@ -157,7 +185,7 @@ export default function AdminReservationPage() {
           <tbody>
             {reservations.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center text-secondary py-5">
+                <td colSpan={6} className="text-center text-secondary py-5">
                   {t("admin.reservations.empty")}
                 </td>
               </tr>
@@ -185,15 +213,7 @@ export default function AdminReservationPage() {
                     </div>
                   </td>
                   <td className={styles.mutedCell}>{showSessionCell(row)}</td>
-                  <td className={styles.mutedCell}>
-                    {formatCell(row.ticketTypes, dash)}
-                  </td>
-                  <td className={`text-end ${styles.mutedCell}`}>
-                    {typeof row.totalTickets === "number" &&
-                    !Number.isNaN(row.totalTickets)
-                      ? String(row.totalTickets)
-                      : dash}
-                  </td>
+                  <td>{ticketDetailsCell(row)}</td>
                   <td className={`text-end fw-semibold ${styles.amountCell}`}>
                     {formatEur(row.totalAmount ?? 0)}
                   </td>

@@ -90,6 +90,30 @@
   color: #888;
 }
 
+/* Détail billets : lignes empilées, sans fond (thème sombre épuré) */
+.ticketIconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  line-height: 1;
+  opacity: 0.92;
+}
+
+.ticketLineText {
+  line-height: 1.35;
+  font-size: 0.8125rem;
+}
+
+.ticketLineVip {
+  color: #f5c518;
+}
+
+.ticketLineDefault {
+  color: #b5b5b5;
+}
+
 .amountCell {
   color: #f5c518;
   white-space: nowrap;
