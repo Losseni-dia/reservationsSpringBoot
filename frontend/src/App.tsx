@@ -30,10 +30,7 @@ import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 import AdminArtistPage from "./pages/Admin/AdminArtistPage/AdminArtistPage";
-<<<<<<< HEAD
 import AdminReservationPage from "./pages/Admin/AdminReservationPage/AdminreservationPage";
-=======
->>>>>>> e67de93b (feat(admin): ajouter la route /admin/artists vers la liste des artistes)
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
 import PaymentCancel from "./pages/payment/PaymentCancel";
 import ReservationPage from "./pages/reservation/ReservationPage";
@@ -77,13 +74,10 @@ function App() {
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/admin/reviews" element={<AdminReviewPage />} />
               <Route path="/admin/artists" element={<AdminArtistPage />} />
-<<<<<<< HEAD
               <Route
                 path="/admin/reservations"
                 element={<AdminReservationPage />}
               />
-=======
->>>>>>> e67de93b (feat(admin): ajouter la route /admin/artists vers la liste des artistes)
               <Route path="/reservation/:slug" element={<ReservationPage />} />
               <Route
                 path="/producer/dashboard"
