@@ -24,12 +24,18 @@ import ShowSchedule from "./pages/Producteur/ShowSchedule/ShowSchedule";
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
+// Assurez-vous que ce chemin correspond exactement à votre dossier (ex: ./pages/Admin/adminproducteur/AdminProducteurPage si le dossier est en minuscule)
+import AdminProducteurPage from "./pages/Admin/AdminProducteurPage/AdminProducteurPage";
 import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
-import ReservationPage from "./pages/ReservationPage";
+import PaymentCancel from "./pages/payment/PaymentCancel";
+import ReservationPage from "./pages/reservation/ReservationPage";
 import About from "./pages/about/About";
+import DeveloperPage from "./pages/Developer/DeveloperPage";
+import ApiDocPage from "./pages/ApiDoc/ApiDocPage";
+import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -60,6 +66,7 @@ function App() {
                 element={<ShowSchedule />}
               />
               <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-cancelled" element={<PaymentCancel />} />
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
@@ -73,6 +80,13 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin/users" element={<AdminUsersPage />} />
+              <Route path="/developers" element={<DeveloperPage />} />
+              <Route path="/api-documentation" element={<ApiDocPage />} />
+              <Route
+                path="/admin/pending-producers"
+                element={<AdminProducteurPage />}
+              />
+              <Route path="/become-producer" element={<BecomeProducer />} />
             </Routes>
           </main>
 

@@ -1,0 +1,32 @@
+.group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn {
+  background: linear-gradient(45deg, #FFD700, #FFC107);
+  color: #1a1a1a;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: opacity 0.2s, transform 0.1s;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+.btn:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

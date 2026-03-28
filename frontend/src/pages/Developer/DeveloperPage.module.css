@@ -1,0 +1,203 @@
+.container {
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+.header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 2rem;
+}
+
+.title {
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #aaa;
+}
+
+.section {
+    margin-bottom: 3rem;
+    background-color: #1a1a1a;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.section h3 {
+    color: #f5c518;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.useCaseList {
+    list-style: none;
+    padding: 0;
+}
+
+.useCaseList li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.useCaseList li::before {
+    content: '🚀';
+    position: absolute;
+    left: 0;
+}
+
+.codeBlock {
+    background-color: #0d0d0d;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: monospace;
+    color: #0dcaf0;
+    border: 1px solid #222;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.toggleBtn {
+    background-color: transparent;
+    color: #f5c518;
+    border: 1px solid #f5c518;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s;
+    margin-top: 1rem;
+}
+
+.toggleBtn:hover {
+    background-color: #f5c518;
+    color: #000;
+}
+
+.docLinkBtn {
+    display: inline-block;
+    background-color: #0d6efd;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+}
+
+.docLinkBtn:hover {
+    background-color: #0b5ed7;
+    color: white;
+}
+
+.loginAlert {
+    background-color: rgba(245, 197, 24, 0.1);
+    border-left: 4px solid #f5c518;
+    padding: 1rem;
+    margin-top: 1rem;
+    color: #ddd;
+}
+
+/* Nouvelles classes pour le tutoriel pas à pas */
+.step {
+    display: flex;
+    margin-bottom: 2rem;
+    align-items: flex-start;
+}
+
+.stepNumber {
+    background-color: #f5c518;
+    color: #000;
+    font-weight: bold;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 1.5rem;
+    margin-top: 5px;
+}
+
+.stepContent h4 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.stepContent p {
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.codeExample {
+    background-color: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 6px;
+    border-left: 4px solid #0dcaf0;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: #d4d4d4;
+    white-space: pre;
+    line-height: 1.5;
+}
+
+.codeHighlight {
+    color: #f5c518;
+    font-weight: bold;
+}
+
+.codeTitle {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.codeBadge {
+    background-color: #333;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #f5c518;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- Style pour les instructions Swagger --- */
+.instructionList {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.instructionList li {
+    background-color: #1a1a1a;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border-left: 4px solid #f5c518;
+    color: #ddd;
+}
+
+.instructionList strong {
+    color: #fff;
+}

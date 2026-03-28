@@ -1,8 +1,5 @@
 package be.event.smartbooking.dto.importexport;
 
-import be.event.smartbooking.dto.importexport.UserImportDto;
-import be.event.smartbooking.dto.importexport.ShowImportDto;
-import be.event.smartbooking.dto.importexport.ImportResult;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

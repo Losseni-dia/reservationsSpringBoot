@@ -58,7 +58,7 @@ export const authApi = {
     params.append("login", credentials.login);
     params.append("password", credentials.password);
 
-    return await fetch("/api/users/login", {
+    const response = await fetch("/api/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -68,6 +68,11 @@ export const authApi = {
       body: params,
       credentials: "include",
     });
+
+    if (!response.ok) {
+      throw new Error("Identifiants incorrects");
+    }
+    return response;
   },
   logout: async () => {
     try {
@@ -82,17 +87,20 @@ export const authApi = {
     return res.json();
   },
   register: async (userData: UserRegistrationDto) => {
-    const res = await secureFetch(`${API_BASE}/users/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Accept-Language": i18n.language || "fr",
     });
-    const text = await res.text();
-    try {
-      return JSON.parse(text);
-    } catch (e) {
-      return text;
-    }
+    const csrfToken = getCsrfToken();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+
+    return fetch(`${API_BASE}/users/register`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(userData),
+      credentials: "include",
+    });
   },
   updateProfile: async (profileData: Partial<UserProfileDto>) => {
     const res = await secureFetch(`${API_BASE}/users/profile`, {
@@ -113,6 +121,10 @@ export const userApi = {
     const res = await secureFetch("/api/users/inactive");
     return res.json();
   },
+  getPending: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users/pending");
+    return res.json();
+  },
   
   delete: async (id: number) => {
     return await secureFetch(`/api/users/${id}`, { method: "DELETE" });
@@ -124,6 +136,11 @@ export const userApi = {
   },
   activate: async (userId: number) => {
     return await secureFetch(`/api/users/${userId}/activate`, {
+      method: "PUT",
+    });
+  },
+  approve: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/approve`, {
       method: "PUT",
     });
   },
@@ -229,8 +246,18 @@ export const reservationApi = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(items),
     });
-    return res.json();
+
+    // Sécurité : On vérifie le type de contenu avant de parser
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return res.json();
+    } else {
+      // Si le backend renvoie l'URL directement en texte
+      const urlText = await res.text();
+      return { url: urlText };
+    }
   },
+
   getMyBookings: async (): Promise<Reservation[]> => {
     const res = await secureFetch(`${API_BASE}/reservations/my-bookings`);
     return res.json();
@@ -284,6 +311,19 @@ export const translateApi = {
         targetLang,
         sourceLang: sourceLang || "fr",
       }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
+  },
+};
+
+/** Live comment translation via Google Cloud (POST /api/translation/translate). Throws on 503 or other errors. */
+export const translationApi = {
+  translateComment: async (text: string, targetLanguage: string): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translation/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, targetLanguage }),
     });
     const data = await res.json();
     return data.translatedText ?? text;

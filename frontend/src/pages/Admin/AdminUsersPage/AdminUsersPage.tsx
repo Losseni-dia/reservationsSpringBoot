@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userApi } from '../../../services/api';
 import { UserProfileDto } from '../../../types/models';
 import Loader from '../../../components/ui/loader/Loader';
 import styles from './AdminUsersPage.module.css';
+import ExportButton from '../../../components/ui/exportButton/ExportButton';
+import ImportZone from '../../../components/ui/importZone/ImportZone';
 
 const AdminUsersPage: React.FC = () => {
     const { t } = useTranslation();
     const [users, setUsers] = useState<UserProfileDto[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showImport, setShowImport] = useState(false);
 
     const loadUsers = async () => {
         try {
@@ -63,6 +67,24 @@ const AdminUsersPage: React.FC = () => {
             <header className={styles.header}>
                 <h1>{t("admin.users.title")} <span className={styles.yellow}>{t("admin.users.titleHighlight")}</span></h1>
                 <p>{t("admin.users.subtitle", { count: users.length })}</p>
+                <div className={styles.headerActions}>
+                      <ExportButton type="users" label={t("admin.users.export")} />
+                            <button 
+                                type="button" 
+                                className={styles.importToggleBtn} 
+                                aria-expanded={showImport} 
+                                onClick={() => setShowImport((prev: boolean) => !prev)}
+                            >
+                                {showImport
+                                ? t("admin.users.hideImport")
+                                : t("admin.users.showImport")}
+                            </button>
+                </div>
+                {showImport && (
+ <div className={styles.importSection}>
+    <ImportZone type="users" onSuccess={loadUsers} />
+  </div>
+)}
             </header>
 
             <div className={styles.tableWrapper}>

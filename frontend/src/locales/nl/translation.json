@@ -159,7 +159,10 @@
     "editorialNoteTitle": "Beoordeling van het team",
     "editorialNoteText": "Een ontroerende voorstelling die de codes van het hedendaagse theater herdefinieert. Niet te missen voor de indrukwekkende acteerprestaties.",
     "noRepresentation": "Geen voorstelling beschikbaar.",
-    "translate": "Vertalen"
+    "translate": "Vertalen",
+    "showOriginal": "Toon origineel",
+    "translating": "Vertalen…",
+    "translationUnavailable": "Vertaling tijdelijk niet beschikbaar"
   },
   "booking": {
     "errorLoad": "Kan de voorstellingsgegevens niet laden.",

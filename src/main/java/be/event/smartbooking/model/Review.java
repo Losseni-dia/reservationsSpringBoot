@@ -35,6 +35,7 @@ public class Review {
     @Column(nullable = false)
     private Integer stars; // 1 à 5
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean validated = false; // Modération admin
 

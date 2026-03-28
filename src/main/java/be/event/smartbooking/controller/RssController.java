@@ -1,7 +1,6 @@
 package be.event.smartbooking.controller;
 
-import be.event.smartbooking.View.RssFeedView;
-import be.event.smartbooking.View.RssFeedView;
+import be.event.smartbooking.view.RssFeedView;
 import be.event.smartbooking.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

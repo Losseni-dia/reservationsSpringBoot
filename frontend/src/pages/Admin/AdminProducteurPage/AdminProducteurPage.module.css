@@ -1,0 +1,119 @@
+.container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    color: #e5e5e5;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f5c518;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.subtitle {
+    color: #a0a0a0;
+    margin-top: 0.5rem;
+}
+
+/* --- TABLEAU --- */
+.tableContainer {
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    background-color: #2a2a2a;
+    color: #f5c518;
+    text-align: left;
+    padding: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.table td {
+    padding: 1.2rem;
+    border-bottom: 1px solid #333;
+    color: #ddd;
+    vertical-align: middle;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* --- BADGES & ACTIONS --- */
+.roleBadge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-right: 8px;
+}
+
+.roleProducer { background-color: #6f42c1; color: white; }
+.roleAdmin { background-color: #dc3545; color: white; }
+.roleMember { background-color: #0d6efd; color: white; }
+
+.statusActive { color: #28a745; font-weight: 600; }
+.statusInactive { color: #dc3545; font-weight: 600; }
+.statusPending { color: #f5c518; font-weight: 600; }
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btnAction {
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btnApprove { background-color: #28a745; color: white; }
+.btnDeactivate { background-color: #ffc107; color: #000; }
+.btnActivate { background-color: #17a2b8; color: white; }
+.btnDelete { background-color: #dc3545; color: white; }
+
+.btnAction:hover { opacity: 0.9; }
+
+.emptyState {
+    padding: 3rem;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}

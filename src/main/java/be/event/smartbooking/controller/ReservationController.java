@@ -25,7 +25,6 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    // Liste de MES réservations
     @GetMapping
     public String myReservations(@AuthenticationPrincipal User currentUser, Model model) {
         List<Reservation> reservations = reservationService.getUserReservations(currentUser);
@@ -34,7 +33,6 @@ public class ReservationController {
         return "reservation/index";
     }
 
-    // Détail d'une réservation
     @GetMapping("/{id}")
     public String show(@PathVariable Long id,
             @AuthenticationPrincipal User currentUser,
@@ -53,7 +51,6 @@ public class ReservationController {
         return "reservation/show";
     }
 
-    // Annuler une réservation (seulement si PENDING ou CONFIRMED)
     @PostMapping("/{id}/cancel")
     public String cancel(@PathVariable Long id,
             @AuthenticationPrincipal User currentUser,

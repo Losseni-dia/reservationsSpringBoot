@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,7 @@ public class User {
     // =================================================================
     // ROLES
     // =================================================================
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
@@ -51,6 +54,7 @@ public class User {
     // =================================================================
     // RÉSERVATIONS (relation principale)
     // =================================================================
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -58,8 +62,13 @@ public class User {
     // =================================================================
     // AVIS (reviews)
     // =================================================================
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+    @Builder.Default
+    @Column(name = "is_approved", nullable = false)
+    @org.hibernate.annotations.ColumnDefault("1")
+    private boolean isApproved = false;
 
 
     // =================================================================
@@ -129,5 +138,23 @@ public class User {
     @Override
     public String toString() {
         return login + " (" + firstname + " " + lastname + ")";
+    }
+
+    // =================================================================
+    // API KEYS
+    // =================================================================
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ApiKey> apiKeys = new ArrayList<>();
+
+    public void addApiKey(ApiKey key) {
+        apiKeys.add(key);
+        key.setUser(this);
+    }
+
+    public void removeApiKey(ApiKey key) {
+        apiKeys.remove(key);
+        key.setUser(null);
     }
 }
