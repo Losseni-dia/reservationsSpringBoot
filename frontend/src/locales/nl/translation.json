@@ -273,19 +273,15 @@
       "colDate": "Datum",
       "colUser": "Gebruiker",
       "colShowSession": "Voorstelling / speeldatum",
-      "colStatus": "Status",
+      "colCategory": "Categorie",
+      "colQuantity": "Aantal",
       "colTotal": "Totaalbedrag",
       "loading": "Reserveringen laden...",
       "error": "Kan reserveringen niet laden.",
       "retry": "Opnieuw proberen",
       "empty": "Nog geen reserveringen.",
       "noValue": "—",
-      "backToDashboard": "← Dashboard",
-      "status": {
-        "PENDING": "In afwachting",
-        "CONFIRMED": "Bevestigd",
-        "CANCELLED": "Geannuleerd"
-      }
+      "backToDashboard": "← Dashboard"
     }
   },
   "producer": {

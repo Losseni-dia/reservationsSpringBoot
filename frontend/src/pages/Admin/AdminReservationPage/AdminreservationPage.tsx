@@ -70,12 +70,6 @@ export default function AdminReservationPage() {
       currency: "EUR",
     }).format(amount);
 
-  const statusLabel = (row: ReservationAdminDto) => {
-    const s = row.statut;
-    if (!s) return t("admin.reservations.noValue");
-    return t(`admin.reservations.status.${s}`, { defaultValue: s });
-  };
-
   const showSessionCell = (row: ReservationAdminDto) => {
     const title = row.showTitle;
     const whenFormatted = formatAdminDateTime(
@@ -151,7 +145,10 @@ export default function AdminReservationPage() {
               <th scope="col">{t("admin.reservations.colDate")}</th>
               <th scope="col">{t("admin.reservations.colUser")}</th>
               <th scope="col">{t("admin.reservations.colShowSession")}</th>
-              <th scope="col">{t("admin.reservations.colStatus")}</th>
+              <th scope="col">{t("admin.reservations.colCategory")}</th>
+              <th scope="col" className="text-end">
+                {t("admin.reservations.colQuantity")}
+              </th>
               <th scope="col" className="text-end">
                 {t("admin.reservations.colTotal")}
               </th>
@@ -160,7 +157,7 @@ export default function AdminReservationPage() {
           <tbody>
             {reservations.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center text-secondary py-5">
+                <td colSpan={7} className="text-center text-secondary py-5">
                   {t("admin.reservations.empty")}
                 </td>
               </tr>
@@ -188,8 +185,14 @@ export default function AdminReservationPage() {
                     </div>
                   </td>
                   <td className={styles.mutedCell}>{showSessionCell(row)}</td>
-                  <td>
-                    <span className={styles.statusBadge}>{statusLabel(row)}</span>
+                  <td className={styles.mutedCell}>
+                    {formatCell(row.ticketTypes, dash)}
+                  </td>
+                  <td className={`text-end ${styles.mutedCell}`}>
+                    {typeof row.totalTickets === "number" &&
+                    !Number.isNaN(row.totalTickets)
+                      ? String(row.totalTickets)
+                      : dash}
                   </td>
                   <td className={`text-end fw-semibold ${styles.amountCell}`}>
                     {formatEur(row.totalAmount ?? 0)}

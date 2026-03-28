@@ -284,19 +284,15 @@
       "colDate": "Date",
       "colUser": "Utilisateur",
       "colShowSession": "Spectacle / séance",
-      "colStatus": "Statut",
+      "colCategory": "Catégorie",
+      "colQuantity": "Quantité",
       "colTotal": "Montant total",
       "loading": "Chargement des réservations...",
       "error": "Impossible de charger les réservations.",
       "retry": "Réessayer",
       "empty": "Aucune réservation enregistrée.",
       "noValue": "—",
-      "backToDashboard": "← Tableau de bord",
-      "status": {
-        "PENDING": "En attente",
-        "CONFIRMED": "Confirmée",
-        "CANCELLED": "Annulée"
-      }
+      "backToDashboard": "← Tableau de bord"
     }
   },
   "producer": {

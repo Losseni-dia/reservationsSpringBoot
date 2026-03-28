@@ -98,7 +98,8 @@ export interface ReservationAdminDto {
     userEmail: string | null;
     showTitle: string | null;
     representationWhen: string | null;
-    statut: string | null;
+    totalTickets: number;
+    ticketTypes: string | null;
     totalAmount: number;
 }
 

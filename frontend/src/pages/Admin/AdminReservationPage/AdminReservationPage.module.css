@@ -90,17 +90,6 @@
   color: #888;
 }
 
-.statusBadge {
-  display: inline-block;
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
 .amountCell {
   color: #f5c518;
   white-space: nowrap;

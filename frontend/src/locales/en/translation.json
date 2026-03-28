@@ -273,19 +273,15 @@
       "colDate": "Date",
       "colUser": "User",
       "colShowSession": "Show / session",
-      "colStatus": "Status",
+      "colCategory": "Category",
+      "colQuantity": "Quantity",
       "colTotal": "Total amount",
       "loading": "Loading reservations...",
       "error": "Unable to load reservations.",
       "retry": "Retry",
       "empty": "No reservations yet.",
       "noValue": "—",
-      "backToDashboard": "← Dashboard",
-      "status": {
-        "PENDING": "Pending",
-        "CONFIRMED": "Confirmed",
-        "CANCELLED": "Cancelled"
-      }
+      "backToDashboard": "← Dashboard"
     }
   },
   "producer": {
