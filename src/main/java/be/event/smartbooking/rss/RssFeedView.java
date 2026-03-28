@@ -1,7 +1,5 @@
 package be.event.smartbooking.rss;
 
-
-
 import be.event.smartbooking.model.Show;
 import com.rometools.rome.feed.rss.Channel;
 import com.rometools.rome.feed.rss.Description;

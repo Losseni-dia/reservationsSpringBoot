@@ -62,11 +62,9 @@ public class ImportExportApiController {
                 case "shows" -> "csv".equalsIgnoreCase(format)
                         ? exportService.exportShowsCsv()
                         : exportService.exportShowsJson();
-                 /*
-                 * case "reservations" -> "csv".equalsIgnoreCase(format)
-                 * ? exportService.exportReservationsCsv()
-                 * : exportService.exportReservationsJson();
-                 */
+                case "reservations" -> "csv".equalsIgnoreCase(format)
+                        ? exportService.exportReservationsCsv()
+                        : exportService.exportReservationsJson();
                 default -> throw new IllegalArgumentException("Type non supporté : " + type);
             };
 
