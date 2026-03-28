@@ -118,7 +118,7 @@ public class ShowApiController {
                         response.put("location", updatedShow.getLocation());
                 }
 
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok().build();
         }
 
         /**
@@ -293,7 +293,7 @@ public class ShowApiController {
                 response.put("id", updatedShow.getId());
                 response.put("status", updatedShow.getStatus().toString());
 
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok().build();
         }
 
         /**

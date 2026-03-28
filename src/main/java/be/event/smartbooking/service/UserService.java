@@ -250,6 +250,11 @@ public void registerFromDto(UserRegistrationDto dto) {
         logger.info("Profil mis à jour pour : {} (ID: {})", user.getLogin(), user.getId());
     }
 
+    public User findByEmailOrLogin(String identifier) {
+    return userRepos.findByEmailOrLogin(identifier, identifier)
+            .orElseThrow(() -> new RuntimeException("Utilisateur introuvable avec l'identifiant : " + identifier));
+}
+
     // --- GESTION DU STATUT (SOFT DELETE) ---
 
     public void toggleUserStatus(Long userId) {

@@ -110,6 +110,22 @@ export const authApi = {
     });
     return res.text();
   },
+  forgotPassword: async (email: string) => {
+        const res = await secureFetch(`${API_BASE}/users/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+        return res.text();
+    },
+    resetPassword: async (token: string, password: string) => {
+        const res = await secureFetch(`${API_BASE}/users/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, password }),
+        });
+        return res.text();
+    },
 };
 
 export const userApi = {
@@ -208,17 +224,15 @@ export const showApi = {
   deleteById: async (id: number): Promise<void> => {
     await secureFetch(`${API_BASE}/shows/${id}`, { method: "DELETE" });
   },
-  confirm: async (id: number): Promise<Show> => {
+  confirm: async (id: number): Promise<void> => {
     const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
       method: "PUT",
     });
-    return res.json();
   },
-  revoke: async (id: number): Promise<Show> => {
+  revoke: async (id: number): Promise<void> => {
     const res = await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
       method: "PUT",
     });
-    return res.json();
   },
   getMyShows: async (): Promise<Show[]> => {
     const res = await secureFetch(`${API_BASE}/shows/my-shows`);

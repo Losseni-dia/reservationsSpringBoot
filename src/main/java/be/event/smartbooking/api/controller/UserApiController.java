@@ -111,10 +111,8 @@ public class UserApiController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expirée");
         }
 
-        User user = userService.findByEmail(principal.getName());
-        if (user == null)
-            user = userService.findByLogin(principal.getName());
-
+        User user = userService.findByEmailOrLogin(principal.getName());
+       
         profileDto.setId(user.getId());
         userService.updateUserFromDto(profileDto);
         return ResponseEntity.ok("Profil mis à jour avec succès");

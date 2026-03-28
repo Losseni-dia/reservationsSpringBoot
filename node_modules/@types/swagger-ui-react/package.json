@@ -1,0 +1,45 @@
+{
+    "name": "@types/swagger-ui-react",
+    "version": "5.18.0",
+    "description": "TypeScript definitions for swagger-ui-react",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/swagger-ui-react",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "viki.green",
+            "githubUsername": "VictoriaGreen93",
+            "url": "https://github.com/VictoriaGreen93"
+        },
+        {
+            "name": "afrkorsakow",
+            "githubUsername": "afrkorsakow",
+            "url": "https://github.com/afrkorsakow"
+        },
+        {
+            "name": "David Ulrich",
+            "githubUsername": "davulrich",
+            "url": "https://github.com/davulrich"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./index.d.mts",
+            "require": "./index.d.ts"
+        },
+        "./package.json": "./package.json"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/swagger-ui-react"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/react": "*"
+    },
+    "peerDependencies": {},
+    "typesPublisherContentHash": "b19f0572fca8e1c2f9e65a553662f50916085ab64a7978700a1f2ef66089d347",
+    "typeScriptVersion": "5.0"
+}
