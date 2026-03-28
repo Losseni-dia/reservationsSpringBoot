@@ -264,6 +264,28 @@
       "empty": "Geen artiesten geregistreerd.",
       "noTypes": "—",
       "backToDashboard": "← Dashboard"
+    },
+    "reservations": {
+      "title": "Beheer van",
+      "titleHighlight": "Reserveringen",
+      "subtitle": "{{count}} reservering(en) in het systeem",
+      "colId": "ID",
+      "colDate": "Datum",
+      "colUser": "Gebruiker",
+      "colShowSession": "Voorstelling / speeldatum",
+      "colStatus": "Status",
+      "colTotal": "Totaalbedrag",
+      "loading": "Reserveringen laden...",
+      "error": "Kan reserveringen niet laden.",
+      "retry": "Opnieuw proberen",
+      "empty": "Nog geen reserveringen.",
+      "noValue": "—",
+      "backToDashboard": "← Dashboard",
+      "status": {
+        "PENDING": "In afwachting",
+        "CONFIRMED": "Bevestigd",
+        "CANCELLED": "Geannuleerd"
+      }
     }
   },
   "producer": {
