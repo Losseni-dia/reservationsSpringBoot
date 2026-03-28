@@ -379,9 +379,17 @@ export const locationApi = {
   },
 };
 
+/** Réponse de GET /api/admin/stats/summary (compteurs globaux). */
+export interface AdminStatsSummaryDto {
+  totalUsers: number;
+  totalShows: number;
+  totalLocations: number;
+  totalReservations: number;
+}
+
 // ✅ adminApi est maintenant un export indépendant et contient la nouvelle méthode
 export const adminApi = {
-  getStatsSummary: async () => {
+  getStatsSummary: async (): Promise<AdminStatsSummaryDto> => {
     const res = await secureFetch(`${API_BASE}/admin/stats/summary`);
     return res.json();
   },
