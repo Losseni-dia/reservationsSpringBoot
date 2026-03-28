@@ -56,6 +56,8 @@ public class User {
     // =================================================================
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // <-- Ne pas envoyer les réservations ici
+    @ToString.Exclude
     private List<Reservation> reservations = new ArrayList<>();
 
 
@@ -64,7 +66,10 @@ public class User {
     // =================================================================
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // <-- Ne pas envoyer les avis quand on demande le profil user
+    @ToString.Exclude
     private List<Review> reviews = new ArrayList<>();
+
     @Builder.Default
     @Column(name = "is_approved", nullable = false)
     @org.hibernate.annotations.ColumnDefault("1")

@@ -74,12 +74,20 @@ public class Show {
 
 	@Builder.Default
 	@OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference // "Affiche les reviews quand on consulte le show"
+	@ToString.Exclude // "Mais ne les mets pas dans le toString() pour éviter de boucler"
+	@EqualsAndHashCode.Exclude
 	private List<Review> reviews = new ArrayList<>();
 
 	@Builder.Default // Ajoute bien ceci pour le problème du Builder !
 	@ManyToMany
 	@JoinTable(name = "artist_type_show", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "artist_type_id"))
 	private List<ArtistType> artistTypes = new ArrayList<>();
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id") // La colonne dans la table SQL
+	@ToString.Exclude
+	private User producer; // 👈 C'est ce champ "user" que le Repository va chercher
 
 	// =================================================================
 	// SLUG AUTOMATIQUE

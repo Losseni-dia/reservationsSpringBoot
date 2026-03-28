@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,10 +25,15 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude // <-- AJOUTE CECI
+    @EqualsAndHashCode.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "show_id", nullable = false)
+    @JsonBackReference // <-- BRISE LA BOUCLE JSON
+    @ToString.Exclude // <-- BRISE LA BOUCLE LOMBOK (toString)
+    @EqualsAndHashCode.Exclude
     private Show show;
 
     @Column(nullable = false, columnDefinition = "TEXT")

@@ -3,6 +3,8 @@ package be.event.smartbooking.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +15,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -25,13 +28,12 @@ public class Role {
     private String role;
 
     @ManyToMany
-	@JoinTable(
-		  name = "user_role", 
-		  joinColumns = @JoinColumn(name = "role_id"), 
-		  inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIgnore 
+    @ToString.Exclude
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users = new ArrayList<>();
 
-    //Méthodes
+    // Méthodes
     public List<User> getUsers() {
         return users;
     }
@@ -53,5 +55,5 @@ public class Role {
 
         return this;
     }
-    
+
 }
