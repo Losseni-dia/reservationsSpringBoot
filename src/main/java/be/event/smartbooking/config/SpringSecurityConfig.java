@@ -59,7 +59,7 @@ public class SpringSecurityConfig {
 
                         // 4. Import / Export (Leur travail)
                         .requestMatchers(HttpMethod.GET, "/api/admin/export/shows")
-                                .hasAnyRole("admin", "ADMIN", "affiliate", "AFFILIATE", "PRODUCER")
+                                .hasAnyRole("admin", "ADMIN", "affiliate", "AFFILIATE", "PRODUCER", "producer")
 
                         // 5. API Publique (Ton travail - nécessite clé ou session)
                         .requestMatchers("/api/public/**").authenticated()
@@ -74,7 +74,7 @@ public class SpringSecurityConfig {
                         // 7. Gestion des Shows & Représentations
                         .requestMatchers(HttpMethod.POST, "/api/shows/**").hasAnyRole("admin", "ADMIN","PRODUCER", "producer")
                         .requestMatchers(HttpMethod.PUT, "/api/shows/**").hasAnyRole("admin", "ADMIN","PRODUCER", "producer")
-                        .requestMatchers(HttpMethod.DELETE, "/api/shows/**").hasAnyRole("admin", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/shows/**").hasAnyRole("admin", "ADMIN", "PRODUCER", "producer")
                         .requestMatchers(HttpMethod.POST, "/api/shows/*/representations")
                                 .hasAnyRole("admin", "affiliate", "ADMIN",  "PRODUCER", "producer")
                         .requestMatchers(HttpMethod.DELETE, "/api/representations/*")
