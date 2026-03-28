@@ -18,5 +18,6 @@ public class RepresentationDTO {
     private LocalDateTime when;
     private String showTitle;
     private String locationName;
+    private int ticketsSold;
     private List<PriceDTO> prices; // Ajout crucial pour le choix du tarif
 }

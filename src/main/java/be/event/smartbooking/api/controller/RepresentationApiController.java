@@ -3,10 +3,13 @@ package be.event.smartbooking.api.controller;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import be.event.smartbooking.dto.PriceDTO;
+import be.event.smartbooking.dto.RepresentationDTO;
 import be.event.smartbooking.dto.RepresentationRequest;
 import be.event.smartbooking.model.Location;
 import be.event.smartbooking.model.Price;
@@ -37,30 +40,23 @@ public class RepresentationApiController {
         if (show == null)
             return ResponseEntity.notFound().build();
 
-        // SÉCURITÉ : On vérifie si on a un lieu quelque part
-        Location finalLocation = null;
-        if (request.getLocationId() != null) {
-            finalLocation = locRepo.findById(request.getLocationId()).orElse(show.getLocation());
-        } else {
-            finalLocation = show.getLocation();
-        }
+        // 1. Déterminer le lieu
+        Location finalLocation = (request.getLocationId() != null)
+                ? locRepo.findById(request.getLocationId()).orElse(show.getLocation())
+                : show.getLocation();
 
-        // Si vraiment aucun lieu n'est défini ni dans la requête ni dans le spectacle
         if (finalLocation == null) {
-            return ResponseEntity.badRequest().body("Erreur : Aucun lieu n'est défini pour cette séance.");
+            return ResponseEntity.badRequest().body("Erreur : Aucun lieu n'est défini.");
         }
 
-        // 1. Création de la représentation
+        // 2. Création de la représentation
         Representation rep = Representation.builder()
                 .show(show)
                 .when(request.getWhen())
-                .location(request.getLocationId() != null
-                        ? locRepo.findById(request.getLocationId()).orElse(show.getLocation())
-                        : show.getLocation())
+                .location(finalLocation)
                 .build();
 
-        // 2. Ajout des prix (La cascade CascadeType.ALL s'occupera de la sauvegarde en
-        // base)
+        // 3. Ajout des prix
         if (request.getPrices() != null) {
             request.getPrices().forEach(p -> {
                 if (p.getAmount() != null) {
@@ -73,8 +69,25 @@ public class RepresentationApiController {
             });
         }
 
-        repRepo.save(rep);
-        return ResponseEntity.ok().build();
+        Representation savedRep = repRepo.save(rep);
+
+        // 🚀 CRUCIAL : On transforme l'entité sauvegardée en DTO pour le Frontend
+        RepresentationDTO dto = RepresentationDTO.builder()
+                .id(savedRep.getId())
+                .when(savedRep.getWhen())
+                .showTitle(show.getTitle())
+                .locationName(finalLocation.getDesignation()) // On remplit le nom du lieu
+                .prices(savedRep.getPrices().stream()
+                        .map(p -> PriceDTO.builder()
+                                .id(p.getId())
+                                .type(p.getType().toString())
+                                .amount(p.getAmount())
+                                // On laisse les dates à null par défaut
+                                .build())
+                        .toList())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     /**
