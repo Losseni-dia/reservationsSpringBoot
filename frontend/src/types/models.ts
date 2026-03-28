@@ -89,6 +89,19 @@ export interface Reservation {
     items: RepresentationReservation[]; // Détails des places réservées
 }
 
+/** Ligne agrégée renvoyée par GET /api/admin/reservations */
+export interface ReservationAdminDto {
+    id: number;
+    reservationDate: string | null;
+    createdAt: string | null;
+    userLogin: string | null;
+    userEmail: string | null;
+    showTitle: string | null;
+    representationWhen: string | null;
+    statut: string | null;
+    totalAmount: number;
+}
+
 /**
  * Ligne de détail d'une réservation (Table de liaison)
  */
