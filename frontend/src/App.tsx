@@ -29,6 +29,7 @@ import AdminProducteurPage from "./pages/Admin/AdminProducteurPage/AdminProducte
 import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
 import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
+import AdminArtistPage from "./pages/Admin/AdminArtistPage/AdminArtistPage";
 import PaymentSuccess from "./pages/payment/PaymentSuccess";
 import PaymentCancel from "./pages/payment/PaymentCancel";
 import ReservationPage from "./pages/reservation/ReservationPage";
@@ -71,6 +72,7 @@ function App() {
               <Route path="/admin/shows/add" element={<AddShow />} />
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/admin/reviews" element={<AdminReviewPage />} />
+              <Route path="/admin/artists" element={<AdminArtistPage />} />
               <Route path="/reservation/:slug" element={<ReservationPage />} />
               <Route
                 path="/producer/dashboard"
