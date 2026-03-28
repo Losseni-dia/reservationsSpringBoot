@@ -4,6 +4,7 @@ import {
   Location,
   Review,
   Reservation,
+  ReservationAdminDto,
   ReservationRequest,
   UserProfileDto,
   UserRegistrationDto,
@@ -263,6 +264,11 @@ export const reservationApi = {
 
   getMyBookings: async (): Promise<Reservation[]> => {
     const res = await secureFetch(`${API_BASE}/reservations/my-bookings`);
+    return res.json();
+  },
+
+  getAllForAdmin: async (): Promise<ReservationAdminDto[]> => {
+    const res = await secureFetch(`${API_BASE}/admin/reservations`);
     return res.json();
   },
 };
