@@ -275,6 +275,28 @@
       "empty": "Aucun artiste enregistré.",
       "noTypes": "—",
       "backToDashboard": "← Tableau de bord"
+    },
+    "reservations": {
+      "title": "Gestion des",
+      "titleHighlight": "Réservations",
+      "subtitle": "{{count}} réservation(s) enregistrée(s)",
+      "colId": "ID",
+      "colDate": "Date",
+      "colUser": "Utilisateur",
+      "colShowSession": "Spectacle / séance",
+      "colStatus": "Statut",
+      "colTotal": "Montant total",
+      "loading": "Chargement des réservations...",
+      "error": "Impossible de charger les réservations.",
+      "retry": "Réessayer",
+      "empty": "Aucune réservation enregistrée.",
+      "noValue": "—",
+      "backToDashboard": "← Tableau de bord",
+      "status": {
+        "PENDING": "En attente",
+        "CONFIRMED": "Confirmée",
+        "CANCELLED": "Annulée"
+      }
     }
   },
   "producer": {
