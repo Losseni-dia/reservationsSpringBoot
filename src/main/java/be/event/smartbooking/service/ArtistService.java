@@ -15,11 +15,11 @@ public class ArtistService {
     private ArtistRepos artistRepos;
 
     public List<Artist> getAllArtists() {
-        return (List<Artist>) artistRepos.findAll();
+        return artistRepos.findAllWithTypes();
     }
 
     public Artist getArtistById(long id) {
-        return artistRepos.findById(id);
+        return artistRepos.findByIdWithTypes(id).orElse(null);
     }
 
     public void addArtist(Artist artist) {

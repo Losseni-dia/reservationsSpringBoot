@@ -6,8 +6,12 @@ import be.event.smartbooking.service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import be.event.smartbooking.model.Type;
 
 @RestController
 @RequestMapping("/api/artists")
@@ -40,12 +44,19 @@ public class ArtistApiController {
         artistService.deleteArtist(id);
     }
 
-    // Méthode interne pour transformer l'entité en DTO proprement
     private ArtistDTO convertToDto(Artist artist) {
+        List<String> typeLabels = Collections.emptyList();
+        if (artist.getTypes() != null && !artist.getTypes().isEmpty()) {
+            typeLabels = artist.getTypes().stream()
+                    .map(Type::getType)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        }
         return ArtistDTO.builder()
                 .id(artist.getId())
                 .firstname(artist.getFirstname())
                 .lastname(artist.getLastname())
+                .types(typeLabels)
                 .build();
     }
 }
