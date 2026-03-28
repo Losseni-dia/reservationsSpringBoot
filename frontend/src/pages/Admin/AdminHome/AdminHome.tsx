@@ -34,7 +34,9 @@ const AdminHome = () => {
   }, []);
 
   const getDisplayNumber = (value: number) => {
-    return loading ? "..." : value || "—";
+    if (loading) return "...";
+    if (typeof value === "number" && !Number.isNaN(value)) return String(value);
+    return "—";
   };
 
   if (error) {
