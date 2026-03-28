@@ -1,8 +1,8 @@
-package be.event.smartbooking.view;
+package be.event.smartbooking.rss;
 
 import be.event.smartbooking.model.Show;
 import com.rometools.rome.feed.rss.Channel;
-import com.rometools.rome.feed.rss.Description; // Import corrigé (Description au lieu de Content)
+import com.rometools.rome.feed.rss.Description;
 import com.rometools.rome.feed.rss.Guid;
 import com.rometools.rome.feed.rss.Item;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,30 +37,28 @@ public class RssFeedView extends AbstractRssFeedView {
         List<Show> shows = (List<Show>) model.get("shows");
         List<Item> items = new ArrayList<>();
 
+        if (shows == null) {
+            return items;
+        }
+
         for (Show show : shows) {
             Item item = new Item();
 
-            // Titre
             item.setTitle(show.getTitle());
 
-            // Lien et GUID
             String showUrl = frontendUrl + "/show/" + show.getSlug();
             item.setLink(showUrl);
-            
-            // Instanciation du GUID via setValue
+
             Guid guid = new Guid();
             guid.setValue(showUrl);
             guid.setPermaLink(true);
             item.setGuid(guid);
 
-            // 3. Date
             if (show.getCreatedAt() != null) {
                 Date pubDate = Date.from(show.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant());
                 item.setPubDate(pubDate);
             }
 
-            // Description
-            // Utilisation de l'objet Description au lieu de Content
             Description description = new Description();
             description.setType("text/plain");
             description.setValue(show.getDescription() != null ? show.getDescription() : "Voir les détails sur le site.");

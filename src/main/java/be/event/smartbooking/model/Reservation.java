@@ -44,4 +44,8 @@ public class Reservation {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    // Relation : Une réservation est liée à une représentation
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "representation_id")
+    private Representation representation;
 }
