@@ -1,0 +1,115 @@
+.container {
+  background-color: #141414;
+  min-height: 100vh;
+  padding: 3rem 5%;
+  color: #fff;
+}
+
+.loaderContainer {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #141414;
+  color: #fff;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: #f5c518;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.backLink:hover {
+  color: #ffd54f;
+  text-decoration: underline;
+}
+
+.header {
+  margin-bottom: 2rem;
+  border-left: 5px solid #f5c518;
+  padding-left: 1.5rem;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.yellow {
+  color: #f5c518;
+}
+
+.tableOuter {
+  background: #1f1f1f;
+  border-radius: 12px;
+  padding: 0.5rem;
+  border: 1px solid #333;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.tableOuter :global(thead th) {
+  color: #f5c518;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-color: #333;
+}
+
+.tableOuter :global(tbody td) {
+  border-color: #2a2a2a;
+  vertical-align: middle;
+}
+
+.idCode {
+  background: #2a2a2a;
+  color: #f5c518;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.mutedCell {
+  color: #ccc;
+  max-width: 14rem;
+  font-size: 0.9rem;
+}
+
+.userCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.userEmail {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.amountCell {
+  color: #f5c518;
+  white-space: nowrap;
+}
+
+.errorBox {
+  background: #1f1f1f;
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 36rem;
+}
