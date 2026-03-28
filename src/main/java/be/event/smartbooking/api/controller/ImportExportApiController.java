@@ -48,50 +48,60 @@ public class ImportExportApiController {
      * @param format csv (default) or json
      */
     @GetMapping("/export/{type}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCER')") // 🔓 On ouvre aux deux
     public ResponseEntity<byte[]> export(
             @PathVariable String type,
-            @RequestParam(defaultValue = "csv") String format) {
+            @RequestParam(defaultValue = "csv") String format,
+            java.security.Principal principal, // 👤 On récupère l'utilisateur
+            org.springframework.security.core.Authentication auth) {
 
         try {
-            log.info("Demande d'export : type={}, format={}", type, format);
+            // Vérification des droits : Un producteur ne peut exporter que ses "shows"
+            boolean isAdmin = auth.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-            String content = switch (type.toLowerCase()) {
-                case "users" -> "csv".equalsIgnoreCase(format)
+            if (!isAdmin && !"shows".equalsIgnoreCase(type)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            String content;
+            String login = principal.getName();
+
+            // Logique de choix du service
+            if ("shows".equalsIgnoreCase(type)) {
+                if (isAdmin) {
+                    // L'admin voit TOUT
+                    content = "csv".equalsIgnoreCase(format)
+                            ? exportService.exportShowsCsv()
+                            : exportService.exportShowsJson();
+                } else {
+                    // Le producteur ne voit que les SIENS 🚀
+                    content = "csv".equalsIgnoreCase(format)
+                            ? exportService.exportShowsCsvForProducer(login)
+                            : exportService.exportShowsJsonForProducer(login);
+                }
+            } else if ("users".equalsIgnoreCase(type) && isAdmin) {
+                content = "csv".equalsIgnoreCase(format)
                         ? exportService.exportUsersCsv()
                         : exportService.exportUsersJson();
-                case "shows" -> "csv".equalsIgnoreCase(format)
-                        ? exportService.exportShowsCsv()
-                        : exportService.exportShowsJson();
-                 /*
-                 * case "reservations" -> "csv".equalsIgnoreCase(format)
-                 * ? exportService.exportReservationsCsv()
-                 * : exportService.exportReservationsJson();
-                 */
-                default -> throw new IllegalArgumentException("Type non supporté : " + type);
-            };
+            } else {
+                throw new IllegalArgumentException("Type non supporté ou droits insuffisants");
+            }
 
-            // --- SÉCURITÉ : Vérifier si le contenu est vide ou null ---
+            // --- Le reste de ton code pour générer le fichier reste identique ---
             if (content == null || content.trim().isEmpty()) {
-                log.warn("L'export pour {} est vide.", type);
-                return ResponseEntity.noContent().build(); // Retourne un code 204 (Pas de contenu)
+                return ResponseEntity.noContent().build();
             }
 
             String extension = "json".equalsIgnoreCase(format) ? ".json" : ".csv";
-            String mediaType = "json".equalsIgnoreCase(format)
-                    ? MediaType.APPLICATION_JSON_VALUE
-                    : "text/csv";
-            String filename = type + "_export_" + LocalDate.now() + extension;
-
+            String filename = (isAdmin ? "admin_" : "my_") + type + "_" + LocalDate.now() + extension;
             byte[] bytes = content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
             HttpHeaders headers = new HttpHeaders();
-            // On s'assure que le charset est bien défini
-            headers.setContentType(MediaType.parseMediaType(mediaType + ";charset=UTF-8"));
-            headers.setContentDisposition(
-                    ContentDisposition.attachment().filename(filename).build());
-            headers.setContentLength(bytes.length);
+            headers.setContentType(MediaType.parseMediaType(
+                    "json".equalsIgnoreCase(format) ? "application/json" : "text/csv" + ";charset=UTF-8"));
+            headers.setContentDisposition(ContentDisposition.attachment().filename(filename).build());
 
-            log.info("Export généré avec succès : {}", filename);
             return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
 
         } catch (Exception e) {
@@ -99,6 +109,8 @@ public class ImportExportApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
 
     // =========================================================================
     //  IMPORT

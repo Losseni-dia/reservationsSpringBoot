@@ -17,6 +17,13 @@ const ShowSchedule: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]); // Liste des lieux pour le select
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const getNowDateTimeString = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
+  };
+
+  const minDateTime = getNowDateTimeString();
   const [toast, setToast] = useState<{
     msg: string;
     type: "success" | "error";
@@ -67,46 +74,54 @@ const ShowSchedule: React.FC = () => {
     setNewRep({ ...newRep, prices: updatedPrices });
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!id || !newRep.when || !newRep.locationId) {
-      setToast({
-        msg: t("producer.schedule.alertFillDateLocation"),
-        type: "error",
+const handleSave = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  // 1. Vérification des champs vides
+  if (!id || !newRep.when || !newRep.locationId) {
+    setToast({
+      msg: t("producer.schedule.alertFillDateLocation"),
+      type: "error",
+    });
+    return;
+  }
+
+  // 2. 🛡️ Validation "Pas de passé"
+  const selectedDate = new Date(newRep.when);
+  const now = new Date();
+  if (selectedDate < now) {
+    setToast({
+      msg: "Vous ne pouvez pas programmer une séance dans le passé",
+      type: "error",
+    });
+    return;
+  }
+
+  setSubmitting(true);
+  try {
+    const payload = {
+      ...newRep,
+      locationId: Number(newRep.locationId),
+      when: newRep.when.replace(" ", "T"),
+    };
+
+    const createdRep = await representationApi.create(Number(id), payload);
+
+    if (show) {
+      setShow({
+        ...show,
+        representations: [...(show.representations || []), createdRep],
       });
-      return;
     }
 
-    setSubmitting(true);
-    try {
-      const payload = {
-        ...newRep,
-        locationId: Number(newRep.locationId),
-        when: newRep.when.replace(" ", "T"),
-      };
-
-      // 1. On récupère la nouvelle séance renvoyée par le serveur
-      const createdRep = await representationApi.create(Number(id), payload);
-
-      // 2. MISE À JOUR INSTANTANÉE DE L'INTERFACE 🚀
-      if (show) {
-        setShow({
-          ...show,
-          // On ajoute la nouvelle séance à la liste existante
-          representations: [...(show.representations || []), createdRep],
-        });
-      }
-
-      // Reset du champ date seulement
-      setNewRep((prev) => ({ ...prev, when: "" }));
-
-      setToast({ msg: t("producer.schedule.successAdd"), type: "success" });
-    } catch (err) {
-      setToast({ msg: t("producer.schedule.errorSave"), type: "error" });
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    setNewRep((prev) => ({ ...prev, when: "" }));
+    setToast({ msg: t("producer.schedule.successAdd"), type: "success" });
+  } catch (err) {
+    setToast({ msg: t("producer.schedule.errorSave"), type: "error" });
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const handleDeleteRep = async (repId: number) => {
     if (!window.confirm(t("producer.schedule.confirmDelete"))) return;
@@ -211,6 +226,7 @@ const ShowSchedule: React.FC = () => {
               <input
                 type="datetime-local"
                 value={newRep.when}
+                min={minDateTime} 
                 onChange={(e) => setNewRep({ ...newRep, when: e.target.value })}
                 required
               />

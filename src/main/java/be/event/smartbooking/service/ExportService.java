@@ -59,24 +59,8 @@ public class ExportService {
         List<Show> shows = StreamSupport
                 .stream(showRepos.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-
-        StringWriter sw = new StringWriter();
-        try (CSVWriter writer = new CSVWriter(sw)) {
-            writer.writeNext(new String[]{"id", "title", "slug", "description", "status", "bookable", "location", "createdAt"});
-            for (Show s : shows) {
-                writer.writeNext(new String[]{
-                            String.valueOf(s.getId()),
-                            s.getTitle(),
-                            s.getSlug(),
-                            s.getDescription(),
-                            s.getStatus() != null ? s.getStatus().name() : "",
-                            String.valueOf(s.isBookable()),
-                            s.getLocation() != null ? s.getLocation().getDesignation() : "",
-                            s.getCreatedAt() != null ? s.getCreatedAt().toString() : ""
-                    });
-            }
-        }
-        return sw.toString();
+        // ✅ On utilise maintenant la méthode privée en bas du fichier
+        return convertShowsToCsv(shows);
     }
 
     /*public String exportReservationsCsv() throws IOException {
@@ -147,16 +131,64 @@ public class ExportService {
         List<Show> shows = StreamSupport
                 .stream(showRepos.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-            var projections = shows.stream().map(s -> new java.util.LinkedHashMap<String, Object>() {{
-            put("id", s.getId());
-            put("title", s.getTitle());
-            put("slug", s.getSlug());
-            put("description", s.getDescription());
-            put("status", s.getStatus() != null ? s.getStatus().name() : null);
-            put("bookable", s.isBookable());
-            put("location", s.getLocation() != null ? s.getLocation().toString() : null);
-            put("createdAt", s.getCreatedAt() != null ? s.getCreatedAt().toString() : null);
-        }}).collect(Collectors.toList());
+        // ✅ On utilise maintenant la méthode privée en bas du fichier
+        return convertShowsToJson(shows);
+    }
+    
+    // ===================================================================
+    // LOGIQUE DE FILTRAGE PRODUCTEUR
+    // ===================================================================
+
+    public String exportShowsCsvForProducer(String login) throws IOException {
+        // On récupère uniquement les spectacles du producteur
+        List<Show> myShows = showRepos.findByUserLogin(login);
+        return convertShowsToCsv(myShows); // Appelle la méthode privée ci-dessous
+    }
+
+    public String exportShowsJsonForProducer(String login) throws IOException {
+        List<Show> myShows = showRepos.findByUserLogin(login);
+        return convertShowsToJson(myShows); // Appelle la méthode privée ci-dessous
+    }
+
+    // ===================================================================
+    // MÉTHODES DE CONVERSION PRIVÉES (Réutilisables)
+    // ===================================================================
+
+    private String convertShowsToCsv(List<Show> shows) throws IOException {
+        StringWriter sw = new StringWriter();
+        try (CSVWriter writer = new CSVWriter(sw)) {
+            writer.writeNext(new String[] { "id", "title", "slug", "description", "status", "bookable", "location",
+                    "createdAt" });
+            for (Show s : shows) {
+                writer.writeNext(new String[] {
+                        String.valueOf(s.getId()),
+                        s.getTitle(),
+                        s.getSlug(),
+                        s.getDescription(),
+                        s.getStatus() != null ? s.getStatus().name() : "",
+                        String.valueOf(s.isBookable()),
+                        s.getLocation() != null ? s.getLocation().getDesignation() : "",
+                        s.getCreatedAt() != null ? s.getCreatedAt().toString() : ""
+                });
+            }
+        }
+        return sw.toString();
+    }
+
+    private String convertShowsToJson(List<Show> shows) throws IOException {
+        var projections = shows.stream().map(s -> new java.util.LinkedHashMap<String, Object>() {
+            {
+                put("id", s.getId());
+                put("title", s.getTitle());
+                put("slug", s.getSlug());
+                put("description", s.getDescription());
+                put("status", s.getStatus() != null ? s.getStatus().name() : null);
+                put("bookable", s.isBookable());
+                put("location", s.getLocation() != null ? s.getLocation().getDesignation() : null);
+                put("createdAt", s.getCreatedAt() != null ? s.getCreatedAt().toString() : null);
+            }
+        }).collect(Collectors.toList());
+
         return buildObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(projections);
     }
 
