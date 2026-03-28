@@ -275,6 +275,7 @@
       "empty": "Aucun artiste enregistré.",
       "noTypes": "—",
       "backToDashboard": "← Tableau de bord"
+<<<<<<< HEAD
     },
     "reservations": {
       "title": "Gestion des",
@@ -292,6 +293,8 @@
       "empty": "Aucune réservation enregistrée.",
       "noValue": "—",
       "backToDashboard": "← Tableau de bord"
+=======
+>>>>>>> dac124ea (feat(i18n): clés admin.artists pour la page artistes (français))
     }
   },
   "producer": {
