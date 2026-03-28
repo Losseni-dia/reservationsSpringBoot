@@ -1,6 +1,7 @@
 package be.event.smartbooking.service;
 
 import be.event.smartbooking.model.Reservation;
+import be.event.smartbooking.model.Role;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.model.User;
 import be.event.smartbooking.repository.ReservationRepository;
@@ -15,7 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -63,7 +67,7 @@ public class ExportService {
         return convertShowsToCsv(shows);
     }
 
-    /*public String exportReservationsCsv() throws IOException {
+    public String exportReservationsCsv() throws IOException {
         List<Reservation> reservations = StreamSupport
                 .stream(reservationRepos.findAll().spliterator(), false)
                 .collect(Collectors.toList());
@@ -89,7 +93,7 @@ public class ExportService {
             }
         }
         return sw.toString();
-    } */
+    }
 
     // ===================================================================
     // EXPORT JSON
@@ -102,28 +106,24 @@ public class ExportService {
         return mapper;
     }
 
-    /**
-     * @return
-     * @throws IOException
-     */
     public String exportUsersJson() throws IOException {
         List<User> users = StreamSupport
                 .stream(userRepos.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-        var projections = users.stream().map(u -> new java.util.LinkedHashMap<String, Object>() {{
-            put("id", u.getId());
-            put("login", u.getLogin());
-            put("firstname", u.getFirstname());
-            put("lastname", u.getLastname());
-            put("email", u.getEmail());
-            put("langue", u.getLangue());
-            put("isActive", u.isActive());
-            put("createdAt", u.getCreatedAt() != null ? u.getCreatedAt().toString() : null);
-            java.util.List<be.event.smartbooking.model.Role> roles = 
-        u.getRoles() != null ? u.getRoles() : java.util.Collections.emptyList();
-            put("roles", roles.stream().map(r -> r.getRole()).collect(Collectors.toList()));
-
-        }}).collect(Collectors.toList());
+        List<Map<String, Object>> projections = users.stream().map(u -> {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("id", u.getId());
+            m.put("login", u.getLogin());
+            m.put("firstname", u.getFirstname());
+            m.put("lastname", u.getLastname());
+            m.put("email", u.getEmail());
+            m.put("langue", u.getLangue());
+            m.put("isActive", u.isActive());
+            m.put("createdAt", u.getCreatedAt() != null ? u.getCreatedAt().toString() : null);
+            List<Role> roles = u.getRoles() != null ? u.getRoles() : Collections.emptyList();
+            m.put("roles", roles.stream().map(Role::getRole).collect(Collectors.toList()));
+            return m;
+        }).collect(Collectors.toList());
         return buildObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(projections);
     }
 
@@ -192,21 +192,23 @@ public class ExportService {
         return buildObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(projections);
     }
 
-   /**  public String exportReservationsJson() throws IOException {
+    public String exportReservationsJson() throws IOException {
         List<Reservation> reservations = StreamSupport
                 .stream(reservationRepos.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-        var projections = reservations.stream().map(r -> new java.util.LinkedHashMap<String, Object>() {{
-            put("id", r.getId());
-            put("userLogin", r.getUser() != null ? r.getUser().getLogin() : null);
-            put("userEmail", r.getUser() != null ? r.getUser().getEmail() : null);
-            put("representationId", r.getRepresentation() != null ? r.getRepresentation().getId() : null);
-            put("showTitle", r.getRepresentation() != null && r.getRepresentation().getShow() != null
+        List<Map<String, Object>> projections = reservations.stream().map(r -> {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("id", r.getId());
+            m.put("userLogin", r.getUser() != null ? r.getUser().getLogin() : null);
+            m.put("userEmail", r.getUser() != null ? r.getUser().getEmail() : null);
+            m.put("representationId", r.getRepresentation() != null ? r.getRepresentation().getId() : null);
+            m.put("showTitle", r.getRepresentation() != null && r.getRepresentation().getShow() != null
                     ? r.getRepresentation().getShow().getTitle() : null);
-            put("statut", r.getStatut() != null ? r.getStatut().name() : null);
-            put("reservationDate", r.getReservationDate() != null ? r.getReservationDate().toString() : null);
-            put("createdAt", r.getCreatedAt() != null ? r.getCreatedAt().toString() : null);
-        }}).collect(Collectors.toList());
+            m.put("statut", r.getStatut() != null ? r.getStatut().name() : null);
+            m.put("reservationDate", r.getReservationDate() != null ? r.getReservationDate().toString() : null);
+            m.put("createdAt", r.getCreatedAt() != null ? r.getCreatedAt().toString() : null);
+            return m;
+        }).collect(Collectors.toList());
         return buildObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(projections);
-    }*/
+    }
 }

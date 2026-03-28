@@ -260,6 +260,41 @@
       "title": "Nos",
       "titleHighlight": "Lieux",
       "visitWebsite": "Visiter le site web →"
+    },
+    "artists": {
+      "title": "Répertoire des",
+      "titleHighlight": "Artistes",
+      "subtitle": "{{count}} artiste(s) enregistré(s)",
+      "colId": "ID",
+      "colFirstname": "Prénom",
+      "colLastname": "Nom",
+      "colTypes": "Types / disciplines",
+      "loading": "Chargement des artistes...",
+      "error": "Impossible de charger les artistes.",
+      "retry": "Réessayer",
+      "empty": "Aucun artiste enregistré.",
+      "noTypes": "—",
+      "backToDashboard": "← Tableau de bord"
+<<<<<<< HEAD
+    },
+    "reservations": {
+      "title": "Gestion des",
+      "titleHighlight": "Réservations",
+      "subtitle": "{{count}} réservation(s) enregistrée(s)",
+      "colId": "ID",
+      "colDate": "Date",
+      "colUser": "Utilisateur",
+      "colShowSession": "Spectacle / séance",
+      "colTicketDetails": "Détail billets",
+      "colTotal": "Montant total",
+      "loading": "Chargement des réservations...",
+      "error": "Impossible de charger les réservations.",
+      "retry": "Réessayer",
+      "empty": "Aucune réservation enregistrée.",
+      "noValue": "—",
+      "backToDashboard": "← Tableau de bord"
+=======
+>>>>>>> dac124ea (feat(i18n): clés admin.artists pour la page artistes (français))
     }
   },
   "producer": {

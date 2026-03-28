@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  userApi,
-  showApi,
-  locationApi,
-  reservationApi,
-  artistApi,
-  reviewApi,
-} from "../services/api";
+import { adminApi, artistApi, reviewApi } from "../services/api";
 
 interface AdminStats {
   totalUsers: number;
@@ -42,30 +35,23 @@ export const useAdminStats = (): UseAdminStatsResult => {
       setLoading(true);
       setError(null);
 
-      // Récupérer les données principales
-      const [users, shows, locations, reservations, artists] =
-        await Promise.all([
-          userApi.getAll(),
-          showApi.getAll(),
-          locationApi.getAll(),
-          reservationApi.getMyBookings(),
-          artistApi.getAll(),
-        ]);
+      const [summary, artists] = await Promise.all([
+        adminApi.getStatsSummary(),
+        artistApi.getAll(),
+      ]);
 
-      // Essayer de récupérer les stats des reviews (optionnel)
       let reviewStats = null;
       try {
         reviewStats = await reviewApi.getStats();
       } catch (reviewError) {
         console.warn("Endpoint review stats non disponible:", reviewError);
-        // On continue sans les stats des reviews
       }
 
       setStats({
-        totalUsers: users.length,
-        totalShows: shows.length,
-        totalLocations: locations.length,
-        totalReservations: reservations.length,
+        totalUsers: Number(summary.totalUsers) || 0,
+        totalShows: Number(summary.totalShows) || 0,
+        totalLocations: Number(summary.totalLocations) || 0,
+        totalReservations: Number(summary.totalReservations) || 0,
         totalArtists: artists.length,
         reviewStats: reviewStats,
       });

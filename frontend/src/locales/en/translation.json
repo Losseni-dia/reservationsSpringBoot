@@ -249,6 +249,38 @@
       "title": "Our",
       "titleHighlight": "Locations",
       "visitWebsite": "Visit website →"
+    },
+    "artists": {
+      "title": "Directory of",
+      "titleHighlight": "Artists",
+      "subtitle": "{{count}} registered artist(s)",
+      "colId": "ID",
+      "colFirstname": "First name",
+      "colLastname": "Last name",
+      "colTypes": "Types / disciplines",
+      "loading": "Loading artists...",
+      "error": "Unable to load artists.",
+      "retry": "Retry",
+      "empty": "No artists registered.",
+      "noTypes": "—",
+      "backToDashboard": "← Dashboard"
+    },
+    "reservations": {
+      "title": "Manage",
+      "titleHighlight": "Reservations",
+      "subtitle": "{{count}} reservation(s) on file",
+      "colId": "ID",
+      "colDate": "Date",
+      "colUser": "User",
+      "colShowSession": "Show / session",
+      "colTicketDetails": "Ticket breakdown",
+      "colTotal": "Total amount",
+      "loading": "Loading reservations...",
+      "error": "Unable to load reservations.",
+      "retry": "Retry",
+      "empty": "No reservations yet.",
+      "noValue": "—",
+      "backToDashboard": "← Dashboard"
     }
   },
   "producer": {
