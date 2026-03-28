@@ -42,15 +42,15 @@ export interface Price {
  * Utilisateur du système
  */
 export interface User {
-  id: number;
-  login: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  langue: string;
-  createdAt: string;
-  isActive: boolean;
-  roles?: Role[]; // Ajouté pour faciliter l'accès aux rôles de l'utilisateur
+    id: number;
+    login: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    langue: string;
+    createdAt: string;
+    isActive: boolean;
+    roles?: Role[]; // Ajouté pour faciliter l'accès aux rôles de l'utilisateur
 }
 
 export interface UserRegistrationDto {

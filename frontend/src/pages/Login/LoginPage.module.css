@@ -1,3 +1,45 @@
+/* Cherchez ces classes dans votre LoginPage.module.css et appliquez le code #f5c518 */
+
+.logoAccent {
+    color: #f5c518; /* Remplace le texte mauve */
+}
+
+.submitButton {
+    background-color: #f5c518; /* Remplace le fond mauve du bouton */
+    color: #000000; /* Le texte ressortira mieux en noir sur fond jaune */
+}
+
+.decorativeElement {
+    background-color: #f5c518; /* Remplace la couleur de l'élément décoratif */
+}
+/* Cherchez ces classes dans votre LoginPage.module.css et appliquez le code #f5c518 */
+
+.logoAccent {
+    color: #f5c518; /* Remplace le texte mauve */
+}
+
+.submitButton {
+    background-color: #f5c518; /* Remplace le fond mauve du bouton */
+    color: #000000; /* Le texte ressortira mieux en noir sur fond jaune */
+}
+
+.decorativeElement {
+    background-color: #f5c518; /* Remplace la couleur de l'élément décoratif */
+}
+/* Cherchez ces classes dans votre LoginPage.module.css et appliquez le code #f5c518 */
+
+.logoAccent {
+    color: #f5c518; /* Remplace le texte mauve */
+}
+
+.submitButton {
+    background-color: #f5c518; /* Remplace le fond mauve du bouton */
+    color: #000000; /* Le texte ressortira mieux en noir sur fond jaune */
+}
+
+.decorativeElement {
+    background-color: #f5c518; /* Remplace la couleur de l'élément décoratif */
+}
 .pageContainer {
     min-height: 100vh;
     background-color: #121212;
@@ -22,7 +64,7 @@
 }
 
 .logoAccent {
-    color: #6A0DAD;
+    color: #FFD700;
 }
 
 .logoSubtitle {
@@ -90,8 +132,8 @@
 
 .input:focus {
     outline: none;
-    border-color: #6A0DAD;
-    box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.3);
+    border-color: #FFD700;
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
 }
 
 .forgotPasswordWrapper {
@@ -100,7 +142,7 @@
 
 .forgotPasswordLink {
     font-size: 0.75rem;
-    color: #6A0DAD;
+    color: #FFD700;
     text-decoration: none;
 }
 
@@ -142,7 +184,7 @@
 }
 
 .signupLink {
-    color: #6A0DAD;
+    color: #FFD700;
     font-weight: 600;
     text-decoration: none;
 }
@@ -162,6 +204,6 @@
 
 .forgotPasswordLink {
     font-size: 0.75rem;
-    color: #6A0DAD;
+    color: #FFD700;
     text-decoration: none;
 }

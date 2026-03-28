@@ -79,7 +79,7 @@
     "firstname": "Prénom",
     "lastname": "Nom",
     "loginId": "Identifiant (Login)",
-    "loginOrEmail": "Identifiant / Email",
+    "loginOrEmail": "Identifiant",
     "language": "Langue",
     "placeholderLogin": "Votre login",
     "placeholderPassword": "••••••••",

@@ -71,4 +71,5 @@ boolean existsByEmailAndIsActiveTrue(String email);
 
 List<User> findAllByIsApproved(boolean isApproved);
 
+Optional<User> findByEmailOrLogin(String email, String login);
 }
