@@ -106,19 +106,13 @@ public class ShowApiController {
          */
         @PutMapping("/{id}/confirm")
         public ResponseEntity<?> confirmShow(@PathVariable Long id) {
+                // 1. On effectue la modification en base via le service
                 Show updatedShow = showService.confirmShow(id);
 
-                Map<String, Object> response = new HashMap<>();
-                response.put("id", updatedShow.getId());
-                response.put("status", updatedShow.getStatus().toString());
-                response.put("title", updatedShow.getTitle()); // Ajoute cette ligne
-
-                // Si tu as une entité Location, envoie juste son nom ou l'objet simplifié
-                if (updatedShow.getLocation() != null) {
-                        response.put("location", updatedShow.getLocation());
-                }
-
-                return ResponseEntity.ok().build();
+                // 2. 🚀 LA CORRECTION : On renvoie le DTO au lieu d'une Map manuelle
+                // safeConvertToDto s'occupe d'extraire le nom du lieu proprement sans les
+                // proxies Hibernate
+                return ResponseEntity.ok(safeConvertToDto(updatedShow));
         }
 
         /**
@@ -287,13 +281,13 @@ public class ShowApiController {
 
         @PutMapping("/{id}/revoke")
         public ResponseEntity<?> revokeShow(@PathVariable Long id) {
+                // 1. Le service passe le statut à A_CONFIRMER en base
                 Show updatedShow = showService.revokeShow(id);
 
-                Map<String, Object> response = new HashMap<>();
-                response.put("id", updatedShow.getId());
-                response.put("status", updatedShow.getStatus().toString());
-
-                return ResponseEntity.ok().build();
+                // 2. 🚀 On renvoie le DTO propre
+                // Cela évite tout problème de sérialisation Hibernate et reste cohérent avec
+                // "confirm"
+                return ResponseEntity.ok(safeConvertToDto(updatedShow));
         }
 
         /**
@@ -415,10 +409,10 @@ public class ShowApiController {
                                 .when(rep.getWhen())
                                 .showTitle(title)
                                 .locationName(locationName)
+                                // 🚀 ON UTILISE TA MÉTHODE RÉELLE ICI
+                                .ticketsSold(rep.getTotalReservedSeats())
                                 .prices(rep.getPrices() != null
-                                                ? rep.getPrices().stream()
-                                                                .map(this::convertPriceToDto)
-                                                                .toList()
+                                                ? rep.getPrices().stream().map(this::convertPriceToDto).toList()
                                                 : new ArrayList<>())
                                 .build();
         }

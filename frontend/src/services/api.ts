@@ -247,6 +247,22 @@ export const representationApi = {
       method: "DELETE",
     });
   },
+  create: async (showId: number, data: any) => {
+    const res = await secureFetch(
+      `${API_BASE}/shows/${showId}/representations`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      },
+    );
+
+    if (!res.ok) {
+      throw new Error("Erreur lors de la création de la représentation");
+    }
+
+    return res.json();
+  },
 };
 
 export const artistTypeApi = {
