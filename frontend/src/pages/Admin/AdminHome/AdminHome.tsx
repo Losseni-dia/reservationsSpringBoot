@@ -12,7 +12,6 @@ import {
   HiSparkles,
   HiLocationMarker,
   HiCurrencyDollar,
-  HiStar,
   HiUserAdd,
 } from "react-icons/hi";
 
@@ -144,19 +143,6 @@ const AdminHome = () => {
             {loading ? "..." : stats.reviewStats?.totalRevenue || 0} €
           </p>
           <h2>{t("admin.home.statTotalRevenue")}</h2>
-        </div>
-
-        {/* Note moyenne */}
-        <div className={`${styles.statCard} ${styles.highlightCard}`}>
-          <div className={styles.cardIcon}>
-            <HiStar />
-          </div>
-          <p className={styles.statNumber}>
-            {loading
-              ? "..."
-              : (stats.reviewStats?.averageRating || 0).toFixed(1)}
-          </p>
-          <h2>{t("admin.home.statAverageRating")}</h2>
         </div>
       </div>
     </div>
