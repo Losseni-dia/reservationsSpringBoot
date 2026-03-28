@@ -5,6 +5,8 @@ import be.event.smartbooking.service.ExportService;
 import be.event.smartbooking.service.ImportService;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,7 @@ import java.time.LocalDate;
 @RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
+@Slf4j
 public class ImportExportApiController {
 
     private final ExportService exportService;
@@ -47,36 +50,54 @@ public class ImportExportApiController {
     @GetMapping("/export/{type}")
     public ResponseEntity<byte[]> export(
             @PathVariable String type,
-            @RequestParam(defaultValue = "csv") String format) throws IOException {
+            @RequestParam(defaultValue = "csv") String format) {
 
-        String content = switch (type.toLowerCase()) {
-            case "users"        -> "csv".equalsIgnoreCase(format)
-                    ? exportService.exportUsersCsv()
-                    : exportService.exportUsersJson();
-            case "shows"        -> "csv".equalsIgnoreCase(format)
-                    ? exportService.exportShowsCsv()
-                    : exportService.exportShowsJson();
-            case "reservations" -> "csv".equalsIgnoreCase(format)
-                    ? exportService.exportReservationsCsv()
-                    : exportService.exportReservationsJson();
-            default -> throw new IllegalArgumentException("Type non supporté : " + type);
-        };
+        try {
+            log.info("Demande d'export : type={}, format={}", type, format);
 
-        String extension = "json".equalsIgnoreCase(format) ? ".json" : ".csv";
-        String mediaType = "json".equalsIgnoreCase(format)
-                ? MediaType.APPLICATION_JSON_VALUE
-                : "text/csv";
-        String filename  = type + "_export_" + LocalDate.now() + extension;
+            String content = switch (type.toLowerCase()) {
+                case "users" -> "csv".equalsIgnoreCase(format)
+                        ? exportService.exportUsersCsv()
+                        : exportService.exportUsersJson();
+                case "shows" -> "csv".equalsIgnoreCase(format)
+                        ? exportService.exportShowsCsv()
+                        : exportService.exportShowsJson();
+                 /*
+                 * case "reservations" -> "csv".equalsIgnoreCase(format)
+                 * ? exportService.exportReservationsCsv()
+                 * : exportService.exportReservationsJson();
+                 */
+                default -> throw new IllegalArgumentException("Type non supporté : " + type);
+            };
 
-        byte[] bytes = content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            // --- SÉCURITÉ : Vérifier si le contenu est vide ou null ---
+            if (content == null || content.trim().isEmpty()) {
+                log.warn("L'export pour {} est vide.", type);
+                return ResponseEntity.noContent().build(); // Retourne un code 204 (Pas de contenu)
+            }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(mediaType + ";charset=UTF-8"));
-        headers.setContentDisposition(
-                ContentDisposition.attachment().filename(filename).build());
-        headers.setContentLength(bytes.length);
+            String extension = "json".equalsIgnoreCase(format) ? ".json" : ".csv";
+            String mediaType = "json".equalsIgnoreCase(format)
+                    ? MediaType.APPLICATION_JSON_VALUE
+                    : "text/csv";
+            String filename = type + "_export_" + LocalDate.now() + extension;
 
-        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+            byte[] bytes = content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+
+            HttpHeaders headers = new HttpHeaders();
+            // On s'assure que le charset est bien défini
+            headers.setContentType(MediaType.parseMediaType(mediaType + ";charset=UTF-8"));
+            headers.setContentDisposition(
+                    ContentDisposition.attachment().filename(filename).build());
+            headers.setContentLength(bytes.length);
+
+            log.info("Export généré avec succès : {}", filename);
+            return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            log.error("Erreur lors de l'export de {} : ", type, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // =========================================================================

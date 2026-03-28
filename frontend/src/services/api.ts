@@ -125,7 +125,7 @@ export const userApi = {
     const res = await secureFetch("/api/users/pending");
     return res.json();
   },
-  
+
   delete: async (id: number) => {
     return await secureFetch(`/api/users/${id}`, { method: "DELETE" });
   },
@@ -220,6 +220,10 @@ export const showApi = {
     });
     return res.json();
   },
+  getMyShows: async (): Promise<Show[]> => {
+    const res = await secureFetch(`${API_BASE}/shows/my-shows`);
+    return res.json();
+  },
 };
 
 export const representationApi = {
@@ -237,7 +241,6 @@ export const artistTypeApi = {
     return res.json();
   },
 };
-
 
 export const reservationApi = {
   create: async (items: ReservationRequest[]): Promise<{ url: string }> => {
@@ -302,7 +305,11 @@ export const reviewApi = {
 };
 
 export const translateApi = {
-  translate: async (text: string, targetLang: string, sourceLang?: string): Promise<string> => {
+  translate: async (
+    text: string,
+    targetLang: string,
+    sourceLang?: string,
+  ): Promise<string> => {
     const res = await secureFetch(`${API_BASE}/translate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -319,7 +326,10 @@ export const translateApi = {
 
 /** Live comment translation via Google Cloud (POST /api/translation/translate). Throws on 503 or other errors. */
 export const translationApi = {
-  translateComment: async (text: string, targetLanguage: string): Promise<string> => {
+  translateComment: async (
+    text: string,
+    targetLanguage: string,
+  ): Promise<string> => {
     const res = await secureFetch(`${API_BASE}/translation/translate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -350,7 +360,10 @@ export const locationApi = {
     return res.json();
   },
 
-  update: async (id: number, location: Partial<Location>): Promise<Location> => {
+  update: async (
+    id: number,
+    location: Partial<Location>,
+  ): Promise<Location> => {
     const res = await secureFetch(`${API_BASE}/locations/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -364,10 +377,22 @@ export const locationApi = {
       method: "DELETE",
     });
   },
+};
 
-   adminApi: {
-  exportData: async (type: string, format: "csv" | "json" = "csv"): Promise<void> => {
-    const res = await secureFetch(`${API_BASE}/admin/export/${type}?format=${format}`);
+// ✅ adminApi est maintenant un export indépendant et contient la nouvelle méthode
+export const adminApi = {
+  getStatsSummary: async () => {
+    const res = await secureFetch(`${API_BASE}/admin/stats/summary`);
+    return res.json();
+  },
+
+  exportData: async (
+    type: string,
+    format: "csv" | "json" = "csv",
+  ): Promise<void> => {
+    const res = await secureFetch(
+      `${API_BASE}/admin/export/${type}?format=${format}`,
+    );
     const blob = await res.blob();
     const extension = format === "json" ? ".json" : ".csv";
     const url = URL.createObjectURL(blob);
@@ -383,21 +408,33 @@ export const locationApi = {
   importData: async (
     type: string,
     format: "csv" | "json",
-    file: File
+    file: File,
   ): Promise<{ imported: number; skipped: number; errors: string[] }> => {
     const formData = new FormData();
     formData.append("file", file);
     const headers = new Headers();
-    const csrfToken = `; ${document.cookie}`.split(`; XSRF-TOKEN=`).pop()?.split(";").shift();
+    const csrfToken = `; ${document.cookie}`
+      .split(`; XSRF-TOKEN=`)
+      .pop()
+      ?.split(";")
+      .shift();
     if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
-    const res = await fetch(`${API_BASE}/admin/import/${type}?format=${format}`, {
-      method: "POST", headers, body: formData, credentials: "include", cache: "no-cache",
-    });
+
+    const res = await fetch(
+      `${API_BASE}/admin/import/${type}?format=${format}`,
+      {
+        method: "POST",
+        headers,
+        body: formData,
+        credentials: "include",
+        cache: "no-cache",
+      },
+    );
+
     if (!res.ok) {
       const errorText = await res.text();
       throw new Error(errorText || `Erreur ${res.status}`);
     }
     return res.json();
   },
-},
 };

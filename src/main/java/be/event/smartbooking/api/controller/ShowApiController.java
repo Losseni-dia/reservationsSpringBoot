@@ -1,6 +1,7 @@
 package be.event.smartbooking.api.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import be.event.smartbooking.model.Review;
 import be.event.smartbooking.model.Show;
 import be.event.smartbooking.repository.ArtistTypeRepos;
 import be.event.smartbooking.repository.LocationRepos;
+import be.event.smartbooking.repository.UserRepos;
 import be.event.smartbooking.service.FileService;
 import be.event.smartbooking.service.ShowService;
 import be.event.smartbooking.service.TranslationService;
@@ -62,57 +64,63 @@ public class ShowApiController {
         @Autowired
         private TranslationService translationService;
 
+        @Autowired
+        private UserRepos userRepos;
+
         /**
-     * GET /api/shows : Catalogue public (Uniquement CONFIRME)
-     */
-    @GetMapping
-    @Transactional(readOnly = true)
-    public ResponseEntity<List<ShowDTO>> getAll() {
-        try {
-            List<Show> shows = showService.getAll(); // Utilise le filtre CONFIRME du service
-            List<ShowDTO> dtos = shows.stream()
-                    .map(this::safeConvertToDto)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+         * GET /api/shows : Catalogue public (Uniquement CONFIRME)
+         */
+        @GetMapping
+        @Transactional(readOnly = true)
+        public ResponseEntity<List<ShowDTO>> getAll() {
+                try {
+                        List<Show> shows = showService.getAll(); // Utilise le filtre CONFIRME du service
+                        List<ShowDTO> dtos = shows.stream()
+                                        .map(this::safeConvertToDto)
+                                        .collect(Collectors.toList());
+                        return ResponseEntity.ok(dtos);
+                } catch (Exception e) {
+                        return ResponseEntity.internalServerError().build();
+                }
         }
-    }
-    /**
-     * GET /api/shows/admin : Liste complète pour l'Admin (CONFIRME + A_CONFIRMER)
-     */
-    @GetMapping("/admin")
-    @Transactional(readOnly = true)
-    public ResponseEntity<List<ShowDTO>> getAllForAdmin() {
-        try {
-            List<Show> shows = showService.getAllForAdmin();
-            List<ShowDTO> dtos = shows.stream()
-                    .map(this::safeConvertToDto)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+
+        /**
+         * GET /api/shows/admin : Liste complète pour l'Admin (CONFIRME + A_CONFIRMER)
+         */
+        @GetMapping("/admin")
+        @Transactional(readOnly = true)
+        public ResponseEntity<List<ShowDTO>> getAllForAdmin() {
+                try {
+                        List<Show> shows = showService.getAllForAdmin();
+                        List<ShowDTO> dtos = shows.stream()
+                                        .map(this::safeConvertToDto)
+                                        .collect(Collectors.toList());
+                        return ResponseEntity.ok(dtos);
+                } catch (Exception e) {
+                        return ResponseEntity.internalServerError().build();
+                }
         }
-    }
-    /**
-     * PUT /api/shows/{id}/confirm : Action de validation par l'Admin
-     */
-    @PutMapping("/{id}/confirm")
-public ResponseEntity<?> confirmShow(@PathVariable Long id) {
-    Show updatedShow = showService.confirmShow(id);
-    
-    Map<String, Object> response = new HashMap<>();
-    response.put("id", updatedShow.getId());
-    response.put("status", updatedShow.getStatus().toString());
-    response.put("title", updatedShow.getTitle()); // Ajoute cette ligne
-    
-    // Si tu as une entité Location, envoie juste son nom ou l'objet simplifié
-    if (updatedShow.getLocation() != null) {
-        response.put("location", updatedShow.getLocation()); 
-    }
-    
-    return ResponseEntity.ok(response);
-}
+
+        /**
+         * PUT /api/shows/{id}/confirm : Action de validation par l'Admin
+         */
+        @PutMapping("/{id}/confirm")
+        public ResponseEntity<?> confirmShow(@PathVariable Long id) {
+                Show updatedShow = showService.confirmShow(id);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("id", updatedShow.getId());
+                response.put("status", updatedShow.getStatus().toString());
+                response.put("title", updatedShow.getTitle()); // Ajoute cette ligne
+
+                // Si tu as une entité Location, envoie juste son nom ou l'objet simplifié
+                if (updatedShow.getLocation() != null) {
+                        response.put("location", updatedShow.getLocation());
+                }
+
+                return ResponseEntity.ok(response);
+        }
+
         /**
          * GET /api/shows/{id} : Récupère un spectacle par son ID
          */
@@ -125,7 +133,7 @@ public ResponseEntity<?> confirmShow(@PathVariable Long id) {
                 }
                 return ResponseEntity.ok(safeConvertToDto(show));
         }
-        
+
         /**
          * GET /api/shows/slug/{slug} : Récupère un spectacle par son slug
          * Utilisé pour les URLs du frontend (ex: /show/mon-spectacle)
@@ -169,16 +177,18 @@ public ResponseEntity<?> confirmShow(@PathVariable Long id) {
                         return ResponseEntity.ok(dtos);
                 } catch (Exception e) {
                         e.printStackTrace();
-                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
         }
+
         /**
          * POST /api/shows : Crée un nouveau spectacle (Issue #3)
          */
         @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
         public ResponseEntity<ShowDTO> create(
                         @RequestPart("show") ShowCreateRequest request,
-                        @RequestPart(value = "poster", required = false) MultipartFile file) {
+                        @RequestPart(value = "poster", required = false) MultipartFile file,
+                        Principal principal) { // 👈 Injecte le Principal ici
                 try {
                         // 1. On construit l'entité Show de base
                         Show show = Show.builder()
@@ -187,22 +197,27 @@ public ResponseEntity<?> confirmShow(@PathVariable Long id) {
                                         .bookable(request.isBookable())
                                         .build();
 
-                        // 2. On lie le lieu (Location)
+                        // 2. On lie le Producteur (Utilisateur connecté) 🚀
+                        if (principal != null) {
+                                String login = principal.getName();
+                                // On récupère l'objet User complet depuis ton repository d'utilisateurs
+                                be.event.smartbooking.model.User currentUser = userRepos.findByLogin(login);
+                                show.setProducer(currentUser); // On assigne le producteur au show
+                        }
+
+                        // 3. On lie le lieu (Location)
                         if (request.getLocationId() != null) {
                                 locationRepos.findById(request.getLocationId())
                                                 .ifPresent(show::setLocation);
                         }
 
-                        // 3. On lie les artistes (ManyToMany)
+                        // 4. On lie les artistes
                         if (request.getArtistTypeIds() != null) {
-                                // On récupère tous les objets ArtistType correspondants aux IDs
                                 List<ArtistType> artists = artistTypeRepos.findAllById(request.getArtistTypeIds());
-
-                                // On utilise ta méthode utilitaire pour chaque artiste
                                 artists.forEach(show::addArtistType);
                         }
 
-                        // 4. On gère l'image
+                        // 5. On gère l'image
                         if (file != null && !file.isEmpty()) {
                                 String imageUrl = fileService.save(file);
                                 show.setPosterUrl(imageUrl);
@@ -269,16 +284,18 @@ public ResponseEntity<?> confirmShow(@PathVariable Long id) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
         }
-@PutMapping("/{id}/revoke")
-public ResponseEntity<?> revokeShow(@PathVariable Long id) {
-    Show updatedShow = showService.revokeShow(id);
-    
-    Map<String, Object> response = new HashMap<>();
-    response.put("id", updatedShow.getId());
-    response.put("status", updatedShow.getStatus().toString());
-    
-    return ResponseEntity.ok(response);
-}
+
+        @PutMapping("/{id}/revoke")
+        public ResponseEntity<?> revokeShow(@PathVariable Long id) {
+                Show updatedShow = showService.revokeShow(id);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("id", updatedShow.getId());
+                response.put("status", updatedShow.getStatus().toString());
+
+                return ResponseEntity.ok(response);
+        }
+
         /**
          * DELETE /api/shows/{id} : Supprime un spectacle
          */
@@ -292,9 +309,32 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                 return ResponseEntity.noContent().build();
         }
 
+        @GetMapping("/my-shows")
+        @Transactional(readOnly = true)
+        public ResponseEntity<List<ShowDTO>> getMyShows(Principal principal) {
+                try {
+                        // 1. On récupère le login de l'utilisateur connecté via Spring Security
+                        String login = principal.getName();
+
+                        // 2. On demande au service les spectacles liés à ce login
+                        List<Show> shows = showService.getByUserLogin(login);
+
+                        // 3. Conversion en DTO (en utilisant ta méthode safeConvertToDto déjà
+                        // existante)
+                        List<ShowDTO> dtos = shows.stream()
+                                        .map(this::safeConvertToDto)
+                                        .collect(Collectors.toList());
+
+                        return ResponseEntity.ok(dtos);
+                } catch (Exception e) {
+                        return ResponseEntity.internalServerError().build();
+                }
+        }
+
         /**
          * Transformation sécurisée de l'entité Show vers ShowDTO.
-         * Translates title and description to the request locale when translation is available.
+         * Translates title and description to the request locale when translation is
+         * available.
          */
         private ShowDTO safeConvertToDto(Show show) {
                 String targetLang = LocaleContextHolder.getLocale().getLanguage();
@@ -332,11 +372,12 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                                 .map(rep -> convertRepToDto(rep, title, sourceLang, targetLang))
                                                 .toList() : new ArrayList<>())
 
-                                  .reviews(show.getReviews() != null 
-                                              ? show.getReviews().stream()
-                                                        .filter(Review::getValidated)
-                                                        .map(rev -> convertToReviewDTO(rev, sourceLang, targetLang))
-                                                        .toList() 
+                                .reviews(show.getReviews() != null
+                                                ? show.getReviews().stream()
+                                                                .filter(Review::getValidated)
+                                                                .map(rev -> convertToReviewDTO(rev, sourceLang,
+                                                                                targetLang))
+                                                                .toList()
                                                 : new ArrayList<>())
                                 .artists(show.getArtistTypes() != null ? show.getArtistTypes().stream()
                                                 .collect(Collectors.groupingBy(
@@ -354,7 +395,8 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                 .build();
         }
 
-        private RepresentationDTO convertRepToDto(Representation rep, String title, String sourceLang, String targetLang) {
+        private RepresentationDTO convertRepToDto(Representation rep, String title, String sourceLang,
+                        String targetLang) {
                 String locationName = "Lieu non défini";
 
                 // 1. On vérifie d'abord si la séance a un lieu spécifique
@@ -389,7 +431,7 @@ public ResponseEntity<?> revokeShow(@PathVariable Long id) {
                                 .stars(rev.getStars())
                                 .comment(comment)
                                 .createdAt(rev.getCreatedAt())
-                                
+
                                 .build();
         }
 

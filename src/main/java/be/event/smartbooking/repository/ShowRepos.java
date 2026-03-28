@@ -18,6 +18,9 @@ public interface ShowRepos extends JpaRepository<Show, Long> {
     boolean existsByTitle(String title);
 
     List<Show> findByLocation(Location location);
+    
+    @Query("SELECT s FROM Show s WHERE s.producer.login = :login") // ✅ On utilise "producer"
+    List<Show> findByUserLogin(@Param("login") String login);
 
     /**
      * Pour le CATALOGUE PUBLIC :

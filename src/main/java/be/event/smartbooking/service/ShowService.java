@@ -126,6 +126,12 @@ public class ShowService {
     }
 
     @Transactional(readOnly = true)
+    public List<Show> getByUserLogin(String login) {
+        log.info("Récupération des spectacles pour le producteur : {}", login);
+        return repository.findByUserLogin(login);
+    }
+
+    @Transactional(readOnly = true)
     public List<Show> search(String title, String location, LocalDateTime start, LocalDateTime end) {
         return repository.searchShows(
                 (title != null && !title.isEmpty()) ? title : null,

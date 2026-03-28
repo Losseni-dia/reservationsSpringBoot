@@ -72,13 +72,13 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").hasAnyRole("admin", "ADMIN")
                         
                         // 7. Gestion des Shows & Représentations
-                        .requestMatchers(HttpMethod.POST, "/api/shows/**").hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
-                        .requestMatchers(HttpMethod.PUT, "/api/shows/**").hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE")
+                        .requestMatchers(HttpMethod.POST, "/api/shows/**").hasAnyRole("admin", "ADMIN","PRODUCER", "producer")
+                        .requestMatchers(HttpMethod.PUT, "/api/shows/**").hasAnyRole("admin", "ADMIN","PRODUCER", "producer")
                         .requestMatchers(HttpMethod.DELETE, "/api/shows/**").hasAnyRole("admin", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/shows/*/representations")
-                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
+                                .hasAnyRole("admin", "affiliate", "ADMIN",  "PRODUCER", "producer")
                         .requestMatchers(HttpMethod.DELETE, "/api/representations/*")
-                                .hasAnyRole("admin", "affiliate", "ADMIN", "AFFILIATE", "PRODUCER")
+                                .hasAnyRole("admin", "ADMIN", "PRODUCER", "producer")
 
                         .requestMatchers(HttpMethod.POST, "/api/translate").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()

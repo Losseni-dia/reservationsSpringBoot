@@ -20,7 +20,7 @@ import Loader from "../../../components/ui/loader/Loader";
 import ConfirmModal from "../../../components/ui/confirmModal/ConfirmModal";
 import Toast from "../../../components/ui/toast/Toast";
 import styles from "./ProducerDashboard.module.css";
-import ExportButton from '../../../components/ui/exportButton/ExportButton';
+import ExportButton from "../../../components/ui/exportButton/ExportButton";
 
 // Register Chart.js components
 ChartJS.register(
@@ -67,10 +67,13 @@ const ProducerDashboard: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const showsData = await showApi.getAll();
+
+        // 🚀 CHANGEMENT ICI : On appelle l'API filtrée
+        const showsData = await showApi.getMyShows();
+
         setShows(showsData);
 
-        // Simulate show stats and then calculate general stats from them
+        // Simulation des stats basées uniquement sur TES spectacles
         const simulatedShowStats = calculateShowStats(showsData, []);
         calculateStats(showsData, simulatedShowStats);
 
@@ -101,8 +104,14 @@ const ProducerDashboard: React.FC = () => {
         label: t("producer.dashboard.statTotalRevenue"),
         value: formatCurrency(totalRevenue, i18n.language),
       },
-      { label: t("producer.dashboard.statTicketsSold"), value: ticketsSoldThisMonth },
-      { label: t("producer.dashboard.statUpcomingEvents"), value: upcomingEvents },
+      {
+        label: t("producer.dashboard.statTicketsSold"),
+        value: ticketsSoldThisMonth,
+      },
+      {
+        label: t("producer.dashboard.statUpcomingEvents"),
+        value: upcomingEvents,
+      },
     ]);
   };
 
@@ -166,7 +175,9 @@ const ProducerDashboard: React.FC = () => {
       await showApi.deleteById(showToDelete.id);
 
       // Succès : afficher toast
-      setToastMessage(t("producer.dashboard.toastDeleteSuccess", { title: deletedShowTitle }));
+      setToastMessage(
+        t("producer.dashboard.toastDeleteSuccess", { title: deletedShowTitle }),
+      );
     } catch (err: any) {
       // Erreur : rollback de l'état
       setShows(previousShows);
@@ -185,7 +196,9 @@ const ProducerDashboard: React.FC = () => {
         errorText.includes("référencé") ||
         errorText.includes("référence")
       ) {
-        errorMessage = t("producer.dashboard.errorDeleteReservations", { title: deletedShowTitle });
+        errorMessage = t("producer.dashboard.errorDeleteReservations", {
+          title: deletedShowTitle,
+        });
       } else if (errorText.includes("network") || errorText.includes("fetch")) {
         errorMessage = t("producer.dashboard.errorNetwork");
       } else if (err.message) {
@@ -259,14 +272,19 @@ const ProducerDashboard: React.FC = () => {
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
-  <h1 className={styles.dashboardTitle}>{t("producer.dashboard.title")}</h1>
-  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-    <button onClick={() => navigate("/producer/shows/add")} className={styles.addShowButton}>
-      {t("producer.dashboard.addShow")}
-    </button>
-    <ExportButton type="shows" label="Exporter mes spectacles" />
-  </div>
-</header>
+        <h1 className={styles.dashboardTitle}>
+          {t("producer.dashboard.title")}
+        </h1>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <button
+            onClick={() => navigate("/producer/shows/add")}
+            className={styles.addShowButton}
+          >
+            {t("producer.dashboard.addShow")}
+          </button>
+          <ExportButton type="shows" label="Exporter mes spectacles" />
+        </div>
+      </header>
 
       {error && <div className={styles.errorBanner}>{error}</div>}
 
@@ -292,7 +310,9 @@ const ProducerDashboard: React.FC = () => {
               <th>{t("producer.dashboard.colTitle")}</th>
               <th>{t("producer.dashboard.colCreatedAt")}</th>
               <th>{t("producer.dashboard.colTicketsSold")}</th>
-              <th className={styles.actionsHeader}>{t("producer.dashboard.colActions")}</th>
+              <th className={styles.actionsHeader}>
+                {t("producer.dashboard.colActions")}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -313,16 +333,16 @@ const ProducerDashboard: React.FC = () => {
                     <td>{showStat?.ticketsSold || 0}</td>
                     <td>
                       <div className={styles.actionsContainer}>
-
                         {/* NOUVEAU BOUTON : GÉRER LES SÉANCES */}
                         <button
-                          onClick={() => navigate(`/admin/shows/${show.id}/schedule`)}
+                          onClick={() =>
+                            navigate(`/admin/shows/${show.id}/schedule`)
+                          }
                           className={`${styles.actionButton} ${styles.scheduleButton}`}
                           title={t("producer.dashboard.scheduleButtonTitle")}
                         >
                           {t("producer.dashboard.scheduleButton")}
                         </button>
-
 
                         <button
                           onClick={() =>
@@ -333,7 +353,6 @@ const ProducerDashboard: React.FC = () => {
                           {t("producer.dashboard.edit")}
                         </button>
 
-
                         <button
                           onClick={() => navigate(`/show/${show.id}`)}
                           className={`${styles.actionButton} ${styles.viewButton}`}
@@ -341,15 +360,12 @@ const ProducerDashboard: React.FC = () => {
                           {t("producer.dashboard.view")}
                         </button>
 
-
                         <button
                           onClick={() => handleDeleteShow(show)}
                           className={`${styles.actionButton} ${styles.deleteButton}`}
                         >
                           Supprimer
                         </button>
-
-                        
                       </div>
                     </td>
                   </tr>
@@ -369,7 +385,9 @@ const ProducerDashboard: React.FC = () => {
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         title={t("producer.dashboard.modalTitle")}
-        message={t("producer.dashboard.modalMessage", { title: showToDelete?.title })}
+        message={t("producer.dashboard.modalMessage", {
+          title: showToDelete?.title,
+        })}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
         confirmText={t("producer.dashboard.confirmText")}
