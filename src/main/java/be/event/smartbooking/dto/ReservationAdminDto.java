@@ -23,8 +23,10 @@ public class ReservationAdminDto {
     private String showTitle;
     /** Date/heure ISO de la représentation (première ligne). */
     private String representationWhen;
-    /** Valeur {@link be.event.smartbooking.model.enumeration.StatutReservation#name()}. */
-    private String statut;
+    /** Somme des quantités sur toutes les lignes (billets). */
+    private Integer totalTickets;
+    /** Libellés des tarifs distincts (ex. "Standard, VIP"). */
+    private String ticketTypes;
     /** Somme des (prix unitaire × quantité) sur toutes les lignes. */
     private Double totalAmount;
 }
