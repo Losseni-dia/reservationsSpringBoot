@@ -137,6 +137,16 @@
       "errorPasswordMismatch": "Passwords do not match."
     }
   },
+  "profile": {
+    "title": "My Profile",
+    "save": "Save",
+    "success": "Profile updated!",
+    "myTicketsTitle": "My Tickets",
+    "noTickets": "You don't have any booked tickets yet.",
+    "myActiveTickets": "My Active Tickets",
+    "ticketDescription": "Show this QR code at the entrance of the venue.",
+    "viewAllTickets": "View all tickets"
+  },
   "show": {
     "errorLoad": "Unable to load show details.",
     "locationUndefined": "Location not specified",

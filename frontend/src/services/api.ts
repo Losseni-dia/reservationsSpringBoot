@@ -8,6 +8,7 @@ import {
   ReservationRequest,
   UserProfileDto,
   UserRegistrationDto,
+  TicketDetail,
 } from "../types/models";
 import i18n from "../i18n";
 
@@ -423,6 +424,14 @@ export interface AdminStatsSummaryDto {
   totalReservations: number;
 }
 
+export const ticketApi = {
+  getMyTickets: async (): Promise<TicketDetail[]> => {
+    const res = await secureFetch(`${API_BASE}/users/my-tickets`);
+    if (!res.ok) throw new Error("Impossible de récupérer vos billets");
+    return res.json();
+  },
+};
+
 // ✅ adminApi est maintenant un export indépendant et contient la nouvelle méthode
 export const adminApi = {
   getStatsSummary: async (): Promise<AdminStatsSummaryDto> => {
@@ -481,4 +490,6 @@ export const adminApi = {
     }
     return res.json();
   },
+
+  
 };
