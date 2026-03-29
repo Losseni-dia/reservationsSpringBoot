@@ -8,6 +8,17 @@ export interface Artist {
   types: string[]; // Liste des types de l'artiste
 }
 
+export interface TicketDetail {
+  // 👈 Vérifie si c'est "TicketDetail" ou "TicketDetailDto"
+  id: number;
+  qrCodeReference: string;
+  showTitle: string;
+  date: string; // LocalDateTime arrive souvent en string ISO
+  locationName: string;
+  category: string;
+  price: number;
+}
+
 // Dans ton fichier de types (models.ts)
 export interface Representation {
   id: number;

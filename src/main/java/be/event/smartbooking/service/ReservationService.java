@@ -33,6 +33,7 @@ public class ReservationService {
     private final RepresentationReservationRepository itemRepository;
     private final PriceRepository priceRepository;
     private final RepresentationRepos representationRepository;
+    private final TicketRepository ticketRepository;
     private final EmailService emailService;
     private final StripeService stripeService;
 
@@ -107,25 +108,47 @@ public class ReservationService {
 
     @Transactional
     public Reservation confirmReservation(Long reservationId) {
+        // 1. Récupération de la réservation
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BusinessException("error.reservation.notfound", HttpStatus.NOT_FOUND));
 
+        // Sécurité pour éviter de confirmer deux fois
         if (reservation.getStatut() != StatutReservation.PENDING) {
-            throw new BusinessException(
-                    "error.reservation.confirm.pending",
-                    HttpStatus.BAD_REQUEST,
-                    reservation.getStatut());
+            return reservation;
         }
 
+        // 2. Mise à jour du statut en CONFIRMED
         reservation.setStatut(StatutReservation.CONFIRMED);
         Reservation confirmed = reservationRepository.save(reservation);
+
+        // 3. Récupération des lignes de commande (panier)
         List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(confirmed);
-        
-        Locale locale = (confirmed.getUser().getLangue() != null && !confirmed.getUser().getLangue().isBlank())
-                ? Locale.forLanguageTag(confirmed.getUser().getLangue()) : Locale.FRENCH;
-        
-        emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed, items, locale);
-        log.info("Réservation #{} confirmée (Payée).", reservationId);
+
+        // 4. GÉNÉRATION DES TICKETS
+        System.out.println("🎟️ Début de création des tickets pour la résa #" + reservationId);
+
+        for (RepresentationReservation item : items) {
+            int qty = (item.getQuantity() != null) ? item.getQuantity() : 0;
+
+            for (int i = 0; i < qty; i++) {
+                Ticket ticket = Ticket.builder()
+                        .user(confirmed.getUser())
+                        .reservation(confirmed)
+                        .representation(item.getRepresentation())
+                        .price(item.getPrice())
+                        .build();
+
+                ticketRepository.save(ticket);
+            }
+        }
+
+        /*
+         * 📧 EMAIL DÉSACTIVÉ POUR LE MOMENT
+         * emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed,
+         * items, locale);
+         */
+
+        System.out.println("✅ SUCCÈS : Réservation confirmée et tickets enregistrés en base !");
         return confirmed;
     }
 
