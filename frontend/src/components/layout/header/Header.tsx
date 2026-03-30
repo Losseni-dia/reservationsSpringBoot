@@ -78,11 +78,24 @@ const Header: React.FC = () => {
                 <div className={styles.actions}>
                     <LanguageSwitcher />
                     {user ? (
-                        <div className={styles.userActions}>
-                            <Link to="/profile" className={styles.profileLink}>👤 {user.firstname}</Link>
-                            <button onClick={logout} className={styles.logoutBtn}>{t('layout.header.logout')}</button>
-                        </div>
-                    ) : (
+                <div className={styles.userActions}>
+                        <Link to="/profile" className={styles.profileLink}>
+                            {user.profilePictureUrl ? (
+                                <img 
+                                    src={user.profilePictureUrl} 
+                                    alt="Profil" 
+                                    className={styles.headerAvatar} 
+                                />
+                            ) : (
+                                <span className={styles.defaultIcon}>👤</span>
+                            )}
+                            <span className={styles.firstNameText}>{user.firstname}</span>
+                        </Link>
+                        <button onClick={logout} className={styles.logoutBtn}>
+                            {t('layout.header.logout')}
+                        </button>
+                    </div>
+                )  : (
                         <div className={styles.authButtons}>
                             {/* DEVENIR PRODUCTEUR (Visiteur) */}
                             <Link to="/become-producer" className={styles.registerBtn}>{t('layout.header.becomeProducer')}</Link>

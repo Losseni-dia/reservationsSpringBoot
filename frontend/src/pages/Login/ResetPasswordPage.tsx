@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi } from '../../services/api';
 import styles from './LoginPage.module.css';
+import PasswordInput from "../../components/ui/passwordinput/PasswordInput";
 
 const ResetPasswordPage: React.FC = () => {
     const { t } = useTranslation();
@@ -38,7 +39,15 @@ const ResetPasswordPage: React.FC = () => {
                 state: { message: t('auth.resetPassword.success') } 
             });
         } catch (err: any) {
-            setError(err.message || t('auth.resetPassword.errorExpired'));
+            try {
+                // On lit le JSON
+                const jsonError = JSON.parse(err.message);
+                // On prend la clé "newPassword", sinon "message", sinon une erreur par défaut
+                setError(jsonError.newPassword || jsonError.message || t('auth.resetPassword.errorExpired'));
+            } catch {
+                // Si ce n'est pas du JSON, on affiche le texte brut
+                setError(err.message || t('auth.resetPassword.errorExpired'));
+            }
         } finally {
             setIsLoading(false);
         }
@@ -70,19 +79,22 @@ const ResetPasswordPage: React.FC = () => {
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.fieldGroup}>
                         <label className={styles.label}>{t('auth.resetPassword.newPassword')}</label>
-                        <input
-                            type="password"
+                        <PasswordInput
+                            name="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className={styles.input}
                             placeholder={t('auth.placeholderPassword')}
                             required
                         />
+                        <small style={{ color: "#888", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
+                            {t("auth.passwordRules")}
+                        </small>
                     </div>
                     <div className={styles.fieldGroup}>
                         <label className={styles.label}>{t('auth.confirm')}</label>
-                        <input
-                            type="password"
+                        <PasswordInput
+                            name="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className={styles.input}

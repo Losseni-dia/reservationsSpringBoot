@@ -20,6 +20,8 @@ const RegisterPage: React.FC = () => {
     langue: 'fr'
   });
   const { login } = useAuth();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,6 +30,13 @@ const RegisterPage: React.FC = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,8 +53,20 @@ const RegisterPage: React.FC = () => {
     try {
       // Le backend (UserRegistrationDto) a besoin de confirmPassword pour la validation
       // On envoie donc tout l'objet formData (qui contient confirmPassword et langue)
-      await authApi.register(formData);
-      
+      await authApi.register(formData as any);
+      const submitData = new FormData();
+      submitData.append('login', formData.login);
+      submitData.append('firstname', formData.firstname);
+      submitData.append('lastname', formData.lastname);
+      submitData.append('email', formData.email);
+      submitData.append('password', formData.password);
+      submitData.append('confirmPassword', formData.confirmPassword);
+      submitData.append('langue', formData.langue);
+      if (selectedFile) {
+        submitData.append('profilePictureFile', selectedFile);
+      }
+      await authApi.register(submitData as any);
+
       // Connexion automatique et redirection vers l'accueil (géré par login)
       await login({
         login: formData.login,
@@ -93,6 +114,27 @@ const RegisterPage: React.FC = () => {
         {error && <div className={styles.errorMessage}>{error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.photoUploadSection}>
+            <div className={styles.avatarPreview}>
+              {previewUrl ? (
+                <img src={previewUrl} alt="Preview" className={styles.previewImg} />
+              ) : (
+                <div className={styles.placeholderIcon}>👤</div>
+              )}
+            </div>
+            <label htmlFor="photo-upload" className={styles.uploadLabel}>
+              {t("auth.register.addPhoto") || "Ajouter une photo"}
+            </label>
+            <input
+              id="photo-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className={styles.fileInput}
+              style={{ display: 'none' }}
+            />
+          </div>
+          
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
               <label className={styles.label}>{t("auth.firstname")}</label>

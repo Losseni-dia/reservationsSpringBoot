@@ -75,6 +75,9 @@ public class User {
     @org.hibernate.annotations.ColumnDefault("1")
     private boolean isApproved = false;
 
+    @Column(name = "profile_picture")
+    private String profilePicture;
+
 
     // =================================================================
     // MÉTHODES UTILITAIRES

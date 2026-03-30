@@ -62,6 +62,7 @@ export interface User {
     createdAt: string;
     isActive: boolean;
     roles?: Role[]; // Ajouté pour faciliter l'accès aux rôles de l'utilisateur
+    
 }
 
 export interface UserRegistrationDto {
@@ -85,6 +86,9 @@ export interface UserProfileDto {
   role: string;
   password?: string; // Optionnel lors d'une simple mise à jour
   confirmPassword?: string; // Optionnel lors d'une simple mise à jour
+  profilePicture?: string; 
+  profilePictureUrl?: string; // URL de la photo de profil (optionnel)
+
 }
 
 /**

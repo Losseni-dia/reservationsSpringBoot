@@ -32,4 +32,7 @@ public class UserProfileDto {
     private String password; // nouveau mot de passe (optionnel)
 
     private String confirmPassword; // confirmation du mot de passe
+
+    private String profilePicture;
+    private String profilePictureUrl;
 }

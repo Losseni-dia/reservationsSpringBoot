@@ -35,4 +35,6 @@ public class UserRegistrationDto {
     private String langue;
 
     private String role;
+    private String profilePicture;
+    private String profilePictureUrl;
 }
