@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importation pour une navigation fluide
 import { UserProfileDto } from '../../types/models';
 import { authApi } from '../../services/api';
+import { applyUserLanguagePreference } from '../../i18n';
 
 interface AuthContextType {
     user: UserProfileDto | null;
@@ -26,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             
             if (userData && userData.login) {
                 setUser(userData);
+                await applyUserLanguagePreference(userData.langue);
             } else {
                 setUser(null);
             }
