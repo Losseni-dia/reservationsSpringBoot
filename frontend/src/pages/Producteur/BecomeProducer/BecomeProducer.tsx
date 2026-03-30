@@ -17,6 +17,7 @@ const BecomeProducer: React.FC = () => {
         password: '',
         confirmPassword: '',
         langue: i18n.language || 'fr',
+        producerRequestDescription: '',
         role: 'producer'
     });
 
@@ -28,7 +29,9 @@ const BecomeProducer: React.FC = () => {
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    ) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -53,6 +56,12 @@ const BecomeProducer: React.FC = () => {
             return;
         }
 
+        const desc = (formData.producerRequestDescription ?? '').trim();
+        if (!desc) {
+            setError(t('producer.becomeProducer.descriptionRequired'));
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -66,6 +75,7 @@ const BecomeProducer: React.FC = () => {
             submitData.append('confirmPassword', formData.confirmPassword);
             submitData.append('langue', i18n.language);
             submitData.append('role', 'producer');
+            submitData.append('producerRequestDescription', desc);
 
             if (selectedFile) {
                 submitData.append('profilePictureFile', selectedFile);
@@ -169,6 +179,23 @@ return (
                     <div className={styles.fieldGroup}>
                         <label className={styles.label}>{t('auth.email')}</label>
                         <input name="email" type="email" value={formData.email} onChange={handleChange} className={styles.input} required />
+                    </div>
+
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.label} htmlFor="producerRequestDescription">
+                            {t('producer.becomeProducer.descriptionLabel')}
+                        </label>
+                        <textarea
+                            id="producerRequestDescription"
+                            name="producerRequestDescription"
+                            value={formData.producerRequestDescription ?? ''}
+                            onChange={handleChange}
+                            className={styles.input}
+                            rows={4}
+                            required
+                            maxLength={5000}
+                            placeholder={t('producer.becomeProducer.descriptionPlaceholder')}
+                        />
                     </div>
 
                     <div className={styles.fieldGroup}>
