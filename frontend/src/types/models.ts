@@ -73,6 +73,8 @@ export interface UserRegistrationDto {
   password: string;
   confirmPassword: string;
   langue: string;
+  /** Obligatoire pour l'inscription producteur (/become-producer). */
+  producerRequestDescription?: string;
 }
 
 export interface UserProfileDto {
@@ -88,7 +90,8 @@ export interface UserProfileDto {
   confirmPassword?: string; // Optionnel lors d'une simple mise à jour
   profilePicture?: string; 
   profilePictureUrl?: string; // URL de la photo de profil (optionnel)
-
+  /** Texte de la demande producteur (admin). */
+  producerRequestDescription?: string;
 }
 
 /**
