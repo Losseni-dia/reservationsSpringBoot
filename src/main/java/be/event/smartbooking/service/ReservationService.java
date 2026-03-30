@@ -142,13 +142,14 @@ public class ReservationService {
             }
         }
 
-        /*
-         * 📧 EMAIL DÉSACTIVÉ POUR LE MOMENT
-         * emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed,
-         * items, locale);
-         */
+        // 5. 📧 ENVOI DE L'E-MAIL RÉACTIVÉ !
+        Locale locale = Locale.FRENCH;
+        if (confirmed.getUser().getLangue() != null) {
+            locale = Locale.forLanguageTag(confirmed.getUser().getLangue());
+        }
+        emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed, items, locale);
 
-        System.out.println("✅ SUCCÈS : Réservation confirmée et tickets enregistrés en base !");
+        System.out.println("✅ SUCCÈS : Réservation confirmée, tickets créés et e-mail envoyé !");
         return confirmed;
     }
 
