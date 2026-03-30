@@ -24,10 +24,7 @@ public interface RepresentationReservationRepository
        "WHERE rr.reservation = :res")
 List<RepresentationReservation> findByReservationWithDetails(@Param("res") Reservation res);
 
-        /**
-         * Somme des montants (tarif unitaire × quantité) pour les réservations au statut donné (ex. CONFIRMED = payé).
-         */
-        @Query("SELECT COALESCE(SUM(p.amount * rr.quantity), 0.0) FROM RepresentationReservation rr "
-                        + "JOIN rr.reservation r JOIN rr.price p WHERE r.statut = :statut")
-        Double sumTotalRevenueByReservationStatus(@Param("statut") StatutReservation statut);
+        @Query("SELECT COALESCE(SUM(p.amount * rr.quantity), 0) FROM RepresentationReservation rr "
+                        + "JOIN rr.reservation r JOIN rr.price p WHERE r.statut IN :statuts")
+        Double sumTotalRevenueByReservationStatuses(@Param("statuts") List<StatutReservation> statuts);
 }
