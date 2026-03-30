@@ -178,6 +178,17 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Chiffre d'affaires total : somme (prix × quantité) des lignes de commande dont la réservation est confirmée (payée).
+     */
+    public BigDecimal getTotalRevenueConfirmed() {
+        Double sum = itemRepository.sumTotalRevenueByReservationStatus(StatutReservation.CONFIRMED);
+        if (sum == null) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(sum);
+    }
+
     private ReservationAdminDto toAdminDto(Reservation r) {
         User u = r.getUser();
         List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(r);

@@ -9,7 +9,7 @@ const ApiDocPage: React.FC = () => {
     <div className={styles.swaggerSection}>
       <div className={styles.centeredContent}>
         <SwaggerUI
-          url="http://localhost:8080/v3/api-docs/b2b-api"
+          url="/v3/api-docs/b2b-api"
           docExpansion="list"
         />
       </div>

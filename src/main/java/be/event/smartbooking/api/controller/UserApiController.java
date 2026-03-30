@@ -95,7 +95,8 @@ public class UserApiController {
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non connecté");
+            // 200 + corps vide : évite un 401 systématique au chargement (AuthContext) pour les visiteurs
+            return ResponseEntity.ok(new UserProfileDto());
         }
 
         // On cherche l'utilisateur (on utilise findByLogin car c'est le standard
