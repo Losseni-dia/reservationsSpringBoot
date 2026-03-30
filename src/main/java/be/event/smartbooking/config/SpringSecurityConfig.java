@@ -112,6 +112,7 @@ public class SpringSecurityConfig {
                                                 .requestMatchers("/api/reservations/**").authenticated()
 
                                                 // Tout le reste
+                                                .requestMatchers("/uploads/**").permitAll()
                                                 .anyRequest().authenticated())
 
                                 .formLogin(form -> form

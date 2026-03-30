@@ -266,3 +266,29 @@
     border-color: #f5c518;
     color: #f5c518;
 }
+.profileLink {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espace entre la photo et le prénom */
+    text-decoration: none;
+    color: inherit;
+}
+
+.headerAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%; /* Image ronde */
+    object-fit: cover;   /* Empêche de déformer la photo */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: block;
+}
+
+.defaultIcon {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.firstNameText {
+    font-weight: 500;
+}
