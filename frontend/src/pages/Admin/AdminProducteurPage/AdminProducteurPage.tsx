@@ -74,13 +74,14 @@ const AdminProducteurPage: React.FC = () => {
                             <th>ID</th>
                             <th>{t('admin.users.colIdentity')}</th>
                             <th>{t('admin.users.colEmail')}</th>
+                            <th>{t('admin.pendingProducers.colDescription')}</th>
                             <th>{t('admin.users.colActions')}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {pendingUsers.length === 0 ? (
                             <tr>
-                                <td colSpan={4} className={styles.emptyState}>Aucune demande de producteur en attente.</td>
+                                <td colSpan={5} className={styles.emptyState}>Aucune demande de producteur en attente.</td>
                             </tr>
                         ) : (
                             pendingUsers.map(user => (
@@ -91,6 +92,17 @@ const AdminProducteurPage: React.FC = () => {
                                         <div style={{fontSize: '0.85em', color: '#888'}}>@{user.login}</div>
                                     </td>
                                     <td>{user.email}</td>
+                                    <td
+                                        className={`${styles.descriptionCell} text-wrap text-break`}
+                                    >
+                                        {user.producerRequestDescription?.trim() ? (
+                                            <span className={styles.descriptionText}>
+                                                {user.producerRequestDescription}
+                                            </span>
+                                        ) : (
+                                            <span className={styles.descriptionEmpty}>—</span>
+                                        )}
+                                    </td>
                                     <td className={styles.actions}>
                                         <button onClick={() => handleApprove(user.id)} className={`${styles.btnAction} ${styles.btnApprove}`} title="Valider l'inscription">
                                             <HiCheckCircle /> Valider
