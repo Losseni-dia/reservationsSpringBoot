@@ -35,4 +35,7 @@ public class UserProfileDto {
 
     private String profilePicture;
     private String profilePictureUrl;
+
+    /** Texte de la demande producteur (liste admin des comptes en attente). */
+    private String producerRequestDescription;
 }
