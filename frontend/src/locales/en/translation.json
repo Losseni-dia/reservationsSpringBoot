@@ -108,6 +108,7 @@
       "submitLoading": "Creating...",
       "hasAccount": "Already have an account?",
       "signIn": "Log in",
+      "addPhoto": "Add a photo",
       "errorPasswordMismatch": "Passwords do not match.",
       "errorGeneric": "An error occurred during registration."
     },
@@ -292,9 +293,17 @@
       "retry": "Retry",
       "empty": "No reservations yet.",
       "noValue": "—"
+    },
+    "pendingProducers": {
+      "colDescription": "DESCRIPTION"
     }
   },
   "producer": {
+    "becomeProducer": {
+      "descriptionLabel": "Request description",
+      "descriptionPlaceholder": "Describe your activity and the type of shows you offer…",
+      "descriptionRequired": "A description is required for a producer account request."
+    },
     "dashboard": {
       "errorLoad": "Unable to load data. Please try again later.",
       "title": "Producer Dashboard",
