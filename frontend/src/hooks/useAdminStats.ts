@@ -6,6 +6,7 @@ interface AdminStats {
   totalShows: number;
   totalReservations: number;
   totalLocations: number;
+  totalRevenue: number;
   totalArtists: number;
   reviewStats: any;
 }
@@ -23,6 +24,7 @@ export const useAdminStats = (): UseAdminStatsResult => {
     totalShows: 0,
     totalReservations: 0,
     totalLocations: 0,
+    totalRevenue: 0,
     totalArtists: 0,
     reviewStats: null,
   });
@@ -52,6 +54,7 @@ export const useAdminStats = (): UseAdminStatsResult => {
         totalShows: Number(summary.totalShows) || 0,
         totalLocations: Number(summary.totalLocations) || 0,
         totalReservations: Number(summary.totalReservations) || 0,
+        totalRevenue: Number(summary.totalRevenue) || 0,
         totalArtists: artists.length,
         reviewStats: reviewStats,
       });
