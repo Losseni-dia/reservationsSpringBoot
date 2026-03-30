@@ -21,7 +21,7 @@ const AdminProducteurPage: React.FC = () => {
             setPendingUsers(data);
         } catch (err) {
             console.error("Erreur chargement des producteurs en attente:", err);
-            setError("Impossible de charger les demandes.");
+            setError(t("admin.pendingProducers.loadError"));
         } finally {
             setLoading(false);
         }
@@ -32,19 +32,21 @@ const AdminProducteurPage: React.FC = () => {
     }, []);
 
     const handleApprove = async (id: number) => {
-        if (!window.confirm("Valider ce compte Producteur ?")) return;
+        if (!window.confirm(t("admin.pendingProducers.confirmApprove"))) return;
         try {
             await userApi.approve(id);
             loadPendingUsers(); // Rafraîchir la liste
         } catch (e: any) {
-            alert(e.message || "Erreur lors de l'approbation");
+            alert(e.message || t("admin.pendingProducers.approveError"));
         }
     };
 
     const handleReject = async (id: number) => {
         const userToReject = pendingUsers.find(u => u.id === id);
-        const name = userToReject ? `${userToReject.firstname} ${userToReject.lastname}` : `ID ${id}`;
-        if (!window.confirm(`Rejeter et supprimer définitivement la demande de "${name}" ?`)) return;
+        const name = userToReject
+            ? `${userToReject.firstname} ${userToReject.lastname}`
+            : t("admin.pendingProducers.rejectIdFallback", { id });
+        if (!window.confirm(t("admin.pendingProducers.confirmReject", { name }))) return;
         try {
             await userApi.delete(id);
             loadPendingUsers(); // Rafraîchir la liste
@@ -60,8 +62,17 @@ const AdminProducteurPage: React.FC = () => {
             <AdminBackToDashboardButton />
             <div className={styles.header}>
                 <div>
-                    <h1 className={styles.title}>Demandes <span style={{color: '#fff'}}>Producteurs</span></h1>
-                    <p className={styles.subtitle}>{t('admin.users.subtitle', { count: pendingUsers.length })}</p>
+                    <h1 className={styles.title}>
+                        {t("admin.pendingProducers.pageTitle")}{" "}
+                        <span style={{ color: "#fff" }}>
+                            {t("admin.pendingProducers.pageTitleHighlight")}
+                        </span>
+                    </h1>
+                    <p className={styles.subtitle}>
+                        {t("admin.pendingProducers.subtitle", {
+                            count: pendingUsers.length,
+                        })}
+                    </p>
                 </div>
             </div>
 
@@ -71,7 +82,7 @@ const AdminProducteurPage: React.FC = () => {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>{t("admin.pendingProducers.colId")}</th>
                             <th>{t('admin.users.colIdentity')}</th>
                             <th>{t('admin.users.colEmail')}</th>
                             <th>{t('admin.pendingProducers.colDescription')}</th>
@@ -81,7 +92,7 @@ const AdminProducteurPage: React.FC = () => {
                     <tbody>
                         {pendingUsers.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className={styles.emptyState}>Aucune demande de producteur en attente.</td>
+                                <td colSpan={5} className={styles.emptyState}>{t("admin.pendingProducers.empty")}</td>
                             </tr>
                         ) : (
                             pendingUsers.map(user => (
@@ -104,11 +115,23 @@ const AdminProducteurPage: React.FC = () => {
                                         )}
                                     </td>
                                     <td className={styles.actions}>
-                                        <button onClick={() => handleApprove(user.id)} className={`${styles.btnAction} ${styles.btnApprove}`} title="Valider l'inscription">
-                                            <HiCheckCircle /> Valider
+                                        <button
+                                            type="button"
+                                            onClick={() => handleApprove(user.id)}
+                                            className={`${styles.btnAction} ${styles.btnApprove}`}
+                                            title={t("admin.pendingProducers.approveTitle")}
+                                        >
+                                            <HiCheckCircle />{" "}
+                                            {t("admin.pendingProducers.approveButton")}
                                         </button>
-                                        <button onClick={() => handleReject(user.id)} className={`${styles.btnAction} ${styles.btnDelete}`} title="Rejeter et supprimer la demande">
-                                            <HiTrash /> Rejeter
+                                        <button
+                                            type="button"
+                                            onClick={() => handleReject(user.id)}
+                                            className={`${styles.btnAction} ${styles.btnDelete}`}
+                                            title={t("admin.pendingProducers.rejectTitle")}
+                                        >
+                                            <HiTrash />{" "}
+                                            {t("admin.pendingProducers.rejectButton")}
                                         </button>
                                     </td>
                                 </tr>

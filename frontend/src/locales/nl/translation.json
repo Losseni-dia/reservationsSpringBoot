@@ -19,7 +19,14 @@
     "footer": {
       "allRightsReserved": "Alle rechten voorbehouden.",
       "privacy": "Privacy",
-      "terms": "Gebruiksvoorwaarden"
+      "terms": "Gebruiksvoorwaarden",
+      "brandName": "SmartBooking",
+      "socialFb": "FB",
+      "socialIg": "IG",
+      "socialTw": "TW",
+      "rssSubscribeTitle": "Abonneren op de RSS-feed",
+      "rssLink": "RSS-feed",
+      "developers": "API & ontwikkelaars"
     }
   },
   "home": {
@@ -69,7 +76,60 @@
   "forbidden": {
     "title": "Toegang Geweigerd",
     "message": "Sorry, u heeft niet de vereiste rechten om deze pagina te bekijken.",
-    "backHome": "Terug naar home"
+    "backHome": "Terug naar home",
+    "systemTagline": "SMARTBOOKING-SYSTEEM"
+  },
+  "developer": {
+    "title": "{{brand}}-API: aan de slag",
+    "subtitle": "Nieuw bij API's? Zo koppelt u uw site, blog of app in enkele minuten aan onze voorstellingsdatabase.",
+    "sectionWhatTitle": "Waarvoor dient dit?",
+    "sectionWhatIntro": "Een API is een brug tussen onze site en de uwe. Uw tools kunnen onze gegevens in real time lezen. Drie voorbeelden:",
+    "uc1Title": "Geen dubbele invoer meer (theaters en gezelschappen)",
+    "uc1Body": "Heeft u een WordPress-site? In plaats van tourdata handmatig bij u en bij {{brand}} te kopiëren, leest uw site onze kalender via de API. Wijzig een datum op {{brand}} en ze wordt op uw site bijgewerkt.",
+    "uc2Title": "Pagina's verrijken (uitgevers en bloggers)",
+    "uc2Before": "Schrijft u over een stuk? Gebruik onze API voor een klein blokje ",
+    "uc2Em": "« Nu op het programma »",
+    "uc2After": " zodat lezers weten waar het speelt.",
+    "uc3Title": "Echte projecten bouwen (student-ontwikkelaars)",
+    "uc3Body": "Genoeg van Lorem Ipsum? Gebruik onze API voor apps met echte cultuurdata (agenda, kaarten…) en versterk uw portfolio.",
+    "ucEtc": "enz.",
+    "tutorialTitle": "Snelstartgids",
+    "tutorialIntro": "Om onze server te bevragen volstaat de URL in de browser niet: u moet aantonen dat u mag. Drie stappen:",
+    "step1Title": "Genereer uw geheime sleutel",
+    "step1P1": "Deze sleutel is uw paspoort. Deel hem nooit openbaar (bijv. op GitHub).",
+    "step1LoginBefore": "👉 ",
+    "step1LoginBold": "Meld u aan",
+    "step1LoginAfter": " om een sleutel te kunnen maken.",
+    "step1LoggedBefore": "Goed zo ",
+    "step1LoggedAfter": ", u bent ingelogd! Maak nu uw sleutel:",
+    "toggleHide": "Sleutelbeheer verbergen",
+    "toggleShow": "API-sleutelbeheer openen",
+    "step2Title": "Uw eerste aanroep (API-request)",
+    "step2P1a": "Voeg uw sleutel toe aan de requestheader (",
+    "step2P1b": "). Die header moet ",
+    "step2P1c": " heten.",
+    "termHeaderHttp": "HTTP-header",
+    "step2P2": "Kies de taal van uw project en kopieer de code:",
+    "codeBadgeFrontend": "Frontend",
+    "codeTitleJs": "JavaScript / React / Vue",
+    "codeBadgeTerminal": "Terminal",
+    "codeTitleCurl": "Snel testen met cURL",
+    "codeBadgeBackend": "Backend",
+    "codeTitlePhp": "PHP (ideaal voor WordPress)",
+    "codeBadgeScripting": "Scripting",
+    "codeTitlePython": "Python (requests)",
+    "step3Title": "Verken het API-woordenboek (Swagger)",
+    "step3P1a": "U vraagt zich af: ",
+    "step3Quote": "« Wat zijn de exacte URL's? Welke data krijg ik? »",
+    "step3P1b": ".",
+    "step3P2a": "Daarvoor is ",
+    "step3P2b": " : een visuele interface met al onze endpoints, live te testen. Zo werkt het:",
+    "instr1": "1. Autoriseren: open Swagger via de link. Rechtsboven op de groene knop « Authorize ».",
+    "instr2": "2. Uw sleutel: plak sk_… in het veld, klik « Authorize », sluit het venster (« Close »).",
+    "instr3": "3. Endpoint openen: klik op een regel (bijv. GET /api/shows) om uit te klappen.",
+    "instr4": "4. Testen: klik « Try it out », dan « Execute ». Het antwoord verschijnt eronder.",
+    "linkSwagger": "Swagger openen",
+    "linkInteractiveDoc": "Interactieve documentatie openen"
   },
   "auth": {
     "email": "E-mail",
@@ -115,7 +175,12 @@
     "profile": {
       "title": "Mijn profiel",
       "save": "Opslaan",
-      "success": "Profiel bijgewerkt!"
+      "success": "Profiel bijgewerkt!",
+      "backToProfile": "← Terug naar profiel",
+      "editTitle": "Profiel bewerken",
+      "avatarAlt": "Profielfoto",
+      "changePhoto": "📷 Wijzigen",
+      "updateError": "Er is een fout opgetreden"
     },
     "forgotPassword": {
       "title": "Wachtwoord vergeten",
@@ -172,6 +237,7 @@
     "errorReservation": "Fout tijdens het reserveren.",
     "loadingShow": "Voorstelling laden...",
     "title": "Reserveer uw plaatsen",
+    "selectTickets": "Selecteer uw tickets",
     "showLabel": "Voorstelling:",
     "chooseDate": "Kies een datum",
     "noDateAvailable": "Geen datum beschikbaar",
@@ -182,6 +248,18 @@
     "preparePayment": "Betaling voorbereiden...",
     "proceedToPayment": "Doorgaan naar betaling",
     "back": "Terug"
+  },
+  "profile": {
+    "title": "Mijn profiel",
+    "save": "Opslaan",
+    "myTicketsTitle": "Mijn tickets",
+    "success": "Profiel bijgewerkt!",
+    "noTickets": "U heeft nog geen gereserveerde tickets.",
+    "myActiveTickets": "Mijn actieve tickets",
+    "ticketDescription": "Toon deze QR-code bij de ingang van de locatie.",
+    "viewAllTickets": "Alle tickets bekijken",
+    "referenceLabel": "REFERENTIE",
+    "ticketTitleUnavailable": "Titel niet beschikbaar"
   },
   "admin": {
     "common": {
@@ -213,7 +291,8 @@
       "activate": "✅ Activeren",
       "empty": "Geen gebruikers gevonden.",
       "confirmDelete": "⚠️ WAARSCHUWING: Gebruiker \"{{name}}\" definitief verwijderen?",
-      "errorDelete": "Fout bij het verwijderen. De gebruiker heeft mogelijk gekoppelde gegevens (reserveringen, enz.)."
+      "errorDelete": "Fout bij het verwijderen. De gebruiker heeft mogelijk gekoppelde gegevens (reserveringen, enz.).",
+      "export": "Exporteren"
     },
     "profile": {
       "title": "Mijn profiel",
@@ -245,7 +324,10 @@
       "modalRevokeTitle": "Intrekken?",
       "modalConfirmTitle": "Bevestigen?",
       "modalRevokeMessage": "\"{{title}}\" uit de openbare catalogus verwijderen?",
-      "modalConfirmMessage": "\"{{title}}\" zichtbaar en reserverbaar maken voor klanten?"
+      "modalConfirmMessage": "\"{{title}}\" zichtbaar en reserverbaar maken voor klanten?",
+      "export": "Exporteren",
+      "importHide": "Import verbergen",
+      "importShow": "Voorstellingen importeren"
     },
     "reviews": {
       "title": "Moderatiewerking",
@@ -295,14 +377,87 @@
       "noValue": "—"
     },
     "pendingProducers": {
-      "colDescription": "BESCHRIJVING"
+      "colDescription": "BESCHRIJVING",
+      "pageTitle": "Aanvragen",
+      "pageTitleHighlight": "Producenten",
+      "subtitle": "{{count}} aanvragen in afwachting van validatie",
+      "empty": "Geen openstaande producentenaanvragen.",
+      "confirmApprove": "Dit producentenaccount goedkeuren?",
+      "approveError": "Fout bij goedkeuring.",
+      "confirmReject": "Aanvraag van \"{{name}}\" afwijzen en definitief verwijderen?",
+      "rejectIdFallback": "ID {{id}}",
+      "loadError": "Kan de aanvragen niet laden.",
+      "colId": "ID",
+      "approveButton": "Goedkeuren",
+      "approveTitle": "Registratie goedkeuren",
+      "rejectButton": "Afwijzen",
+      "rejectTitle": "Aanvraag afwijzen en verwijderen"
+    },
+    "export": {
+      "errorAlert": "Er is een fout opgetreden bij het exporteren.",
+      "tooltipCsv": "{{label}} (CSV)",
+      "tooltipJson": "{{label}} (JSON)",
+      "buttonCsv": "{{label}} CSV",
+      "buttonJson": "JSON"
+    },
+    "importZone": {
+      "formatError": "Bestandsformaat niet ondersteund. Gebruik CSV of JSON.",
+      "importFailed": "Fout bij import",
+      "loading": "Bezig met importeren…",
+      "dropText": "Sleep een CSV- of JSON-bestand hierheen",
+      "orClick": "of klik om te kiezen",
+      "imported": "geïmporteerd",
+      "skipped": "overgeslagen",
+      "errors": "fout(en)",
+      "seeErrors": "Fouten bekijken"
     }
+  },
+  "apiKeys": {
+    "title": "Mijn API-sleutels beheren",
+    "description": "Gebruik deze sleutels om verzoeken naar onze openbare API te authenticeren.",
+    "nameRequired": "Voer een naam voor de sleutel in.",
+    "successGenerated": "Sleutel succesvol aangemaakt!",
+    "errorGenerate": "Fout bij het aanmaken van de sleutel.",
+    "errorConnection": "Verbindingsfout.",
+    "confirmDelete": "Weet u zeker dat u deze sleutel wilt verwijderen? Ze werkt daarna niet meer.",
+    "successDeleted": "Sleutel definitief verwijderd.",
+    "errorDelete": "Fout bij het verwijderen.",
+    "copied": "Sleutel gekopieerd naar het klembord!",
+    "placeholderName": "Naam van de sleutel (bijv. mijn WordPress-site)",
+    "generating": "Bezig…",
+    "createButton": "Sleutel aanmaken",
+    "activeKeysTitle": "Mijn actieve sleutels",
+    "emptyList": "U heeft nog geen API-sleutels.",
+    "copy": "Kopiëren",
+    "delete": "Verwijderen",
+    "createdOn": "Aangemaakt: {{date}}",
+    "docWhatTitle": "Waarvoor dient deze sleutel?",
+    "docWhatBody": "Deze sleutel werkt als een geheim wachtwoord. Ze laat andere sites (uw vitrine, een blog of een partner-app) veilig verbinding maken met ons platform om automatisch voorstellingsinformatie op te halen.",
+    "docHowTitle": "Hoe gebruik ik ze?",
+    "docHowRegular": "Voor gewone gebruikers:",
+    "docHowRegularBody": "Kopieer uw sleutel hierboven en plak ze in het veld « API-sleutel » van het programma dat u wilt koppelen.",
+    "docHowDev": "Voor ontwikkelaars:",
+    "docHowDevBody": "Voeg deze sleutel toe aan de HTTP-header",
+    "docHowDevSuffix": "bij uw verzoeken.",
+    "docFooterBefore": "👉 Ontdek alle beschikbare gegevens in onze",
+    "docFooterLink": "interactieve documentatie",
+    "docFooterAfter": "."
   },
   "producer": {
     "becomeProducer": {
       "descriptionLabel": "Beschrijving van de aanvraag",
       "descriptionPlaceholder": "Beschrijf uw activiteit en het type voorstellingen…",
-      "descriptionRequired": "Een beschrijving is verplicht voor een producentenaanvraag."
+      "descriptionRequired": "Een beschrijving is verplicht voor een producentenaanvraag.",
+      "pageTitle": "Producent worden",
+      "pageSubtitle": "Maak uw producentenruimte om uw voorstellingen te publiceren.",
+      "successTitle": "Aanvraag verzonden!",
+      "successIntro": "Uw",
+      "successProducerWord": "Producenten",
+      "successIntroEnd": "account is succesvol aangemaakt.",
+      "successNote": "Een beheerder moet het valideren voordat u kunt inloggen.",
+      "backHome": "Terug naar home",
+      "submitRequest": "Mijn aanvraag verzenden",
+      "previewAlt": "Voorbeeld van de foto"
     },
     "dashboard": {
       "errorLoad": "Kan gegevens niet laden. Probeer het later opnieuw.",
@@ -364,7 +519,15 @@
       "successAdd": "Voorstelling toegevoegd!",
       "errorSave": "Fout bij het opslaan. Controleer of de locatie correct is ingesteld.",
       "confirmDelete": "Deze voorstelling verwijderen?",
-      "errorDelete": "Fout bij verwijderen"
+      "errorDelete": "Fout bij verwijderen",
+      "alertPastDateTime": "U kunt geen voorstelling in het verleden plannen.",
+      "successDelete": "Voorstelling succesvol verwijderd.",
+      "priceType": {
+        "STANDARD": "Standaard",
+        "REDUIT": "Verlaagd",
+        "VIP": "VIP",
+        "PREMIUM": "Premium"
+      }
     },
     "showForm": {
       "titleEdit": "Voorstelling wijzigen",

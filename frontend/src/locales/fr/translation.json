@@ -20,7 +20,14 @@
     "footer": {
       "allRightsReserved": "Tous droits réservés.",
       "privacy": "Confidentialité",
-      "terms": "Conditions d'utilisation"
+      "terms": "Conditions d'utilisation",
+      "brandName": "SmartBooking",
+      "socialFb": "FB",
+      "socialIg": "IG",
+      "socialTw": "TW",
+      "rssSubscribeTitle": "S'abonner au flux RSS",
+      "rssLink": "Flux RSS",
+      "developers": "API & Développeurs"
     }
   },
   "home": {
@@ -70,7 +77,60 @@
   "forbidden": {
     "title": "Accès Interdit",
     "message": "Désolé, vous n'avez pas les permissions nécessaires pour accéder aux coulisses de cette page.",
-    "backHome": "Retour à l'accueil"
+    "backHome": "Retour à l'accueil",
+    "systemTagline": "SYSTÈME SMARTBOOKING"
+  },
+  "developer": {
+    "title": "API {{brand}} : le guide pour bien démarrer",
+    "subtitle": "Vous débutez avec les API ? Pas de panique ! Voici comment connecter votre site web, votre blog ou votre application à notre base de données de spectacles en quelques minutes.",
+    "sectionWhatTitle": "À quoi ça sert concrètement ?",
+    "sectionWhatIntro": "Une API, c'est comme un pont entre notre site et le vôtre. Elle permet à vos outils de « lire » nos informations en temps réel. Voici trois exemples concrets :",
+    "uc1Title": "Fini la double saisie (théâtres et compagnies)",
+    "uc1Body": "Vous avez un site WordPress ? Au lieu de recopier vos dates de tournée à la main chez vous et sur {{brand}}, l'API permet à votre site de lire notre calendrier. Modifiez une date sur {{brand}}, elle se met à jour automatiquement sur votre site !",
+    "uc2Title": "Enrichir vos pages (éditeurs et blogueurs)",
+    "uc2Before": "Vous parlez d'une pièce sur votre blog ? Utilisez notre API pour afficher un encart ",
+    "uc2Em": "« En ce moment à l'affiche »",
+    "uc2After": " et indiquer dans quels théâtres elle se joue.",
+    "uc3Title": "Créer de vrais projets (apprentis développeurs)",
+    "uc3Body": "Marre du Lorem Ipsum pour vos travaux ? Connectez-vous à notre API pour des applications avec de vraies données culturelles (agenda, carte des lieux…) et renforcez votre portfolio.",
+    "ucEtc": "etc.",
+    "tutorialTitle": "Tutoriel de démarrage rapide",
+    "tutorialIntro": "Pour interroger notre serveur, vous ne pouvez pas seulement taper l'URL dans le navigateur : vous devez prouver que vous avez l'autorisation. Suivez ces trois étapes :",
+    "step1Title": "Générez votre clé secrète",
+    "step1P1": "Cette clé est votre passeport. Ne la partagez jamais publiquement (par ex. sur GitHub).",
+    "step1LoginBefore": "👉 Veuillez vous ",
+    "step1LoginBold": "connecter",
+    "step1LoginAfter": " à votre compte pour pouvoir générer une clé.",
+    "step1LoggedBefore": "Super ",
+    "step1LoggedAfter": ", vous êtes connecté ! Créez votre clé maintenant :",
+    "toggleHide": "Masquer le gestionnaire",
+    "toggleShow": "Ouvrir le gestionnaire de clés API",
+    "step2Title": "Faites votre première requête (appel API)",
+    "step2P1a": "Pour vous authentifier auprès du serveur, ajoutez votre clé dans l'en-tête (",
+    "step2P1b": ") de la requête. Ce header doit obligatoirement s'appeler ",
+    "step2P1c": ".",
+    "termHeaderHttp": "Header HTTP",
+    "step2P2": "Choisissez le langage adapté à votre projet et copiez le code :",
+    "codeBadgeFrontend": "Frontend",
+    "codeTitleJs": "JavaScript / React / Vue",
+    "codeBadgeTerminal": "Terminal",
+    "codeTitleCurl": "Test rapide avec cURL",
+    "codeBadgeBackend": "Backend",
+    "codeTitlePhp": "PHP (idéal pour WordPress)",
+    "codeBadgeScripting": "Scripting",
+    "codeTitlePython": "Python (requests)",
+    "step3Title": "Explorez le dictionnaire de l'API (Swagger)",
+    "step3P1a": "Vous vous demandez : ",
+    "step3Quote": "« Quelles sont les adresses exactes ? Quelles données vais-je recevoir ? »",
+    "step3P1b": ".",
+    "step3P2a": "C'est le rôle de ",
+    "step3P2b": " : une interface visuelle qui liste nos endpoints et permet de les tester en direct. Voici comment procéder :",
+    "instr1": "1. Connexion : ouvrez Swagger via le lien ci-dessous. En haut à droite, cliquez sur le bouton vert « Authorize ».",
+    "instr2": "2. Votre clé : une fenêtre s'ouvre. Collez votre clé (sk_…) dans le champ, cliquez sur « Authorize », puis fermez (« Close »).",
+    "instr3": "3. Ouvrir un endpoint : cliquez sur une ligne (par ex. GET /api/shows) pour la dérouler.",
+    "instr4": "4. Tester : cliquez sur « Try it out », puis sur « Execute ». La réponse du serveur s'affiche en dessous.",
+    "linkSwagger": "Ouvrir Swagger",
+    "linkInteractiveDoc": "Ouvrir la documentation interactive"
   },
   "auth": {
     "email": "Email",
@@ -117,7 +177,12 @@
       "title": "Mon Profil",
       "save": "Enregistrer",
       "success": "Profil mis à jour !",
-      "noTickets": "Vous n'avez pas encore de billets réservés."
+      "noTickets": "Vous n'avez pas encore de billets réservés.",
+      "backToProfile": "← Retour au profil",
+      "editTitle": "Modifier mon profil",
+      "avatarAlt": "Photo de profil",
+      "changePhoto": "📷 Modifier",
+      "updateError": "Une erreur est survenue"
     },
     "forgotPassword": {
       "title": "Mot de passe oublié",
@@ -148,7 +213,9 @@
     "noTickets": "Vous n'avez pas encore de billets réservés.",
     "myActiveTickets": "Mes billets actifs",
     "ticketDescription": "Présentez ce QR code à l'entrée de la salle.",
-    "viewAllTickets": "Voir tous les billets"
+    "viewAllTickets": "Voir tous les billets",
+    "referenceLabel": "RÉFÉRENCE",
+    "ticketTitleUnavailable": "Titre non disponible"
   },
   "show": {
     "errorLoad": "Impossible de charger les détails du spectacle.",
@@ -184,6 +251,7 @@
     "errorReservation": "Erreur lors de la réservation.",
     "loadingShow": "Chargement du spectacle...",
     "title": "Réservez vos places",
+    "selectTickets": "Sélectionnez vos billets",
     "showLabel": "Spectacle :",
     "chooseDate": "Choisir une date",
     "noDateAvailable": "Aucune date disponible",
@@ -257,7 +325,9 @@
       "modalConfirmMessage": "Rendre \"{{title}}\" visible et réservable par les clients ?",
       "export": "Exporter",
       "showimport": "📥Importer",
-      "importZoneLabel": "Glissez un fichier .csv ou .json ici"
+      "importZoneLabel": "Glissez un fichier .csv ou .json ici",
+      "importHide": "Masquer l'import",
+      "importShow": "Importer des spectacles"
     },
     "reviews": {
       "title": "Modération des",
@@ -307,14 +377,87 @@
       "noValue": "—"
     },
     "pendingProducers": {
-      "colDescription": "DESCRIPTION"
+      "colDescription": "DESCRIPTION",
+      "pageTitle": "Demandes",
+      "pageTitleHighlight": "Producteurs",
+      "subtitle": "{{count}} demande(s) en attente de validation",
+      "empty": "Aucune demande de producteur en attente.",
+      "confirmApprove": "Valider ce compte Producteur ?",
+      "approveError": "Erreur lors de l'approbation",
+      "confirmReject": "Rejeter et supprimer définitivement la demande de \"{{name}}\" ?",
+      "rejectIdFallback": "ID {{id}}",
+      "loadError": "Impossible de charger les demandes.",
+      "colId": "ID",
+      "approveButton": "Valider",
+      "approveTitle": "Valider l'inscription",
+      "rejectButton": "Rejeter",
+      "rejectTitle": "Rejeter et supprimer la demande"
+    },
+    "export": {
+      "errorAlert": "Une erreur est survenue lors de l'export.",
+      "tooltipCsv": "{{label}} (CSV)",
+      "tooltipJson": "{{label}} (JSON)",
+      "buttonCsv": "{{label}} CSV",
+      "buttonJson": "JSON"
+    },
+    "importZone": {
+      "formatError": "Format de fichier non supporté. Utilisez CSV ou JSON.",
+      "importFailed": "Erreur lors de l'import",
+      "loading": "Import en cours...",
+      "dropText": "Glissez un fichier CSV ou JSON ici",
+      "orClick": "ou cliquez pour choisir",
+      "imported": "importé(s)",
+      "skipped": "ignoré(s)",
+      "errors": "erreur(s)",
+      "seeErrors": "Voir les erreurs"
     }
+  },
+  "apiKeys": {
+    "title": "Gérer mes clés API",
+    "description": "Utilisez ces clés pour authentifier vos requêtes vers notre API publique.",
+    "nameRequired": "Veuillez entrer un nom pour la clé.",
+    "successGenerated": "Clé générée avec succès !",
+    "errorGenerate": "Erreur lors de la génération.",
+    "errorConnection": "Erreur de connexion.",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette clé ? Elle ne fonctionnera plus.",
+    "successDeleted": "Clé supprimée définitivement.",
+    "errorDelete": "Erreur lors de la suppression.",
+    "copied": "Clé copiée dans le presse-papier !",
+    "placeholderName": "Nom de la clé (ex : Mon site WordPress)",
+    "generating": "Génération...",
+    "createButton": "Créer une clé",
+    "activeKeysTitle": "Mes clés actives",
+    "emptyList": "Vous n'avez pas encore de clé API.",
+    "copy": "Copier",
+    "delete": "Supprimer",
+    "createdOn": "Créée le : {{date}}",
+    "docWhatTitle": "À quoi sert cette clé ?",
+    "docWhatBody": "Cette clé agit comme un mot de passe secret. Elle permet à d'autres sites (comme votre site vitrine, un blog ou une application partenaire) de se connecter de manière sécurisée à notre plateforme pour récupérer automatiquement les informations des spectacles.",
+    "docHowTitle": "Comment l'utiliser ?",
+    "docHowRegular": "Pour les utilisateurs réguliers :",
+    "docHowRegularBody": "Copiez simplement votre clé ci-dessus et collez-la dans le champ « Clé API » de l'outil que vous souhaitez relier.",
+    "docHowDev": "Pour les développeurs :",
+    "docHowDevBody": "Incluez cette clé dans l'en-tête HTTP",
+    "docHowDevSuffix": "lors de vos requêtes.",
+    "docFooterBefore": "👉 Découvrez toutes les données disponibles sur notre",
+    "docFooterLink": "documentation interactive",
+    "docFooterAfter": "."
   },
   "producer": {
     "becomeProducer": {
       "descriptionLabel": "Description de la demande",
       "descriptionPlaceholder": "Présentez votre activité, le type de spectacles que vous proposez…",
-      "descriptionRequired": "La description de la demande est obligatoire."
+      "descriptionRequired": "La description de la demande est obligatoire.",
+      "pageTitle": "Devenir Producteur",
+      "pageSubtitle": "Créez votre espace producteur pour publier vos spectacles.",
+      "successTitle": "Demande envoyée !",
+      "successIntro": "Votre compte",
+      "successProducerWord": "Producteur",
+      "successIntroEnd": "a été créé avec succès.",
+      "successNote": "Il doit être validé par un administrateur avant de pouvoir vous connecter.",
+      "backHome": "Retour à l'accueil",
+      "submitRequest": "Envoyer ma demande",
+      "previewAlt": "Aperçu de la photo"
     },
     "dashboard": {
       "errorLoad": "Impossible de charger les données. Veuillez réessayer plus tard.",
@@ -376,7 +519,15 @@
       "successAdd": "Séance ajoutée !",
       "errorSave": "Erreur lors de l'enregistrement. Vérifiez que le lieu est bien défini.",
       "confirmDelete": "Supprimer cette séance ?",
-      "errorDelete": "Erreur de suppression"
+      "errorDelete": "Erreur de suppression",
+      "alertPastDateTime": "Vous ne pouvez pas programmer une séance dans le passé.",
+      "successDelete": "Séance supprimée avec succès.",
+      "priceType": {
+        "STANDARD": "Standard",
+        "REDUIT": "Réduit",
+        "VIP": "VIP",
+        "PREMIUM": "Premium"
+      }
     },
     "showForm": {
       "titleEdit": "Modifier le spectacle",

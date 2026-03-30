@@ -184,13 +184,15 @@ const newStatus = show.status === ShowStatus.CONFIRME
   <AdminBackToDashboardButton />
   <h1 className={styles.adminTitle}>{t("admin.shows.title")}</h1>
   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-    <ExportButton type="shows" label="Exporter" />
+    <ExportButton type="shows" label={t("admin.shows.export")} />
     <button
       type="button"
       className={styles.refreshButton}
       onClick={() => setShowImport(prev => !prev)}
     >
-      {showImport ? "Masquer l'import" : "Importer des spectacles"}
+      {showImport
+        ? t("admin.shows.importHide")
+        : t("admin.shows.importShow")}
     </button>
     <button className={styles.refreshButton} onClick={handleRefresh}>
       {t("admin.shows.refresh")}

@@ -205,7 +205,7 @@ const ProducerDashboard: React.FC = () => {
           >
             {t("producer.dashboard.addShow")}
           </button>
-          <ExportButton type="shows" label="Exporter" />
+          <ExportButton type="shows" label={t("admin.shows.export")} />
         </div>
       </header>
 

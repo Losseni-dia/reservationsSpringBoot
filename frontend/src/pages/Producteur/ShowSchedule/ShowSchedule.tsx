@@ -132,7 +132,7 @@ const handleSave = async (e: React.FormEvent) => {
   const now = new Date();
   if (selectedDate < now) {
     setToast({
-      msg: "Vous ne pouvez pas programmer une séance dans le passé",
+      msg: t("producer.schedule.alertPastDateTime"),
       type: "error",
     });
     return;
@@ -182,7 +182,7 @@ const handleSave = async (e: React.FormEvent) => {
       await representationApi.delete(repId);
       await loadInitialData();
       // Utilise le toast ici aussi !
-      setToast({ msg: "Séance supprimée avec succès", type: "success" });
+      setToast({ msg: t("producer.schedule.successDelete"), type: "success" });
     } catch (err) {
       setToast({ msg: t("producer.schedule.errorDelete"), type: "error" });
     }
@@ -231,7 +231,8 @@ const handleSave = async (e: React.FormEvent) => {
                   <div className={styles.priceBadges}>
                     {rep.prices?.map((p) => (
                       <span key={p.id} className={styles.badge}>
-                        {p.type}: {formatCurrency(p.amount, i18n.language)}
+                        {t(`producer.schedule.priceType.${p.type}`)}:{" "}
+                        {formatCurrency(p.amount, i18n.language)}
                       </span>
                     ))}
                   </div>
@@ -302,7 +303,9 @@ const handleSave = async (e: React.FormEvent) => {
               </label>
               {newRep.prices.map((p, index) => (
                 <div key={p.type} className={styles.priceInputGroup}>
-                  <span className={styles.priceTypeLabel}>{p.type}</span>
+                  <span className={styles.priceTypeLabel}>
+                    {t(`producer.schedule.priceType.${p.type}`)}
+                  </span>
                   <div className={styles.priceInputWrap}>
                     <input
                       type="number"
@@ -312,7 +315,7 @@ const handleSave = async (e: React.FormEvent) => {
                       value={p.amountStr}
                       onChange={(e) => handlePriceInputChange(index, e)}
                       onBlur={() => handlePriceInputBlur(index)}
-                      aria-label={`${p.type} (${getCurrencySymbol(i18n.language)})`}
+                      aria-label={`${t(`producer.schedule.priceType.${p.type}`)} (${getCurrencySymbol(i18n.language)})`}
                     />
                     <span className={styles.currencySuffix} aria-hidden>
                       {getCurrencySymbol(i18n.language)}
