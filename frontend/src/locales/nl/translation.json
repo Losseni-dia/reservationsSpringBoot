@@ -211,6 +211,16 @@
       "confirmDelete": "⚠️ WAARSCHUWING: Gebruiker \"{{name}}\" definitief verwijderen?",
       "errorDelete": "Fout bij het verwijderen. De gebruiker heeft mogelijk gekoppelde gegevens (reserveringen, enz.)."
     },
+    "profile": {
+      "title": "Mijn profiel",
+      "save": "Opslaan",
+      "success": "Profiel bijgewerkt!",
+      "myTicketsTitle": "Mijn Tickets",
+      "noTickets": "U heeft nog geen gereserveerde tickets.",
+      "myActiveTickets": "Mijn actieve tickets",
+      "ticketDescription": "Toon deze QR-code bij de ingang van de locatie.",
+      "viewAllTickets": "Alle tickets bekijken"
+    },
     "shows": {
       "errorLoad": "Kan voorstellingen niet laden.",
       "title": "Moderatiewerking voorstellingen",

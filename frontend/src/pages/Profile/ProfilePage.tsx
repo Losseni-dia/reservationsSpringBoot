@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom"; // 🚀 Importe Link
 import { useAuth } from "../../components/context/AuthContext";
 import { authApi } from "../../services/api";
 import { UserProfileDto } from "../../types/models";
@@ -8,6 +9,7 @@ import styles from "./ProfilePage.module.css";
 const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const { user, refreshProfile } = useAuth();
+
   const [formData, setFormData] = useState<Partial<UserProfileDto>>({
     firstname: "",
     lastname: "",
@@ -15,7 +17,6 @@ const ProfilePage: React.FC = () => {
     langue: "",
   });
   const [message, setMessage] = useState({ type: "", text: "" });
-
 
   useEffect(() => {
     if (user) {
@@ -38,7 +39,6 @@ const ProfilePage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
-
     try {
       await authApi.updateProfile(formData);
       await refreshProfile();
@@ -55,8 +55,20 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      {/* 1. La bannière (Shortcut) */}
+      <div className={styles.ticketShortcut}>
+        <div className={styles.ticketContent}>
+          <h3>{t("profile.myActiveTickets")}</h3>
+          <p>{t("profile.ticketDescription")}</p>
+        </div>
+        <Link to="/profile/tickets" className={styles.ticketBtn}>
+          🎟️ {t("profile.viewAllTickets")}
+        </Link>
+      </div>
+
       <div className={styles.card}>
         <h2 className="text-white mb-4">{t("auth.profile.title")}</h2>
+        {/* ... (Reste de ton formulaire inchangé) */}
         {message.text && (
           <div
             className={
@@ -67,6 +79,7 @@ const ProfilePage: React.FC = () => {
           </div>
         )}
         <form onSubmit={handleSubmit} className={styles.form}>
+          {/* Tes champs firstname, lastname, email, language... */}
           <div className="row mb-3">
             <div className="col">
               <label className={styles.label}>{t("auth.firstname")}</label>
@@ -89,6 +102,7 @@ const ProfilePage: React.FC = () => {
               />
             </div>
           </div>
+          {/* ... email et select langue ... */}
           <div className="mb-3">
             <label className={styles.label}>{t("auth.email")}</label>
             <input
@@ -114,13 +128,11 @@ const ProfilePage: React.FC = () => {
             </select>
           </div>
 
-          {/* BOUTON ENREGISTRER : Placé tout en bas de la carte Profil */}
           <button type="submit" className={styles.btn}>
             {t("auth.profile.save")}
           </button>
         </form>
       </div>
-
     </div>
   );
 };

@@ -18,7 +18,6 @@ public class RepresentationReservation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    // On ajoute updatable=false et insertable=true pour forcer Hibernate
     @JoinColumn(name = "representation_id", referencedColumnName = "id", nullable = false)
     private Representation representation;
 

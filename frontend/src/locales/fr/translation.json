@@ -115,7 +115,8 @@
     "profile": {
       "title": "Mon Profil",
       "save": "Enregistrer",
-      "success": "Profil mis à jour !"
+      "success": "Profil mis à jour !",
+      "noTickets": "Vous n'avez pas encore de billets réservés."
     },
     "forgotPassword": {
       "title": "Mot de passe oublié",
@@ -137,6 +138,16 @@
       "errorExpired": "Le lien a expiré ou est invalide.",
       "errorPasswordMismatch": "Les mots de passe ne correspondent pas."
     }
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "save": "Enregistrer",
+    "myTicketsTitle": "Mes Billets",
+    "success": "Profil mis à jour !",
+    "noTickets": "Vous n'avez pas encore de billets réservés.",
+    "myActiveTickets": "Mes billets actifs",
+    "ticketDescription": "Présentez ce QR code à l'entrée de la salle.",
+    "viewAllTickets": "Voir tous les billets"
   },
   "show": {
     "errorLoad": "Impossible de charger les détails du spectacle.",
