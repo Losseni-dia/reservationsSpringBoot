@@ -3,23 +3,25 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi } from '../../../services/api';
 import { UserRegistrationDto } from '../../../types/models';
+import { resolveUserLanguageTag } from '../../../i18n';
 import styles from '../../../pages/Register/RegisterPage.module.css';
 import PasswordInput from "../../../components/ui/passwordinput/PasswordInput";
 
 const BecomeProducer: React.FC = () => {
     const { t, i18n } = useTranslation();
-    
-    const [formData, setFormData] = useState<UserRegistrationDto & { role: string }>({
+
+    /** Langue du compte (enregistrée à l’inscription, appliquée à la connexion) — ne pilote pas l’UI du formulaire. */
+    const [formData, setFormData] = useState<UserRegistrationDto & { role: string }>(() => ({
         login: '',
         firstname: '',
         lastname: '',
         email: '',
         password: '',
         confirmPassword: '',
-        langue: i18n.language || 'fr',
+        langue: resolveUserLanguageTag(i18n.language),
         producerRequestDescription: '',
         role: 'producer'
-    });
+    }));
 
     // --- ÉTATS POUR L'IMAGE ---
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -32,9 +34,14 @@ const BecomeProducer: React.FC = () => {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
     ) => {
+        const { name, value } = e.target;
+        if (name === 'langue') {
+            setFormData({ ...formData, langue: resolveUserLanguageTag(value) });
+            return;
+        }
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [name]: value
         });
     };
 
@@ -73,7 +80,7 @@ const BecomeProducer: React.FC = () => {
             submitData.append('email', formData.email);
             submitData.append('password', formData.password);
             submitData.append('confirmPassword', formData.confirmPassword);
-            submitData.append('langue', i18n.language);
+            submitData.append('langue', resolveUserLanguageTag(formData.langue));
             submitData.append('role', 'producer');
             submitData.append('producerRequestDescription', desc);
 
@@ -182,6 +189,15 @@ return (
                     </div>
 
                     <div className={styles.fieldGroup}>
+                        <label className={styles.label}>{t('auth.language')}</label>
+                        <select name="langue" value={formData.langue} onChange={handleChange} className={styles.input}>
+                            <option value="fr">{t('auth.langFr')}</option>
+                            <option value="en">{t('auth.langEn')}</option>
+                            <option value="nl">{t('auth.langNl')}</option>
+                        </select>
+                    </div>
+
+                    <div className={styles.fieldGroup}>
                         <label className={styles.label} htmlFor="producerRequestDescription">
                             {t('producer.becomeProducer.descriptionLabel')}
                         </label>
@@ -196,15 +212,6 @@ return (
                             maxLength={5000}
                             placeholder={t('producer.becomeProducer.descriptionPlaceholder')}
                         />
-                    </div>
-
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.label}>{t('auth.language')}</label>
-                        <select name="langue" value={formData.langue} onChange={handleChange} className={styles.input}>
-                            <option value="fr">{t('auth.langFr')}</option>
-                            <option value="en">{t('auth.langEn')}</option>
-                            <option value="nl">{t('auth.langNl')}</option>
-                        </select>
                     </div>
 
                     <div className={styles.row}>
