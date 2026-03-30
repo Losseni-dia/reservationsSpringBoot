@@ -91,8 +91,10 @@ public class SpringSecurityConfig {
                                                 .hasAnyRole("admin", "ADMIN")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/users/**")
                                                 .hasAnyRole("admin", "ADMIN")
+                                                .requestMatchers(HttpMethod.PUT, "/api/reviews/**")
+                                                .hasAnyRole("ADMIN", "PRODUCER", "admin", "producer")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/reviews/**")
-                                                .hasAnyRole("admin", "ADMIN")
+                                                .hasAnyRole("admin", "ADMIN", "PRODUCER", "producer")
 
                                                 // 7. Gestion des Shows & Représentations
                                                 .requestMatchers(HttpMethod.POST, "/api/shows/**")

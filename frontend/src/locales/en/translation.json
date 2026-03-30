@@ -40,32 +40,38 @@
     "reserve": "Book",
     "full": "Sold out"
   },
-  "about": {
-    "heroTitle": "The ",
-    "heroTitleBrand": "SmartBooking",
-    "heroTitleSuffix": " experience",
-    "heroSubtitle": "Where the stage meets emotion. Live art, intensely.",
-    "ctaDiscover": "Discover our shows",
-    "sectionValues": "Our Values",
-    "valuePassion": "Artistic Passion",
-    "valuePassionDesc": "A curated selection that moves audiences.",
-    "valueTalents": "Emerging Talents",
-    "valueTalentsDesc": "Spotlighting the voices of tomorrow.",
-    "valueCommunity": "Community",
-    "valueCommunityDesc": "Share your experiences with fellow enthusiasts.",
-    "valueDiversity": "Diversity",
-    "valueDiversityDesc": "All art forms have their place here.",
-    "sectionReviews": "What our audiences say",
-    "review1": "\"A smooth and inspiring platform for my outings.\"",
-    "author1": "Marc D.",
-    "review2": "\"I discovered incredible artistic gems this season.\"",
-    "author2": "Clara J.",
-    "reserve": "Book",
-    "sectionFavorites": "Our favourites",
-    "showEvent": "Featured Show",
-    "theatreNational": "National Theatre - 8pm",
-    "seeMore": "See more"
-  },
+ "about": {
+  "heroTitle": "Experience ",
+  "heroTitleBrand": "SmartBooking",
+  "heroSubtitle": "The next-generation ticketing platform for all your shows and cultural events in Belgium.",
+  "ctaDiscover": "Discover Shows",
+  "statsTickets": "Tickets sold",
+  "statsVenues": "Partner venues",
+  "statsSatisfaction": "Satisfied clients",
+  "missionTitle": "Our Mission",
+  "missionDesc": "Since 2024, SmartBooking has been striving to make culture accessible to everyone by simplifying show bookings. We believe every night at the theater or concert is a unique chance to create memories.",
+  "sectionValues": "Our Values",
+  "valuePassion": "Passion",
+  "valuePassionDesc": "We love the stage and do everything to ensure every booking is the start of an unforgettable night.",
+  "valueTalents": "Supporting Talents",
+  "valueTalentsDesc": "From national theaters to local stages, we highlight the artists who make our culture vibrate.",
+  "valueCommunity": "Community",
+  "valueCommunityDesc": "More than just ticketing, a space for culture lovers and artistic discovery to connect.",
+  "valueDiversity": "Diversity",
+  "valueDiversityDesc": "Comedy, tragedy, concerts, or dance: we celebrate the richness of all performing arts.",
+  "sectionFavorites": "Our Top Picks",
+  "theatreNational": "Royal Theater of Brussels",
+  "seeMore": "See More",
+  "producerTitle": "Organizing a show?",
+  "producerDesc": "Join over 150 Belgian producers who trust us with their ticketing management.",
+  "producerBtn": "Create producer account",
+  "sectionReviews": "What our audience says",
+  "author1": "Marc D.",
+  "review1": "A smooth and inspiring platform for my outings.",
+  "author2": "Clara J.",
+  "review2": "I discovered incredible artistic gems this season.",
+  "reserve": "Reserve"
+},
   "payment": {
     "title": "Payment Successful!",
     "message": "Thank you for your purchase. Your reservation",
@@ -535,5 +541,28 @@
       "submitUpdate": "Update",
       "submitCreate": "Create show"
     }
+  },
+  "legal": {
+    "title": "Legal Terms",
+    "lastUpdate": "Last update: March 30, 2026",
+    "cgu": {
+      "title": "1. Terms of Service",
+      "objectTitle": "Service Purpose",
+      "objectText": "SmartBooking is a platform for booking and purchasing show tickets online.",
+      "accountTitle": "User Account",
+      "accountText": "You are responsible for your account security. Any misuse may lead to suspension.",
+      "paymentTitle": "Secure Payment",
+      "paymentText": "Transactions are handled by Stripe. We do not store any banking details on our servers."
+    },
+    "privacy": {
+      "title": "2. Privacy Policy",
+      "dataTitle": "Data Collection",
+      "dataText": "We collect your name and email to manage your tickets and send confirmations.",
+      "rightsTitle": "Your Rights (GDPR)",
+      "rightsText": "You have the right to access, modify, and delete your data via your profile.",
+      "cookiesTitle": "Cookies",
+      "cookiesText": "We use technical cookies only for session and language management."
+    },
+    "contactText": "For any legal inquiries:"
   }
 }

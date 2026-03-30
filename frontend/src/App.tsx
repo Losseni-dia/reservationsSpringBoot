@@ -40,6 +40,7 @@ import ApiDocPage from "./pages/ApiDoc/ApiDocPage";
 import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
 import MyTickets from "./pages/Profile/My-ticket/MyTickets";
 import EditProfilePage from "./pages/Profile/Edit/EditProfilePage";
+import TermsAndPrivacy from "./pages/legal/TermsAndPrivacy";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -60,6 +61,7 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/tickets" element={<MyTickets />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/terms" element={<TermsAndPrivacy />} />
                 <Route path="/profile/edit" element={<EditProfilePage />} />
               </Route>
               <Route path="/admin/locations" element={<LocationList />} />
@@ -75,7 +77,12 @@ function App() {
               <Route path="/payment-cancelled" element={<PaymentCancel />} />
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
+<<<<<<< HEAD
               <Route path="/admin/reviews" element={<AdminReviewPage />} />
+=======
+              <Route path="/admin/shows/edit/:id" element={<EditShow />} />
+              <Route path="/producer/reviews" element={<AdminReviewPage />} />
+>>>>>>> origin
               <Route path="/admin/artists" element={<AdminArtistPage />} />
               <Route
                 path="/admin/reservations"

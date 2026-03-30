@@ -19,6 +19,7 @@
     },
     "footer": {
       "allRightsReserved": "Tous droits réservés.",
+<<<<<<< HEAD
       "privacy": "Confidentialité",
       "terms": "Conditions d'utilisation",
       "brandName": "SmartBooking",
@@ -28,8 +29,14 @@
       "rssSubscribeTitle": "S'abonner au flux RSS",
       "rssLink": "Flux RSS",
       "developers": "API & Développeurs"
+=======
+      "terms": "Conditions d'utilisation",
+      "rssLink": "Flux RSS",
+      "devs": "API & Développeurs"
+>>>>>>> origin
     }
   },
+
   "home": {
     "programming": "Programmation",
     "searchPlaceholder": "Rechercher un spectacle ou un lieu...",
@@ -41,32 +48,38 @@
     "reserve": "Réserver",
     "full": "Complet"
   },
-  "about": {
-    "heroTitle": "L'expérience ",
-    "heroTitleBrand": "SmartBooking",
-    "heroTitleSuffix": "",
-    "heroSubtitle": "Là où la scène rencontre l'émotion. Vivez l'art, intensément.",
-    "ctaDiscover": "Découvrir nos spectacles",
-    "sectionValues": "Nos Valeurs",
-    "valuePassion": "Passion Artistique",
-    "valuePassionDesc": "Une sélection pointue qui fait vibrer les publics.",
-    "valueTalents": "Talents Émergents",
-    "valueTalentsDesc": "Mettre en lumière les voix de demain.",
-    "valueCommunity": "Communauté",
-    "valueCommunityDesc": "Partagez vos expériences avec d'autres passionnés.",
-    "valueDiversity": "Diversité",
-    "valueDiversityDesc": "Toutes les formes d'art ont leur place ici.",
-    "sectionReviews": "Ce que disent nos spectateurs",
-    "review1": "\"Une plateforme fluide et inspirante pour mes sorties.\"",
-    "author1": "Marc D.",
-    "review2": "\"J'ai découvert des pépites artistiques incroyables cette saison.\"",
-    "author2": "Clara J.",
-    "reserve": "Réserver",
-    "sectionFavorites": "Nos coups de cœur",
-    "showEvent": "Spectacle Événement",
-    "theatreNational": "Théâtre National - 20h00",
-    "seeMore": "Voir plus"
-  },
+ "about": {
+  "heroTitle": "Vivez l'expérience ",
+  "heroTitleBrand": "SmartBooking",
+  "heroSubtitle": "La plateforme de billetterie nouvelle génération pour tous vos spectacles et événements culturels en Belgique.",
+  "ctaDiscover": "Découvrir les spectacles",
+  "statsTickets": "Billets vendus",
+  "statsVenues": "Salles partenaires",
+  "statsSatisfaction": "Clients satisfaits",
+  "missionTitle": "Notre Mission",
+  "missionDesc": "Depuis 2024, SmartBooking s'efforce de rendre la culture accessible à tous en simplifiant la réservation de spectacles. Nous croyons que chaque soirée au théâtre ou en concert est une occasion unique de créer des souvenirs.",
+  "sectionValues": "Nos Valeurs",
+  "valuePassion": "Passion",
+  "valuePassionDesc": "Nous aimons la scène et mettons tout en œuvre pour que chaque réservation soit le début d'une soirée inoubliable.",
+  "valueTalents": "Soutien aux Talents",
+  "valueTalentsDesc": "Du théâtre national aux scènes locales, nous mettons en lumière les artistes qui font vibrer notre culture.",
+  "valueCommunity": "Communauté",
+  "valueCommunityDesc": "Plus qu'une billetterie, un espace de partage pour les passionnés de culture et de découvertes.",
+  "valueDiversity": "Diversité",
+  "valueDiversityDesc": "Humour, tragédie, concerts ou danse : nous célébrons la richesse de tous les arts vivants.",
+  "sectionFavorites": "Nos Coups de Cœur",
+  "theatreNational": "Théâtre Royal de Bruxelles",
+  "seeMore": "En savoir plus",
+  "producerTitle": "Vous organisez des spectacles ?",
+  "producerDesc": "Rejoignez plus de 150 producteurs belges qui nous font confiance pour leur billetterie.",
+  "producerBtn": "Créer un compte producteur",
+  "sectionReviews": "Ce que disent nos spectateurs",
+  "author1": "Marc D.",
+  "review1": "Une plateforme fluide et inspirante pour mes sorties.",
+  "author2": "Clara J.",
+  "review2": "J'ai découvert des pépites artistiques incroyables cette saison.",
+  "reserve": "Réserver"
+},
   "payment": {
     "title": "Paiement Réussi !",
     "message": "Merci pour votre achat. Votre réservation",
@@ -545,5 +558,28 @@
       "submitUpdate": "Mettre à jour",
       "submitCreate": "Créer le spectacle"
     }
-  }
+  },
+  "legal": {
+  "title": "Mentions Légales",
+  "lastUpdate": "Dernière mise à jour : 30 mars 2026",
+  "cgu": {
+    "title": "1. Conditions Générales d'Utilisation",
+    "objectTitle": "Objet du service",
+    "objectText": "SmartBooking est une plateforme permettant la réservation et l'achat de tickets de spectacles en ligne.",
+    "accountTitle": "Compte Utilisateur",
+    "accountText": "Vous êtes responsable de la sécurité de votre compte. Toute utilisation abusive peut entraîner une suspension.",
+    "paymentTitle": "Paiement sécurisé",
+    "paymentText": "Les transactions sont gérées par Stripe. Nous ne stockons aucune coordonnée bancaire sur nos serveurs."
+  },
+  "privacy": {
+    "title": "2. Politique de Confidentialité",
+    "dataTitle": "Collecte des données",
+    "dataText": "Nous collectons votre nom, prénom et email pour la gestion de vos billets et l'envoi de confirmations.",
+    "rightsTitle": "Vos droits (RGPD)",
+    "rightsText": "Vous disposez d'un droit d'accès, de modification et de suppression de vos données via votre profil.",
+    "cookiesTitle": "Cookies",
+    "cookiesText": "Nous utilisons des cookies techniques uniquement pour la gestion de votre session et de la langue."
+  },
+  "contactText": "Pour toute question juridique :"
+}
 }

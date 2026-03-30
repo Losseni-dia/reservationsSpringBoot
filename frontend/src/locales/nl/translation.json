@@ -40,32 +40,38 @@
     "reserve": "Reserveren",
     "full": "Uitverkocht"
   },
-  "about": {
-    "heroTitle": "De ",
-    "heroTitleBrand": "SmartBooking",
-    "heroTitleSuffix": " ervaring",
-    "heroSubtitle": "Waar het podium emotie ontmoet. Beleef kunst, intens.",
-    "ctaDiscover": "Ontdek onze voorstellingen",
-    "sectionValues": "Onze Waarden",
-    "valuePassion": "Artistieke Passie",
-    "valuePassionDesc": "Een doordachte selectie die het publiek raakt.",
-    "valueTalents": "Opkomend Talent",
-    "valueTalentsDesc": "De stemmen van morgen in de spotlight.",
-    "valueCommunity": "Gemeenschap",
-    "valueCommunityDesc": "Deel uw ervaringen met andere liefhebbers.",
-    "valueDiversity": "Diversiteit",
-    "valueDiversityDesc": "Alle kunstvormen hebben hier hun plaats.",
-    "sectionReviews": "Wat onze bezoekers zeggen",
-    "review1": "\"Een vloeiend en inspirerend platform voor mijn uitjes.\"",
-    "author1": "Marc D.",
-    "review2": "\"Ik heb deze seizoen ongelooflijke artistieke pareltjes ontdekt.\"",
-    "author2": "Clara J.",
-    "reserve": "Reserveren",
-    "sectionFavorites": "Onze favorieten",
-    "showEvent": "Uitgelichte voorstelling",
-    "theatreNational": "Nationale Schouwburg - 20u00",
-    "seeMore": "Meer info"
-  },
+ "about": {
+  "heroTitle": "Beleef de ",
+  "heroTitleBrand": "SmartBooking",
+  "heroSubtitle": "Het ticketplatform van de volgende generatie voor al uw shows en culturele evenementen in België.",
+  "ctaDiscover": "Ontdek Voorstellingen",
+  "statsTickets": "Verkochte tickets",
+  "statsVenues": "Partnerzalen",
+  "statsSatisfaction": "Tevreden klanten",
+  "missionTitle": "Onze Missie",
+  "missionDesc": "Sinds 2024 streeft SmartBooking ernaar cultuur toegankelijk te maken voor iedereen door boekingen te vereenvoudigen. Wij geloven dat elke avond in het theater een unieke kans is om herinneringen te creëren.",
+  "sectionValues": "Onze Waarden",
+  "valuePassion": "Passie",
+  "valuePassionDesc": "Wij houden van het podium en doen er alles aan om van elke boeking een onvergetelijke avond te maken.",
+  "valueTalents": "Talent Ondersteunen",
+  "valueTalentsDesc": "Van nationale theaters tot lokale podia, wij zetten de artiesten die onze cultuur verrijken in de schijnwerpers.",
+  "valueCommunity": "Gemeenschap",
+  "valueCommunityDesc": "Meer dan alleen tickets, een plek voor cultuurliefhebbers en artistieke ontdekkingen.",
+  "valueDiversity": "Diversiteit",
+  "valueDiversityDesc": "Humor, tragedie, concerten of dans: wij vieren de rijkdom van alle podiumkunsten.",
+  "sectionFavorites": "Onze Favorieten",
+  "theatreNational": "Koninklijke Schouwburg Brussel",
+  "seeMore": "Meer info",
+  "producerTitle": "Organiseert u voorstellingen?",
+  "producerDesc": "Sluit u aan bij meer dan 150 Belgische producenten die ons vertrouwen voor hun ticketverkoop.",
+  "producerBtn": "Maak een producentenaccount aan",
+  "sectionReviews": "Wat onze toeschouwers zeggen",
+  "author1": "Marc D.",
+  "review1": "Een vlot en inspirerend platform voor mijn uitstapjes.",
+  "author2": "Clara J.",
+  "review2": "Ik heb dit seizoen ongelooflijke artistieke pareltjes ontdekt.",
+  "reserve": "Reserveren"
+},
   "payment": {
     "title": "Betaling Geslaagd!",
     "message": "Bedankt voor uw aankoop. Uw reservering",
@@ -550,5 +556,28 @@
       "submitUpdate": "Bijwerken",
       "submitCreate": "Voorstelling aanmaken"
     }
+  },
+  "legal": {
+    "title": "Wettelijke Voorwaarden",
+    "lastUpdate": "Laatste update: 30 maart 2026",
+    "cgu": {
+      "title": "1. Gebruiksvoorwaarden",
+      "objectTitle": "Doel van de service",
+      "objectText": "SmartBooking is een platform voor het online reserveren en kopen van tickets voor voorstellingen.",
+      "accountTitle": "Gebruikersaccount",
+      "accountText": "U bent verantwoordelijk voor de beveiliging van uw account. Elk misbruik kan leiden tot opschorting.",
+      "paymentTitle": "Veilig Betalen",
+      "paymentText": "Transacties worden afgehandeld door Stripe. Wij slaan geen bankgegevens op onze servers op."
+    },
+    "privacy": {
+      "title": "2. Privacybeleid",
+      "dataTitle": "Gegevensverzameling",
+      "dataText": "Wij verzamelen uw naam en e-mailadres om uw tickets te beheren en bevestigingen te sturen.",
+      "rightsTitle": "Uw Rechten (AVG/GDPR)",
+      "rightsText": "U heeft het recht om uw gegevens in te zien, te wijzigen en te verwijderen via uw profiel.",
+      "cookiesTitle": "Cookies",
+      "cookiesText": "Wij gebruiken uitsluitend technische cookies voor sessie- en taalbeheer."
+    },
+    "contactText": "Voor juridische vragen:"
   }
 }

@@ -1,13 +1,14 @@
 .container {
-  background: #1a1a1a;
+  background: #121212;
   color: white;
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-/* HERO AVEC SALLE DE SPECTACLE */
+/* HERO SECTION */
 .hero {
-  height: 70vh;
-  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)),
+  height: 60vh;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(18,18,18,1)),
     url("https://images.unsplash.com/photo-1503095396549-807a8bc3667c?q=80&w=2071") center/cover no-repeat;
   display: flex;
   align-items: center;
@@ -15,44 +16,124 @@
   text-align: center;
 }
 
-.title { font-size: 3.5rem; font-weight: 800; margin-bottom: 10px; }
+.title { font-size: 3.5rem; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
 .title span { color: #f5c518; }
-.subtitle { font-size: 1.2rem; color: #ccc; margin-bottom: 30px; }
+.subtitle { font-size: 1.2rem; color: #bbb; max-width: 700px; margin: 0 auto 30px; }
 
 .ctaPrimary {
   background: #f5c518;
   color: #000;
-  padding: 15px 35px;
+  padding: 16px 40px;
   border: none;
-  font-weight: bold;
-  border-radius: 5px;
+  font-weight: 800;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.3s;
+  text-transform: uppercase;
+}
+.ctaPrimary:hover { background: #ffdb4d; transform: scale(1.05); }
+
+/* STATS SECTION */
+.statsSection {
+  display: flex;
+  justify-content: space-around;
+  padding: 60px 10%;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  text-align: center;
 }
 
-/* SECTIONS */
-.sectionDark { padding: 80px 10%; background: #1a1a1a; }
-.sectionLight { padding: 80px 10%; background: #f4f4f4; color: #1a1a1a; }
-.sectionTitle { color: white; font-size: 2.2rem; margin-bottom: 40px; }
-.sectionTitleDark { color: #1a1a1a; font-size: 2.2rem; margin-bottom: 40px; text-align: center; }
+.statNumber {
+  display: block;
+  font-size: 3rem;
+  font-weight: 900;
+  color: #f5c518;
+}
 
-/* VALEURS CARDS */
-.cardGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-.valueCard { background: #262626; padding: 30px; border-radius: 10px; text-align: center; transition: 0.3s; }
-.activeCard { border-bottom: 4px solid #f5c518; transform: translateY(-5px); }
-.icon { font-size: 2.5rem; margin-bottom: 15px; }
+.statItem p {
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  margin-top: 10px;
+}
 
-/* AVIS CARDS */
-.reviewGrid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-.reviewCard { background: white; padding: 30px; border-radius: 10px; width: 250px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-.reviewCardWide { background: white; display: flex; border-radius: 10px; overflow: hidden; width: 450px; }
-.reviewImage { width: 150px; background: #333; }
-.reviewContent { padding: 20px; flex: 1; }
-.stars { color: #f5c518; margin: 10px 0; }
+/* MISSION SECTION */
+.missionSection {
+  display: flex;
+  align-items: center;
+  padding: 100px 10%;
+  gap: 50px;
+  background: #121212;
+}
+
+.missionContent { flex: 1; }
+.sectionTitleLeft { font-size: 2.5rem; color: #f5c518; margin-bottom: 20px; }
+.missionText { font-size: 1.1rem; line-height: 1.8; color: #ccc; }
+
+.missionImage {
+  flex: 1;
+  height: 400px;
+  background: url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=600') center/cover;
+  border-radius: 20px;
+  border: 1px solid #333;
+}
+
+/* NOS VALEURS */
+.sectionDark { padding: 100px 10%; background: #121212; }
+.sectionTitle { color: white; font-size: 2.5rem; margin-bottom: 50px; text-align: center; }
+
+.cardGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
+.valueCard { background: #1e1e1e; padding: 40px 30px; border-radius: 15px; text-align: center; border: 1px solid #333; }
+.activeCard { border-bottom: 5px solid #f5c518; background: #252525; }
+.icon { font-size: 3rem; margin-bottom: 20px; }
 
 /* COUPS DE COEUR */
-.showGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-.showCard { background: #000; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
-.showImagePlaceholder { height: 200px; background: #333; transition: 0.5s; }
-.showCard:hover .showImagePlaceholder { background: #444; }
-.showInfo { padding: 20px; }
-.btnOutline { background: transparent; border: 1px solid #f5c518; color: #f5c518; padding: 8px 15px; cursor: pointer; margin-top: 10px; }
+.sectionFavorites { padding: 80px 10%; background: #1a1a1a; }
+.showGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.showCard { background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; position: relative; transition: 0.4s; }
+.showCard:hover { transform: translateY(-10px); border-color: #f5c518; }
+
+.showImagePlaceholder { height: 220px; background: #222; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
+.showInfo { padding: 25px; }
+
+.ratingBadge { background: #f5c518; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; margin-bottom: 10px; display: inline-block;}
+.locationDesignation { color: #888; font-size: 0.9rem; margin: 10px 0 20px; }
+.btnOutline { width: 100%; background: transparent; border: 2px solid #f5c518; color: #f5c518; padding: 12px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+.btnOutline:hover { background: #f5c518; color: #000; }
+
+.topBadge { position: absolute; top: 15px; left: 15px; background: #e74c3c; color: white; padding: 5px 15px; border-radius: 5px; font-weight: bold; z-index: 2; }
+
+/* PRODUCER CTA */
+.producerCta {
+  padding: 80px 10%;
+  background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+              url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1500') center/cover;
+  text-align: center;
+}
+.producerContent h2 { font-size: 2.5rem; margin-bottom: 15px; color: white; }
+.producerContent p { font-size: 1.2rem; color: #ccc; margin-bottom: 30px; }
+.ctaGold { background: #f5c518; color: black; padding: 15px 40px; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+.ctaGold:hover { background: white; }
+
+/* AVIS CLIENTS */
+.sectionLight { padding: 100px 10%; background: #f9f9f9; color: #1a1a1a; }
+.sectionTitleDark { color: #1a1a1a; font-size: 2.5rem; margin-bottom: 50px; text-align: center; }
+.reviewGrid { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
+.reviewCard { background: white; padding: 40px; border-radius: 20px; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+.avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 3px solid #f5c518; }
+.reviewCardWide { background: white; display: flex; border-radius: 20px; overflow: hidden; width: 630px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.reviewImageAlt { width: 200px; background: #333 url('https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=400') center/cover; }
+.reviewContent { padding: 40px; flex: 1; }
+.stars { color: #f5c518; font-size: 1.2rem; margin: 15px 0; }
+.author { font-weight: 700; color: #555; display: block; }
+.miniCta { margin-top: 20px; background: #1a1a1a; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .missionSection { flex-direction: column; text-align: center; }
+  .statsSection { flex-direction: column; gap: 30px; }
+  .reviewCardWide { flex-direction: column; width: 100%; }
+  .reviewImageAlt { width: 100%; height: 150px; }
+  .title { font-size: 2.2rem; }
+}

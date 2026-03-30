@@ -192,6 +192,7 @@ export interface Review {
   authorLogin: string;
   comment: string;
   stars: number;
+  showTitle: string;
   createdAt: string; // Les dates JSON arrivent en string ISO
 }
 
