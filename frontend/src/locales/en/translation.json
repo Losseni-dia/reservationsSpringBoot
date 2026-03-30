@@ -287,6 +287,7 @@
       "empty": "No users found.",
       "confirmDelete": "⚠️ WARNING: Permanently delete user \"{{name}}\"?",
       "errorDelete": "Error during deletion. The user may have linked data (reservations, etc.).",
+      "errorToggleStatus": "Could not update account status. The display was reverted.",
       "export": "Export"
     },
     "shows": {

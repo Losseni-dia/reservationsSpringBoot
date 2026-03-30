@@ -292,6 +292,7 @@
       "empty": "Geen gebruikers gevonden.",
       "confirmDelete": "⚠️ WAARSCHUWING: Gebruiker \"{{name}}\" definitief verwijderen?",
       "errorDelete": "Fout bij het verwijderen. De gebruiker heeft mogelijk gekoppelde gegevens (reserveringen, enz.).",
+      "errorToggleStatus": "Kan de status niet wijzigen. De weergave is teruggezet.",
       "export": "Exporteren"
     },
     "profile": {

@@ -295,6 +295,7 @@
       "empty": "Aucun utilisateur trouvé.",
       "confirmDelete": "⚠️ ATTENTION : Supprimer définitivement l'utilisateur \"{{name}}\" ?",
       "errorDelete": "Erreur lors de la suppression. L'utilisateur a peut-être des données liées (réservations, etc.).",
+      "errorToggleStatus": "Impossible de modifier le statut. L'affichage a été rétabli.",
       "export": "Exporter",
       "showImport": "📥 Importer",
       "hideImport": "✕ Fermer l'import",
