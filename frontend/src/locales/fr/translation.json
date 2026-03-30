@@ -109,6 +109,7 @@
       "submitLoading": "Création...",
       "hasAccount": "Déjà un compte ?",
       "signIn": "Se connecter",
+      "addPhoto": "Ajouter une photo",
       "errorPasswordMismatch": "Les mots de passe ne correspondent pas.",
       "errorGeneric": "Une erreur est survenue lors de l'inscription."
     },
@@ -304,9 +305,17 @@
       "retry": "Réessayer",
       "empty": "Aucune réservation enregistrée.",
       "noValue": "—"
+    },
+    "pendingProducers": {
+      "colDescription": "DESCRIPTION"
     }
   },
   "producer": {
+    "becomeProducer": {
+      "descriptionLabel": "Description de la demande",
+      "descriptionPlaceholder": "Présentez votre activité, le type de spectacles que vous proposez…",
+      "descriptionRequired": "La description de la demande est obligatoire."
+    },
     "dashboard": {
       "errorLoad": "Impossible de charger les données. Veuillez réessayer plus tard.",
       "title": "Tableau de bord du Producteur",
