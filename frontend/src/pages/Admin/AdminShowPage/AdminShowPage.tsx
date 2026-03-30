@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // API client for admin show operations (list, confirm, revoke)
 import { showApi } from "../../../services/api";
@@ -20,7 +19,6 @@ import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDas
 
 const AdminShowPage: React.FC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   // List data and request state: shows list, loading flag, error message
   const [shows, setShows] = useState<Show[]>([]);
@@ -66,12 +64,6 @@ const AdminShowPage: React.FC = () => {
   const handleRefresh = useCallback(() => {
     fetchShows();
   }, [fetchShows]);
-
-  // Navigate to the edit page for the given show id
-  const handleEditShow = useCallback((id: number) => {
-      navigate(`/admin/shows/edit/${id}`);
-    }, [navigate]
-  );
 
 /** Toggles show status between CONFIRME and A_CONFIRMER; calls API then updates local state and toast. */
 const handleToggleConfirmShow = useCallback(async (show: Show) => {
@@ -134,7 +126,7 @@ const newStatus = show.status === ShowStatus.CONFIRME
     setShowToConfirm(null);
   }, []); 
 
-  /** Renders the table of shows: title, location, status badge, edit and confirm/revoke actions. */
+  /** Renders the table of shows: title, location, status badge, confirm/revoke actions. */
   const renderShowsTable = () => {
     return (
       <table className={styles.showsTable}>
@@ -168,12 +160,6 @@ const newStatus = show.status === ShowStatus.CONFIRME
               </td>
               <td className={styles.tableCell}>
                 <div className={styles.actionsCell}>
-                  <button
-                    className={`${styles.actionButton} ${styles.editButton}`}
-                    onClick={() => handleEditShow(show.id)}
-                  >
-                    {t("admin.shows.edit")}
-                  </button>
                   <button
                     className={`${styles.actionButton} ${styles.confirmButton}`}
                     onClick={() => handleOpenConfirmModal(show)}
