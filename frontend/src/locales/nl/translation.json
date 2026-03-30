@@ -293,7 +293,12 @@
       "confirmDelete": "⚠️ WAARSCHUWING: Gebruiker \"{{name}}\" definitief verwijderen?",
       "errorDelete": "Fout bij het verwijderen. De gebruiker heeft mogelijk gekoppelde gegevens (reserveringen, enz.).",
       "errorToggleStatus": "Kan de status niet wijzigen. De weergave is teruggezet.",
-      "export": "Exporteren"
+      "export": "Exporteren",
+      "showImport": "📥 Importeren",
+      "hideImport": "✕ Import sluiten",
+      "importTitle": "Massale import van gebruikers",
+      "importHint": "Vereiste CSV-kolommen: login, firstname, lastname, email, password",
+      "importZoneLabel": "Sleep een .csv- of .json-bestand hierheen"
     },
     "profile": {
       "title": "Mijn profiel",

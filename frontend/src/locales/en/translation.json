@@ -288,7 +288,12 @@
       "confirmDelete": "⚠️ WARNING: Permanently delete user \"{{name}}\"?",
       "errorDelete": "Error during deletion. The user may have linked data (reservations, etc.).",
       "errorToggleStatus": "Could not update account status. The display was reverted.",
-      "export": "Export"
+      "export": "Export",
+      "showImport": "📥 Import",
+      "hideImport": "✕ Close import",
+      "importTitle": "Bulk user import",
+      "importHint": "Required CSV columns: login, firstname, lastname, email, password",
+      "importZoneLabel": "Drop a .csv or .json file here"
     },
     "shows": {
       "errorLoad": "Unable to load shows.",
