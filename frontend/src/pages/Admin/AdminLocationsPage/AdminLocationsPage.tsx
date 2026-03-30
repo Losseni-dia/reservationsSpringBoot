@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { locationApi } from '../../../services/api';
+import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDashboardButton';
 import styles from './AdminLocationsPage.module.css';
 
 interface Location {
@@ -27,6 +28,7 @@ const LocationList: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <AdminBackToDashboardButton />
             <h1 className={styles.title}>{t("admin.locations.title")} <span className={styles.yellow}>{t("admin.locations.titleHighlight")}</span></h1>
             <div className={styles.grid}>
                 {locations.map(loc => (

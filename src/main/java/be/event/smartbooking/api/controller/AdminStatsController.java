@@ -12,6 +12,7 @@ import be.event.smartbooking.repository.LocationRepos;
 import be.event.smartbooking.repository.ReservationRepository;
 import be.event.smartbooking.repository.ShowRepos;
 import be.event.smartbooking.repository.UserRepos;
+import be.event.smartbooking.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -24,14 +25,16 @@ public class AdminStatsController {
     private final ShowRepos showRepo;
     private final LocationRepos locRepo;
     private final ReservationRepository resRepo;
+    private final ReservationService reservationService;
 
     @GetMapping("/summary")
-    public ResponseEntity<Map<String, Long>> getSummary() {
-        Map<String, Long> stats = new HashMap<>();
-        stats.put("totalUsers", userRepo.count()); // .count() est ultra rapide et sûr
+    public ResponseEntity<Map<String, Object>> getSummary() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalUsers", userRepo.count());
         stats.put("totalShows", showRepo.count());
         stats.put("totalLocations", locRepo.count());
         stats.put("totalReservations", resRepo.count());
+        stats.put("totalRevenue", reservationService.getTotalRevenueConfirmed().doubleValue());
         return ResponseEntity.ok(stats);
     }
  

@@ -15,6 +15,7 @@ import Toast from "../../../components/ui/toast/Toast";
 import styles from "./AdminShowPage.module.css";
 import ExportButton from '../../../components/ui/exportButton/ExportButton';
 import ImportZone from '../../../components/ui/importZone/ImportZone';
+import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDashboardButton';
 // Dans adminHeader, ajouter ExportButton + ImportZone collapsible
 
 const AdminShowPage: React.FC = () => {
@@ -194,6 +195,7 @@ const newStatus = show.status === ShowStatus.CONFIRME
 
   return (
     <div className={styles.adminContainer}>
+  <AdminBackToDashboardButton />
   <h1 className={styles.adminTitle}>{t("admin.shows.title")}</h1>
   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
     <ExportButton type="shows" label="Exporter" />

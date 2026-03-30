@@ -4,6 +4,7 @@ import { userApi } from '../../../services/api';
 import { UserProfileDto } from '../../../types/models';
 import Loader from '../../../components/ui/loader/Loader';
 import styles from './AdminProducteurPage.module.css';
+import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDashboardButton';
 import { HiCheckCircle, HiTrash } from 'react-icons/hi';
 
 const AdminProducteurPage: React.FC = () => {
@@ -56,6 +57,7 @@ const AdminProducteurPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <AdminBackToDashboardButton />
             <div className={styles.header}>
                 <div>
                     <h1 className={styles.title}>Demandes <span style={{color: '#fff'}}>Producteurs</span></h1>

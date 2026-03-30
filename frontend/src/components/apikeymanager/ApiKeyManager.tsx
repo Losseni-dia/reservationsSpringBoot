@@ -20,7 +20,7 @@ const ApiKeyManager: React.FC = () => {
 
   const fetchMyKeys = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/users/keys", {
+      const response = await fetch("/api/users/keys", {
         method: "GET",
         credentials: "include",
       });
@@ -47,7 +47,7 @@ const ApiKeyManager: React.FC = () => {
     setMessage({ text: "", type: "" });
 
     try {
-      const response = await fetch("http://localhost:8080/api/users/keys", {
+      const response = await fetch("/api/users/keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -80,13 +80,10 @@ const ApiKeyManager: React.FC = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/users/keys/${id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        },
-      );
+      const response = await fetch(`/api/users/keys/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
 
       if (response.ok) {
         // Met à jour la liste en retirant la clé supprimée

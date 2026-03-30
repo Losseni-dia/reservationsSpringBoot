@@ -7,6 +7,7 @@ import Loader from '../../../components/ui/loader/Loader';
 import styles from './AdminUsersPage.module.css';
 import ExportButton from '../../../components/ui/exportButton/ExportButton';
 import ImportZone from '../../../components/ui/importZone/ImportZone';
+import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDashboardButton';
 
 const AdminUsersPage: React.FC = () => {
     const { t } = useTranslation();
@@ -64,6 +65,7 @@ const AdminUsersPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <AdminBackToDashboardButton />
             <header className={styles.header}>
                 <h1>{t("admin.users.title")} <span className={styles.yellow}>{t("admin.users.titleHighlight")}</span></h1>
                 <p>{t("admin.users.subtitle", { count: users.length })}</p>

@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaStar, FaTicketAlt } from "react-icons/fa";
 import { useAdminReservations } from "../../../hooks/useAdminReservations";
 import Loader from "../../../components/ui/loader/Loader";
+import AdminBackToDashboardButton from "../../../components/admin/AdminBackToDashboardButton";
 import styles from "./AdminReservationPage.module.css";
 import type { ReservationAdminDto, TicketDetailDto } from "../../../types/models";
 
@@ -130,9 +130,7 @@ export default function AdminReservationPage() {
   if (error) {
     return (
       <div className={styles.container}>
-        <Link to="/admin" className={styles.backLink}>
-          {t("admin.reservations.backToDashboard")}
-        </Link>
+        <AdminBackToDashboardButton />
         <div className={styles.errorBox} role="alert">
           <p className="text-danger mb-3">{t("admin.reservations.error")}</p>
           <p className="text-secondary small mb-3">{error}</p>
@@ -152,9 +150,7 @@ export default function AdminReservationPage() {
 
   return (
     <div className={styles.container}>
-      <Link to="/admin" className={styles.backLink}>
-        {t("admin.reservations.backToDashboard")}
-      </Link>
+      <AdminBackToDashboardButton />
 
       <header className={styles.header}>
         <h1 className="mb-0">
