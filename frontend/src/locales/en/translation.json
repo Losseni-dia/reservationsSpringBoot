@@ -193,6 +193,9 @@
     "back": "Back"
   },
   "admin": {
+    "common": {
+      "backToDashboard": "Dashboard"
+    },
     "home": {
       "title": "Administrator Space",
       "titleError": "Administrator Dashboard",
@@ -272,8 +275,7 @@
       "error": "Unable to load artists.",
       "retry": "Retry",
       "empty": "No artists registered.",
-      "noTypes": "—",
-      "backToDashboard": "← Dashboard"
+      "noTypes": "—"
     },
     "reservations": {
       "title": "Manage",
@@ -289,8 +291,7 @@
       "error": "Unable to load reservations.",
       "retry": "Retry",
       "empty": "No reservations yet.",
-      "noValue": "—",
-      "backToDashboard": "← Dashboard"
+      "noValue": "—"
     }
   },
   "producer": {
