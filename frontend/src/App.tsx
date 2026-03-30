@@ -39,6 +39,7 @@ import DeveloperPage from "./pages/Developer/DeveloperPage";
 import ApiDocPage from "./pages/ApiDoc/ApiDocPage";
 import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
 import MyTickets from "./pages/Profile/My-ticket/MyTickets";
+import EditProfilePage from "./pages/Profile/Edit/EditProfilePage";
 function App() {
   return (
     /* 1. Le Router enveloppe maintenant l'AuthProvider */
@@ -59,6 +60,7 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/tickets" element={<MyTickets />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/profile/edit" element={<EditProfilePage />} />
               </Route>
               <Route path="/admin/locations" element={<LocationList />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
