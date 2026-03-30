@@ -183,6 +183,9 @@
     "back": "Terug"
   },
   "admin": {
+    "common": {
+      "backToDashboard": "Dashboard"
+    },
     "home": {
       "title": "Beheerdersruimte",
       "titleError": "Beheerdersdashboard",
@@ -272,8 +275,7 @@
       "error": "Kan artiesten niet laden.",
       "retry": "Opnieuw proberen",
       "empty": "Geen artiesten geregistreerd.",
-      "noTypes": "—",
-      "backToDashboard": "← Dashboard"
+      "noTypes": "—"
     },
     "reservations": {
       "title": "Beheer van",
@@ -289,8 +291,7 @@
       "error": "Kan reserveringen niet laden.",
       "retry": "Opnieuw proberen",
       "empty": "Nog geen reserveringen.",
-      "noValue": "—",
-      "backToDashboard": "← Dashboard"
+      "noValue": "—"
     }
   },
   "producer": {
