@@ -338,6 +338,7 @@ dto.setProfilePictureUrl("http://localhost:8080/uploads/" + user.getProfilePictu
             dto.setLogin(user.getLogin());
             dto.setLangue(user.getLangue());
             dto.setIsActive(user.isActive());
+            dto.setProducerRequestDescription(user.getProducerRequestDescription());
             if (user.getRoles() != null && !user.getRoles().isEmpty()) {
                 dto.setRole(user.getRoles().get(0).getRole());
             }
