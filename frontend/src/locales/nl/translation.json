@@ -108,6 +108,7 @@
       "submitLoading": "Bezig met aanmaken...",
       "hasAccount": "Al een account?",
       "signIn": "Inloggen",
+      "addPhoto": "Foto toevoegen",
       "errorPasswordMismatch": "De wachtwoorden komen niet overeen.",
       "errorGeneric": "Er is een fout opgetreden tijdens de registratie."
     },
@@ -292,9 +293,17 @@
       "retry": "Opnieuw proberen",
       "empty": "Nog geen reserveringen.",
       "noValue": "—"
+    },
+    "pendingProducers": {
+      "colDescription": "BESCHRIJVING"
     }
   },
   "producer": {
+    "becomeProducer": {
+      "descriptionLabel": "Beschrijving van de aanvraag",
+      "descriptionPlaceholder": "Beschrijf uw activiteit en het type voorstellingen…",
+      "descriptionRequired": "Een beschrijving is verplicht voor een producentenaanvraag."
+    },
     "dashboard": {
       "errorLoad": "Kan gegevens niet laden. Probeer het later opnieuw.",
       "title": "Producentendashboard",
