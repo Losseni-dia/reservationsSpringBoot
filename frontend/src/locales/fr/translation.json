@@ -195,6 +195,9 @@
     "back": "Retour"
   },
   "admin": {
+    "common": {
+      "backToDashboard": "Tableau de bord"
+    },
     "home": {
       "title": "Espace Administrateur",
       "titleError": "Tableau de Bord Administrateur",
@@ -284,8 +287,7 @@
       "error": "Impossible de charger les artistes.",
       "retry": "Réessayer",
       "empty": "Aucun artiste enregistré.",
-      "noTypes": "—",
-      "backToDashboard": "← Tableau de bord"
+      "noTypes": "—"
     },
     "reservations": {
       "title": "Gestion des",
@@ -301,8 +303,7 @@
       "error": "Impossible de charger les réservations.",
       "retry": "Réessayer",
       "empty": "Aucune réservation enregistrée.",
-      "noValue": "—",
-      "backToDashboard": "← Tableau de bord"
+      "noValue": "—"
     }
   },
   "producer": {
