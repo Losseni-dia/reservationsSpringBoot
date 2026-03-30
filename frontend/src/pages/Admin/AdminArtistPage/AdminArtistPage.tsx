@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAdminArtists } from "../../../hooks/useAdminArtists";
 import Loader from "../../../components/ui/loader/Loader";
+import AdminBackToDashboardButton from "../../../components/admin/AdminBackToDashboardButton";
 import styles from "./AdminArtistPage.module.css";
 
 export default function AdminArtistPage() {
@@ -20,9 +20,7 @@ export default function AdminArtistPage() {
   if (error) {
     return (
       <div className={styles.container}>
-        <Link to="/admin" className={styles.backLink}>
-          {t("admin.artists.backToDashboard")}
-        </Link>
+        <AdminBackToDashboardButton />
         <div className={styles.errorBox} role="alert">
           <p className="text-danger mb-3">{t("admin.artists.error")}</p>
           <p className="text-secondary small mb-3">{error}</p>
@@ -40,9 +38,7 @@ export default function AdminArtistPage() {
 
   return (
     <div className={styles.container}>
-      <Link to="/admin" className={styles.backLink}>
-        {t("admin.artists.backToDashboard")}
-      </Link>
+      <AdminBackToDashboardButton />
 
       <header className={styles.header}>
         <h1 className="mb-0">
