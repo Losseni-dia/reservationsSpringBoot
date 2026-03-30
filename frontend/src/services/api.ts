@@ -422,6 +422,8 @@ export interface AdminStatsSummaryDto {
   totalShows: number;
   totalLocations: number;
   totalReservations: number;
+  /** Somme des montants (€) des réservations confirmées (payées). */
+  totalRevenue: number;
 }
 
 export const ticketApi = {
