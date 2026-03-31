@@ -12,6 +12,9 @@ const AdminProducteurPage: React.FC = () => {
     const [pendingUsers, setPendingUsers] = useState<UserProfileDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [processingIds, setProcessingIds] = useState<number[]>([]);
+    
+
 
     const loadPendingUsers = async () => {
         setLoading(true);
@@ -31,15 +34,24 @@ const AdminProducteurPage: React.FC = () => {
         loadPendingUsers();
     }, []);
 
-    const handleApprove = async (id: number) => {
-        if (!window.confirm("Valider ce compte Producteur ?")) return;
-        try {
-            await userApi.approve(id);
-            loadPendingUsers(); // Rafraîchir la liste
-        } catch (e: any) {
-            alert(e.message || "Erreur lors de l'approbation");
-        }
-    };
+const handleApprove = async (id: number) => {
+    if (!window.confirm("Valider ce compte Producteur ?")) return;
+    
+    // On ajoute l'ID à la liste des traitements en cours
+    setProcessingIds(prev => [...prev, id]);
+    
+    try {
+        await userApi.approve(id);
+        // On retire l'utilisateur localement avant même de rafraîchir 
+        setPendingUsers(prev => prev.filter(u => u.id !== id));
+        loadPendingUsers(); 
+    } catch (e: any) {
+        alert(e.message || "Erreur lors de l'approbation");
+    } finally {
+        // On libère l'ID
+        setProcessingIds(prev => prev.filter(pid => pid !== id));
+    }
+};
 
     const handleReject = async (id: number) => {
         const userToReject = pendingUsers.find(u => u.id === id);
@@ -92,10 +104,22 @@ const AdminProducteurPage: React.FC = () => {
                                     </td>
                                     <td>{user.email}</td>
                                     <td className={styles.actions}>
-                                        <button onClick={() => handleApprove(user.id)} className={`${styles.btnAction} ${styles.btnApprove}`} title="Valider l'inscription">
-                                            <HiCheckCircle /> Valider
+                                        <button 
+                                            onClick={() => handleApprove(user.id)} 
+                                            className={`${styles.btnAction} ${styles.btnApprove}`}
+                                            disabled={processingIds.includes(user.id)} // Bloque le bouton
+                                        >
+                                            {processingIds.includes(user.id) ? (
+                                                "Traitement..." 
+                                            ) : (
+                                                <><HiCheckCircle /> Valider</>
+                                            )}
                                         </button>
-                                        <button onClick={() => handleReject(user.id)} className={`${styles.btnAction} ${styles.btnDelete}`} title="Rejeter et supprimer la demande">
+                                        <button 
+                                            onClick={() => handleReject(user.id)} 
+                                            className={`${styles.btnAction} ${styles.btnDelete}`}
+                                            disabled={processingIds.includes(user.id)} // Bloque aussi le rejet
+                                        >
                                             <HiTrash /> Rejeter
                                         </button>
                                     </td>
