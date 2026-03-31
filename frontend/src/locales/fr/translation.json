@@ -19,21 +19,9 @@
     },
     "footer": {
       "allRightsReserved": "Tous droits réservés.",
-<<<<<<< HEAD
-      "privacy": "Confidentialité",
-      "terms": "Conditions d'utilisation",
-      "brandName": "SmartBooking",
-      "socialFb": "FB",
-      "socialIg": "IG",
-      "socialTw": "TW",
-      "rssSubscribeTitle": "S'abonner au flux RSS",
-      "rssLink": "Flux RSS",
-      "developers": "API & Développeurs"
-=======
       "terms": "Conditions d'utilisation",
       "rssLink": "Flux RSS",
       "devs": "API & Développeurs"
->>>>>>> origin
     }
   },
 

@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api")
 public class TranslationController {
+
+    private static final Logger log = LoggerFactory.getLogger(TranslationController.class);
 
     @Autowired
     private TranslationService translationService;
@@ -60,6 +64,11 @@ public class TranslationController {
                     .translatedText(result.get())
                     .build());
         }
+        log.error(
+                "Réponse HTTP 503 — traduction live indisponible (POST {}). Causes fréquentes : "
+                        + "GOOGLE_TRANSLATION_API_KEY / google.cloud.translation.api-key non définie, langue cible invalide, "
+                        + "échec ou quota dépassé sur l'API Google Cloud Translation. Voir les logs GoogleCloudTranslationService ci-dessus.",
+                httpRequest.getRequestURI());
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.SERVICE_UNAVAILABLE.value())

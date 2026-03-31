@@ -77,12 +77,8 @@ function App() {
               <Route path="/payment-cancelled" element={<PaymentCancel />} />
               <Route path="/admin/shows" element={<AdminShowPage />} />
               <Route path="/admin/shows/add" element={<AddShow />} />
-<<<<<<< HEAD
-              <Route path="/admin/reviews" element={<AdminReviewPage />} />
-=======
               <Route path="/admin/shows/edit/:id" element={<EditShow />} />
               <Route path="/producer/reviews" element={<AdminReviewPage />} />
->>>>>>> origin
               <Route path="/admin/artists" element={<AdminArtistPage />} />
               <Route
                 path="/admin/reservations"
