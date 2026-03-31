@@ -23,13 +23,24 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children 
 
     // Vérification des rôles
     if (allowedRoles && allowedRoles.length > 0) {
-    const userRole = user?.role?.toUpperCase(); 
+    // .trim() enlève les espaces invisibles, .toUpperCase() uniformise
+    const userRole = user?.role?.trim().toUpperCase(); 
     
-    const hasAccess = allowedRoles.some(role => role.toUpperCase() === userRole);
+    // On compare les rôles
+    const hasAccess = allowedRoles.some(role => {
+        const requiredRole = role.trim().toUpperCase();
+        return requiredRole === userRole;
+    });
+
+    // Debugging (À supprimer une fois que ça marche)
+    if (!hasAccess) {
+        console.warn(`Accès refusé ! Rôle utilisateur: "${userRole}", Rôles requis:`, allowedRoles);
+    }
 
     if (!hasAccess) {
         return <Navigate to="/forbidden" replace />;
     }
+
 }
 
     return children ? <>{children}</> : <Outlet />;
