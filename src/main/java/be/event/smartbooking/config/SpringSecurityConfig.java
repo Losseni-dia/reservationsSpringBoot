@@ -47,7 +47,7 @@ public class SpringSecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/artist-types/**").permitAll()
                                                 .requestMatchers("/api/rss").permitAll()
-                                                .requestMatchers("/api/webhooks/**").permitAll()
+                                                .requestMatchers("/api/webhooks/**", "/api/stripe/webhook").permitAll()
                                                 .requestMatchers("/error").permitAll()
                                                 .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
 
