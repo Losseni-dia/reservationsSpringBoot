@@ -154,7 +154,6 @@ const handleApprove = async (id: number) => {
 >
     <HiTrash /> {t("admin.pendingProducers.rejectButton")}
 </button>
-                                        </button>
                                     </td>
                                 </tr>
                             ))

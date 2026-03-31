@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Context
 import { AuthProvider } from "./components/context/AuthContext";
@@ -24,7 +24,6 @@ import ShowSchedule from "./pages/Producteur/ShowSchedule/ShowSchedule";
 import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
 import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
-// Assurez-vous que ce chemin correspond exactement à votre dossier (ex: ./pages/Admin/adminproducteur/AdminProducteurPage si le dossier est en minuscule)
 import AdminProducteurPage from "./pages/Admin/AdminProducteurPage/AdminProducteurPage";
 import AdminHome from "./pages/Admin/AdminHome/AdminHome";
 
@@ -43,71 +42,67 @@ import EditProfilePage from "./pages/Profile/Edit/EditProfilePage";
 import TermsAndPrivacy from "./pages/legal/TermsAndPrivacy";
 function App() {
   return (
-    /* 1. Le Router enveloppe maintenant l'AuthProvider */
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
-        <div
-          className="d-flex flex-column min-vh-100"
-          style={{ backgroundColor: "#141414" }}
-        >
+        <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: "#141414" }}>
           <Header />
-
           <main className="flex-grow-1">
             <Routes>
+              {/* --- ROUTES PUBLIQUES --- */}
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route element={<ProtectedRoute />}>
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/profile/tickets" element={<MyTickets />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/terms" element={<TermsAndPrivacy />} />
-                <Route path="/profile/edit" element={<EditProfilePage />} />
-              </Route>
-              <Route path="/admin/locations" element={<LocationList />} />
               <Route path="/show/:slug" element={<ShowDetailsPage />} />
-              <Route path="/producer/shows/add" element={<AddShow />} />
-              <Route path="/producer/shows/edit/:id" element={<EditShow />} />
-              <Route path="/admin" element={<AdminHome />} />
-              <Route
-                path="/admin/shows/:id/schedule"
-                element={<ShowSchedule />}
-              />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="/payment-cancelled" element={<PaymentCancel />} />
-              <Route path="/admin/shows" element={<AdminShowPage />} />
-              <Route path="/admin/shows/add" element={<AddShow />} />
-              <Route path="/admin/shows/edit/:id" element={<EditShow />} />
-              <Route path="/producer/reviews" element={<AdminReviewPage />} />
-              <Route path="/admin/artists" element={<AdminArtistPage />} />
-              <Route
-                path="/admin/reservations"
-                element={<AdminReservationPage />}
-              />
-              <Route path="/reservation/:slug" element={<ReservationPage />} />
-              <Route
-                path="/producer/dashboard"
-                element={<ProducerDashboard />}
-              />
-              <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/admin/users" element={<AdminUsersPage />} />
               <Route path="/developers" element={<DeveloperPage />} />
               <Route path="/api-documentation" element={<ApiDocPage />} />
-              <Route
-                path="/admin/pending-producers"
-                element={<AdminProducteurPage />}
-              />
+              <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/become-producer" element={<BecomeProducer />} />
+              <Route path="/terms" element={<TermsAndPrivacy />} />
+                <Route path="/about" element={<About />} />
+
+
+              {/* --- ROUTES UTILISATEURS CONNECTÉS (Membres, Producteurs, Admins) --- */}
+              <Route element={<ProtectedRoute allowedRoles={['MEMBRE', 'PRODUCTEUR', 'ADMIN']} />}>
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile/edit" element={<EditProfilePage />} />
+                <Route path="/profile/tickets" element={<MyTickets />} />
+                <Route path="/reservation/:slug" element={<ReservationPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-cancelled" element={<PaymentCancel />} />
+              </Route>
+
+              {/* --- ROUTES PRODUCTEURS --- */}
+              <Route element={<ProtectedRoute allowedRoles={['PRODUCTEUR', 'ADMIN']} />}>
+                <Route path="/producer/dashboard" element={<ProducerDashboard />} />
+                <Route path="/producer/shows/add" element={<AddShow />} />
+                <Route path="/producer/shows/edit/:id" element={<EditShow />} />
+                <Route path="/producer/reviews" element={<AdminReviewPage />} />
+              </Route>
+
+              {/* --- ROUTES ADMINS --- */}
+              <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+                <Route path="/admin" element={<AdminHome />} />
+                <Route path="/admin/users" element={<AdminUsersPage />} />
+                <Route path="/admin/shows" element={<AdminShowPage />} />
+                <Route path="/admin/shows/add" element={<AddShow />} />
+                <Route path="/admin/shows/edit/:id" element={<EditShow />} />
+                <Route path="/admin/shows/:id/schedule" element={<ShowSchedule />} />
+                <Route path="/admin/locations" element={<LocationList />} />
+                <Route path="/admin/artists" element={<AdminArtistPage />} />
+                <Route path="/admin/reservations" element={<AdminReservationPage />} />
+                <Route path="/admin/pending-producers" element={<AdminProducteurPage />} />
+              </Route>
+
+              {/* Catch-all pour les pages inexistantes */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
-
           <Footer />
         </div>
       </AuthProvider>
     </Router>
   );
 }
-
 export default App;
