@@ -102,7 +102,7 @@ public class ReviewApiController {
     // Supprimer un avis (déjà géré si tu as mis le DeleteMapping générique, sinon
     // ajoute-le)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN', 'PRODUCER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
