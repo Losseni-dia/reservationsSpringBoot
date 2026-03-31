@@ -3,22 +3,25 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi } from '../../../services/api';
 import { UserRegistrationDto } from '../../../types/models';
+import { resolveUserLanguageTag } from '../../../i18n';
 import styles from '../../../pages/Register/RegisterPage.module.css';
 import PasswordInput from "../../../components/ui/passwordinput/PasswordInput";
 
 const BecomeProducer: React.FC = () => {
     const { t, i18n } = useTranslation();
-    
-    const [formData, setFormData] = useState<UserRegistrationDto & { role: string }>({
+
+    /** Langue du compte (enregistrée à l’inscription, appliquée à la connexion) — ne pilote pas l’UI du formulaire. */
+    const [formData, setFormData] = useState<UserRegistrationDto & { role: string }>(() => ({
         login: '',
         firstname: '',
         lastname: '',
         email: '',
         password: '',
         confirmPassword: '',
-        langue: i18n.language || 'fr',
+        langue: resolveUserLanguageTag(i18n.language),
+        producerRequestDescription: '',
         role: 'producer'
-    });
+    }));
 
     // --- ÉTATS POUR L'IMAGE ---
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -28,10 +31,17 @@ const BecomeProducer: React.FC = () => {
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    ) => {
+        const { name, value } = e.target;
+        if (name === 'langue') {
+            setFormData({ ...formData, langue: resolveUserLanguageTag(value) });
+            return;
+        }
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [name]: value
         });
     };
 
@@ -53,6 +63,12 @@ const BecomeProducer: React.FC = () => {
             return;
         }
 
+        const desc = (formData.producerRequestDescription ?? '').trim();
+        if (!desc) {
+            setError(t('producer.becomeProducer.descriptionRequired'));
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -64,8 +80,9 @@ const BecomeProducer: React.FC = () => {
             submitData.append('email', formData.email);
             submitData.append('password', formData.password);
             submitData.append('confirmPassword', formData.confirmPassword);
-            submitData.append('langue', i18n.language);
+            submitData.append('langue', resolveUserLanguageTag(formData.langue));
             submitData.append('role', 'producer');
+            submitData.append('producerRequestDescription', desc);
 
             if (selectedFile) {
                 submitData.append('profilePictureFile', selectedFile);
@@ -105,15 +122,19 @@ const BecomeProducer: React.FC = () => {
                     <h1 className={styles.logoTitle}>SMART<span className={styles.logoAccent}>BOOKING</span></h1>
                 </div>
                 <div className={styles.registerCard}>
-                    <h2 className={styles.cardTitle} style={{ color: '#f5c518' }}>Demande envoyée !</h2>
+                    <h2 className={styles.cardTitle} style={{ color: '#f5c518' }}>{t('producer.becomeProducer.successTitle')}</h2>
                     <div style={{ textAlign: 'center', color: '#fff', marginBottom: '2rem' }}>
-                        <p style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}>Votre compte <strong style={{ color: '#f5c518' }}>Producteur</strong> a été créé avec succès.</p>
+                        <p style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}>
+                            {t('producer.becomeProducer.successIntro')}{' '}
+                            <strong style={{ color: '#f5c518' }}>{t('producer.becomeProducer.successProducerWord')}</strong>{' '}
+                            {t('producer.becomeProducer.successIntroEnd')}
+                        </p>
                         <div style={{ backgroundColor: 'rgba(245, 197, 24, 0.1)', border: '1px solid #f5c518', color: '#f5c518', padding: '1rem', borderRadius: '6px' }}>
-                            Il doit être validé par un administrateur avant de pouvoir vous connecter.
+                            {t('producer.becomeProducer.successNote')}
                         </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Link to="/" className={styles.submitButton} style={{ textDecoration: 'none', textAlign: 'center', width: 'auto', padding: '12px 30px' }}>Retour à l'accueil</Link>
+                        <Link to="/" className={styles.submitButton} style={{ textDecoration: 'none', textAlign: 'center', width: 'auto', padding: '12px 30px' }}>{t('producer.becomeProducer.backHome')}</Link>
                     </div>
                 </div>
             </div>
@@ -127,9 +148,9 @@ return (
             </div>
 
             <div className={styles.registerCard}>
-                <h2 className={styles.cardTitle}>Devenir Producteur</h2>
+                <h2 className={styles.cardTitle}>{t('producer.becomeProducer.pageTitle')}</h2>
                 <p style={{ textAlign: 'center', color: '#a0a0a0', marginBottom: '1.5rem', marginTop: '-1rem' }}>
-                    Créez votre espace producteur pour publier vos spectacles.
+                    {t('producer.becomeProducer.pageSubtitle')}
                 </p>
                 
                 {error && <div className={styles.errorMessage}>{error}</div>}
@@ -139,7 +160,7 @@ return (
                     <div className={styles.photoUploadSection}>
                         <div className={styles.avatarPreview}>
                             {previewUrl ? (
-                                <img src={previewUrl} alt="Preview" className={styles.previewImg} />
+                                <img src={previewUrl} alt={t('producer.becomeProducer.previewAlt')} className={styles.previewImg} />
                             ) : (
                                 <span className={styles.placeholderIcon}>👤</span>
                             )}
@@ -180,6 +201,23 @@ return (
                         </select>
                     </div>
 
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.label} htmlFor="producerRequestDescription">
+                            {t('producer.becomeProducer.descriptionLabel')}
+                        </label>
+                        <textarea
+                            id="producerRequestDescription"
+                            name="producerRequestDescription"
+                            value={formData.producerRequestDescription ?? ''}
+                            onChange={handleChange}
+                            className={styles.input}
+                            rows={4}
+                            required
+                            maxLength={5000}
+                            placeholder={t('producer.becomeProducer.descriptionPlaceholder')}
+                        />
+                    </div>
+
                     <div className={styles.row}>
                         <div className={styles.fieldGroup}>
                             <label className={styles.label}>{t('auth.password')}</label>
@@ -212,7 +250,7 @@ return (
                     </div>
 
                     <button type="submit" disabled={loading} className={`${styles.submitButton} ${loading ? styles.buttonDisabled : ''}`}>
-                        {loading ? t('auth.register.submitLoading') : "Envoyer ma demande"}
+                        {loading ? t('auth.register.submitLoading') : t('producer.becomeProducer.submitRequest')}
                     </button>
                 </form>
 

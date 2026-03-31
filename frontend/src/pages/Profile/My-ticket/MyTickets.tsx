@@ -6,6 +6,8 @@ import { formatDate, formatTime, formatCurrency } from "../../../utils/format";
 import { useTranslation } from "react-i18next";
 import styles from "./MyTickets.module.css";
 
+const KNOWN_PRICE_TYPES = ["STANDARD", "REDUIT", "VIP", "PREMIUM"] as const;
+
 const MyTickets: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [tickets, setTickets] = useState<TicketDetail[]>([]);
@@ -23,7 +25,7 @@ const MyTickets: React.FC = () => {
   }, []);
 
   if (loading)
-    return <div className={styles.loader}>{t("common.loading")}</div>;
+    return <div className={styles.loader}>{t("auth.loading")}</div>;
 
   if (tickets.length === 0) {
     return <div className={styles.empty}>{t("profile.noTickets")}</div>;
@@ -33,23 +35,32 @@ const MyTickets: React.FC = () => {
     <div className={styles.container}>
       <h2 className={styles.title}>{t("profile.myTicketsTitle")}</h2>
       <div className={styles.ticketGrid}>
-        {tickets.map((ticket) => (
+        {tickets.map((ticket) => {
+          const rawCat = ticket.category || "STANDARD";
+          const categoryLabel = (KNOWN_PRICE_TYPES as readonly string[]).includes(
+            rawCat
+          )
+            ? t(`producer.schedule.priceType.${rawCat}`)
+            : rawCat;
+
+          return (
           <div key={ticket.id} className={styles.ticketCard}>
-            {/* Partie Gauche : Infos du Spectacle */}
             <div className={styles.infoSection}>
               <div className={styles.showHeader}>
                 <span className={styles.categoryBadge}>
-                  {ticket.category || "STANDARD"}
+                  {categoryLabel}
                 </span>
                 <h3 className={styles.showTitle}>
-                  {ticket.showTitle || "Titre non disponible"}
+                  {ticket.showTitle || t("profile.ticketTitleUnavailable")}
                 </h3>
               </div>
 
               <div className={styles.details}>
                 <div className={styles.detailItem}>
                   <span className={styles.icon}>📍</span>
-                  <span>{ticket.locationName || "Lieu non précisé"}</span>
+                  <span>
+                    {ticket.locationName || t("show.locationUndefined")}
+                  </span>
                 </div>
                 <div className={styles.detailItem}>
                   <span className={styles.icon}>📅</span>
@@ -81,13 +92,14 @@ const MyTickets: React.FC = () => {
                   includeMargin={false}
                 />
               </div>
-              <p className={styles.refLabel}>RÉFÉRENCE</p>
+              <p className={styles.refLabel}>{t("profile.referenceLabel")}</p>
               <code className={styles.refCode}>
                 {ticket.qrCodeReference.substring(0, 8).toUpperCase()}
               </code>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

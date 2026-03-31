@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./ApiKeyManager.module.css";
 
 interface ApiKey {
@@ -9,6 +10,7 @@ interface ApiKey {
 }
 
 const ApiKeyManager: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [newKeyName, setNewKeyName] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
@@ -37,7 +39,7 @@ const ApiKeyManager: React.FC = () => {
     e.preventDefault();
     if (!newKeyName.trim()) {
       setMessage({
-        text: "Veuillez entrer un nom pour la clé.",
+        text: t("apiKeys.nameRequired"),
         type: "error",
       });
       return;
@@ -58,24 +60,19 @@ const ApiKeyManager: React.FC = () => {
         const newKey: ApiKey = await response.json();
         setKeys([...keys, newKey]);
         setNewKeyName("");
-        setMessage({ text: "Clé générée avec succès !", type: "success" });
+        setMessage({ text: t("apiKeys.successGenerated"), type: "success" });
       } else {
-        setMessage({ text: "Erreur lors de la génération.", type: "error" });
+        setMessage({ text: t("apiKeys.errorGenerate"), type: "error" });
       }
     } catch (error) {
-      setMessage({ text: "Erreur de connexion.", type: "error" });
+      setMessage({ text: t("apiKeys.errorConnection"), type: "error" });
     } finally {
       setLoading(false);
     }
   };
 
-  // --- NOUVELLE FONCTION DE SUPPRESSION ---
   const handleDeleteKey = async (id: number) => {
-    if (
-      !window.confirm(
-        "Êtes-vous sûr de vouloir supprimer cette clé ? Elle ne fonctionnera plus.",
-      )
-    ) {
+    if (!window.confirm(t("apiKeys.confirmDelete"))) {
       return;
     }
 
@@ -86,29 +83,25 @@ const ApiKeyManager: React.FC = () => {
       });
 
       if (response.ok) {
-        // Met à jour la liste en retirant la clé supprimée
         setKeys(keys.filter((k) => k.id !== id));
-        setMessage({ text: "Clé supprimée définitivement.", type: "success" });
+        setMessage({ text: t("apiKeys.successDeleted"), type: "success" });
       } else {
-        setMessage({ text: "Erreur lors de la suppression.", type: "error" });
+        setMessage({ text: t("apiKeys.errorDelete"), type: "error" });
       }
     } catch (error) {
-      setMessage({ text: "Erreur de connexion.", type: "error" });
+      setMessage({ text: t("apiKeys.errorConnection"), type: "error" });
     }
   };
 
   const copyToClipboard = (keyValue: string) => {
     navigator.clipboard.writeText(keyValue);
-    setMessage({ text: "Clé copiée dans le presse-papier !", type: "success" });
+    setMessage({ text: t("apiKeys.copied"), type: "success" });
   };
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Gérer mes clés API</h2>
-      <p className={styles.description}>
-        Utilisez ces clés pour authentifier vos requêtes vers notre API
-        publique.
-      </p>
+      <h2 className={styles.title}>{t("apiKeys.title")}</h2>
+      <p className={styles.description}>{t("apiKeys.description")}</p>
 
       {message.text && (
         <div
@@ -121,20 +114,20 @@ const ApiKeyManager: React.FC = () => {
       <form onSubmit={handleGenerateKey} className={styles.form}>
         <input
           type="text"
-          placeholder="Nom de la clé (ex: Mon site WordPress)"
+          placeholder={t("apiKeys.placeholderName")}
           value={newKeyName}
           onChange={(e) => setNewKeyName(e.target.value)}
           className={styles.input}
         />
         <button type="submit" disabled={loading} className={styles.btn}>
-          {loading ? "Génération..." : "Créer une clé"}
+          {loading ? t("apiKeys.generating") : t("apiKeys.createButton")}
         </button>
       </form>
 
       <div className={styles.keysList}>
-        <h3>Mes clés actives</h3>
+        <h3>{t("apiKeys.activeKeysTitle")}</h3>
         {keys.length === 0 ? (
-          <p style={{ color: "#aaa" }}>Vous n'avez pas encore de clé API.</p>
+          <p style={{ color: "#aaa" }}>{t("apiKeys.emptyList")}</p>
         ) : (
           <ul className={styles.list}>
             {keys.map((key) => (
@@ -147,18 +140,20 @@ const ApiKeyManager: React.FC = () => {
                       onClick={() => copyToClipboard(key.keyValue)}
                       className={styles.copyBtn}
                     >
-                      Copier
+                      {t("apiKeys.copy")}
                     </button>
                     <button
                       onClick={() => handleDeleteKey(key.id)}
                       className={styles.deleteBtn}
                     >
-                      Supprimer
+                      {t("apiKeys.delete")}
                     </button>
                   </div>
                 </div>
                 <small className={styles.date}>
-                  Créée le : {new Date(key.createdAt).toLocaleString()}
+                  {t("apiKeys.createdOn", {
+                    date: new Date(key.createdAt).toLocaleString(i18n.language),
+                  })}
                 </small>
               </li>
             ))}
@@ -167,40 +162,34 @@ const ApiKeyManager: React.FC = () => {
       </div>
 
       <div className={styles.docSection}>
-        <h4>💡 À quoi sert cette clé ?</h4>
-        <p className={styles.docText}>
-          Cette clé agit comme un <strong>mot de passe secret</strong>. Elle
-          permet à d'autres sites (comme votre site vitrine, un blog ou une
-          application partenaire) de se connecter de manière sécurisée à notre
-          plateforme pour récupérer automatiquement les informations des
-          spectacles.
-        </p>
+        <h4>{t("apiKeys.docWhatTitle")}</h4>
+        <p className={styles.docText}>{t("apiKeys.docWhatBody")}</p>
 
-        <h5 className={styles.docSubTitle}>Comment l'utiliser ?</h5>
+        <h5 className={styles.docSubTitle}>{t("apiKeys.docHowTitle")}</h5>
         <ul className={styles.docList}>
           <li className={styles.docListItem}>
-            <strong>Pour les utilisateurs réguliers :</strong> Copiez simplement
-            votre clé ci-dessus et collez-la dans le champ "Clé API" de l'outil
-            que vous souhaitez relier.
+            <strong>{t("apiKeys.docHowRegular")}</strong>{" "}
+            {t("apiKeys.docHowRegularBody")}
           </li>
           <li>
-            <strong>Pour les développeurs :</strong> Incluez cette clé dans
-            l'en-tête HTTP <code className={styles.inlineCode}>X-API-KEY</code>{" "}
-            lors de vos requêtes.
+            <strong>{t("apiKeys.docHowDev")}</strong>{" "}
+            {t("apiKeys.docHowDevBody")}{" "}
+            <code className={styles.inlineCode}>X-API-KEY</code>{" "}
+            {t("apiKeys.docHowDevSuffix")}
           </li>
         </ul>
 
         <p className={styles.docFooter}>
-          👉 Découvrez toutes les données disponibles sur notre{" "}
+          {t("apiKeys.docFooterBefore")}{" "}
           <a
             href="http://localhost:8080/swagger-ui/index.html"
             target="_blank"
             rel="noreferrer"
             className={styles.docLink}
           >
-            documentation interactive
+            {t("apiKeys.docFooterLink")}
           </a>
-          .
+          {t("apiKeys.docFooterAfter")}
         </p>
       </div>
     </div>
