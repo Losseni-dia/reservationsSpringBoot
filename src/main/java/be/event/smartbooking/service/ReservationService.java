@@ -108,28 +108,28 @@ public class ReservationService {
 
     @Transactional
     public Reservation confirmReservation(Long reservationId) {
-        // 1. Récupération de la réservation
+        log.info("🏁 [SERVICE] Confirmation de la Résa #{}", reservationId);
+
+        // 1. Récupération
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BusinessException("error.reservation.notfound", HttpStatus.NOT_FOUND));
 
-        // Sécurité pour éviter de confirmer deux fois
+        // 2. Sécurité doublon
         if (reservation.getStatut() != StatutReservation.PENDING) {
             return reservation;
         }
 
-        // 2. Mise à jour du statut en CONFIRMED
+        // 3. Passage en CONFIRMED
         reservation.setStatut(StatutReservation.CONFIRMED);
-        Reservation confirmed = reservationRepository.save(reservation);
+        Reservation confirmed = reservationRepository.saveAndFlush(reservation);
 
-        // 3. Récupération des lignes de commande (panier)
+        // 4. Récupération des articles
         List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(confirmed);
+        log.info("📦 [SERVICE] Résa #{}: {} articles trouvés.", reservationId, items.size());
 
-        // 4. GÉNÉRATION DES TICKETS
-        System.out.println("🎟️ Début de création des tickets pour la résa #" + reservationId);
-
+        // 5. Création des billets
         for (RepresentationReservation item : items) {
             int qty = (item.getQuantity() != null) ? item.getQuantity() : 0;
-
             for (int i = 0; i < qty; i++) {
                 Ticket ticket = Ticket.builder()
                         .user(confirmed.getUser())
@@ -137,21 +137,30 @@ public class ReservationService {
                         .representation(item.getRepresentation())
                         .price(item.getPrice())
                         .build();
-
                 ticketRepository.save(ticket);
             }
         }
 
-        // 5. 📧 ENVOI DE L'E-MAIL RÉACTIVÉ !
-        Locale locale = Locale.FRENCH;
-        if (confirmed.getUser().getLangue() != null) {
-            locale = Locale.forLanguageTag(confirmed.getUser().getLangue());
-        }
-        emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed, items, locale);
+        // 6. 📧 ENVOI DE L'E-MAIL (SÉCURISÉ)
+        try {
+            Locale locale = Locale
+                    .forLanguageTag(confirmed.getUser().getLangue() != null ? confirmed.getUser().getLangue() : "fr");
 
-        System.out.println("✅ SUCCÈS : Réservation confirmée, tickets créés et e-mail envoyé !");
+            // Appel asynchrone : le code continue sans attendre le mail
+            emailService.sendReservationSummaryMail(confirmed.getUser(), confirmed, items, locale);
+
+            log.info("🚀 [SERVICE] Ordre d'envoi d'e-mail transmis.");
+        } catch (Exception e) {
+            // TRÈS IMPORTANT : On logge l'erreur mais on ne fait pas de "throw"
+            // Cela garantit que les tickets créés au-dessus restent sauvés (pas de
+            // Rollback).
+            log.error("⚠️ [SERVICE] Erreur mail ignorée pour sauver la transaction : {}", e.getMessage());
+        }
+
+        log.info("✅ [SERVICE] Terminé : Résa #{} confirmée et tickets créés.", reservationId);
         return confirmed;
     }
+
 
     @Transactional
     public void cancelReservation(Long reservationId) {
