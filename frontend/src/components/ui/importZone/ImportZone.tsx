@@ -1,5 +1,6 @@
 // src/components/ui/importZone/ImportZone.tsx
 import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./ImportZone.module.css";
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const ImportZone: React.FC<Props> = ({ type, onSuccess }) => {
+  const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,9 +27,8 @@ const ImportZone: React.FC<Props> = ({ type, onSuccess }) => {
 
     const ext = file.name.split(".").pop()?.toLowerCase();
 
-    // Vérification du format
     if (ext !== "csv" && ext !== "json") {
-      setError("Format de fichier non supporté. Utilisez CSV ou JSON.");
+      setError(t("admin.importZone.formatError"));
       setLoading(false);
       return;
     }
@@ -37,7 +38,6 @@ const ImportZone: React.FC<Props> = ({ type, onSuccess }) => {
     formData.append("file", file);
 
     try {
-      // Récupération du token CSRF pour la sécurité Spring
       const csrfToken = `; ${document.cookie}`
         .split(`; XSRF-TOKEN=`)
         .pop()
@@ -56,7 +56,7 @@ const ImportZone: React.FC<Props> = ({ type, onSuccess }) => {
 
       if (!res.ok) {
         const errorText = await res.text();
-        throw new Error(errorText || "Erreur lors de l'import");
+        throw new Error(errorText || t("admin.importZone.importFailed"));
       }
 
       const result = await res.json();
@@ -101,15 +101,13 @@ const ImportZone: React.FC<Props> = ({ type, onSuccess }) => {
         {loading ? (
           <div className={styles.loadingContent}>
             <div className={styles.spinner} />
-            <p>Import en cours...</p>
+            <p>{t("admin.importZone.loading")}</p>
           </div>
         ) : (
           <div className={styles.idleContent}>
             <span className={styles.uploadIcon}>📂</span>
-            <p className={styles.dropText}>
-              Glissez un fichier CSV ou JSON ici
-            </p>
-            <p className={styles.orText}>ou cliquez pour choisir</p>
+            <p className={styles.dropText}>{t("admin.importZone.dropText")}</p>
+            <p className={styles.orText}>{t("admin.importZone.orClick")}</p>
           </div>
         )}
       </div>
@@ -120,20 +118,20 @@ const ImportZone: React.FC<Props> = ({ type, onSuccess }) => {
         <div className={styles.report}>
           <div className={styles.reportHeader}>
             <span className={styles.successCount}>
-              ✅ {report.imported} importé(s)
+              ✅ {report.imported} {t("admin.importZone.imported")}
             </span>
             <span className={styles.skippedCount}>
-              ⏭ {report.skipped} ignoré(s)
+              ⏭ {report.skipped} {t("admin.importZone.skipped")}
             </span>
             {report.errors.length > 0 && (
               <span className={styles.errorCount}>
-                ❌ {report.errors.length} erreur(s)
+                ❌ {report.errors.length} {t("admin.importZone.errors")}
               </span>
             )}
           </div>
           {report.errors.length > 0 && (
             <details className={styles.errorDetails}>
-              <summary>Voir les erreurs</summary>
+              <summary>{t("admin.importZone.seeErrors")}</summary>
               <ul className={styles.errorList}>
                 {report.errors.map((e, i) => (
                   <li key={i}>{e}</li>

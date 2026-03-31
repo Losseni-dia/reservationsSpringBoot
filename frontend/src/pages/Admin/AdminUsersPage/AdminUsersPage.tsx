@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userApi } from '../../../services/api';
 import { UserProfileDto } from '../../../types/models';
 import Loader from '../../../components/ui/loader/Loader';
+import Toast from '../../../components/ui/toast/Toast';
 import styles from './AdminUsersPage.module.css';
 import ExportButton from '../../../components/ui/exportButton/ExportButton';
 import ImportZone from '../../../components/ui/importZone/ImportZone';
+import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDashboardButton';
 
 const AdminUsersPage: React.FC = () => {
     const { t } = useTranslation();
     const [users, setUsers] = useState<UserProfileDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [showImport, setShowImport] = useState(false);
+    const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const [toastType, setToastType] = useState<'success' | 'error' | 'info'>('info');
 
     const loadUsers = async () => {
         try {
@@ -40,16 +44,33 @@ const AdminUsersPage: React.FC = () => {
         }
     };
 
-    const handleToggleStatus = async (id: number, isActive: boolean) => {
+    const handleToggleStatus = async (id: number, wasActive: boolean) => {
+        if (updatingUserId === id) return;
+
+        setUpdatingUserId(id);
+        setUsers((prev) =>
+            prev.map((u) =>
+                u.id === id ? { ...u, isActive: !wasActive } : u
+            )
+        );
+
         try {
-            if (isActive) {
+            if (wasActive) {
                 await userApi.deactivate(id);
             } else {
                 await userApi.activate(id);
             }
-            await loadUsers();
         } catch (err) {
-            alert(t("admin.users.errorDelete"));
+            console.error("Erreur changement statut utilisateur:", err);
+            setUsers((prev) =>
+                prev.map((u) =>
+                    u.id === id ? { ...u, isActive: wasActive } : u
+                )
+            );
+            setToastType("error");
+            setToastMessage(t("admin.users.errorToggleStatus"));
+        } finally {
+            setUpdatingUserId(null);
         }
     };
 
@@ -64,6 +85,7 @@ const AdminUsersPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
+            <AdminBackToDashboardButton />
             <header className={styles.header}>
                 <h1>{t("admin.users.title")} <span className={styles.yellow}>{t("admin.users.titleHighlight")}</span></h1>
                 <p>{t("admin.users.subtitle", { count: users.length })}</p>
@@ -115,12 +137,25 @@ const AdminUsersPage: React.FC = () => {
                                         </span>
                                     </td>
                                     <td>
-                                        <button 
-                                                onClick={() => handleToggleStatus(user.id, user.isActive || false)}
-                                                 className={user.isActive ? 'btn btn-warning' : 'btn btn-success'}
-                                                            >
-                                                     {user.isActive ? t("admin.users.deactivate") : t("admin.users.activate")}
-                                            </button>
+                                        <button
+                                            type="button"
+                                            disabled={updatingUserId === user.id}
+                                            onClick={() =>
+                                                handleToggleStatus(
+                                                    user.id,
+                                                    user.isActive ?? false
+                                                )
+                                            }
+                                            className={
+                                                user.isActive
+                                                    ? "btn btn-warning"
+                                                    : "btn btn-success"
+                                            }
+                                        >
+                                            {user.isActive
+                                                ? t("admin.users.deactivate")
+                                                : t("admin.users.activate")}
+                                        </button>
                                     </td>
                                 </tr>
                             ))
@@ -132,6 +167,14 @@ const AdminUsersPage: React.FC = () => {
                     </tbody>
                 </table>
             </div>
+
+            {toastMessage && (
+                <Toast
+                    message={toastMessage}
+                    type={toastType}
+                    onClose={() => setToastMessage(null)}
+                />
+            )}
         </div>
     );
 };

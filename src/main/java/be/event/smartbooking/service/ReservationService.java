@@ -179,6 +179,19 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Chiffre d'affaires total : somme (prix × quantité) des lignes de commande dont la réservation est confirmée (payée).
+     */
+    public BigDecimal getTotalRevenueConfirmed() {
+        // TODO: Revert after demo — n'inclure que StatutReservation.CONFIRMED une fois le webhook Stripe configuré en local.
+        Double sum = itemRepository.sumTotalRevenueByReservationStatuses(
+                List.of(StatutReservation.CONFIRMED, StatutReservation.PENDING));
+        if (sum == null) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(sum);
+    }
+
     private ReservationAdminDto toAdminDto(Reservation r) {
         User u = r.getUser();
         List<RepresentationReservation> items = itemRepository.findByReservationWithDetails(r);

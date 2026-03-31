@@ -88,27 +88,28 @@ export const authApi = {
     const res = await secureFetch(`${API_BASE}/users/profile`);
     return res.json();
   },
-  register: async (userData: UserRegistrationDto) => {
+  register: async (formData: FormData) => {
     const headers = new Headers({
-      "Content-Type": "application/json",
+      // ⚠️ IMPORTANT : On ne met PAS de "Content-Type". 
+      // Le navigateur le fera automatiquement avec le "boundary" pour le FormData.
       Accept: "application/json",
       "Accept-Language": i18n.language || "fr",
     });
+
     const csrfToken = getCsrfToken();
     if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
 
     return fetch(`${API_BASE}/users/register`, {
       method: "POST",
       headers,
-      body: JSON.stringify(userData),
+      body: formData, // On envoie directement le FormData ici
       credentials: "include",
     });
   },
-  updateProfile: async (profileData: Partial<UserProfileDto>) => {
+  updateProfile: async (profileData: FormData) => {
     const res = await secureFetch(`${API_BASE}/users/profile`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(profileData),
+      body: profileData,
     });
     return res.text();
   },
@@ -124,11 +125,14 @@ export const authApi = {
         const res = await secureFetch(`${API_BASE}/users/reset-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token, password }),
-        });
+            body: JSON.stringify({ token: token, newPassword: password }),});
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(errorText);
+        }
         return res.text();
     },
-};
+  };
 
 export const userApi = {
   getAll: async (): Promise<UserProfileDto[]> => {
@@ -422,6 +426,8 @@ export interface AdminStatsSummaryDto {
   totalShows: number;
   totalLocations: number;
   totalReservations: number;
+  /** Somme des montants (€) des réservations confirmées (payées). */
+  totalRevenue: number;
 }
 
 export const ticketApi = {

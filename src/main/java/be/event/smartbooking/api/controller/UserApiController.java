@@ -1,5 +1,6 @@
 package be.event.smartbooking.api.controller;
 
+import be.event.smartbooking.dto.ResetPasswordDto;
 import be.event.smartbooking.dto.TicketDetail;
 import be.event.smartbooking.dto.UserProfileDto;
 import be.event.smartbooking.dto.UserRegistrationDto;
@@ -18,10 +19,12 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -73,12 +76,29 @@ public class UserApiController {
     }
 
     // INSCRIPTION (Public)
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> register(
+            @Valid @ModelAttribute UserRegistrationDto registrationDto,
+            @RequestParam(value = "profilePictureFile", required = false) MultipartFile file) {
+
         if (!userService.isLoginAndEmailAvailable(registrationDto.getLogin(), registrationDto.getEmail())) {
             return ResponseEntity.badRequest().body("Login ou Email déjà utilisé");
         }
+
+        // 1. Gestion de l'image avant l'enregistrement
+        if (file != null && !file.isEmpty()) {
+            try {
+                String fileName = userService.saveProfilePicture(file);
+                // On stocke le nom du fichier dans le DTO pour que le service l'enregistre
+                registrationDto.setProfilePicture(fileName);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Erreur lors de la sauvegarde de l'image : " + e.getMessage());
+            }
+        }
+
+        // 2. Enregistrement de l'utilisateur
         userService.registerFromDto(registrationDto);
+
         User user = userService.findByLogin(registrationDto.getLogin());
         Locale locale = toLocale(registrationDto.getLangue());
 
@@ -90,12 +110,12 @@ public class UserApiController {
                     "Votre compte Producteur a été créé. Il doit être validé par un administrateur avant de pouvoir vous connecter.");
         }
     }
-
     // RÉCUPÉRER MON PROFIL (Connecté)
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non connecté");
+            // 200 + corps vide : évite un 401 systématique au chargement (AuthContext) pour les visiteurs
+            return ResponseEntity.ok(new UserProfileDto());
         }
 
         // On cherche l'utilisateur (on utilise findByLogin car c'est le standard
@@ -119,6 +139,10 @@ public class UserApiController {
         dto.setLangue(user.getLangue());
         dto.setLogin(user.getLogin());
         dto.setIsActive(user.isActive());
+        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+    // On construit l'URL complète pour que le navigateur puisse trouver l'image
+dto.setProfilePictureUrl("http://localhost:8080/uploads/" + user.getProfilePicture());
+        }
 
         // Sécurité sur les rôles (évite le crash Lazy Loading)
         try {
@@ -135,17 +159,34 @@ public class UserApiController {
     }
 
     // METTRE À JOUR MON PROFIL (Connecté)
-    @PutMapping("/profile")
-    public ResponseEntity<String> updateProfile(@Valid @RequestBody UserProfileDto profileDto, Principal principal) {
+    @PutMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> updateProfile(@RequestParam(value = "profilePictureFile", required = false) MultipartFile file,
+                                            @ModelAttribute     UserProfileDto profileDto, Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expirée");
         }
 
+        try {
         User user = userService.findByEmailOrLogin(principal.getName());
-
         profileDto.setId(user.getId());
+
+        // 3. Gestion de l'image (si l'utilisateur en a envoyé une nouvelle)
+        if (file != null && !file.isEmpty()) {
+            // On sauvegarde l'image sur le PC et on récupère son nouveau nom
+            String fileName = userService.saveProfilePicture(file);
+            // On met ce nom dans le DTO
+            profileDto.setProfilePicture(fileName);
+        }
+
+        // 4. On met à jour l'utilisateur (texte + nom de l'image s'il y en a une)
         userService.updateUserFromDto(profileDto);
+        
         return ResponseEntity.ok("Profil mis à jour avec succès");
+
+    } catch (Exception e) {
+        // Au cas où la sauvegarde de l'image plante (ex: dossier introuvable)
+        return ResponseEntity.badRequest().body("Erreur lors de la mise à jour : " + e.getMessage());
+    }
     }
 
     // MOT DE PASSE OUBLIÉ (Public)
@@ -163,22 +204,22 @@ public class UserApiController {
 
     // RÉINITIALISATION MOT DE PASSE (Public)
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
-        String token = request.get("token");
-        String password = request.get("password");
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordDto request) {
+        String token = request.getToken();
+    String password = request.getNewPassword(); 
 
-        User user = tokenService.validatePasswordResetToken(token);
+    User user = tokenService.validatePasswordResetToken(token);
 
-        if (user == null) {
-            return ResponseEntity.badRequest().body("Token invalide ou expiré");
-        }
+    if (user == null) {
+        return ResponseEntity.badRequest().body("Token invalide ou expiré");
+    }
 
-        user.setPassword(passwordEncoder.encode(password));
-        userService.updateUser(user.getId(), user);
+    user.setPassword(passwordEncoder.encode(password));
+    userService.updateUser(user.getId(), user);
 
-        tokenService.deleteToken(token);
+    tokenService.deleteToken(token);
 
-        return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
+    return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
     }
 
     // LISTER TOUS LES USERS (Admin seulement)
@@ -297,6 +338,7 @@ public class UserApiController {
             dto.setLogin(user.getLogin());
             dto.setLangue(user.getLangue());
             dto.setIsActive(user.isActive());
+            dto.setProducerRequestDescription(user.getProducerRequestDescription());
             if (user.getRoles() != null && !user.getRoles().isEmpty()) {
                 dto.setRole(user.getRoles().get(0).getRole());
             }

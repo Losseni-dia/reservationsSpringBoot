@@ -70,3 +70,17 @@ export function formatCurrency(amount: number, locale: string): string {
     currency: "EUR",
   }).format(amount);
 }
+
+/** Symbole affiché à côté des champs prix (EUR, aligné sur formatCurrency). */
+export function getCurrencySymbol(locale: string): string {
+  const intlLocale = toLocale(locale);
+  try {
+    const parts = new Intl.NumberFormat(intlLocale, {
+      style: "currency",
+      currency: "EUR",
+    }).formatToParts(0);
+    return parts.find((p) => p.type === "currency")?.value ?? "€";
+  } catch {
+    return "€";
+  }
+}

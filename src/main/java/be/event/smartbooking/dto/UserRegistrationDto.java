@@ -35,4 +35,12 @@ public class UserRegistrationDto {
     private String langue;
 
     private String role;
+    private String profilePicture;
+    private String profilePictureUrl;
+
+    /**
+     * Description de la demande producteur. Obligatoire si {@code role=producer} (validé dans {@code UserService}).
+     */
+    @Size(max = 5000, message = "La description ne peut pas dépasser 5000 caractères")
+    private String producerRequestDescription;
 }

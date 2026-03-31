@@ -75,6 +75,12 @@ public class User {
     @org.hibernate.annotations.ColumnDefault("1")
     private boolean isApproved = false;
 
+    @Column(name = "profile_picture")
+    private String profilePicture;
+
+    /** Motivation / description fournie lors d'une demande producteur (null pour les membres). */
+    @Column(name = "producer_request_description", columnDefinition = "TEXT")
+    private String producerRequestDescription;
 
     // =================================================================
     // MÉTHODES UTILITAIRES

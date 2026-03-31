@@ -19,7 +19,14 @@
     "footer": {
       "allRightsReserved": "All rights reserved.",
       "privacy": "Privacy",
-      "terms": "Terms of Use"
+      "terms": "Terms of Use",
+      "brandName": "SmartBooking",
+      "socialFb": "FB",
+      "socialIg": "IG",
+      "socialTw": "TW",
+      "rssSubscribeTitle": "Subscribe to the RSS feed",
+      "rssLink": "RSS feed",
+      "developers": "API & Developers"
     }
   },
   "home": {
@@ -33,32 +40,38 @@
     "reserve": "Book",
     "full": "Sold out"
   },
-  "about": {
-    "heroTitle": "The ",
-    "heroTitleBrand": "SmartBooking",
-    "heroTitleSuffix": " experience",
-    "heroSubtitle": "Where the stage meets emotion. Live art, intensely.",
-    "ctaDiscover": "Discover our shows",
-    "sectionValues": "Our Values",
-    "valuePassion": "Artistic Passion",
-    "valuePassionDesc": "A curated selection that moves audiences.",
-    "valueTalents": "Emerging Talents",
-    "valueTalentsDesc": "Spotlighting the voices of tomorrow.",
-    "valueCommunity": "Community",
-    "valueCommunityDesc": "Share your experiences with fellow enthusiasts.",
-    "valueDiversity": "Diversity",
-    "valueDiversityDesc": "All art forms have their place here.",
-    "sectionReviews": "What our audiences say",
-    "review1": "\"A smooth and inspiring platform for my outings.\"",
-    "author1": "Marc D.",
-    "review2": "\"I discovered incredible artistic gems this season.\"",
-    "author2": "Clara J.",
-    "reserve": "Book",
-    "sectionFavorites": "Our favourites",
-    "showEvent": "Featured Show",
-    "theatreNational": "National Theatre - 8pm",
-    "seeMore": "See more"
-  },
+ "about": {
+  "heroTitle": "Experience ",
+  "heroTitleBrand": "SmartBooking",
+  "heroSubtitle": "The next-generation ticketing platform for all your shows and cultural events in Belgium.",
+  "ctaDiscover": "Discover Shows",
+  "statsTickets": "Tickets sold",
+  "statsVenues": "Partner venues",
+  "statsSatisfaction": "Satisfied clients",
+  "missionTitle": "Our Mission",
+  "missionDesc": "Since 2024, SmartBooking has been striving to make culture accessible to everyone by simplifying show bookings. We believe every night at the theater or concert is a unique chance to create memories.",
+  "sectionValues": "Our Values",
+  "valuePassion": "Passion",
+  "valuePassionDesc": "We love the stage and do everything to ensure every booking is the start of an unforgettable night.",
+  "valueTalents": "Supporting Talents",
+  "valueTalentsDesc": "From national theaters to local stages, we highlight the artists who make our culture vibrate.",
+  "valueCommunity": "Community",
+  "valueCommunityDesc": "More than just ticketing, a space for culture lovers and artistic discovery to connect.",
+  "valueDiversity": "Diversity",
+  "valueDiversityDesc": "Comedy, tragedy, concerts, or dance: we celebrate the richness of all performing arts.",
+  "sectionFavorites": "Our Top Picks",
+  "theatreNational": "Royal Theater of Brussels",
+  "seeMore": "See More",
+  "producerTitle": "Organizing a show?",
+  "producerDesc": "Join over 150 Belgian producers who trust us with their ticketing management.",
+  "producerBtn": "Create producer account",
+  "sectionReviews": "What our audience says",
+  "author1": "Marc D.",
+  "review1": "A smooth and inspiring platform for my outings.",
+  "author2": "Clara J.",
+  "review2": "I discovered incredible artistic gems this season.",
+  "reserve": "Reserve"
+},
   "payment": {
     "title": "Payment Successful!",
     "message": "Thank you for your purchase. Your reservation",
@@ -69,7 +82,60 @@
   "forbidden": {
     "title": "Access Denied",
     "message": "Sorry, you do not have the required permissions to access this page.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "systemTagline": "SMARTBOOKING SYSTEM"
+  },
+  "developer": {
+    "title": "{{brand}} API: getting started",
+    "subtitle": "New to APIs? Here is how to connect your website, blog, or app to our shows database in minutes.",
+    "sectionWhatTitle": "What is it for?",
+    "sectionWhatIntro": "An API is a bridge between our site and yours. Your tools can read our data in real time. Here are three examples:",
+    "uc1Title": "No more double entry (theatres and companies)",
+    "uc1Body": "Got a WordPress site? Instead of copying tour dates manually on your site and on {{brand}}, the API lets your site read our calendar. Change a date on {{brand}} and it updates on your site.",
+    "uc2Title": "Enrich your pages (publishers and bloggers)",
+    "uc2Before": "Writing about a play? Use our API to show a small ",
+    "uc2Em": "\"Now playing\"",
+    "uc2After": " widget so readers know which theatres are hosting it.",
+    "uc3Title": "Build real projects (student developers)",
+    "uc3Body": "Tired of Lorem Ipsum for assignments? Use our API for apps with real cultural data (schedules, venue maps…) and strengthen your portfolio.",
+    "ucEtc": "etc.",
+    "tutorialTitle": "Quick start tutorial",
+    "tutorialIntro": "To query our server you cannot just open the URL in a browser: you must prove you are allowed. Follow these three steps:",
+    "step1Title": "Generate your secret key",
+    "step1P1": "This key is your passport. Never share it publicly (e.g. on GitHub).",
+    "step1LoginBefore": "👉 Please ",
+    "step1LoginBold": "log in",
+    "step1LoginAfter": " to your account to generate a key.",
+    "step1LoggedBefore": "Great ",
+    "step1LoggedAfter": ", you are signed in! Create your key now:",
+    "toggleHide": "Hide key manager",
+    "toggleShow": "Open API key manager",
+    "step2Title": "Make your first request (API call)",
+    "step2P1a": "To authenticate, add your key to the request header (",
+    "step2P1b": "). That header must be named ",
+    "step2P1c": ".",
+    "termHeaderHttp": "HTTP header",
+    "step2P2": "Pick the language that fits your project and copy the code:",
+    "codeBadgeFrontend": "Frontend",
+    "codeTitleJs": "JavaScript / React / Vue",
+    "codeBadgeTerminal": "Terminal",
+    "codeTitleCurl": "Quick test with cURL",
+    "codeBadgeBackend": "Backend",
+    "codeTitlePhp": "PHP (great for WordPress)",
+    "codeBadgeScripting": "Scripting",
+    "codeTitlePython": "Python (requests)",
+    "step3Title": "Explore the API dictionary (Swagger)",
+    "step3P1a": "You may wonder: ",
+    "step3Quote": "\"What are the exact URLs? What data will I get?\"",
+    "step3P1b": ".",
+    "step3P2a": "That is what ",
+    "step3P2b": " is for: a visual UI that lists our endpoints and lets you try them live. Here is how:",
+    "instr1": "1. Authorize: open Swagger from the link below. Top right, click the green \"Authorize\" button.",
+    "instr2": "2. Your key: a dialog opens. Paste your key (sk_…) in the field, click \"Authorize\", then close (\"Close\").",
+    "instr3": "3. Open an endpoint: click a row (e.g. GET /api/shows) to expand it.",
+    "instr4": "4. Try it: click \"Try it out\", then \"Execute\". The server response appears below.",
+    "linkSwagger": "Open Swagger",
+    "linkInteractiveDoc": "Open interactive documentation"
   },
   "auth": {
     "email": "Email",
@@ -108,6 +174,7 @@
       "submitLoading": "Creating...",
       "hasAccount": "Already have an account?",
       "signIn": "Log in",
+      "addPhoto": "Add a photo",
       "errorPasswordMismatch": "Passwords do not match.",
       "errorGeneric": "An error occurred during registration."
     },
@@ -145,7 +212,9 @@
     "noTickets": "You don't have any booked tickets yet.",
     "myActiveTickets": "My Active Tickets",
     "ticketDescription": "Show this QR code at the entrance of the venue.",
-    "viewAllTickets": "View all tickets"
+    "viewAllTickets": "View all tickets",
+    "referenceLabel": "REFERENCE",
+    "ticketTitleUnavailable": "Title unavailable"
   },
   "show": {
     "errorLoad": "Unable to load show details.",
@@ -181,6 +250,7 @@
     "errorReservation": "Error during reservation.",
     "loadingShow": "Loading show...",
     "title": "Book your tickets",
+    "selectTickets": "Select your tickets",
     "showLabel": "Show:",
     "chooseDate": "Choose a date",
     "noDateAvailable": "No date available",
@@ -193,6 +263,9 @@
     "back": "Back"
   },
   "admin": {
+    "common": {
+      "backToDashboard": "Dashboard"
+    },
     "home": {
       "title": "Administrator Space",
       "titleError": "Administrator Dashboard",
@@ -219,7 +292,14 @@
       "activate": "✅ Activate",
       "empty": "No users found.",
       "confirmDelete": "⚠️ WARNING: Permanently delete user \"{{name}}\"?",
-      "errorDelete": "Error during deletion. The user may have linked data (reservations, etc.)."
+      "errorDelete": "Error during deletion. The user may have linked data (reservations, etc.).",
+      "errorToggleStatus": "Could not update account status. The display was reverted.",
+      "export": "Export",
+      "showImport": "📥 Import",
+      "hideImport": "✕ Close import",
+      "importTitle": "Bulk user import",
+      "importHint": "Required CSV columns: login, firstname, lastname, email, password",
+      "importZoneLabel": "Drop a .csv or .json file here"
     },
     "shows": {
       "errorLoad": "Unable to load shows.",
@@ -241,7 +321,10 @@
       "modalRevokeTitle": "Revoke?",
       "modalConfirmTitle": "Confirm?",
       "modalRevokeMessage": "Remove \"{{title}}\" from the public catalogue?",
-      "modalConfirmMessage": "Make \"{{title}}\" visible and bookable by customers?"
+      "modalConfirmMessage": "Make \"{{title}}\" visible and bookable by customers?",
+      "export": "Export",
+      "importHide": "Hide import",
+      "importShow": "Import shows"
     },
     "reviews": {
       "title": "Moderation of",
@@ -272,8 +355,7 @@
       "error": "Unable to load artists.",
       "retry": "Retry",
       "empty": "No artists registered.",
-      "noTypes": "—",
-      "backToDashboard": "← Dashboard"
+      "noTypes": "—"
     },
     "reservations": {
       "title": "Manage",
@@ -289,11 +371,91 @@
       "error": "Unable to load reservations.",
       "retry": "Retry",
       "empty": "No reservations yet.",
-      "noValue": "—",
-      "backToDashboard": "← Dashboard"
+      "noValue": "—"
+    },
+    "pendingProducers": {
+      "colDescription": "DESCRIPTION",
+      "pageTitle": "Pending",
+      "pageTitleHighlight": "Producers",
+      "subtitle": "{{count}} request(s) awaiting validation",
+      "empty": "No pending producer requests.",
+      "confirmApprove": "Approve this producer account?",
+      "approveError": "Error while approving.",
+      "confirmReject": "Reject and permanently delete the request from \"{{name}}\"?",
+      "rejectIdFallback": "ID {{id}}",
+      "loadError": "Unable to load requests.",
+      "colId": "ID",
+      "approveButton": "Approve",
+      "approveTitle": "Approve registration",
+      "rejectButton": "Reject",
+      "rejectTitle": "Reject and delete the request"
+    },
+    "export": {
+      "errorAlert": "An error occurred while exporting.",
+      "tooltipCsv": "{{label}} (CSV)",
+      "tooltipJson": "{{label}} (JSON)",
+      "buttonCsv": "{{label}} CSV",
+      "buttonJson": "JSON"
+    },
+    "importZone": {
+      "formatError": "Unsupported file format. Use CSV or JSON.",
+      "importFailed": "Import failed",
+      "loading": "Importing…",
+      "dropText": "Drop a CSV or JSON file here",
+      "orClick": "or click to choose",
+      "imported": "imported",
+      "skipped": "skipped",
+      "errors": "error(s)",
+      "seeErrors": "See errors"
     }
   },
+  "apiKeys": {
+    "title": "Manage my API keys",
+    "description": "Use these keys to authenticate requests to our public API.",
+    "nameRequired": "Please enter a name for the key.",
+    "successGenerated": "Key generated successfully!",
+    "errorGenerate": "Error while generating the key.",
+    "errorConnection": "Connection error.",
+    "confirmDelete": "Are you sure you want to delete this key? It will stop working immediately.",
+    "successDeleted": "Key deleted permanently.",
+    "errorDelete": "Error while deleting.",
+    "copied": "Key copied to clipboard!",
+    "placeholderName": "Key name (e.g. My WordPress site)",
+    "generating": "Generating…",
+    "createButton": "Create key",
+    "activeKeysTitle": "My active keys",
+    "emptyList": "You do not have any API keys yet.",
+    "copy": "Copy",
+    "delete": "Delete",
+    "createdOn": "Created: {{date}}",
+    "docWhatTitle": "What is this key for?",
+    "docWhatBody": "This key acts like a secret password. It lets other sites (your showcase site, a blog, or a partner app) connect securely to our platform to fetch show information automatically.",
+    "docHowTitle": "How do I use it?",
+    "docHowRegular": "For regular users:",
+    "docHowRegularBody": "Copy your key above and paste it into the “API key” field of the tool you want to connect.",
+    "docHowDev": "For developers:",
+    "docHowDevBody": "Include this key in the HTTP header",
+    "docHowDevSuffix": "when you send requests.",
+    "docFooterBefore": "👉 Explore all available data in our",
+    "docFooterLink": "interactive documentation",
+    "docFooterAfter": "."
+  },
   "producer": {
+    "becomeProducer": {
+      "descriptionLabel": "Request description",
+      "descriptionPlaceholder": "Describe your activity and the type of shows you offer…",
+      "descriptionRequired": "A description is required for a producer account request.",
+      "pageTitle": "Become a producer",
+      "pageSubtitle": "Create your producer space to publish your shows.",
+      "successTitle": "Request sent!",
+      "successIntro": "Your",
+      "successProducerWord": "Producer",
+      "successIntroEnd": "account was created successfully.",
+      "successNote": "An administrator must validate it before you can sign in.",
+      "backHome": "Back to home",
+      "submitRequest": "Send my request",
+      "previewAlt": "Photo preview"
+    },
     "dashboard": {
       "errorLoad": "Unable to load data. Please try again later.",
       "title": "Producer Dashboard",
@@ -354,7 +516,15 @@
       "successAdd": "Session added!",
       "errorSave": "Error during saving. Please verify that the venue is properly defined.",
       "confirmDelete": "Delete this session?",
-      "errorDelete": "Deletion error"
+      "errorDelete": "Deletion error",
+      "alertPastDateTime": "You cannot schedule a session in the past.",
+      "successDelete": "Session deleted successfully.",
+      "priceType": {
+        "STANDARD": "Standard",
+        "REDUIT": "Reduced",
+        "VIP": "VIP",
+        "PREMIUM": "Premium"
+      }
     },
     "showForm": {
       "titleEdit": "Edit show",
@@ -371,5 +541,28 @@
       "submitUpdate": "Update",
       "submitCreate": "Create show"
     }
+  },
+  "legal": {
+    "title": "Legal Terms",
+    "lastUpdate": "Last update: March 30, 2026",
+    "cgu": {
+      "title": "1. Terms of Service",
+      "objectTitle": "Service Purpose",
+      "objectText": "SmartBooking is a platform for booking and purchasing show tickets online.",
+      "accountTitle": "User Account",
+      "accountText": "You are responsible for your account security. Any misuse may lead to suspension.",
+      "paymentTitle": "Secure Payment",
+      "paymentText": "Transactions are handled by Stripe. We do not store any banking details on our servers."
+    },
+    "privacy": {
+      "title": "2. Privacy Policy",
+      "dataTitle": "Data Collection",
+      "dataText": "We collect your name and email to manage your tickets and send confirmations.",
+      "rightsTitle": "Your Rights (GDPR)",
+      "rightsText": "You have the right to access, modify, and delete your data via your profile.",
+      "cookiesTitle": "Cookies",
+      "cookiesText": "We use technical cookies only for session and language management."
+    },
+    "contactText": "For any legal inquiries:"
   }
 }

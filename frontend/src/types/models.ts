@@ -62,6 +62,7 @@ export interface User {
     createdAt: string;
     isActive: boolean;
     roles?: Role[]; // Ajouté pour faciliter l'accès aux rôles de l'utilisateur
+    
 }
 
 export interface UserRegistrationDto {
@@ -72,6 +73,8 @@ export interface UserRegistrationDto {
   password: string;
   confirmPassword: string;
   langue: string;
+  /** Obligatoire pour l'inscription producteur (/become-producer). */
+  producerRequestDescription?: string;
 }
 
 export interface UserProfileDto {
@@ -85,6 +88,10 @@ export interface UserProfileDto {
   role: string;
   password?: string; // Optionnel lors d'une simple mise à jour
   confirmPassword?: string; // Optionnel lors d'une simple mise à jour
+  profilePicture?: string; 
+  profilePictureUrl?: string; // URL de la photo de profil (optionnel)
+  /** Texte de la demande producteur (admin). */
+  producerRequestDescription?: string;
 }
 
 /**
@@ -185,6 +192,7 @@ export interface Review {
   authorLogin: string;
   comment: string;
   stars: number;
+  showTitle: string;
   createdAt: string; // Les dates JSON arrivent en string ISO
 }
 

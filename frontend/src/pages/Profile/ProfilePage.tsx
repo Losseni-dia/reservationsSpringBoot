@@ -1,61 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom"; // 🚀 Importe Link
+import { Link } from "react-router-dom";
 import { useAuth } from "../../components/context/AuthContext";
-import { authApi } from "../../services/api";
-import { UserProfileDto } from "../../types/models";
 import styles from "./ProfilePage.module.css";
 
 const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
-  const { user, refreshProfile } = useAuth();
+  const { user } = useAuth();
 
-  const [formData, setFormData] = useState<Partial<UserProfileDto>>({
-    firstname: "",
-    lastname: "",
-    email: "",
-    langue: "",
-  });
-  const [message, setMessage] = useState({ type: "", text: "" });
-
-  useEffect(() => {
-    if (user) {
-      setFormData((prev) => ({
-        ...prev,
-        firstname: user.firstname || "",
-        lastname: user.lastname || "",
-        email: user.email || "",
-        langue: user.langue || "fr",
-      }));
-    }
-  }, [user]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage({ type: "", text: "" });
-    try {
-      await authApi.updateProfile(formData);
-      await refreshProfile();
-      setMessage({ type: "success", text: t("auth.profile.success") });
-    } catch (err: any) {
-      setMessage({ type: "error", text: err.message });
-    }
-  };
-
-  if (!user)
-    return (
-      <div className="text-white text-center mt-5">{t("auth.loading")}</div>
-    );
+  if (!user) {
+    return <div className="text-white text-center mt-5">{t("auth.loading")}</div>;
+  }
 
   return (
     <div className={styles.container}>
-      {/* 1. La bannière (Shortcut) */}
+      {/* La bannière pour les tickets */}
       <div className={styles.ticketShortcut}>
         <div className={styles.ticketContent}>
           <h3>{t("profile.myActiveTickets")}</h3>
@@ -66,72 +25,54 @@ const ProfilePage: React.FC = () => {
         </Link>
       </div>
 
+      {/* Les informations de l'utilisateur en lecture seule */}
       <div className={styles.card}>
         <h2 className="text-white mb-4">{t("auth.profile.title")}</h2>
-        {/* ... (Reste de ton formulaire inchangé) */}
-        {message.text && (
-          <div
-            className={
-              message.type === "success" ? styles.success : styles.error
-            }
-          >
-            {message.text}
+        <div className="text-center mb-4">
+          <div className={styles.avatarWrapper}>
+            <img 
+              src={user.profilePictureUrl} 
+              alt="Profil" 
+              className={styles.profileImage} 
+            />
           </div>
-        )}
-        <form onSubmit={handleSubmit} className={styles.form}>
-          {/* Tes champs firstname, lastname, email, language... */}
+        </div>
+        
+        <div className={styles.form}>
           <div className="row mb-3">
             <div className="col">
               <label className={styles.label}>{t("auth.firstname")}</label>
-              <input
-                className={styles.input}
-                type="text"
-                name="firstname"
-                value={formData.firstname}
-                onChange={handleChange}
-              />
+              {/* Affichage en simple texte (tu peux adapter les classes CSS selon tes besoins) */}
+              <p style={{ color: "white", fontSize: "1.1rem" }}>{user.firstname}</p>
             </div>
             <div className="col">
               <label className={styles.label}>{t("auth.lastname")}</label>
-              <input
-                className={styles.input}
-                type="text"
-                name="lastname"
-                value={formData.lastname}
-                onChange={handleChange}
-              />
+              <p style={{ color: "white", fontSize: "1.1rem" }}>{user.lastname}</p>
             </div>
           </div>
-          {/* ... email et select langue ... */}
+
           <div className="mb-3">
             <label className={styles.label}>{t("auth.email")}</label>
-            <input
-              className={styles.input}
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <p style={{ color: "white", fontSize: "1.1rem" }}>{user.email}</p>
           </div>
 
           <div className="mb-3">
             <label className={styles.label}>{t("auth.language")}</label>
-            <select
-              className={styles.input}
-              name="langue"
-              value={formData.langue}
-              onChange={handleChange}
-            >
-              <option value="fr">{t("auth.langFr")}</option>
-              <option value="en">{t("auth.langEn")}</option>
-              <option value="nl">{t("auth.langNl")}</option>
-            </select>
+            <p style={{ color: "white", fontSize: "1.1rem" }}>
+              {/* Petite astuce pour afficher le vrai nom de la langue au lieu de "fr" ou "en" */}
+              {user.langue === 'en' ? t("auth.langEn") : user.langue === 'nl' ? t("auth.langNl") : t("auth.langFr")}
+            </p>
           </div>
 
-          <button type="submit" className={styles.btn}>
-            {t("auth.profile.save")}
-          </button>
-        </form>
+          <div className={styles.editButtonContainer}>
+            <Link 
+              to="/profile/edit" 
+              className={`${styles.btn} ${styles.editProfileBtn}`}
+            >
+              Modifier mes informations
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

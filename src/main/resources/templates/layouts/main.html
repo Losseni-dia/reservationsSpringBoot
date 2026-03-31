@@ -4,11 +4,11 @@
 <head>
     <meta charset="utf-8">
     <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Projet Réservations</title>
-    <th:block layout:fragment="css"> </th:block>
+    <th:block layout:fragment="css"></th:block>
 </head>
 
 <body>
-    <div th:replace="fragments/header :: header">Header here</div>
+    <div th:replace="~{fragments/header :: header}">Header here</div>
     
     <div class="container">
         <div id="notification" layout:fragment="notification">
@@ -22,8 +22,10 @@
 
         <div layout:fragment="content">Main content will be inserted here.</div>
     </div>
-    <div th:replace="fragments/footer :: footer">&copy; 2026 The Static Templates</div>
-    <th:block layout:fragment="scripts"> </th:block>
+
+    <div th:replace="~{fragments/footer :: footer}">&copy; 2026 The Static Templates</div>
+
+    <th:block layout:fragment="scripts"></th:block>
 </body>
 
 </html>

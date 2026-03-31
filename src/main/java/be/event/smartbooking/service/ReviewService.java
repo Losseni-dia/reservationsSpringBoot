@@ -28,26 +28,42 @@ public class ReviewService {
      * 
      * @throws BusinessException 409 si l'utilisateur a déjà voté pour ce spectacle.
      */
-   @Transactional
-public Review addReview(Review review) {
-    // 1. "Fast-fail" : Vérification rapide pour éviter de solliciter la DB inutilement
-    if (reviewRepository.existsByUserIdAndShowId(review.getUser().getId(), review.getShow().getId())) {
-        throw new BusinessException("Vous avez déjà posté un avis sur ce spectacle.", HttpStatus.CONFLICT);
-    }
+    @Transactional
+    public Review addReview(Review review) {
+        // 0. Sécurité : Vérifier que les objets ne sont pas null avant d'appeler
+        // .getId()
+        if (review.getUser() == null || review.getShow() == null) {
+            log.error("Tentative d'ajout d'avis avec des données manquantes.");
+            throw new BusinessException("Données de l'avis incomplètes.", HttpStatus.BAD_REQUEST);
+        }
 
-    // 2. Par défaut : en attente de modération
-    review.setValidated(false);
+        // 1. "Fast-fail" : Vérification rapide pour éviter les doublons
+        if (reviewRepository.existsByUserIdAndShowId(review.getUser().getId(), review.getShow().getId())) {
+            throw new BusinessException("Vous avez déjà posté un avis sur ce spectacle.", HttpStatus.CONFLICT);
+        }
 
-    try {
-        log.info("Tentative de création d'avis pour le spectacle ID: {}", review.getShow().getId());
-        return reviewRepository.save(review);
-    } catch (DataIntegrityViolationException e) {
-        // 3. Gestion de la concurrence : Si une autre requête a inséré l'avis 
-        // juste entre notre check (étape 1) et notre sauvegarde (étape 2).
-        log.warn("Doublon détecté par la base de données (Race Condition) pour l'utilisateur {}", review.getUser().getId());
-        throw new BusinessException("Vous avez déjà posté un avis sur ce spectacle.", HttpStatus.CONFLICT);
+        // 2. Initialisation des valeurs par défaut
+        review.setValidated(false); // En attente de modération admin
+
+        // On s'assure d'avoir une date si elle n'a pas été fixée dans le contrôleur
+        if (review.getCreatedAt() == null) {
+            review.setCreatedAt(java.time.LocalDateTime.now());
+        }
+
+        try {
+            log.info("🚀 Création d'un avis pour le spectacle ID: {} par l'utilisateur: {}",
+                    review.getShow().getId(), review.getUser().getLogin());
+
+            return reviewRepository.save(review);
+
+        } catch (DataIntegrityViolationException e) {
+            // 3. Gestion de la concurrence (Race Condition)
+            // Si deux clics rapides surviennent, la contrainte unique de la DB nous sauve
+            // ici
+            log.warn("Doublon détecté par la base de données pour l'utilisateur ID: {}", review.getUser().getId());
+            throw new BusinessException("Vous avez déjà posté un avis sur ce spectacle.", HttpStatus.CONFLICT);
+        }
     }
-}
 
     public List<Review> getValidatedReviewsByShow(Long showId) {
         return reviewRepository.findByShowIdAndValidatedTrueOrderByCreatedAtDesc(showId);
@@ -95,5 +111,14 @@ public Review addReview(Review review) {
                 .validatedReviews(reviewRepository.countByValidatedTrue())
                 .globalAverage(average != null ? average : 0.0) // Évite le null si pas d'avis
                 .build();
+    }
+
+    /**
+     * Récupère uniquement les avis en attente pour les spectacles d'un producteur
+     * précis.
+     */
+    public List<Review> getPendingReviewsForProducer(String producerLogin) {
+        log.info("Récupération des avis en attente pour le producteur : {}", producerLogin);
+        return reviewRepository.findByValidatedFalseAndShowProducerLoginOrderByCreatedAtDesc(producerLogin);
     }
 }

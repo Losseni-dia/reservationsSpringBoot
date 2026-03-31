@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAdminStats } from "../../../hooks/useAdminStats";
 import { userApi } from "../../../services/api";
+import { formatCurrency } from "../../../utils/format";
 import styles from "./AdminHome.module.css";
 import {
   HiUsers,
@@ -16,7 +17,7 @@ import {
 } from "react-icons/hi";
 
 const AdminHome = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { stats, loading, error, retry } = useAdminStats();
   const [pendingCount, setPendingCount] = useState(0);
 
@@ -140,7 +141,9 @@ const AdminHome = () => {
             <HiCurrencyDollar />
           </div>
           <p className={styles.statNumber}>
-            {loading ? "..." : stats.reviewStats?.totalRevenue || 0} €
+            {loading
+              ? "..."
+              : formatCurrency(stats.totalRevenue, i18n.language)}
           </p>
           <h2>{t("admin.home.statTotalRevenue")}</h2>
         </div>

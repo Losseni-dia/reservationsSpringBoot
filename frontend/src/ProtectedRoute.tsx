@@ -21,14 +21,27 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children 
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // Vérification des rôles (si spécifiés)
+    // Vérification des rôles
     if (allowedRoles && allowedRoles.length > 0) {
-        // Note: Assurez-vous que votre UserProfileDto contient bien une propriété 'role'
-        // @ts-ignore: Suppression de l'erreur TS potentielle si le type n'est pas encore à jour
-        if (!allowedRoles.includes(user.role)) {
-            return <Navigate to="/forbidden" replace />;
-        }
+    // .trim() enlève les espaces invisibles, .toUpperCase() uniformise
+    const userRole = user?.role?.trim().toUpperCase(); 
+    
+    // On compare les rôles
+    const hasAccess = allowedRoles.some(role => {
+        const requiredRole = role.trim().toUpperCase();
+        return requiredRole === userRole;
+    });
+
+    // Debugging (À supprimer une fois que ça marche)
+    if (!hasAccess) {
+        console.warn(`Accès refusé ! Rôle utilisateur: "${userRole}", Rôles requis:`, allowedRoles);
     }
+
+    if (!hasAccess) {
+        return <Navigate to="/forbidden" replace />;
+    }
+
+}
 
     return children ? <>{children}</> : <Outlet />;
 };

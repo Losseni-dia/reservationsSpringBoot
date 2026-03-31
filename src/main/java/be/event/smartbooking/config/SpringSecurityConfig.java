@@ -2,6 +2,8 @@ package be.event.smartbooking.config;
 
 import be.event.smartbooking.service.ApiKeyService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +21,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SpringSecurityConfig {
+
+        private static final Logger log = LoggerFactory.getLogger(SpringSecurityConfig.class);
 
         @Autowired
         private ApiKeyService apiKeyService;
@@ -45,7 +49,11 @@ public class SpringSecurityConfig {
                                                 // 1. Accès publics (Consultation)
                                                 .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/artists/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/reviews/show/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/artist-types/**").permitAll()
+                                                // Session "probe" : le contrôleur renvoie un corps vide si non connecté
+                                                .requestMatchers(HttpMethod.GET, "/api/users/profile").permitAll()
                                                 .requestMatchers("/api/rss").permitAll()
                                                 .requestMatchers("/api/webhooks/**", "/api/stripe/webhook").permitAll()
                                                 .requestMatchers("/error").permitAll()
@@ -67,7 +75,13 @@ public class SpringSecurityConfig {
                                                 .hasAnyRole("admin", "ADMIN", "affiliate", "AFFILIATE", "PRODUCER",
                                                                 "producer")
 
-                                                // 5. API Publique (Ton travail - nécessite clé ou session)
+                                                // Évite 401 sur GET / (navigateur), favicon, et catalogue B2B
+                                                // (PublicApiController = GET uniquement). Les GET /api/public/** sans
+                                                // session ni X-API-KEY ne doivent pas boucler en 401 (Swagger UI, etc.).
+                                                .requestMatchers(HttpMethod.GET, "/", "/favicon.ico").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+
+                                                // 5. API Publique (écritures ou autres méthodes : clé + session)
                                                 .requestMatchers("/api/public/**").authenticated()
                                                 .requestMatchers("/api/users/keys/**").authenticated()
 
@@ -77,8 +91,10 @@ public class SpringSecurityConfig {
                                                 .hasAnyRole("admin", "ADMIN")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/users/**")
                                                 .hasAnyRole("admin", "ADMIN")
+                                                .requestMatchers(HttpMethod.PUT, "/api/reviews/**")
+                                                .hasAnyRole("ADMIN", "PRODUCER", "admin", "producer")
                                                 .requestMatchers(HttpMethod.DELETE, "/api/reviews/**")
-                                                .hasAnyRole("admin", "ADMIN")
+                                                .hasAnyRole("admin", "ADMIN", "PRODUCER", "producer")
 
                                                 // 7. Gestion des Shows & Représentations
                                                 .requestMatchers(HttpMethod.POST, "/api/shows/**")
@@ -98,6 +114,7 @@ public class SpringSecurityConfig {
                                                 .requestMatchers("/api/reservations/**").authenticated()
 
                                                 // Tout le reste
+                                                .requestMatchers("/uploads/**").permitAll()
                                                 .anyRequest().authenticated())
 
                                 .formLogin(form -> form
@@ -117,8 +134,12 @@ public class SpringSecurityConfig {
                                                 }))
 
                                 .exceptionHandling(ex -> ex
-                                                .authenticationEntryPoint((req, res, authEx) -> res.sendError(
-                                                                HttpServletResponse.SC_UNAUTHORIZED, "Non autorisé")))
+                                                .authenticationEntryPoint((req, res, authEx) -> {
+                                                        log.warn("401 Unauthorized (anonymous): {} {} — query={}",
+                                                                        req.getMethod(), req.getRequestURI(),
+                                                                        req.getQueryString());
+                                                        res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Non autorisé");
+                                                }))
 
                                 .logout(logout -> logout
                                                 .logoutUrl("/api/users/logout")
@@ -130,22 +151,23 @@ public class SpringSecurityConfig {
         }
 
         /**
-         * Configuration CORS pour autoriser le Frontend React (port 3000)
-         * à communiquer avec ce Backend (port 8080)
+         * CORS : origines localhost (tous ports) pour le front Vite/React en dev.
          */
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
 
-                // Autorise le port 3000 (React)
-                configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                // Dev : tous les ports localhost (3000, 3001, Vite 5173, etc.) avec cookies
+                configuration.setAllowedOriginPatterns(
+                                List.of("http://localhost:*", "http://127.0.0.1:*"));
 
                 // Autorise les méthodes HTTP courantes
-                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedMethods(
+                                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
                 // Autorise les headers nécessaires (dont X-API-KEY)
                 configuration.setAllowedHeaders(
-                                Arrays.asList("Content-Type", "Authorization", "X-API-KEY", "X-Requested-With"));
+                                List.of("Content-Type", "Authorization", "X-API-KEY", "X-Requested-With", "X-XSRF-TOKEN"));
 
                 // Autorise l'envoi des cookies (Session ID) pour rester connecté
                 configuration.setAllowCredentials(true);

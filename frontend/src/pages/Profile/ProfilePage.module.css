@@ -135,3 +135,34 @@
   color: #667eea;
 }
 
+.editButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+/* Style spécifique pour affiner le bouton d'édition */
+.editProfileBtn {
+  display: inline-block;
+  width: auto;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.avatarWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.profileImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* Rend l'image parfaitement ronde */
+  object-fit: cover;   /* Évite de déformer l'image */
+  border: 3px solid #fff; /* Un petit contour blanc pour le style */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}

@@ -89,6 +89,8 @@
 .actions {
     display: flex;
     gap: 0.5rem;
+    vertical-align: middle;
+    align-items: center;
 }
 
 .btnAction {
@@ -116,4 +118,26 @@
     text-align: center;
     color: #888;
     font-style: italic;
+}
+
+/* Description multi-lignes : largeur plafonnée pour ne pas étirer le tableau */
+.descriptionCell {
+    max-width: 350px;
+    vertical-align: top;
+    /* Même padding que .table td ; un peu plus d’air vertical sur blocs longs */
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+}
+
+.descriptionText {
+    display: block;
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.descriptionEmpty {
+    color: #666;
 }

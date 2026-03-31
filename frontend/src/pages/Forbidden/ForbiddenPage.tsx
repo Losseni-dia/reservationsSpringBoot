@@ -27,7 +27,7 @@ const ForbiddenPage: React.FC = () => {
       </button>
 
       <div style={{ marginTop: '50px', opacity: 0.3, fontSize: '12px', letterSpacing: '2px' }}>
-        SMARTBOOKING SYSTEM
+        {t("forbidden.systemTagline")}
       </div>
     </div>
   );

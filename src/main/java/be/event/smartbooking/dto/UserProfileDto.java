@@ -32,4 +32,10 @@ public class UserProfileDto {
     private String password; // nouveau mot de passe (optionnel)
 
     private String confirmPassword; // confirmation du mot de passe
+
+    private String profilePicture;
+    private String profilePictureUrl;
+
+    /** Texte de la demande producteur (liste admin des comptes en attente). */
+    private String producerRequestDescription;
 }

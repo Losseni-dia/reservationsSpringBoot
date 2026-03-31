@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './ExportButton.module.css';
 
 interface Props {
@@ -6,7 +7,9 @@ interface Props {
   label?: string;
 }
 
-const ExportButton: React.FC<Props> = ({ type, label = 'Exporter' }) => {
+const ExportButton: React.FC<Props> = ({ type, label }) => {
+  const { t } = useTranslation();
+  const exportLabel = label ?? t('admin.shows.export');
   const [loading, setLoading] = useState(false);
 
   const handleExport = async (format: 'csv' | 'json') => {
@@ -33,7 +36,7 @@ const ExportButton: React.FC<Props> = ({ type, label = 'Exporter' }) => {
       URL.revokeObjectURL(url);
     } catch (e) {
       console.error('Export failed:', e);
-      alert('Une erreur est survenue lors de l\'export.');
+      alert(t('admin.export.errorAlert'));
     } finally {
       setLoading(false);
     }
@@ -45,18 +48,18 @@ const ExportButton: React.FC<Props> = ({ type, label = 'Exporter' }) => {
         disabled={loading}
         onClick={() => handleExport('csv')}
         className={styles.btn}
-        title={`${label} au format CSV`}
+        title={t('admin.export.tooltipCsv', { label: exportLabel })}
       >
-        {loading ? '...' : `${label} CSV`}
+        {loading ? '...' : t('admin.export.buttonCsv', { label: exportLabel })}
       </button>
       <button
         type="button"
         disabled={loading}
         onClick={() => handleExport('json')}
         className={styles.btn}
-        title={`${label} au format JSON`}
+        title={t('admin.export.tooltipJson', { label: exportLabel })}
       >
-        {loading ? '...' : 'JSON'}
+        {loading ? '...' : t('admin.export.buttonJson')}
       </button>
     </div>
   );

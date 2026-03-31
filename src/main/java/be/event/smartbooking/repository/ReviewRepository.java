@@ -3,6 +3,7 @@ package be.event.smartbooking.repository;
 import be.event.smartbooking.model.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -12,6 +13,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // Pour l'affichage public
     List<Review> findByShowIdAndValidatedTrueOrderByCreatedAtDesc(Long showId);
 
+    @Query("SELECT r FROM Review r WHERE r.validated = false AND r.show.producer.login = :login ORDER BY r.createdAt DESC")
+    List<Review> findByValidatedFalseAndShowProducerLoginOrderByCreatedAtDesc(@Param("login") String login);
     // Pour la modération Admin
     List<Review> findByValidatedFalseOrderByCreatedAtDesc();
 
