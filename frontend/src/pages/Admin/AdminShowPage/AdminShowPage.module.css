@@ -174,18 +174,6 @@
   white-space: nowrap;
 }
 
-.editButton {
-  background-color: #1976d2;
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
-}
-
-.editButton:hover {
-  background-color: #1565c0;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
-}
-
 .confirmButton {
   background-color: #388e3c;
   color: #ffffff;

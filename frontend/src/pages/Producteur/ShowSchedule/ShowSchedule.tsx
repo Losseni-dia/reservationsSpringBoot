@@ -2,11 +2,30 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { showApi, representationApi, locationApi } from "../../../services/api";
-import { formatDate, formatTime, formatCurrency } from "../../../utils/format";
+import {
+  formatDate,
+  formatTime,
+  formatCurrency,
+  getCurrencySymbol,
+} from "../../../utils/format";
 import { TypePrice } from "../../../types/enums";
 import { Show, Location } from "../../../types/models";
 import styles from "./ShowSchedule.module.css";
 import Toast from "../../../components/ui/toast/Toast";
+import { HiCalendarDays } from "react-icons/hi2";
+
+/** Retire les zéros de tête avant un chiffre ("020" → "20") sans altérer "0.5". */
+function stripLeadingZerosBeforeDigits(raw: string): string {
+  return raw.replace(/^0+(?=\d)/, "");
+}
+
+/** Valeur affichée dans l’input → montant API (≥ 0). */
+function amountStrToNumber(s: string): number {
+  const t = s.trim();
+  if (t === "" || t === ".") return 0;
+  const n = parseFloat(t);
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
 
 const ShowSchedule: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -34,9 +53,9 @@ const ShowSchedule: React.FC = () => {
     when: "",
     locationId: "" as number | "",
     prices: [
-      { type: TypePrice.STANDARD, amount: 0 },
-      { type: TypePrice.REDUIT, amount: 0 },
-      { type: TypePrice.VIP, amount: 0 },
+      { type: TypePrice.STANDARD, amountStr: "0" },
+      { type: TypePrice.REDUIT, amountStr: "0" },
+      { type: TypePrice.VIP, amountStr: "0" },
     ],
   });
 
@@ -68,10 +87,32 @@ const ShowSchedule: React.FC = () => {
     loadInitialData();
   }, [id]);
 
-  const handlePriceChange = (index: number, value: number) => {
-    const updatedPrices = [...newRep.prices];
-    updatedPrices[index].amount = value;
-    setNewRep({ ...newRep, prices: updatedPrices });
+  const handlePriceInputChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    let v = e.target.value;
+    setNewRep((prev) => {
+      const prices = [...prev.prices];
+      if (v === "") {
+        prices[index] = { ...prices[index], amountStr: "" };
+        return { ...prev, prices };
+      }
+      v = stripLeadingZerosBeforeDigits(v);
+      prices[index] = { ...prices[index], amountStr: v };
+      return { ...prev, prices };
+    });
+  };
+
+  const handlePriceInputBlur = (index: number) => {
+    setNewRep((prev) => {
+      const prices = [...prev.prices];
+      const s = prices[index].amountStr.trim();
+      if (s === "" || s === ".") {
+        prices[index] = { ...prices[index], amountStr: "0" };
+      }
+      return { ...prev, prices };
+    });
   };
 
 const handleSave = async (e: React.FormEvent) => {
@@ -91,18 +132,23 @@ const handleSave = async (e: React.FormEvent) => {
   const now = new Date();
   if (selectedDate < now) {
     setToast({
-      msg: "Vous ne pouvez pas programmer une séance dans le passé",
+      msg: t("producer.schedule.alertPastDateTime"),
       type: "error",
     });
     return;
   }
 
+  const pricesPayload = newRep.prices.map((p) => ({
+    type: p.type,
+    amount: amountStrToNumber(p.amountStr),
+  }));
+
   setSubmitting(true);
   try {
     const payload = {
-      ...newRep,
-      locationId: Number(newRep.locationId),
       when: newRep.when.replace(" ", "T"),
+      locationId: Number(newRep.locationId),
+      prices: pricesPayload,
     };
 
     const createdRep = await representationApi.create(Number(id), payload);
@@ -114,7 +160,14 @@ const handleSave = async (e: React.FormEvent) => {
       });
     }
 
-    setNewRep((prev) => ({ ...prev, when: "" }));
+    setNewRep((prev) => ({
+      ...prev,
+      when: "",
+      prices: prev.prices.map((row) => ({
+        ...row,
+        amountStr: String(amountStrToNumber(row.amountStr)),
+      })),
+    }));
     setToast({ msg: t("producer.schedule.successAdd"), type: "success" });
   } catch (err) {
     setToast({ msg: t("producer.schedule.errorSave"), type: "error" });
@@ -129,7 +182,7 @@ const handleSave = async (e: React.FormEvent) => {
       await representationApi.delete(repId);
       await loadInitialData();
       // Utilise le toast ici aussi !
-      setToast({ msg: "Séance supprimée avec succès", type: "success" });
+      setToast({ msg: t("producer.schedule.successDelete"), type: "success" });
     } catch (err) {
       setToast({ msg: t("producer.schedule.errorDelete"), type: "error" });
     }
@@ -178,7 +231,8 @@ const handleSave = async (e: React.FormEvent) => {
                   <div className={styles.priceBadges}>
                     {rep.prices?.map((p) => (
                       <span key={p.id} className={styles.badge}>
-                        {p.type}: {formatCurrency(p.amount, i18n.language)}
+                        {t(`producer.schedule.priceType.${p.type}`)}:{" "}
+                        {formatCurrency(p.amount, i18n.language)}
                       </span>
                     ))}
                   </div>
@@ -222,32 +276,51 @@ const handleSave = async (e: React.FormEvent) => {
             </div>
 
             <div className={styles.field}>
-              <label>{t("producer.schedule.dateTimeLabel")}</label>
-              <input
-                type="datetime-local"
-                value={newRep.when}
-                min={minDateTime} 
-                onChange={(e) => setNewRep({ ...newRep, when: e.target.value })}
-                required
-              />
+              <label htmlFor="session-datetime">
+                {t("producer.schedule.dateTimeLabel")}
+              </label>
+              <div className={styles.dateTimeWrap}>
+                <span className={styles.dateTimeIcon} aria-hidden>
+                  <HiCalendarDays />
+                </span>
+                <input
+                  id="session-datetime"
+                  type="datetime-local"
+                  className={styles.dateTimeInput}
+                  value={newRep.when}
+                  min={minDateTime}
+                  onChange={(e) =>
+                    setNewRep({ ...newRep, when: e.target.value })
+                  }
+                  required
+                />
+              </div>
             </div>
 
             <div className={styles.priceGrid}>
-              <label className={styles.fullWidth}>
+              <label className={styles.priceGridTitle}>
                 {t("producer.schedule.priceGridLabel")}
               </label>
               {newRep.prices.map((p, index) => (
                 <div key={p.type} className={styles.priceInputGroup}>
-                  <span>{p.type}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={p.amount}
-                    onChange={(e) =>
-                      handlePriceChange(index, Number(e.target.value))
-                    }
-                  />
+                  <span className={styles.priceTypeLabel}>
+                    {t(`producer.schedule.priceType.${p.type}`)}
+                  </span>
+                  <div className={styles.priceInputWrap}>
+                    <input
+                      type="number"
+                      min={0}
+                      step={0.5}
+                      className={styles.priceInput}
+                      value={p.amountStr}
+                      onChange={(e) => handlePriceInputChange(index, e)}
+                      onBlur={() => handlePriceInputBlur(index)}
+                      aria-label={`${t(`producer.schedule.priceType.${p.type}`)} (${getCurrencySymbol(i18n.language)})`}
+                    />
+                    <span className={styles.currencySuffix} aria-hidden>
+                      {getCurrencySymbol(i18n.language)}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>

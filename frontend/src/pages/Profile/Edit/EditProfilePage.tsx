@@ -84,7 +84,7 @@ const EditProfilePage: React.FC = () => {
       // Redirige vers la page profil en lecture seule avec un message de succès
       navigate("/profile", { state: { message: t("auth.profile.success") } });
     } catch (err: any) {
-      setMessage({ type: "error", text: err.message || "Une erreur est survenue" });
+      setMessage({ type: "error", text: err.message || t("auth.profile.updateError") });
     } finally {
       setIsLoading(false);
     }
@@ -98,11 +98,11 @@ const EditProfilePage: React.FC = () => {
         {/* Lien de retour */}
         <div className={styles.backLinkContainer}>
             <Link to="/profile" className={styles.backLink}>
-              ← Retour au profil
+              {t("auth.profile.backToProfile")}
             </Link>
         </div>
 
-        <h2 className={styles.title}>Modifier mon profil</h2>
+        <h2 className={styles.title}>{t("auth.profile.editTitle")}</h2>
         
         {message.text && (
           <div className={message.type === "success" ? styles.success : styles.error}>
@@ -120,11 +120,11 @@ const EditProfilePage: React.FC = () => {
             >
             <img 
                 src={previewUrl || `https://ui-avatars.com/api/?name=${formData.firstname}+${formData.lastname}&background=random`} 
-                alt="Profil" 
+                alt={t("auth.profile.avatarAlt")}
                 className={styles.avatarImage} 
             />
               <div className={styles.avatarOverlay}>
-                <span>📷 Modifier</span>
+                <span>{t("auth.profile.changePhoto")}</span>
               </div>
             </div>
             
@@ -191,7 +191,7 @@ const EditProfilePage: React.FC = () => {
           </div>
 
           <button type="submit" className={styles.btn} disabled={isLoading}>
-            {isLoading ? "Chargement..." : t("auth.profile.save")}
+            {isLoading ? t("auth.loading") : t("auth.profile.save")}
           </button>
         </form>
       </div>

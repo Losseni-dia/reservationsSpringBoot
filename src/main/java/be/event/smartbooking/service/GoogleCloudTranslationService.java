@@ -50,12 +50,14 @@ public class GoogleCloudTranslationService {
             return Optional.of("");
         }
         if (apiKey.isBlank()) {
-            log.debug("Google Translation skipped: API key not set (set GOOGLE_TRANSLATION_API_KEY)");
+            log.warn(
+                    "Google Translation indisponible : clé API absente. Définissez la propriété google.cloud.translation.api-key "
+                            + "ou la variable d'environnement GOOGLE_TRANSLATION_API_KEY.");
             return Optional.empty();
         }
         String target = targetLanguageCode != null ? targetLanguageCode.trim() : "";
         if (target.isEmpty()) {
-            log.debug("Google Translation skipped: target language code is required");
+            log.warn("Google Translation indisponible : code langue cible vide ou manquant.");
             return Optional.empty();
         }
 
@@ -86,9 +88,14 @@ public class GoogleCloudTranslationService {
                 }
             }
         } catch (Exception e) {
-            log.warn("Google Translation request failed: {}", e.getMessage());
+            log.error("Erreur API de traduction (Google Cloud Translation) : ", e);
+            return Optional.empty();
         }
 
+        log.warn(
+                "Google Translation : réponse vide ou format inattendu (URL={}, target={}). Vérifier la clé, les quotas et la réponse JSON.",
+                apiUrl,
+                target);
         return Optional.empty();
     }
 

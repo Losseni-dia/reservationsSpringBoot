@@ -19,7 +19,14 @@
     "footer": {
       "allRightsReserved": "All rights reserved.",
       "privacy": "Privacy",
-      "terms": "Terms of Use"
+      "terms": "Terms of Use",
+      "brandName": "SmartBooking",
+      "socialFb": "FB",
+      "socialIg": "IG",
+      "socialTw": "TW",
+      "rssSubscribeTitle": "Subscribe to the RSS feed",
+      "rssLink": "RSS feed",
+      "developers": "API & Developers"
     }
   },
   "home": {
@@ -75,7 +82,60 @@
   "forbidden": {
     "title": "Access Denied",
     "message": "Sorry, you do not have the required permissions to access this page.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "systemTagline": "SMARTBOOKING SYSTEM"
+  },
+  "developer": {
+    "title": "{{brand}} API: getting started",
+    "subtitle": "New to APIs? Here is how to connect your website, blog, or app to our shows database in minutes.",
+    "sectionWhatTitle": "What is it for?",
+    "sectionWhatIntro": "An API is a bridge between our site and yours. Your tools can read our data in real time. Here are three examples:",
+    "uc1Title": "No more double entry (theatres and companies)",
+    "uc1Body": "Got a WordPress site? Instead of copying tour dates manually on your site and on {{brand}}, the API lets your site read our calendar. Change a date on {{brand}} and it updates on your site.",
+    "uc2Title": "Enrich your pages (publishers and bloggers)",
+    "uc2Before": "Writing about a play? Use our API to show a small ",
+    "uc2Em": "\"Now playing\"",
+    "uc2After": " widget so readers know which theatres are hosting it.",
+    "uc3Title": "Build real projects (student developers)",
+    "uc3Body": "Tired of Lorem Ipsum for assignments? Use our API for apps with real cultural data (schedules, venue maps…) and strengthen your portfolio.",
+    "ucEtc": "etc.",
+    "tutorialTitle": "Quick start tutorial",
+    "tutorialIntro": "To query our server you cannot just open the URL in a browser: you must prove you are allowed. Follow these three steps:",
+    "step1Title": "Generate your secret key",
+    "step1P1": "This key is your passport. Never share it publicly (e.g. on GitHub).",
+    "step1LoginBefore": "👉 Please ",
+    "step1LoginBold": "log in",
+    "step1LoginAfter": " to your account to generate a key.",
+    "step1LoggedBefore": "Great ",
+    "step1LoggedAfter": ", you are signed in! Create your key now:",
+    "toggleHide": "Hide key manager",
+    "toggleShow": "Open API key manager",
+    "step2Title": "Make your first request (API call)",
+    "step2P1a": "To authenticate, add your key to the request header (",
+    "step2P1b": "). That header must be named ",
+    "step2P1c": ".",
+    "termHeaderHttp": "HTTP header",
+    "step2P2": "Pick the language that fits your project and copy the code:",
+    "codeBadgeFrontend": "Frontend",
+    "codeTitleJs": "JavaScript / React / Vue",
+    "codeBadgeTerminal": "Terminal",
+    "codeTitleCurl": "Quick test with cURL",
+    "codeBadgeBackend": "Backend",
+    "codeTitlePhp": "PHP (great for WordPress)",
+    "codeBadgeScripting": "Scripting",
+    "codeTitlePython": "Python (requests)",
+    "step3Title": "Explore the API dictionary (Swagger)",
+    "step3P1a": "You may wonder: ",
+    "step3Quote": "\"What are the exact URLs? What data will I get?\"",
+    "step3P1b": ".",
+    "step3P2a": "That is what ",
+    "step3P2b": " is for: a visual UI that lists our endpoints and lets you try them live. Here is how:",
+    "instr1": "1. Authorize: open Swagger from the link below. Top right, click the green \"Authorize\" button.",
+    "instr2": "2. Your key: a dialog opens. Paste your key (sk_…) in the field, click \"Authorize\", then close (\"Close\").",
+    "instr3": "3. Open an endpoint: click a row (e.g. GET /api/shows) to expand it.",
+    "instr4": "4. Try it: click \"Try it out\", then \"Execute\". The server response appears below.",
+    "linkSwagger": "Open Swagger",
+    "linkInteractiveDoc": "Open interactive documentation"
   },
   "auth": {
     "email": "Email",
@@ -114,6 +174,7 @@
       "submitLoading": "Creating...",
       "hasAccount": "Already have an account?",
       "signIn": "Log in",
+      "addPhoto": "Add a photo",
       "errorPasswordMismatch": "Passwords do not match.",
       "errorGeneric": "An error occurred during registration."
     },
@@ -151,7 +212,9 @@
     "noTickets": "You don't have any booked tickets yet.",
     "myActiveTickets": "My Active Tickets",
     "ticketDescription": "Show this QR code at the entrance of the venue.",
-    "viewAllTickets": "View all tickets"
+    "viewAllTickets": "View all tickets",
+    "referenceLabel": "REFERENCE",
+    "ticketTitleUnavailable": "Title unavailable"
   },
   "show": {
     "errorLoad": "Unable to load show details.",
@@ -187,6 +250,7 @@
     "errorReservation": "Error during reservation.",
     "loadingShow": "Loading show...",
     "title": "Book your tickets",
+    "selectTickets": "Select your tickets",
     "showLabel": "Show:",
     "chooseDate": "Choose a date",
     "noDateAvailable": "No date available",
@@ -228,7 +292,14 @@
       "activate": "✅ Activate",
       "empty": "No users found.",
       "confirmDelete": "⚠️ WARNING: Permanently delete user \"{{name}}\"?",
-      "errorDelete": "Error during deletion. The user may have linked data (reservations, etc.)."
+      "errorDelete": "Error during deletion. The user may have linked data (reservations, etc.).",
+      "errorToggleStatus": "Could not update account status. The display was reverted.",
+      "export": "Export",
+      "showImport": "📥 Import",
+      "hideImport": "✕ Close import",
+      "importTitle": "Bulk user import",
+      "importHint": "Required CSV columns: login, firstname, lastname, email, password",
+      "importZoneLabel": "Drop a .csv or .json file here"
     },
     "shows": {
       "errorLoad": "Unable to load shows.",
@@ -250,7 +321,10 @@
       "modalRevokeTitle": "Revoke?",
       "modalConfirmTitle": "Confirm?",
       "modalRevokeMessage": "Remove \"{{title}}\" from the public catalogue?",
-      "modalConfirmMessage": "Make \"{{title}}\" visible and bookable by customers?"
+      "modalConfirmMessage": "Make \"{{title}}\" visible and bookable by customers?",
+      "export": "Export",
+      "importHide": "Hide import",
+      "importShow": "Import shows"
     },
     "reviews": {
       "title": "Moderation of",
@@ -298,9 +372,90 @@
       "retry": "Retry",
       "empty": "No reservations yet.",
       "noValue": "—"
+    },
+    "pendingProducers": {
+      "colDescription": "DESCRIPTION",
+      "pageTitle": "Pending",
+      "pageTitleHighlight": "Producers",
+      "subtitle": "{{count}} request(s) awaiting validation",
+      "empty": "No pending producer requests.",
+      "confirmApprove": "Approve this producer account?",
+      "approveError": "Error while approving.",
+      "confirmReject": "Reject and permanently delete the request from \"{{name}}\"?",
+      "rejectIdFallback": "ID {{id}}",
+      "loadError": "Unable to load requests.",
+      "colId": "ID",
+      "approveButton": "Approve",
+      "approveTitle": "Approve registration",
+      "rejectButton": "Reject",
+      "rejectTitle": "Reject and delete the request"
+    },
+    "export": {
+      "errorAlert": "An error occurred while exporting.",
+      "tooltipCsv": "{{label}} (CSV)",
+      "tooltipJson": "{{label}} (JSON)",
+      "buttonCsv": "{{label}} CSV",
+      "buttonJson": "JSON"
+    },
+    "importZone": {
+      "formatError": "Unsupported file format. Use CSV or JSON.",
+      "importFailed": "Import failed",
+      "loading": "Importing…",
+      "dropText": "Drop a CSV or JSON file here",
+      "orClick": "or click to choose",
+      "imported": "imported",
+      "skipped": "skipped",
+      "errors": "error(s)",
+      "seeErrors": "See errors"
     }
   },
+  "apiKeys": {
+    "title": "Manage my API keys",
+    "description": "Use these keys to authenticate requests to our public API.",
+    "nameRequired": "Please enter a name for the key.",
+    "successGenerated": "Key generated successfully!",
+    "errorGenerate": "Error while generating the key.",
+    "errorConnection": "Connection error.",
+    "confirmDelete": "Are you sure you want to delete this key? It will stop working immediately.",
+    "successDeleted": "Key deleted permanently.",
+    "errorDelete": "Error while deleting.",
+    "copied": "Key copied to clipboard!",
+    "placeholderName": "Key name (e.g. My WordPress site)",
+    "generating": "Generating…",
+    "createButton": "Create key",
+    "activeKeysTitle": "My active keys",
+    "emptyList": "You do not have any API keys yet.",
+    "copy": "Copy",
+    "delete": "Delete",
+    "createdOn": "Created: {{date}}",
+    "docWhatTitle": "What is this key for?",
+    "docWhatBody": "This key acts like a secret password. It lets other sites (your showcase site, a blog, or a partner app) connect securely to our platform to fetch show information automatically.",
+    "docHowTitle": "How do I use it?",
+    "docHowRegular": "For regular users:",
+    "docHowRegularBody": "Copy your key above and paste it into the “API key” field of the tool you want to connect.",
+    "docHowDev": "For developers:",
+    "docHowDevBody": "Include this key in the HTTP header",
+    "docHowDevSuffix": "when you send requests.",
+    "docFooterBefore": "👉 Explore all available data in our",
+    "docFooterLink": "interactive documentation",
+    "docFooterAfter": "."
+  },
   "producer": {
+    "becomeProducer": {
+      "descriptionLabel": "Request description",
+      "descriptionPlaceholder": "Describe your activity and the type of shows you offer…",
+      "descriptionRequired": "A description is required for a producer account request.",
+      "pageTitle": "Become a producer",
+      "pageSubtitle": "Create your producer space to publish your shows.",
+      "successTitle": "Request sent!",
+      "successIntro": "Your",
+      "successProducerWord": "Producer",
+      "successIntroEnd": "account was created successfully.",
+      "successNote": "An administrator must validate it before you can sign in.",
+      "backHome": "Back to home",
+      "submitRequest": "Send my request",
+      "previewAlt": "Photo preview"
+    },
     "dashboard": {
       "errorLoad": "Unable to load data. Please try again later.",
       "title": "Producer Dashboard",
@@ -361,7 +516,15 @@
       "successAdd": "Session added!",
       "errorSave": "Error during saving. Please verify that the venue is properly defined.",
       "confirmDelete": "Delete this session?",
-      "errorDelete": "Deletion error"
+      "errorDelete": "Deletion error",
+      "alertPastDateTime": "You cannot schedule a session in the past.",
+      "successDelete": "Session deleted successfully.",
+      "priceType": {
+        "STANDARD": "Standard",
+        "REDUIT": "Reduced",
+        "VIP": "VIP",
+        "PREMIUM": "Premium"
+      }
     },
     "showForm": {
       "titleEdit": "Edit show",

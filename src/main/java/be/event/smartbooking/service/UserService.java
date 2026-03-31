@@ -82,6 +82,14 @@ public void registerFromDto(UserRegistrationDto dto) {
         throw new BusinessException("Cet email est déjà utilisé", HttpStatus.CONFLICT);
     }
 
+    String roleToAssign = (dto.getRole() == null || dto.getRole().isBlank()) ? "member" : dto.getRole();
+    if ("producer".equalsIgnoreCase(roleToAssign)) {
+        if (dto.getProducerRequestDescription() == null || dto.getProducerRequestDescription().isBlank()) {
+            throw new BusinessException("La description de la demande est obligatoire pour un compte producteur",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
     User user = new User();
     user.setFirstname(dto.getFirstname());
     user.setLastname(dto.getLastname());
@@ -90,9 +98,11 @@ public void registerFromDto(UserRegistrationDto dto) {
     user.setLangue(dto.getLangue());
     user.setPassword(passwordEncoder.encode(dto.getPassword()));
     user.setProfilePicture(dto.getProfilePicture());
-    // 2. LOGIQUE DU RÔLE PAR DÉFAUT
-    // Si le DTO ne contient pas de rôle, on impose "Membre"
-    String roleToAssign = (dto.getRole() == null || dto.getRole().isBlank()) ? "member" : dto.getRole();
+    if ("producer".equalsIgnoreCase(roleToAssign)) {
+        user.setProducerRequestDescription(dto.getProducerRequestDescription().trim());
+    } else {
+        user.setProducerRequestDescription(null);
+    }
 
     // 3. Gestion de l'approbation selon le rôle final
     if ("producer".equalsIgnoreCase(roleToAssign)) {
