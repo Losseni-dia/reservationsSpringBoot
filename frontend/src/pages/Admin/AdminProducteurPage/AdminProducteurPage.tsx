@@ -12,6 +12,9 @@ const AdminProducteurPage: React.FC = () => {
     const [pendingUsers, setPendingUsers] = useState<UserProfileDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [processingIds, setProcessingIds] = useState<number[]>([]);
+    
+
 
     const loadPendingUsers = async () => {
         setLoading(true);
@@ -31,13 +34,24 @@ const AdminProducteurPage: React.FC = () => {
         loadPendingUsers();
     }, []);
 
-    const handleApprove = async (id: number) => {
+const handleApprove = async (id: number) => {
+        // 1. On garde la TRADUCTION du Master
         if (!window.confirm(t("admin.pendingProducers.confirmApprove"))) return;
+
+        // 2. On garde TA LOGIQUE de rapidité
+        setProcessingIds(prev => [...prev, id]);
+
         try {
             await userApi.approve(id);
-            loadPendingUsers(); // Rafraîchir la liste
+            
+            // 3. On garde TON OPTIMISATION d'affichage instantané
+            setPendingUsers(prev => prev.filter(u => u.id !== id));
+            loadPendingUsers(); 
         } catch (e: any) {
+            // 4. On utilise la TRADUCTION du Master pour l'erreur
             alert(e.message || t("admin.pendingProducers.approveError"));
+        } finally {
+            setProcessingIds(prev => prev.filter(pid => pid !== id));
         }
     };
 
@@ -115,23 +129,31 @@ const AdminProducteurPage: React.FC = () => {
                                         )}
                                     </td>
                                     <td className={styles.actions}>
-                                        <button
-                                            type="button"
-                                            onClick={() => handleApprove(user.id)}
-                                            className={`${styles.btnAction} ${styles.btnApprove}`}
-                                            title={t("admin.pendingProducers.approveTitle")}
-                                        >
-                                            <HiCheckCircle />{" "}
-                                            {t("admin.pendingProducers.approveButton")}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => handleReject(user.id)}
-                                            className={`${styles.btnAction} ${styles.btnDelete}`}
-                                            title={t("admin.pendingProducers.rejectTitle")}
-                                        >
-                                            <HiTrash />{" "}
-                                            {t("admin.pendingProducers.rejectButton")}
+<button
+    type="button"
+    onClick={() => handleApprove(user.id)}
+    className={`${styles.btnAction} ${styles.btnApprove}`}
+    disabled={processingIds.includes(user.id)}
+    title={t("admin.pendingProducers.approveTitle")}
+>
+    {processingIds.includes(user.id) ? (
+        t("admin.common.processing") || "Traitement..."
+    ) : (
+        <>
+            <HiCheckCircle /> {t("admin.pendingProducers.approveButton")}
+        </>
+    )}
+</button>
+
+<button
+    type="button"
+    onClick={() => handleReject(user.id)}
+    className={`${styles.btnAction} ${styles.btnDelete}`}
+    disabled={processingIds.includes(user.id)}
+    title={t("admin.pendingProducers.rejectTitle")}
+>
+    <HiTrash /> {t("admin.pendingProducers.rejectButton")}
+</button>
                                         </button>
                                     </td>
                                 </tr>

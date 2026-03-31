@@ -12,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -66,7 +67,7 @@ public class EmailService {
 
         sendHtmlMail(user.getEmail(), subject, html);
     }
-
+    @Async
     public void sendAccountActivatedMail(User user, Locale locale) {
         if (locale == null) locale = Locale.FRENCH;
         String firstName = user.getFirstname() != null ? user.getFirstname() : user.getLogin();
@@ -119,7 +120,6 @@ public class EmailService {
 
         sendHtmlMail(user.getEmail(), subject, html);
     }
-
     private void sendHtmlMail(String to, String subject, String html) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
