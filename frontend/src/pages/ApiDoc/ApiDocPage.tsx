@@ -5,7 +5,7 @@ import styles from "./ApiDocPage.module.css";
 
 const ApiDocPage: React.FC = () => {
   return (
-    /* On ne met QUE le contenu de la page, car le Layout global s'occupe du reste */
+   
     <div className={styles.swaggerSection}>
       <div className={styles.centeredContent}>
         <SwaggerUI

@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../components/context/AuthContext";
 import styles from "./DeveloperPage.module.css";
 import ApiKeyManager from "../../components/apikeymanager/ApiKeyManager";
-import { Link } from "react-router-dom";
 import {
   codeExampleCurlBefore,
   codeExampleJs,
@@ -211,9 +210,7 @@ const DeveloperPage: React.FC = () => {
             >
               {t("developer.linkSwagger")}
             </a>
-            <Link to="/api-documentation" className={styles.docLinkBtn}>
-              {t("developer.linkInteractiveDoc")}
-            </Link>
+            
           </div>
         </div>
       </section>

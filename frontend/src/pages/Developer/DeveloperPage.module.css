@@ -85,20 +85,30 @@
 }
 
 .docLinkBtn {
-    display: inline-block;
+    display: block;        
+    width: 15rem;   
+    margin: 2rem auto;   
+    
+    /* Style de base */
     background-color: #0d6efd;
     color: white;
-    padding: 12px 24px;
-    border-radius: 4px;
+    padding: 14px 28px;   
+    border-radius: 8px;   
     text-decoration: none;
     font-weight: bold;
-    margin-top: 1rem;
-    transition: background-color 0.3s;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: all 0.3s ease;
+
 }
 
 .docLinkBtn:hover {
     background-color: #0b5ed7;
     color: white;
+    transform: translateY(-3px);           
+    box-shadow: 0 6px 12px rgba(13, 110, 253, 0.3);
 }
 
 .loginAlert {
@@ -109,7 +119,7 @@
     color: #ddd;
 }
 
-/* Nouvelles classes pour le tutoriel pas à pas */
+
 .step {
     display: flex;
     margin-bottom: 2rem;

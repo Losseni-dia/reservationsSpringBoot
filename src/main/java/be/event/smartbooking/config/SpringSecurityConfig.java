@@ -55,7 +55,7 @@ public class SpringSecurityConfig {
                                                 // Session "probe" : le contrôleur renvoie un corps vide si non connecté
                                                 .requestMatchers(HttpMethod.GET, "/api/users/profile").permitAll()
                                                 .requestMatchers("/api/rss").permitAll()
-                                                .requestMatchers("/api/webhooks/**").permitAll()
+                                                .requestMatchers("/api/webhooks/**", "/api/stripe/webhook").permitAll()
                                                 .requestMatchers("/error").permitAll()
                                                 .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
 
@@ -65,19 +65,17 @@ public class SpringSecurityConfig {
                                                                 "/api/users/forgot-password")
                                                 .permitAll()
 
-                                                // 3. Documentation Swagger (Ton travail)
+                                                // 3. Documentation Swagger
                                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
                                                                 "/swagger-ui.html")
                                                 .permitAll()
 
-                                                // 4. Import / Export (Leur travail)
+                                                // 4. Import / Export
                                                 .requestMatchers(HttpMethod.GET, "/api/admin/export/shows")
                                                 .hasAnyRole("admin", "ADMIN", "affiliate", "AFFILIATE", "PRODUCER",
                                                                 "producer")
 
-                                                // Évite 401 sur GET / (navigateur), favicon, et catalogue B2B
-                                                // (PublicApiController = GET uniquement). Les GET /api/public/** sans
-                                                // session ni X-API-KEY ne doivent pas boucler en 401 (Swagger UI, etc.).
+                                
                                                 .requestMatchers(HttpMethod.GET, "/", "/favicon.ico").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
 
