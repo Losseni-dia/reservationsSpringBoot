@@ -166,7 +166,10 @@
       "submitLoading": "Logging in...",
       "noAccount": "Don't have an account?",
       "signUp": "Sign up",
-      "errorCredentials": "Invalid credentials or server unavailable."
+      "errorCredentials": "Invalid credentials or server unavailable.",
+      "welcomeTitle": "Welcome to SmartBooking!",
+      "welcomeMessage": "Your registration is confirmed. You can now log in to your member area.",
+      "goToLogin": "Go to Login page"
     },
     "register": {
       "title": "Create an account",

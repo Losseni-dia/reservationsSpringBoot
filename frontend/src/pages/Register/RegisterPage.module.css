@@ -173,3 +173,82 @@
   font-size: 0.9rem;
   text-decoration: underline;
 }
+
+.passwordRules {
+    color: #888;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+/* Styles du Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+    background-color: #1f1f1f;
+    padding: 2.5rem;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    border: 1px solid #f5c518;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    animation: scaleUp 0.3s ease;
+}
+
+.modalIconContainer {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.modalTitle {
+    color: #f5c518;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.modalMessage {
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.modalButton {
+    background-color: #f5c518;
+    color: #000;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+.modalButton:hover {
+    transform: scale(1.02);
+    background-color: #e0b10d;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

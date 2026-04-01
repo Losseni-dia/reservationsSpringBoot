@@ -166,7 +166,10 @@
       "submitLoading": "Bezig met inloggen...",
       "noAccount": "Nog geen account?",
       "signUp": "Registreren",
-      "errorCredentials": "Ongeldige gegevens of server niet beschikbaar."
+      "errorCredentials": "Ongeldige gegevens of server niet beschikbaar.",
+      "welcomeTitle": "Welkom bij SmartBooking!",
+      "welcomeMessage": "Uw registratie is bevestigd. U kunt nu inloggen op uw ledengedeelte.",
+      "goToLogin": "Ga naar de inlogpagina"
     },
     "register": {
       "title": "Account aanmaken",

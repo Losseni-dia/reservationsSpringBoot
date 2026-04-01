@@ -1,36 +1,40 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { authApi } from '../../services/api';
-import { useAuth } from '../../components/context/AuthContext';
-import { UserRegistrationDto } from '../../types/models';
-import styles from './RegisterPage.module.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { authApi } from "../../services/api";
+import { UserRegistrationDto } from "../../types/models";
+import styles from "./RegisterPage.module.css";
 import PasswordInput from "../../components/ui/passwordinput/PasswordInput";
 
 const RegisterPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState<UserRegistrationDto>({
-    login: '',
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    langue: 'fr'
+    login: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    langue: "fr",
   });
-  const { login } = useAuth();
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -41,63 +45,62 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError(t('auth.register.errorPasswordMismatch'));
+      setError(t("auth.register.errorPasswordMismatch"));
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Le backend (UserRegistrationDto) a besoin de confirmPassword pour la validation
-      // On envoie donc tout l'objet formData (qui contient confirmPassword et langue)
-      await authApi.register(formData as any);
       const submitData = new FormData();
-      submitData.append('login', formData.login);
-      submitData.append('firstname', formData.firstname);
-      submitData.append('lastname', formData.lastname);
-      submitData.append('email', formData.email);
-      submitData.append('password', formData.password);
-      submitData.append('confirmPassword', formData.confirmPassword);
-      submitData.append('langue', formData.langue);
+      submitData.append("login", formData.login);
+      submitData.append("firstname", formData.firstname);
+      submitData.append("lastname", formData.lastname);
+      submitData.append("email", formData.email);
+      submitData.append("password", formData.password);
+      submitData.append("confirmPassword", formData.confirmPassword);
+      submitData.append("langue", formData.langue);
+
       if (selectedFile) {
-        submitData.append('profilePictureFile', selectedFile);
+        submitData.append("profilePictureFile", selectedFile);
       }
+
+      // Appel unique à l'API
       await authApi.register(submitData as any);
 
-      // Connexion automatique et redirection vers l'accueil (géré par login)
-      await login({
-        login: formData.login,
-        password: formData.password
-      });
+      // Affichage du modal de succès
+      setShowWelcomeModal(true);
     } catch (err: any) {
       console.error("Erreur d'inscription:", err);
-      
-      let errorMessage = t('auth.register.errorGeneric');
+      let errorMessage = t("auth.register.errorGeneric");
 
-      if (err === "UNAUTHORIZED") {
-        errorMessage = t('auth.register.errorGeneric');
-      } else if (typeof err === 'string') {
-        errorMessage = err;
-      } else if (err && err.message) {
+      if (err && err.message) {
         errorMessage = err.message;
-        try { 
-          const json = JSON.parse(errorMessage); 
-          // Gestion des erreurs de validation Spring Boot (ex: mot de passe faible)
-          if (json.errors && Array.isArray(json.errors) && json.errors.length > 0) {
+        try {
+          const json = JSON.parse(errorMessage);
+          if (
+            json.errors &&
+            Array.isArray(json.errors) &&
+            json.errors.length > 0
+          ) {
             errorMessage = json.errors[0].defaultMessage;
           } else if (json.message) {
-            errorMessage = json.message; 
+            errorMessage = json.message;
           }
-        } catch(e) {}
+        } catch (e) {}
       }
-
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowWelcomeModal(false);
+    navigate("/login");
   };
 
   return (
@@ -117,7 +120,11 @@ const RegisterPage: React.FC = () => {
           <div className={styles.photoUploadSection}>
             <div className={styles.avatarPreview}>
               {previewUrl ? (
-                <img src={previewUrl} alt="Preview" className={styles.previewImg} />
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className={styles.previewImg}
+                />
               ) : (
                 <div className={styles.placeholderIcon}>👤</div>
               )}
@@ -130,11 +137,10 @@ const RegisterPage: React.FC = () => {
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className={styles.fileInput}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
             />
           </div>
-          
+
           <div className={styles.row}>
             <div className={styles.fieldGroup}>
               <label className={styles.label}>{t("auth.firstname")}</label>
@@ -213,9 +219,7 @@ const RegisterPage: React.FC = () => {
                 placeholder={t("auth.placeholderPassword")}
                 required
               />
-              <small
-                style={{ color: "#888", fontSize: "0.75rem", marginTop: "4px" }}
-              >
+              <small className={styles.passwordRules}>
                 {t("auth.passwordRules")}
               </small>
             </div>
@@ -250,6 +254,27 @@ const RegisterPage: React.FC = () => {
           </Link>
         </p>
       </div>
+
+      {/* MODAL DE BIENVENUE */}
+      {showWelcomeModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalIconContainer}>
+              <span className={styles.modalIcon}>🎉</span>
+            </div>
+            <h3 className={styles.modalTitle}>
+              {t("auth.register.welcomeTitle") || "Bienvenue !"}
+            </h3>
+            <p className={styles.modalMessage}>
+              {t("auth.register.welcomeMessage") ||
+                `Félicitations ${formData.firstname}, votre compte a été créé avec succès.`}
+            </p>
+            <button className={styles.modalButton} onClick={handleCloseModal}>
+              {t("auth.register.goToLogin") || "Se connecter maintenant"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

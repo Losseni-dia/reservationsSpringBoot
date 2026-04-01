@@ -64,7 +64,7 @@ function App() {
 
 
               {/* --- ROUTES UTILISATEURS CONNECTÉS (Membres, Producteurs, Admins) --- */}
-              <Route element={<ProtectedRoute allowedRoles={['MEMBRE', 'producer', 'ADMIN']} />}>
+              <Route element={<ProtectedRoute allowedRoles={['MEMBER', 'producer', 'ADMIN']} />}>
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/edit" element={<EditProfilePage />} />
                 <Route path="/profile/tickets" element={<MyTickets />} />

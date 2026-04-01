@@ -172,7 +172,10 @@
       "signIn": "Se connecter",
       "addPhoto": "Ajouter une photo",
       "errorPasswordMismatch": "Les mots de passe ne correspondent pas.",
-      "errorGeneric": "Une erreur est survenue lors de l'inscription."
+      "errorGeneric": "Une erreur est survenue lors de l'inscription.",
+      "welcomeTitle": "Bienvenue chez SmartBooking !",
+      "welcomeMessage": "Votre inscription est confirmée. Vous pouvez maintenant vous connecter à votre espace membre.",
+      "goToLogin": "Aller à la page de connexion"
     },
     "profile": {
       "title": "Mon Profil",
