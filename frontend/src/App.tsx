@@ -65,8 +65,6 @@ function App() {
               <Route path="/become-producer" element={<BecomeProducer />} />
               <Route path="/terms" element={<TermsAndPrivacy />} />
               <Route path="/about" element={<About />} />
-              <Route path="/artists" element={<AdminArtistPage />} />
-              <Route path="/artists/:id" element={<ArtistProfile />} />
 
               {/* --- ROUTES UTILISATEURS CONNECTÉS (Membres, Producteurs, Admins) --- */}
               <Route
@@ -85,6 +83,8 @@ function App() {
                 />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-cancelled" element={<PaymentCancel />} />
+                <Route path="/artists" element={<AdminArtistPage />} />
+                <Route path="/artists/:id" element={<ArtistProfile />} />
               </Route>
 
               {/* --- ROUTES PRODUCTEURS --- */}

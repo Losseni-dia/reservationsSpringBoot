@@ -60,15 +60,18 @@ public class SpringSecurityConfig {
                                                 .requestMatchers("/uploads/**", "/css/**", "/js/**").permitAll()
 
                                                 //1. Permettre à tout le monde de chercher les artistes bilingues
-                                        
-                                                .requestMatchers(HttpMethod.GET, "/api/artists/search/fluent/*")
-                                                .permitAll()
 
                                                 // 2. Restreindre l'ajout d'une langue à l'ADMIN uniquement (Sécurité)
                                                 .requestMatchers(HttpMethod.POST, "/api/artists/*/languages")
                                                 .hasAnyRole("ADMIN", "admin")
 
-                                                .requestMatchers(HttpMethod.GET, "/api/languages").permitAll()
+                                                // B. Tout utilisateur doit être CONNECTÉ pour voir les artistes et
+                                                // leurs détails
+                                                .requestMatchers(HttpMethod.GET, "/api/artists/**").authenticated()
+
+                                                // C. Tout utilisateur doit être CONNECTÉ pour charger la liste
+                                                // déroulante des langues
+                                                .requestMatchers(HttpMethod.GET, "/api/languages").authenticated()
 
                                                 // 2. Authentification & Mot de passe
                                                 .requestMatchers("/api/users/login", "/api/users/register").permitAll()
