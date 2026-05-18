@@ -3,6 +3,7 @@ import { useAdminArtists } from "../../../hooks/useAdminArtists";
 import Loader from "../../../components/ui/loader/Loader";
 import AdminBackToDashboardButton from "../../../components/admin/AdminBackToDashboardButton";
 import styles from "./AdminArtistPage.module.css";
+import { Link } from "react-router-dom"; // 🎯 FIX 1 : Le bon import pour la navigation !
 
 export default function AdminArtistPage() {
   const { t } = useTranslation();
@@ -11,7 +12,9 @@ export default function AdminArtistPage() {
   if (loading) {
     return (
       <div className={styles.loaderContainer}>
-        <p className="text-light text-center mb-3">{t("admin.artists.loading")}</p>
+        <p className="text-light text-center mb-3">
+          {t("admin.artists.loading")}
+        </p>
         <Loader />
       </div>
     );
@@ -43,7 +46,9 @@ export default function AdminArtistPage() {
       <header className={styles.header}>
         <h1 className="mb-0">
           {t("admin.artists.title")}{" "}
-          <span className={styles.yellow}>{t("admin.artists.titleHighlight")}</span>
+          <span className={styles.yellow}>
+            {t("admin.artists.titleHighlight")}
+          </span>
         </h1>
         <p className="text-secondary mt-2 mb-0">
           {t("admin.artists.subtitle", { count: artists.length })}
@@ -58,12 +63,14 @@ export default function AdminArtistPage() {
               <th scope="col">{t("admin.artists.colFirstname")}</th>
               <th scope="col">{t("admin.artists.colLastname")}</th>
               <th scope="col">{t("admin.artists.colTypes")}</th>
+              <th scope="col">Actions</th>{" "}
+              {/* 🎯 FIX 2 : Le titre de la colonne reste ici dans le thead */}
             </tr>
           </thead>
           <tbody>
             {artists.length === 0 ? (
               <tr>
-                <td colSpan={4} className="text-center text-secondary py-5">
+                <td colSpan={5} className="text-center text-secondary py-5">
                   {t("admin.artists.empty")}
                 </td>
               </tr>
@@ -79,6 +86,14 @@ export default function AdminArtistPage() {
                     {artist.types?.length
                       ? artist.types.join(", ")
                       : t("admin.artists.noTypes")}
+                  </td>
+                  <td>
+                    <Link
+                      to={`/artists/${artist.id}`}
+                      className="btn btn-sm btn-outline-warning fw-bold"
+                    >
+                      👁️ Voir Profil
+                    </Link>
                   </td>
                 </tr>
               ))

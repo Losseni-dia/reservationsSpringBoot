@@ -1,17 +1,19 @@
 package be.event.smartbooking.model;
 
-public enum Language {
-    EN("Anglais"),
-    FR("Français"),
-    NL("Néerlandais");
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    private String description;
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "languages")
+public class Language {
 
-    private Language(String description) {
-        this.description = description;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public String getDescription() {
-        return this.description;
-    }
+    @Column(nullable = false, unique = true)
+    private String language;
 }

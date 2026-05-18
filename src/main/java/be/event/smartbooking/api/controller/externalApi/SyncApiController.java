@@ -24,7 +24,7 @@ public class SyncApiController {
     public ResponseEntity<?> triggerSync(@RequestParam(defaultValue = "20") int limit) {
         try {
             // On lance la synchronisation
-            int count = locationSyncService.syncLocations(limit);
+            int count = locationSyncService.syncLocations(limit, limit);
 
             return ResponseEntity.ok(Map.of(
                     "status", "success",

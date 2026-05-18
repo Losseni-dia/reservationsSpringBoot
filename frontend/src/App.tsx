@@ -40,11 +40,15 @@ import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
 import MyTickets from "./pages/Profile/My-ticket/MyTickets";
 import EditProfilePage from "./pages/Profile/Edit/EditProfilePage";
 import TermsAndPrivacy from "./pages/legal/TermsAndPrivacy";
+import ArtistProfile from "./pages/artist/ArtistProfile";
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
-        <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: "#141414" }}>
+        <div
+          className="d-flex flex-column min-vh-100"
+          style={{ backgroundColor: "#141414" }}
+        >
           <Header />
           <main className="flex-grow-1">
             <Routes>
@@ -60,39 +64,65 @@ function App() {
               <Route path="/forbidden" element={<ForbiddenPage />} />
               <Route path="/become-producer" element={<BecomeProducer />} />
               <Route path="/terms" element={<TermsAndPrivacy />} />
-                <Route path="/about" element={<About />} />
-
+              <Route path="/about" element={<About />} />
+              <Route path="/artists" element={<AdminArtistPage />} />
+              <Route path="/artists/:id" element={<ArtistProfile />} />
 
               {/* --- ROUTES UTILISATEURS CONNECTÉS (Membres, Producteurs, Admins) --- */}
-              <Route element={<ProtectedRoute allowedRoles={['MEMBER', 'producer', 'ADMIN']} />}>
+              <Route
+                element={
+                  <ProtectedRoute
+                    allowedRoles={["MEMBER", "producer", "ADMIN"]}
+                  />
+                }
+              >
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/edit" element={<EditProfilePage />} />
                 <Route path="/profile/tickets" element={<MyTickets />} />
-                <Route path="/reservation/:slug" element={<ReservationPage />} />
+                <Route
+                  path="/reservation/:slug"
+                  element={<ReservationPage />}
+                />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-cancelled" element={<PaymentCancel />} />
               </Route>
 
               {/* --- ROUTES PRODUCTEURS --- */}
-              <Route element={<ProtectedRoute allowedRoles={['producer']} />}>
-                <Route path="/producer/dashboard" element={<ProducerDashboard />} />
+              <Route element={<ProtectedRoute allowedRoles={["producer"]} />}>
+                <Route
+                  path="/producer/dashboard"
+                  element={<ProducerDashboard />}
+                />
                 <Route path="/producer/shows/add" element={<AddShow />} />
                 <Route path="/producer/shows/edit/:id" element={<EditShow />} />
                 <Route path="/producer/reviews" element={<AdminReviewPage />} />
               </Route>
 
               {/* --- ROUTES ADMINS --- */}
-              <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+              <Route
+                element={
+                  <ProtectedRoute allowedRoles={["ADMIN", "producer"]} />
+                }
+              >
                 <Route path="/admin" element={<AdminHome />} />
                 <Route path="/admin/users" element={<AdminUsersPage />} />
                 <Route path="/admin/shows" element={<AdminShowPage />} />
                 <Route path="/admin/shows/add" element={<AddShow />} />
                 <Route path="/admin/shows/edit/:id" element={<EditShow />} />
-                <Route path="/admin/shows/:id/schedule" element={<ShowSchedule />} />
+                <Route
+                  path="/admin/shows/:id/schedule"
+                  element={<ShowSchedule />}
+                />
                 <Route path="/admin/locations" element={<LocationList />} />
                 <Route path="/admin/artists" element={<AdminArtistPage />} />
-                <Route path="/admin/reservations" element={<AdminReservationPage />} />
-                <Route path="/admin/pending-producers" element={<AdminProducteurPage />} />
+                <Route
+                  path="/admin/reservations"
+                  element={<AdminReservationPage />}
+                />
+                <Route
+                  path="/admin/pending-producers"
+                  element={<AdminProducteurPage />}
+                />
               </Route>
 
               {/* Catch-all pour les pages inexistantes */}

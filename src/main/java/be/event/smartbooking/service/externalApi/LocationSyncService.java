@@ -28,32 +28,45 @@ public class LocationSyncService {
     @Autowired
     private LocalityRepos localityRepository;
 
-    @Scheduled(cron = "0 0 3 1,16 * *")
+    // Déclenchement toutes les 60 secondes (1 minute)
+    @Scheduled(fixedRate = 60000)
     public void scheduledSync() {
-        log.info(">>> DÉMARRAGE DE LA SYNCHRONISATION AUTOMATIQUE (Bimensuelle)");
+        log.info(">>> DÉMARRAGE DE LA SYNCHRONISATION MINUTÉE (Objectif : +2)");
         try {
-            int added = syncLocations(10);
-            log.info(">>> SYNCHRONISATION TERMINÉE : {} nouveaux lieux ajoutés.", added);
+            // fetchLimit à 100 : on regarde les 100 premiers résultats de l'API
+            // maxToAdd à 2 : on s'arrête dès qu'on a inséré 2 nouveaux lieux
+            int added = syncLocations(100, 2);
+
+            if (added > 0) {
+                log.info(">>> SUCCESS : {} nouveaux lieux ajoutés. Nouveau total en base : {}",
+                        added, locationRepository.count());
+            } else {
+                log.info(">>> RAS : Aucun nouveau lieu trouvé dans les résultats analysés.");
+            }
         } catch (Exception e) {
-            log.error(">>> ERREUR lors de la synchronisation automatique : {}", e.getMessage());
+            log.error(">>> ERREUR lors de la synchronisation : {}", e.getMessage());
         }
     }
 
     /**
-     * Note: On enlève le @Transactional ici pour permettre de sauvegarder
-     * les lieux un par un même si l'un d'eux échoue.
+     * Synchronise les lieux avec une limite d'analyse et un quota d'insertion.
      */
-    public int syncLocations(int limit) {
-        LocationApiResponse response = locationClient.fetchAllVenues(limit);
+    public int syncLocations(int fetchLimit, int maxToAdd) {
+        LocationApiResponse response = locationClient.fetchAllVenues(fetchLimit);
         int addedCount = 0;
 
         if (response != null && response.getResults() != null) {
             for (ExternalLocationDTO dto : response.getResults()) {
 
-                // 1. Vérification du nom pour éviter les doublons métier
+                // 🛑 CONDITION CRUCIALE : On s'arrête si le quota de +2 est atteint
+                if (addedCount >= maxToAdd) {
+                    log.info(">>> Quota de {} ajouts atteint pour cette minute. Fin du batch.", maxToAdd);
+                    break;
+                }
+
+                // 1. Vérification du nom pour éviter les doublons
                 if (dto.getName() != null && !locationRepository.existsByDesignation(dto.getName())) {
 
-                    // --- SÉCURITÉ : Try-catch par élément pour éviter de bloquer tout l'import ---
                     try {
                         // Gestion de la localité
                         String cityName = (dto.getCity() != null) ? dto.getCity() : "Inconnu";
@@ -78,18 +91,17 @@ public class LocationSyncService {
                         loc.setWebsite(dto.getUrl());
                         loc.setLocality(city);
 
-                        // Sauvegarde individuelle
+                        // Sauvegarde
                         locationRepository.save(loc);
-                        addedCount++;
-                        log.info("Lieu ajouté avec succès : {}", dto.getName());
+                        addedCount++; // On incrémente notre compteur d'ajouts réussis
+                        log.info("[BATCH] Lieu ajouté : {}", dto.getName());
 
                     } catch (Exception e) {
-                        // Si une erreur d'ID (Duplicate Entry) survient, on log l'erreur et on passe au
-                        // suivant
                         log.error("Erreur technique lors de l'ajout de '{}' : {}", dto.getName(), e.getMessage());
                     }
                 } else if (dto.getName() != null) {
-                    log.info("Le lieu '{}' existe déjà (doublon ignoré).", dto.getName());
+                    // On ne fait rien si le lieu existe déjà, la boucle continue vers le suivant
+                    // pour essayer de trouver un lieu qui n'est pas encore en base.
                 }
             }
         }

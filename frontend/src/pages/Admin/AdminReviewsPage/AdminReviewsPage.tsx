@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { reviewApi } from "../../../services/api";
 import { Review } from "../../../types/models";
 import Loader from "../../../components/ui/loader/Loader";
-import AdminBackToDashboardButton from "../../../components/admin/AdminBackToDashboardButton";
 import { formatDate } from "../../../utils/format";
 import styles from "./AdminReviewPage.module.css";
+import ProdBackToDashboardButton from "../../../components/admin/prodButton/ProdBackToDashboardButton";
 
 const AdminReviewPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -50,7 +50,7 @@ const AdminReviewPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <AdminBackToDashboardButton />
+      <ProdBackToDashboardButton />
       <header className={styles.header}>
         <h1>
           {t("admin.reviews.title")}{" "}

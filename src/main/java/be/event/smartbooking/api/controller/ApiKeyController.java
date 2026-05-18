@@ -1,4 +1,4 @@
-package be.event.smartbooking.controller;
+package be.event.smartbooking.api.controller;
 
 import be.event.smartbooking.model.ApiKey;
 import be.event.smartbooking.model.User;

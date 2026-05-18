@@ -1,0 +1,113 @@
+.container {
+  background-color: #141414;
+  min-height: 100vh;
+  padding: 3rem 5%;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+}
+
+.profileCard {
+  background: #1f1f1f;
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 700px;
+  border: 1px solid #333;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.header {
+  border-left: 5px solid #f5c518;
+  padding-left: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.yellow {
+  color: #f5c518;
+}
+
+.subtitle {
+  color: #a0a0a0;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+.languageSection {
+  background: #262626;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.langList {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 2rem 0;
+}
+
+.langItem {
+  padding: 0.6rem;
+  border-bottom: 1px solid #333;
+}
+
+.noData {
+  color: #888;
+  font-style: italic;
+}
+
+.adminFormBox {
+  border-top: 2px dashed #444;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.adminFormBox h4 {
+  color: #f5c518;
+  margin-bottom: 1rem;
+}
+
+.formRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.select {
+  background: #141414;
+  color: white;
+  border: 1px solid #555;
+  padding: 10px;
+  border-radius: 6px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.btnSubmit {
+  background: #f5c518;
+  color: black;
+  border: none;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnSubmit:hover {
+  background: white;
+}
+
+.alert {
+  color: #f5c518;
+  background: rgba(245, 197, 24, 0.1);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
