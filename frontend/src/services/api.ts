@@ -1,6 +1,7 @@
 import {
   Artist,
   Show,
+  Tag,
   Location,
   Review,
   Reservation,
@@ -378,6 +379,29 @@ export const translationApi = {
     });
     const data = await res.json();
     return data.translatedText ?? text;
+  },
+};
+
+export const tagApi = {
+  getAll: async (): Promise<Tag[]> => {
+    const res = await secureFetch(`${API_BASE}/tags`);
+    return res.json();
+  },
+  searchByTag: async (keyword: string): Promise<{ total: number; keyword: string; shows: Show[] }> => {
+    const res = await secureFetch(`${API_BASE}/shows/search-by-tag?keyword=${encodeURIComponent(keyword)}`);
+    return res.json();
+  },
+  getShowsWithoutTag: async (tag: string): Promise<{ total: number; excludedTag: string; shows: Show[] }> => {
+    const res = await secureFetch(`${API_BASE}/shows/without-tag/${encodeURIComponent(tag)}`);
+    return res.json();
+  },
+  addTagToShow: async (showId: number, tagName: string): Promise<Tag> => {
+    const res = await secureFetch(`${API_BASE}/tags/shows/${showId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tag: tagName }),
+    });
+    return res.json();
   },
 };
 

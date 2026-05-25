@@ -41,6 +41,7 @@ import MyTickets from "./pages/Profile/My-ticket/MyTickets";
 import EditProfilePage from "./pages/Profile/Edit/EditProfilePage";
 import TermsAndPrivacy from "./pages/legal/TermsAndPrivacy";
 import ArtistProfile from "./pages/artist/ArtistProfile";
+import ShowsWithoutTagPage from "./pages/show/showsWithoutTag/ShowsWithoutTag";
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -65,6 +66,7 @@ function App() {
               <Route path="/become-producer" element={<BecomeProducer />} />
               <Route path="/terms" element={<TermsAndPrivacy />} />
               <Route path="/about" element={<About />} />
+              <Route path="/shows/without-tag/:tag" element={<ShowsWithoutTagPage />} />
 
               {/* --- ROUTES UTILISATEURS CONNECTÉS (Membres, Producteurs, Admins) --- */}
               <Route

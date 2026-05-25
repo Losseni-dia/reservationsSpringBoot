@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { showApi, reviewApi, IMAGE_STORAGE_BASE } from '../../../services/api';
+import { showApi, reviewApi, tagApi, IMAGE_STORAGE_BASE } from '../../../services/api';
 import { useAuth } from '../../../components/context/AuthContext';
 import { formatDate, formatDateTime, formatCurrency } from '../../../utils/format';
 import Loader from '../../../components/ui/loader/Loader';
@@ -20,6 +20,12 @@ const ShowDetailPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedRepIndex, setSelectedRepIndex] = useState(0);
+
+    // --- ÉTATS TAGS ---
+    const [newTag, setNewTag] = useState("");
+    const [tagSubmitting, setTagSubmitting] = useState(false);
+    const [tagError, setTagError] = useState<string | null>(null);
+    const [tagSuccess, setTagSuccess] = useState(false);
 
     // --- ÉTATS FORMULAIRE AVIS ---
     const [comment, setComment] = useState("");
@@ -45,6 +51,27 @@ const ShowDetailPage: React.FC = () => {
     useEffect(() => {
         loadData();
     }, [loadData]);
+
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'admin';
+
+    // Soumission du tag (admin uniquement)
+    const handleSubmitTag = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTag.trim() || !data) return;
+        setTagSubmitting(true);
+        setTagError(null);
+        try {
+            await tagApi.addTagToShow(data.id, newTag.trim());
+            setNewTag("");
+            setTagSuccess(true);
+            loadData(); // Recharge pour afficher le nouveau tag
+            setTimeout(() => setTagSuccess(false), 4000);
+        } catch (err: any) {
+            setTagError(err.message || "Erreur lors de l'ajout du tag.");
+        } finally {
+            setTagSubmitting(false);
+        }
+    };
 
     // Soumission de l'avis
     const handleSubmitReview = async (e: React.FormEvent) => {
@@ -117,6 +144,73 @@ const ShowDetailPage: React.FC = () => {
                   className={styles.descriptionText}
                   as="p"
                 />
+              </div>
+
+              {/* SECTION TAGS */}
+              <div className={styles.infoSection}>
+                <h3>🏷️ Mots-clés</h3>
+                <div className="d-flex flex-wrap gap-2 mt-3">
+                  {data.tags && data.tags.length > 0 ? (
+                    data.tags.map((tag: any) => (
+                      <span
+                        key={tag.id}
+                        style={{
+                          background: '#1a1a1a',
+                          border: '1px solid #f5c518',
+                          color: '#f5c518',
+                          borderRadius: '50px',
+                          padding: '4px 14px',
+                          fontSize: '0.85rem',
+                          fontWeight: 500,
+                        }}
+                      >
+                        #{tag.tag}
+                      </span>
+                    ))
+                  ) : (
+                    <p className="text-muted small">Aucun mot-clé pour ce spectacle.</p>
+                  )}
+                </div>
+
+                {/* FORMULAIRE AJOUT TAG — ADMIN UNIQUEMENT */}
+                {isAdmin && (
+                  <form onSubmit={handleSubmitTag} className="mt-4 d-flex gap-2 align-items-center flex-wrap">
+                    <input
+                      type="text"
+                      placeholder="Nouveau mot-clé..."
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      maxLength={30}
+                      style={{
+                        background: '#1a1a1a',
+                        border: '1px solid #444',
+                        borderRadius: '50px',
+                        color: 'white',
+                        padding: '8px 16px',
+                        outline: 'none',
+                        minWidth: '200px',
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={tagSubmitting || !newTag.trim()}
+                      style={{
+                        background: '#f5c518',
+                        color: '#000',
+                        border: 'none',
+                        borderRadius: '50px',
+                        padding: '8px 18px',
+                        fontWeight: 'bold',
+                        cursor: tagSubmitting ? 'not-allowed' : 'pointer',
+                        opacity: tagSubmitting ? 0.6 : 1,
+                      }}
+                    >
+                      {tagSubmitting ? '...' : '+ Ajouter'}
+                    </button>
+                    {tagError && <span className="text-danger small">{tagError}</span>}
+                    {tagSuccess && <span className="text-success small">✓ Tag ajouté !</span>}
+                  </form>
+                )}
               </div>
 
               <div className={styles.editorialNote}>

@@ -155,6 +155,11 @@ export interface ReservationRequest {
   places: number;
 }
 
+export interface Tag {
+  id: number;
+  tag: string;
+}
+
 export interface Show {
   id: number;
   slug: string;
@@ -170,6 +175,7 @@ export interface Show {
   representations?: Representation[];
   reviews?: Review[];
   artists?: Artist[];
+  tags?: Tag[];
   createdAt: string;
 }
 
