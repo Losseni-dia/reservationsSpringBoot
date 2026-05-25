@@ -56,4 +56,15 @@ public interface ShowRepos extends JpaRepository<Show, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("status") ShowStatus status);
+
+    @Query("SELECT DISTINCT s FROM Show s JOIN s.tags t " +
+            "WHERE LOWER(t.tag) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "AND s.status = :status")
+    List<Show> findByTagKeyword(@Param("keyword") String keyword,
+            @Param("status") ShowStatus status);
+
+    @Query("SELECT s FROM Show s WHERE s.status = :status " +
+            "AND s NOT IN (SELECT s2 FROM Show s2 JOIN s2.tags t WHERE LOWER(t.tag) = LOWER(:tag))")
+    List<Show> findShowsWithoutTag(@Param("tag") String tag,
+            @Param("status") ShowStatus status);
 }

@@ -46,14 +46,14 @@ const Header: React.FC = () => {
           >
             {t("layout.header.shows")}
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/artists"
             className={({ isActive }) =>
               isActive ? styles.activeLink : styles.link
             }
           >
-            {t("layout.header.artists") || "Artistes"}
-          </NavLink>
+            {t("layout.header.artists") || "Artistes"}6233w
+          </NavLink> */}
           <NavLink
             to="/about"
             className={({ isActive }) =>

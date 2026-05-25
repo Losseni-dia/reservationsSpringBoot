@@ -48,6 +48,7 @@ public class SpringSecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
                                                 // 1. Accès publics (Consultation)
                                                 .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/tags/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/artists/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/reviews/show/**").permitAll()
@@ -108,7 +109,11 @@ public class SpringSecurityConfig {
                                                 .requestMatchers(HttpMethod.DELETE, "/api/reviews/**")
                                                 .hasAnyRole("admin", "ADMIN", "PRODUCER", "producer")
 
-                                                // 7. Gestion des Shows & Représentations
+                                                // 7. Gestion des Tags (ADMIN uniquement)
+                                                .requestMatchers(HttpMethod.POST, "/api/tags/**")
+                                                .hasAnyRole("admin", "ADMIN")
+
+                                                // 8. Gestion des Shows & Représentations
                                                 .requestMatchers(HttpMethod.POST, "/api/shows/**")
                                                 .hasAnyRole("admin", "ADMIN", "PRODUCER", "producer")
                                                 .requestMatchers(HttpMethod.PUT, "/api/shows/**")

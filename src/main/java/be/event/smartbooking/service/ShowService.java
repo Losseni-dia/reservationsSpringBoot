@@ -140,4 +140,14 @@ public class ShowService {
                 (end != null) ? end : null,
                 ShowStatus.CONFIRME);
     }
+
+    @Transactional(readOnly = true)
+    public List<Show> searchByTag(String keyword) {
+        return repository.findByTagKeyword(keyword, ShowStatus.CONFIRME);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Show> getShowsWithoutTag(String tag) {
+        return repository.findShowsWithoutTag(tag, ShowStatus.CONFIRME);
+    }
 }

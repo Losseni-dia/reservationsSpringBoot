@@ -84,6 +84,15 @@ public class Show {
 	@JoinTable(name = "artist_type_show", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "artist_type_id"))
 	private List<ArtistType> artistTypes = new ArrayList<>();
 
+	@Builder.Default
+	@ManyToMany
+	@JoinTable(
+		name = "show_tag",
+		joinColumns = @JoinColumn(name = "show_id"),
+		inverseJoinColumns = @JoinColumn(name = "tag_id")
+	)
+	private List<Tag> tags = new ArrayList<>();
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id") // La colonne dans la table SQL
 	@ToString.Exclude
@@ -124,6 +133,16 @@ public class Show {
 	public void removeArtistType(ArtistType artistType) {
 		artistTypes.remove(artistType);
 		artistType.getShows().remove(this);
+	}
+
+	public void addTag(Tag tag) {
+		tags.add(tag);
+		tag.getShows().add(this);
+	}
+
+	public void removeTag(Tag tag) {
+		tags.remove(tag);
+		tag.getShows().remove(this);
 	}
 
 	public void addReview(Review review) {

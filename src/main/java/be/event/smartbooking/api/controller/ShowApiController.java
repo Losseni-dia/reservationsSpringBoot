@@ -33,6 +33,7 @@ import be.event.smartbooking.dto.ReviewDTO;
 import be.event.smartbooking.dto.ShowCreateRequest;
 import be.event.smartbooking.dto.ShowDTO;
 import be.event.smartbooking.dto.ShowUpdateDTO;
+import be.event.smartbooking.dto.TagDTO;
 import be.event.smartbooking.model.ArtistType;
 import be.event.smartbooking.model.Price;
 import be.event.smartbooking.model.Representation;
@@ -172,6 +173,44 @@ public class ShowApiController {
                 } catch (Exception e) {
                         e.printStackTrace();
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+        }
+
+        /**
+         * GET /api/shows/search-by-tag?keyword=... : Recherche par mot-clé (tag)
+         */
+        @GetMapping("/search-by-tag")
+        @Transactional(readOnly = true)
+        public ResponseEntity<Map<String, Object>> searchByTag(@RequestParam String keyword) {
+                try {
+                        List<Show> shows = showService.searchByTag(keyword);
+                        List<ShowDTO> dtos = shows.stream().map(this::safeConvertToDto).collect(Collectors.toList());
+                        Map<String, Object> result = new HashMap<>();
+                        result.put("total", dtos.size());
+                        result.put("keyword", keyword);
+                        result.put("shows", dtos);
+                        return ResponseEntity.ok(result);
+                } catch (Exception e) {
+                        return ResponseEntity.internalServerError().build();
+                }
+        }
+
+        /**
+         * GET /api/shows/without-tag/{tag} : Route personnalisée — spectacles sans ce tag
+         */
+        @GetMapping("/without-tag/{tag}")
+        @Transactional(readOnly = true)
+        public ResponseEntity<Map<String, Object>> getShowsWithoutTag(@PathVariable String tag) {
+                try {
+                        List<Show> shows = showService.getShowsWithoutTag(tag);
+                        List<ShowDTO> dtos = shows.stream().map(this::safeConvertToDto).collect(Collectors.toList());
+                        Map<String, Object> result = new HashMap<>();
+                        result.put("total", dtos.size());
+                        result.put("excludedTag", tag);
+                        result.put("shows", dtos);
+                        return ResponseEntity.ok(result);
+                } catch (Exception e) {
+                        return ResponseEntity.internalServerError().build();
                 }
         }
 
@@ -361,6 +400,11 @@ public class ShowApiController {
                                 .locationDesignation(locationDesignation)
                                 .averageRating(show.getAverageRating())
                                 .reviewCount(show.getReviewCount())
+                                .tags(show.getTags() != null
+                                                ? show.getTags().stream()
+                                                                .map(t -> TagDTO.builder().id(t.getId()).tag(t.getTag()).build())
+                                                                .toList()
+                                                : new ArrayList<>())
 
                                 .representations(show.getRepresentations() != null ? show.getRepresentations().stream()
                                                 .map(rep -> convertRepToDto(rep, title, sourceLang, targetLang))
