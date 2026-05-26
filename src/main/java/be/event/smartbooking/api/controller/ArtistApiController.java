@@ -63,15 +63,23 @@ public class ArtistApiController {
             return langMap;
         }).toList();
 
-        // 3. Construire la réponse finale combinée (L'artiste + ses types + ses
-        // langues)
+        // 3. Construire la troupe si présente
+        Map<String, Object> troupeDto = null;
+        if (artist.getTroupe() != null) {
+            troupeDto = new java.util.HashMap<>();
+            troupeDto.put("id", artist.getTroupe().getId());
+            troupeDto.put("name", artist.getTroupe().getName());
+            troupeDto.put("logoUrl", artist.getTroupe().getLogoUrl());
+        }
+
+        // 4. Construire la réponse finale combinée
         Map<String, Object> jsonResponse = new java.util.HashMap<>();
         jsonResponse.put("id", artist.getId());
         jsonResponse.put("firstname", artist.getFirstname());
         jsonResponse.put("lastname", artist.getLastname());
-        // On extrait uniquement les chaînes de caractères des disciplines
         jsonResponse.put("types", artist.getTypes().stream().map(t -> t.getType()).toList());
-        jsonResponse.put("languages", languagesListDto); // 🚀 Envoyé au front !
+        jsonResponse.put("languages", languagesListDto);
+        jsonResponse.put("troupe", troupeDto); // null si non affilié
 
         return ResponseEntity.ok(jsonResponse);
     }

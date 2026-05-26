@@ -160,6 +160,20 @@ export interface Tag {
   tag: string;
 }
 
+export interface Troupe {
+  id: number;
+  name: string;
+  logoUrl: string | null;
+}
+
+export interface Video {
+  id: number;
+  title: string;
+  videoUrl: string;
+  showId: number;
+  showTitle?: string;
+}
+
 export interface Show {
   id: number;
   slug: string;
@@ -176,6 +190,7 @@ export interface Show {
   reviews?: Review[];
   artists?: Artist[];
   tags?: Tag[];
+  videos?: Video[];
   createdAt: string;
 }
 

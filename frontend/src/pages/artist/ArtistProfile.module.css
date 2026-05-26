@@ -111,3 +111,15 @@
   border-radius: 6px;
   margin-bottom: 1rem;
 }
+
+.alertSuccess {
+  color: #a5d6a7;
+  background: #1a2e1a;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.languageSection + .languageSection {
+  margin-top: 1.5rem;
+}

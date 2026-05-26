@@ -113,6 +113,16 @@ public class SpringSecurityConfig {
                                                 .requestMatchers(HttpMethod.POST, "/api/tags/**")
                                                 .hasAnyRole("admin", "ADMIN")
 
+                                                // 8. Gestion des Troupes
+                                                .requestMatchers(HttpMethod.GET, "/api/troupes/**").permitAll()
+                                                .requestMatchers(HttpMethod.PUT, "/api/troupes/**")
+                                                .hasAnyRole("admin", "ADMIN")
+
+                                                // 9. Gestion des Vidéos
+                                                .requestMatchers(HttpMethod.GET, "/api/videos/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/api/videos/**")
+                                                .hasAnyRole("admin", "ADMIN")
+
                                                 // 8. Gestion des Shows & Représentations
                                                 .requestMatchers(HttpMethod.POST, "/api/shows/**")
                                                 .hasAnyRole("admin", "ADMIN", "PRODUCER", "producer")

@@ -2,6 +2,8 @@ import {
   Artist,
   Show,
   Tag,
+  Troupe,
+  Video,
   Location,
   Review,
   Reservation,
@@ -379,6 +381,39 @@ export const translationApi = {
     });
     const data = await res.json();
     return data.translatedText ?? text;
+  },
+};
+
+export const troupeApi = {
+  getAll: async (): Promise<Troupe[]> => {
+    const res = await secureFetch(`${API_BASE}/troupes`);
+    return res.json();
+  },
+  assignArtist: async (artistId: number, troupeId: number | null): Promise<void> => {
+    await secureFetch(`${API_BASE}/troupes/artists/${artistId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ troupeId }),
+    });
+  },
+};
+
+export const videoApi = {
+  getByShow: async (showId: number): Promise<Video[]> => {
+    const res = await secureFetch(`${API_BASE}/videos/show/${showId}`);
+    return res.json();
+  },
+  addToShow: async (showId: number, title: string, videoUrl: string): Promise<Video> => {
+    const res = await secureFetch(`${API_BASE}/videos/show/${showId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, videoUrl }),
+    });
+    return res.json();
+  },
+  getByArtist: async (lastname: string): Promise<{ artist: string; total: number; videos: Video[] }> => {
+    const res = await secureFetch(`${API_BASE}/videos/by-artist/${encodeURIComponent(lastname)}`);
+    return res.json();
   },
 };
 

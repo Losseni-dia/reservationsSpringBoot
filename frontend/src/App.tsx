@@ -42,6 +42,7 @@ import EditProfilePage from "./pages/Profile/Edit/EditProfilePage";
 import TermsAndPrivacy from "./pages/legal/TermsAndPrivacy";
 import ArtistProfile from "./pages/artist/ArtistProfile";
 import ShowsWithoutTagPage from "./pages/show/showsWithoutTag/ShowsWithoutTag";
+import VideosByArtist from "./pages/video/VideosByArtist";
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -67,6 +68,7 @@ function App() {
               <Route path="/terms" element={<TermsAndPrivacy />} />
               <Route path="/about" element={<About />} />
               <Route path="/shows/without-tag/:tag" element={<ShowsWithoutTagPage />} />
+              <Route path="/videos/by-artist/:lastname" element={<VideosByArtist />} />
 
               {/* --- ROUTES UTILISATEURS CONNECTÉS (Membres, Producteurs, Admins) --- */}
               <Route

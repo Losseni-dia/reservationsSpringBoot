@@ -35,4 +35,5 @@ public class ShowDTO {
     private String locationDesignation; // Nom du lieu uniquement
     private String createdAt;
     private List<TagDTO> tags;
+    private List<VideoDTO> videos;
 }

@@ -46,10 +46,10 @@ public class Show {
 	private boolean bookable = true;
 
 	// --- AJOUT DU STATUT ---
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @Builder.Default
-    private ShowStatus status = ShowStatus.A_CONFIRMER;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	@Builder.Default
+	private ShowStatus status = ShowStatus.A_CONFIRMER;
 
 	// Supprimé le champ "price" → les prix sont maintenant gérés via Price +
 	// Representation !
@@ -79,6 +79,13 @@ public class Show {
 	@EqualsAndHashCode.Exclude
 	private List<Review> reviews = new ArrayList<>();
 
+	@Builder.Default
+	@OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	private List<Video> videos = new ArrayList<>();
+
 	@Builder.Default // Ajoute bien ceci pour le problème du Builder !
 	@ManyToMany
 	@JoinTable(name = "artist_type_show", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "artist_type_id"))
@@ -86,11 +93,7 @@ public class Show {
 
 	@Builder.Default
 	@ManyToMany
-	@JoinTable(
-		name = "show_tag",
-		joinColumns = @JoinColumn(name = "show_id"),
-		inverseJoinColumns = @JoinColumn(name = "tag_id")
-	)
+	@JoinTable(name = "show_tag", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)

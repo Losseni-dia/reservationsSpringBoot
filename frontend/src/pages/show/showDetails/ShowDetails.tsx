@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { showApi, reviewApi, tagApi, IMAGE_STORAGE_BASE } from '../../../services/api';
+import { showApi, reviewApi, tagApi, videoApi, IMAGE_STORAGE_BASE } from '../../../services/api';
 import { useAuth } from '../../../components/context/AuthContext';
 import { formatDate, formatDateTime, formatCurrency } from '../../../utils/format';
 import Loader from '../../../components/ui/loader/Loader';
@@ -26,6 +26,13 @@ const ShowDetailPage: React.FC = () => {
     const [tagSubmitting, setTagSubmitting] = useState(false);
     const [tagError, setTagError] = useState<string | null>(null);
     const [tagSuccess, setTagSuccess] = useState(false);
+
+    // --- ÉTATS VIDÉOS ---
+    const [newVideoTitle, setNewVideoTitle] = useState("");
+    const [newVideoUrl, setNewVideoUrl] = useState("");
+    const [videoSubmitting, setVideoSubmitting] = useState(false);
+    const [videoError, setVideoError] = useState<string | null>(null);
+    const [videoSuccess, setVideoSuccess] = useState(false);
 
     // --- ÉTATS FORMULAIRE AVIS ---
     const [comment, setComment] = useState("");
@@ -70,6 +77,26 @@ const ShowDetailPage: React.FC = () => {
             setTagError(err.message || "Erreur lors de l'ajout du tag.");
         } finally {
             setTagSubmitting(false);
+        }
+    };
+
+    // Soumission de la vidéo (admin uniquement)
+    const handleSubmitVideo = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newVideoTitle.trim() || !newVideoUrl.trim() || !data) return;
+        setVideoSubmitting(true);
+        setVideoError(null);
+        try {
+            await videoApi.addToShow(data.id, newVideoTitle.trim(), newVideoUrl.trim());
+            setNewVideoTitle("");
+            setNewVideoUrl("");
+            setVideoSuccess(true);
+            loadData();
+            setTimeout(() => setVideoSuccess(false), 4000);
+        } catch (err: any) {
+            setVideoError(err.message || "Erreur lors de l'ajout de la vidéo.");
+        } finally {
+            setVideoSubmitting(false);
         }
     };
 
@@ -209,6 +236,75 @@ const ShowDetailPage: React.FC = () => {
                     </button>
                     {tagError && <span className="text-danger small">{tagError}</span>}
                     {tagSuccess && <span className="text-success small">✓ Tag ajouté !</span>}
+                  </form>
+                )}
+              </div>
+
+              {/* SECTION VIDÉOS */}
+              <div className={styles.infoSection}>
+                <h3>🎬 Vidéos</h3>
+                <div className="mt-3">
+                  {data.videos && data.videos.length > 0 ? (
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {data.videos.map((video: any) => (
+                        <li key={video.id} className="mb-3">
+                          <a
+                            href={video.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: '#f5c518', fontWeight: 600, textDecoration: 'none' }}
+                          >
+                            ▶ {video.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted small">Aucune vidéo pour ce spectacle.</p>
+                  )}
+                </div>
+
+                {isAdmin && (
+                  <form onSubmit={handleSubmitVideo} className="mt-4 d-flex flex-column gap-2">
+                    <div className="d-flex gap-2 flex-wrap">
+                      <input
+                        type="text"
+                        placeholder="Titre de la vidéo..."
+                        value={newVideoTitle}
+                        onChange={(e) => setNewVideoTitle(e.target.value)}
+                        maxLength={100}
+                        style={{
+                          background: '#1a1a1a', border: '1px solid #444',
+                          borderRadius: '6px', color: 'white',
+                          padding: '8px 14px', outline: 'none', flex: 1, minWidth: '180px',
+                        }}
+                      />
+                      <input
+                        type="url"
+                        placeholder="URL de la vidéo (YouTube, Vimeo…)"
+                        value={newVideoUrl}
+                        onChange={(e) => setNewVideoUrl(e.target.value)}
+                        style={{
+                          background: '#1a1a1a', border: '1px solid #444',
+                          borderRadius: '6px', color: 'white',
+                          padding: '8px 14px', outline: 'none', flex: 2, minWidth: '220px',
+                        }}
+                      />
+                      <button
+                        type="submit"
+                        disabled={videoSubmitting || !newVideoTitle.trim() || !newVideoUrl.trim()}
+                        style={{
+                          background: '#f5c518', color: '#000', border: 'none',
+                          borderRadius: '6px', padding: '8px 18px', fontWeight: 'bold',
+                          cursor: videoSubmitting ? 'not-allowed' : 'pointer',
+                          opacity: videoSubmitting ? 0.6 : 1,
+                        }}
+                      >
+                        {videoSubmitting ? '...' : '+ Ajouter'}
+                      </button>
+                    </div>
+                    {videoError && <span className="text-danger small">{videoError}</span>}
+                    {videoSuccess && <span className="text-success small">✓ Vidéo ajoutée !</span>}
                   </form>
                 )}
               </div>

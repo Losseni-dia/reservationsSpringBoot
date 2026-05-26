@@ -34,6 +34,7 @@ import be.event.smartbooking.dto.ShowCreateRequest;
 import be.event.smartbooking.dto.ShowDTO;
 import be.event.smartbooking.dto.ShowUpdateDTO;
 import be.event.smartbooking.dto.TagDTO;
+import be.event.smartbooking.dto.VideoDTO;
 import be.event.smartbooking.model.ArtistType;
 import be.event.smartbooking.model.Price;
 import be.event.smartbooking.model.Representation;
@@ -403,6 +404,17 @@ public class ShowApiController {
                                 .tags(show.getTags() != null
                                                 ? show.getTags().stream()
                                                                 .map(t -> TagDTO.builder().id(t.getId()).tag(t.getTag()).build())
+                                                                .toList()
+                                                : new ArrayList<>())
+                                .videos(show.getVideos() != null
+                                                ? show.getVideos().stream()
+                                                                .map(v -> VideoDTO.builder()
+                                                                                .id(v.getId())
+                                                                                .title(v.getTitle())
+                                                                                .videoUrl(v.getVideoUrl())
+                                                                                .showId(show.getId())
+                                                                                .showTitle(title)
+                                                                                .build())
                                                                 .toList()
                                                 : new ArrayList<>())
 
