@@ -1,0 +1,55 @@
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { locationApi } from '../../../services/api';
+import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDashboardButton';
+import styles from './AdminLocationsPage.module.css';
+
+interface Location {
+    id: number;
+    designation: string;
+    address: string;
+    website: string | null;
+    localityName: string;
+}
+
+const LocationList: React.FC = () => {
+    const { t } = useTranslation();
+    const [locations, setLocations] = useState<Location[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        locationApi.getAll()
+            .then(setLocations)
+            .catch(err => console.error("Erreur lieux:", err))
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) return <div className={styles.loader}>{t("admin.locations.loading")}</div>;
+
+    return (
+        <div className={styles.container}>
+            <AdminBackToDashboardButton />
+            <h1 className={styles.title}>{t("admin.locations.title")} <span className={styles.yellow}>{t("admin.locations.titleHighlight")}</span></h1>
+            <div className={styles.grid}>
+                {locations.map(loc => (
+                    <div key={loc.id} className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <span className={styles.cityBadge}>{loc.localityName}</span>
+                            <h2 className={styles.designation}>{loc.designation}</h2>
+                        </div>
+                        <div className={styles.cardBody}>
+                            <p className={styles.address}>📍 {loc.address}</p>
+                            {loc.website && (
+                                <a href={loc.website} target="_blank" rel="noopener noreferrer" className={styles.webLink}>
+                                    {t("admin.locations.visitWebsite")}
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default LocationList;

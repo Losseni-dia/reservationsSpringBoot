@@ -1,0 +1,142 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
+// Context
+import { AuthProvider } from "./components/context/AuthContext";
+
+// Layout
+import Header from "./components/layout/header/Header";
+import Footer from "./components/layout/footer/Footer";
+
+// Pages
+import Home from "./pages/home/Home";
+import ShowDetailsPage from "./pages/show/showDetails/ShowDetails";
+import LoginPage from "./pages/Login/LoginPage";
+import RegisterPage from "./pages/Register/RegisterPage";
+import ProfilePage from "./pages/Profile/ProfilePage";
+import ProducerDashboard from "./pages/Producteur/Dashboard/ProducerDashboard";
+import ForbiddenPage from "./pages/Forbidden/ForbiddenPage";
+import ProtectedRoute from "./ProtectedRoute";
+import AddShow from "./pages/Producteur/AddShow/AddShow";
+import EditShow from "./pages/Producteur/UpdateShow/EditShow";
+import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
+import ShowSchedule from "./pages/Producteur/ShowSchedule/ShowSchedule";
+import AdminShowPage from "./pages/Admin/AdminShowPage/AdminShowPage";
+import LocationList from "./pages/Admin/AdminLocationsPage/AdminLocationsPage";
+import AdminUsersPage from "./pages/Admin/AdminUsersPage/AdminUsersPage";
+import AdminProducteurPage from "./pages/Admin/AdminProducteurPage/AdminProducteurPage";
+import AdminHome from "./pages/Admin/AdminHome/AdminHome";
+
+import AdminReviewPage from "./pages/Admin/AdminReviewsPage/AdminReviewsPage";
+import AdminArtistPage from "./pages/Admin/AdminArtistPage/AdminArtistPage";
+import AdminReservationPage from "./pages/Admin/AdminReservationPage/AdminreservationPage";
+import PaymentSuccess from "./pages/payment/PaymentSuccess";
+import PaymentCancel from "./pages/payment/PaymentCancel";
+import ReservationPage from "./pages/reservation/ReservationPage";
+import About from "./pages/about/About";
+import DeveloperPage from "./pages/Developer/DeveloperPage";
+import ApiDocPage from "./pages/ApiDoc/ApiDocPage";
+import BecomeProducer from "./pages/Producteur/BecomeProducer/BecomeProducer";
+import MyTickets from "./pages/Profile/My-ticket/MyTickets";
+import EditProfilePage from "./pages/Profile/Edit/EditProfilePage";
+import TermsAndPrivacy from "./pages/legal/TermsAndPrivacy";
+import ArtistProfile from "./pages/artist/ArtistProfile";
+import ShowsWithoutTagPage from "./pages/show/showsWithoutTag/ShowsWithoutTag";
+import VideosByArtist from "./pages/video/VideosByArtist";
+function App() {
+  return (
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <AuthProvider>
+        <div
+          className="d-flex flex-column min-vh-100"
+          style={{ backgroundColor: "#141414" }}
+        >
+          <Header />
+          <main className="flex-grow-1">
+            <Routes>
+              {/* --- ROUTES PUBLIQUES --- */}
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/show/:slug" element={<ShowDetailsPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/developers" element={<DeveloperPage />} />
+              <Route path="/api-documentation" element={<ApiDocPage />} />
+              <Route path="/forbidden" element={<ForbiddenPage />} />
+              <Route path="/become-producer" element={<BecomeProducer />} />
+              <Route path="/terms" element={<TermsAndPrivacy />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/shows/without-tag/:tag" element={<ShowsWithoutTagPage />} />
+              <Route path="/videos/by-artist/:lastname" element={<VideosByArtist />} />
+
+              {/* --- ROUTES UTILISATEURS CONNECTÉS (Membres, Producteurs, Admins) --- */}
+              <Route
+                element={
+                  <ProtectedRoute
+                    allowedRoles={["MEMBER", "producer", "ADMIN"]}
+                  />
+                }
+              >
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile/edit" element={<EditProfilePage />} />
+                <Route path="/profile/tickets" element={<MyTickets />} />
+                <Route
+                  path="/reservation/:slug"
+                  element={<ReservationPage />}
+                />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-cancelled" element={<PaymentCancel />} />
+                <Route path="/artists" element={<AdminArtistPage />} />
+                <Route path="/artists/:id" element={<ArtistProfile />} />
+              </Route>
+
+              {/* --- ROUTES PRODUCTEURS --- */}
+              <Route element={<ProtectedRoute allowedRoles={["producer"]} />}>
+                <Route
+                  path="/producer/dashboard"
+                  element={<ProducerDashboard />}
+                />
+                <Route path="/producer/shows/add" element={<AddShow />} />
+                <Route path="/producer/shows/edit/:id" element={<EditShow />} />
+                <Route path="/producer/reviews" element={<AdminReviewPage />} />
+              </Route>
+
+              {/* --- ROUTES ADMINS --- */}
+              <Route
+                element={
+                  <ProtectedRoute allowedRoles={["ADMIN", "producer"]} />
+                }
+              >
+                <Route path="/admin" element={<AdminHome />} />
+                <Route path="/admin/users" element={<AdminUsersPage />} />
+                <Route path="/admin/shows" element={<AdminShowPage />} />
+                <Route path="/admin/shows/add" element={<AddShow />} />
+                <Route path="/admin/shows/edit/:id" element={<EditShow />} />
+                <Route
+                  path="/admin/shows/:id/schedule"
+                  element={<ShowSchedule />}
+                />
+                <Route path="/admin/locations" element={<LocationList />} />
+                <Route path="/admin/artists" element={<AdminArtistPage />} />
+                <Route
+                  path="/admin/reservations"
+                  element={<AdminReservationPage />}
+                />
+                <Route
+                  path="/admin/pending-producers"
+                  element={<AdminProducteurPage />}
+                />
+              </Route>
+
+              {/* Catch-all pour les pages inexistantes */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </AuthProvider>
+    </Router>
+  );
+}
+export default App;

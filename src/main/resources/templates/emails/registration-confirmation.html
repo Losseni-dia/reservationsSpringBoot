@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title th:text="#{email.register.subject}">Welcome to SmartBooking</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="margin-bottom: 24px;">
+    <p th:text="#{email.register.greeting(${firstName})}">Hello,</p>
+    <p th:text="#{email.register.welcome}">Your account has been created successfully.</p>
+  </div>
+  <p style="font-size: 12px; color: #999;" th:text="#{email.register.footer}">The SmartBooking team</p>
+</body>
+</html>

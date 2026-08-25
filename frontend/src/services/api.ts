@@ -1,0 +1,560 @@
+import {
+  Artist,
+  Show,
+  Tag,
+  Troupe,
+  Video,
+  Location,
+  Review,
+  Reservation,
+  ReservationAdminDto,
+  ReservationRequest,
+  UserProfileDto,
+  UserRegistrationDto,
+  TicketDetail,
+} from "../types/models";
+import i18n from "../i18n";
+
+const API_BASE = "/api";
+export const IMAGE_STORAGE_BASE = "";
+
+function getCsrfToken(): string | undefined {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; XSRF-TOKEN=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
+  return undefined;
+}
+
+async function secureFetch(url: string, options: RequestInit = {}) {
+  const method = options.method?.toUpperCase() || "GET";
+  const headers = new Headers(options.headers);
+
+  headers.set("Accept", "application/json");
+  headers.set("Accept-Language", i18n.language || "fr");
+
+  if (["POST", "PUT", "DELETE"].includes(method)) {
+    const token = getCsrfToken();
+    if (token) {
+      headers.append("X-XSRF-TOKEN", token);
+    }
+  }
+
+  const response = await fetch(url, {
+    ...options,
+    headers,
+    credentials: "include",
+    cache: "no-cache",
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      return Promise.reject(new Error("UNAUTHORIZED"));
+    }
+    const errorText = await response.text();
+    throw new Error(errorText || `Erreur ${response.status}`);
+  }
+
+  return response;
+}
+
+export const authApi = {
+  login: async (credentials: { login: string; password: string }) => {
+    const params = new URLSearchParams();
+    params.append("login", credentials.login);
+    params.append("password", credentials.password);
+
+    const response = await fetch("/api/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        "Accept-Language": i18n.language || "fr",
+      },
+      body: params,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Identifiants incorrects");
+    }
+    return response;
+  },
+  logout: async () => {
+    try {
+      return await secureFetch("/api/users/logout", { method: "POST" });
+    } catch (e) {
+      console.warn("Le serveur a déjà fermé la session ou erreur CSRF");
+      return null;
+    }
+  },
+  getProfile: async () => {
+    const res = await secureFetch(`${API_BASE}/users/profile`);
+    return res.json();
+  },
+  register: async (formData: FormData) => {
+    const headers = new Headers({
+      // ⚠️ IMPORTANT : On ne met PAS de "Content-Type". 
+      // Le navigateur le fera automatiquement avec le "boundary" pour le FormData.
+      Accept: "application/json",
+      "Accept-Language": i18n.language || "fr",
+    });
+
+    const csrfToken = getCsrfToken();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+
+    return fetch(`${API_BASE}/users/register`, {
+      method: "POST",
+      headers,
+      body: formData, // On envoie directement le FormData ici
+      credentials: "include",
+    });
+  },
+  updateProfile: async (profileData: FormData) => {
+    const res = await secureFetch(`${API_BASE}/users/profile`, {
+      method: "PUT",
+      body: profileData,
+    });
+    return res.text();
+  },
+  forgotPassword: async (email: string) => {
+        const res = await secureFetch(`${API_BASE}/users/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+        return res.text();
+    },
+    resetPassword: async (token: string, password: string) => {
+        const res = await secureFetch(`${API_BASE}/users/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token, newPassword: password }),});
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(errorText);
+        }
+        return res.text();
+    },
+  };
+
+export const userApi = {
+  getAll: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users");
+    return res.json();
+  },
+  getAllInactive: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users/inactive");
+    return res.json();
+  },
+  getPending: async (): Promise<UserProfileDto[]> => {
+    const res = await secureFetch("/api/users/pending");
+    return res.json();
+  },
+
+  delete: async (id: number) => {
+    return await secureFetch(`/api/users/${id}`, { method: "DELETE" });
+  },
+  deactivate: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/deactivate`, {
+      method: "PUT",
+    });
+  },
+  activate: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/activate`, {
+      method: "PUT",
+    });
+  },
+  approve: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/approve`, {
+      method: "PUT",
+    });
+  },
+  toggleStatus: async (userId: number) => {
+    return await secureFetch(`/api/users/${userId}/toggle-status`, {
+      method: "PUT",
+    });
+  },
+  getStats: async () => {
+    const res = await secureFetch(`${API_BASE}/users/stats`);
+    return res.json();
+  },
+};
+
+export const artistApi = {
+  getAll: async (): Promise<Artist[]> => {
+    const res = await secureFetch(`${API_BASE}/artists`);
+    return res.json();
+  },
+  getById: async (id: number): Promise<Artist> => {
+    const res = await secureFetch(`${API_BASE}/artists/${id}`);
+    return res.json();
+  },
+  create: async (artist: Partial<Artist>): Promise<Artist> => {
+    const res = await secureFetch(`${API_BASE}/artists/admin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(artist),
+    });
+    return res.json();
+  },
+};
+
+export const showApi = {
+  getAll: async (): Promise<Show[]> => {
+    const res = await secureFetch(`${API_BASE}/shows`);
+    return res.json();
+  },
+  getAllForAdmin: async (): Promise<Show[]> => {
+    const res = await secureFetch(`${API_BASE}/shows/admin`);
+    return res.json();
+  },
+  getById: async (id: number): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}`);
+    return res.json();
+  },
+  getBySlug: async (slug: string): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/slug/${slug}`);
+    return res.json();
+  },
+  create: async (formData: FormData): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows`, {
+      method: "POST",
+      body: formData,
+    });
+    return res.json();
+  },
+  update: async (id: number, formData: FormData): Promise<Show> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}`, {
+      method: "PUT",
+      body: formData,
+    });
+    return res.json();
+  },
+  deleteById: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/shows/${id}`, { method: "DELETE" });
+  },
+  confirm: async (id: number): Promise<void> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/confirm`, {
+      method: "PUT",
+    });
+  },
+  revoke: async (id: number): Promise<void> => {
+    const res = await secureFetch(`${API_BASE}/shows/${id}/revoke`, {
+      method: "PUT",
+    });
+  },
+  getMyShows: async (): Promise<Show[]> => {
+    const res = await secureFetch(`${API_BASE}/shows/my-shows`);
+    return res.json();
+  },
+};
+
+export const representationApi = {
+  // Uniquement pour la gestion des représentations elles-mêmes
+  delete: async (id: number) => {
+    return secureFetch(`${API_BASE}/representations/${id}`, {
+      method: "DELETE",
+    });
+  },
+  create: async (showId: number, data: any) => {
+    const res = await secureFetch(
+      `${API_BASE}/shows/${showId}/representations`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      },
+    );
+
+    if (!res.ok) {
+      throw new Error("Erreur lors de la création de la représentation");
+    }
+
+    return res.json();
+  },
+};
+
+export const artistTypeApi = {
+  getAll: async (): Promise<any[]> => {
+    const res = await secureFetch(`${API_BASE}/artist-types`);
+    return res.json();
+  },
+};
+
+export const reservationApi = {
+  create: async (items: ReservationRequest[]): Promise<{ url: string }> => {
+    const res = await secureFetch(`${API_BASE}/reservations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(items),
+    });
+
+    // Sécurité : On vérifie le type de contenu avant de parser
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return res.json();
+    } else {
+      // Si le backend renvoie l'URL directement en texte
+      const urlText = await res.text();
+      return { url: urlText };
+    }
+  },
+
+  getMyBookings: async (): Promise<Reservation[]> => {
+    const res = await secureFetch(`${API_BASE}/reservations/my-bookings`);
+    return res.json();
+  },
+
+  getAllForAdmin: async (): Promise<ReservationAdminDto[]> => {
+    const res = await secureFetch(`${API_BASE}/admin/reservations`);
+    return res.json();
+  },
+};
+export const reviewApi = {
+  getByShow: async (showId: number): Promise<Review[]> => {
+    const res = await secureFetch(`${API_BASE}/reviews/show/${showId}`);
+    return res.json();
+  },
+
+  getPending: async (): Promise<Review[]> => {
+    const res = await secureFetch(`${API_BASE}/reviews/pending`);
+    return res.json();
+  },
+
+  validate: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}/validate`, { method: "PUT" });
+  },
+
+  delete: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/reviews/${id}`, { method: "DELETE" });
+  },
+
+  create: async (
+    showId: number,
+    comment: string,
+    stars: number,
+  ): Promise<Review> => {
+    const res = await secureFetch(`${API_BASE}/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ showId, comment, stars }),
+    });
+    return res.json();
+  },
+
+  getStats: async (): Promise<any> => {
+    const res = await secureFetch(`${API_BASE}/reviews/admin/stats`);
+    return res.json();
+  },
+};
+
+export const translateApi = {
+  translate: async (
+    text: string,
+    targetLang: string,
+    sourceLang?: string,
+  ): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text,
+        targetLang,
+        sourceLang: sourceLang || "fr",
+      }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
+  },
+};
+
+/** Live comment translation via Google Cloud (POST /api/translation/translate). Throws on 503 or other errors. */
+export const translationApi = {
+  translateComment: async (
+    text: string,
+    targetLanguage: string,
+  ): Promise<string> => {
+    const res = await secureFetch(`${API_BASE}/translation/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, targetLanguage }),
+    });
+    const data = await res.json();
+    return data.translatedText ?? text;
+  },
+};
+
+export const troupeApi = {
+  getAll: async (): Promise<Troupe[]> => {
+    const res = await secureFetch(`${API_BASE}/troupes`);
+    return res.json();
+  },
+  assignArtist: async (artistId: number, troupeId: number | null): Promise<void> => {
+    await secureFetch(`${API_BASE}/troupes/artists/${artistId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ troupeId }),
+    });
+  },
+};
+
+export const videoApi = {
+  getByShow: async (showId: number): Promise<Video[]> => {
+    const res = await secureFetch(`${API_BASE}/videos/show/${showId}`);
+    return res.json();
+  },
+  addToShow: async (showId: number, title: string, videoUrl: string): Promise<Video> => {
+    const res = await secureFetch(`${API_BASE}/videos/show/${showId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, videoUrl }),
+    });
+    return res.json();
+  },
+  getByArtist: async (lastname: string): Promise<{ artist: string; total: number; videos: Video[] }> => {
+    const res = await secureFetch(`${API_BASE}/videos/by-artist/${encodeURIComponent(lastname)}`);
+    return res.json();
+  },
+};
+
+export const tagApi = {
+  getAll: async (): Promise<Tag[]> => {
+    const res = await secureFetch(`${API_BASE}/tags`);
+    return res.json();
+  },
+  searchByTag: async (keyword: string): Promise<{ total: number; keyword: string; shows: Show[] }> => {
+    const res = await secureFetch(`${API_BASE}/shows/search-by-tag?keyword=${encodeURIComponent(keyword)}`);
+    return res.json();
+  },
+  getShowsWithoutTag: async (tag: string): Promise<{ total: number; excludedTag: string; shows: Show[] }> => {
+    const res = await secureFetch(`${API_BASE}/shows/without-tag/${encodeURIComponent(tag)}`);
+    return res.json();
+  },
+  addTagToShow: async (showId: number, tagName: string): Promise<Tag> => {
+    const res = await secureFetch(`${API_BASE}/tags/shows/${showId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tag: tagName }),
+    });
+    return res.json();
+  },
+};
+
+export const locationApi = {
+  getAll: async (): Promise<Location[]> => {
+    const res = await secureFetch(`${API_BASE}/locations`);
+    return res.json();
+  },
+
+  getById: async (id: number): Promise<Location> => {
+    const res = await secureFetch(`${API_BASE}/locations/${id}`);
+    return res.json();
+  },
+
+  create: async (location: Partial<Location>): Promise<Location> => {
+    const res = await secureFetch(`${API_BASE}/locations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(location),
+    });
+    return res.json();
+  },
+
+  update: async (
+    id: number,
+    location: Partial<Location>,
+  ): Promise<Location> => {
+    const res = await secureFetch(`${API_BASE}/locations/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(location),
+    });
+    return res.json();
+  },
+
+  deleteById: async (id: number): Promise<void> => {
+    await secureFetch(`${API_BASE}/locations/${id}`, {
+      method: "DELETE",
+    });
+  },
+};
+
+/** Réponse de GET /api/admin/stats/summary (compteurs globaux). */
+export interface AdminStatsSummaryDto {
+  totalUsers: number;
+  totalShows: number;
+  totalLocations: number;
+  totalReservations: number;
+  /** Somme des montants (€) des réservations confirmées (payées). */
+  totalRevenue: number;
+}
+
+export const ticketApi = {
+  getMyTickets: async (): Promise<TicketDetail[]> => {
+    const res = await secureFetch(`${API_BASE}/users/my-tickets`);
+    if (!res.ok) throw new Error("Impossible de récupérer vos billets");
+    return res.json();
+  },
+};
+
+// ✅ adminApi est maintenant un export indépendant et contient la nouvelle méthode
+export const adminApi = {
+  getStatsSummary: async (): Promise<AdminStatsSummaryDto> => {
+    const res = await secureFetch(`${API_BASE}/admin/stats/summary`);
+    return res.json();
+  },
+
+  exportData: async (
+    type: string,
+    format: "csv" | "json" = "csv",
+  ): Promise<void> => {
+    const res = await secureFetch(
+      `${API_BASE}/admin/export/${type}?format=${format}`,
+    );
+    const blob = await res.blob();
+    const extension = format === "json" ? ".json" : ".csv";
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${type}_export_${new Date().toISOString().split("T")[0]}${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  },
+
+  importData: async (
+    type: string,
+    format: "csv" | "json",
+    file: File,
+  ): Promise<{ imported: number; skipped: number; errors: string[] }> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const headers = new Headers();
+    const csrfToken = `; ${document.cookie}`
+      .split(`; XSRF-TOKEN=`)
+      .pop()
+      ?.split(";")
+      .shift();
+    if (csrfToken) headers.append("X-XSRF-TOKEN", csrfToken);
+
+    const res = await fetch(
+      `${API_BASE}/admin/import/${type}?format=${format}`,
+      {
+        method: "POST",
+        headers,
+        body: formData,
+        credentials: "include",
+        cache: "no-cache",
+      },
+    );
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || `Erreur ${res.status}`);
+    }
+    return res.json();
+  },
+
+  
+};

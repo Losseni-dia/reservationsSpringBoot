@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:layout="http://www.ultraq.net.mx/thymeleaf/layout" layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Fiche d’un artiste</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="notification" th:replace="~{main::notification}"></div>
+        <div layout:fragment="content">
+            <h1 th:text="${artist.firstname} +' '+ ${artist.lastname}">Cédric Nsavi</h1>
+
+            <h2>Liste des types</h2>
+	        <ul th:unless="${#lists.isEmpty(artist.types)}">
+	        	<li th:each="type : ${artist.types}" th:text="${type.type}">Type</li>
+   	        </ul>
+
+            
+            <div class="actions">
+                <a th:href="@{/artists/{id}/edit(id=${artist.id})}">Editer</a>  
+                <form th:id="|deleteForm-${artist.id}|"
+                    th:action="@{/artists/{id}(id=${artist.id})}" method="delete">
+                    <a href="#" th:onclick="|if (confirm('Êtes-vous sûr de vouloir supprimer l\'artiste #${artist.id} ?')) 
+                    document.getElementById('deleteForm-${artist.id}').submit();
+                    return false;|">Supprimer</a>
+                </form>
+            </div>
+
+            <nav><a th:href="@{/artists}">Retour à l'index</a></nav>
+        </div>
+    </div>
+</body>
+
+</html>

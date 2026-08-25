@@ -1,0 +1,39 @@
+package be.event.smartbooking.dto;
+
+
+
+import java.util.List;
+
+import be.event.smartbooking.model.enumeration.ShowStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ShowDTO {
+    private Long id;
+    private String slug;
+    private String title;
+    private String description;
+    private String posterUrl;
+    private boolean bookable;
+    private ShowStatus status;
+    private Long locationId; // Crucial pour le <select>
+    private List<Long> artistTypeIds;
+
+    // Nouveaux champs pour les détails complets
+    private Double averageRating; // Calculé via show.getAverageRating()
+    private Long reviewCount; // Calculé via show.getReviewCount()
+    private List<RepresentationDTO> representations; // Liste des dates
+    private List<ReviewDTO> reviews; // Liste des avis
+    private List<ArtistDTO> artists; // Liste des artistes associés
+
+    private String locationDesignation; // Nom du lieu uniquement
+    private String createdAt;
+    private List<TagDTO> tags;
+    private List<VideoDTO> videos;
+}

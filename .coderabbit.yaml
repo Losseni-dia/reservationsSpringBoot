@@ -1,0 +1,5 @@
+language: "fr" 
+reviews:
+  profile: "chill" 
+  auto_review:
+    enabled: true

@@ -1,0 +1,493 @@
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import { showApi, reviewApi, tagApi, videoApi, IMAGE_STORAGE_BASE } from '../../../services/api';
+import { useAuth } from '../../../components/context/AuthContext';
+import { formatDate, formatDateTime, formatCurrency } from '../../../utils/format';
+import Loader from '../../../components/ui/loader/Loader';
+import { TranslatableText } from '../../../components/ui/translatableText/TranslatableText';
+import { TranslatableComment } from '../../../components/ui/translatableComment/TranslatableComment';
+import styles from './ShowDetails.module.css';
+
+const ShowDetailPage: React.FC = () => {
+    const { t, i18n } = useTranslation();
+    const { slug } = useParams<{ slug: string }>();
+    const navigate = useNavigate();
+    const { user } = useAuth(); // Pour vérifier si l'utilisateur est connecté
+
+    // --- ÉTATS DONNÉES ---
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedRepIndex, setSelectedRepIndex] = useState(0);
+
+    // --- ÉTATS TAGS ---
+    const [newTag, setNewTag] = useState("");
+    const [tagSubmitting, setTagSubmitting] = useState(false);
+    const [tagError, setTagError] = useState<string | null>(null);
+    const [tagSuccess, setTagSuccess] = useState(false);
+
+    // --- ÉTATS VIDÉOS ---
+    const [newVideoTitle, setNewVideoTitle] = useState("");
+    const [newVideoUrl, setNewVideoUrl] = useState("");
+    const [videoSubmitting, setVideoSubmitting] = useState(false);
+    const [videoError, setVideoError] = useState<string | null>(null);
+    const [videoSuccess, setVideoSuccess] = useState(false);
+
+    // --- ÉTATS FORMULAIRE AVIS ---
+    const [comment, setComment] = useState("");
+    const [stars, setStars] = useState(5);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+
+    // Chargement des données
+    const loadData = useCallback(() => {
+        if (!slug) return;
+        showApi.getBySlug(slug)
+            .then(json => {
+                setData(json);
+                setLoading(false);
+            })
+            .catch(() => {
+                setError(t('show.errorLoad'));
+                setLoading(false);
+            });
+    }, [slug, t]);
+
+    useEffect(() => {
+        loadData();
+    }, [loadData]);
+
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'admin';
+
+    // Soumission du tag (admin uniquement)
+    const handleSubmitTag = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTag.trim() || !data) return;
+        setTagSubmitting(true);
+        setTagError(null);
+        try {
+            await tagApi.addTagToShow(data.id, newTag.trim());
+            setNewTag("");
+            setTagSuccess(true);
+            loadData(); // Recharge pour afficher le nouveau tag
+            setTimeout(() => setTagSuccess(false), 4000);
+        } catch (err: any) {
+            setTagError(err.message || "Erreur lors de l'ajout du tag.");
+        } finally {
+            setTagSubmitting(false);
+        }
+    };
+
+    // Soumission de la vidéo (admin uniquement)
+    const handleSubmitVideo = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newVideoTitle.trim() || !newVideoUrl.trim() || !data) return;
+        setVideoSubmitting(true);
+        setVideoError(null);
+        try {
+            await videoApi.addToShow(data.id, newVideoTitle.trim(), newVideoUrl.trim());
+            setNewVideoTitle("");
+            setNewVideoUrl("");
+            setVideoSuccess(true);
+            loadData();
+            setTimeout(() => setVideoSuccess(false), 4000);
+        } catch (err: any) {
+            setVideoError(err.message || "Erreur lors de l'ajout de la vidéo.");
+        } finally {
+            setVideoSubmitting(false);
+        }
+    };
+
+    // Soumission de l'avis
+    const handleSubmitReview = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!comment.trim() || !data) return;
+
+        setSubmitting(true);
+        setSubmitError(null);
+
+        try {
+            await reviewApi.create(data.id, comment, stars);
+            setComment("");
+            setStars(5);
+            setSubmitSuccess(true);
+            // On recharge les données pour mettre à jour la moyenne et la liste (si auto-validé)
+            loadData();
+            setTimeout(() => setSubmitSuccess(false), 5000);
+        } catch (err: any) {
+            setSubmitError(t('show.reviewErrorAlready'));
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    if (loading) return <Loader />;
+    if (error || !data) return <div className="text-white text-center mt-5">{error}</div>;
+
+    const posterUrl = `${IMAGE_STORAGE_BASE}${data.posterUrl}`;
+    const selectedRep = data.representations && data.representations[selectedRepIndex];
+
+    const handleBookingRedirect = () => {
+      // Redirige vers la route /reservation/le-slug-du-spectacle
+      navigate(`/reservation/${slug}`);
+    };
+
+    return (
+      <div className={styles.detailsContainer}>
+        {/* HERO SECTION */}
+        <div
+          className={styles.heroSection}
+          style={{
+            backgroundImage: `linear-gradient(to top, #141414, transparent), url(${posterUrl})`,
+          }}
+        >
+          <div className="container">
+            <h1 className={styles.title}>{data.title}</h1>
+            <p className={styles.locationTag}>
+              📍 {data.locationDesignation || t('show.locationUndefined')}
+            </p>
+            {data.averageRating > 0 && (
+              <div className={styles.ratingHero}>
+                <span className={styles.starIcon}>★</span>
+                <span className="fw-bold">{data.averageRating.toFixed(1)}</span>
+                <span className="text-muted ms-2">
+                  ({t('home.reviewsCount', { count: data.reviewCount })})
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="container mt-5">
+          <div className="row">
+            {/* COLONNE GAUCHE */}
+            <div className="col-lg-8">
+              <div className={styles.infoSection}>
+                <h3>{t('show.about')}</h3>
+                <TranslatableText
+                  text={data.description || ''}
+                  className={styles.descriptionText}
+                  as="p"
+                />
+              </div>
+
+              {/* SECTION TAGS */}
+              <div className={styles.infoSection}>
+                <h3>🏷️ Mots-clés</h3>
+                <div className="d-flex flex-wrap gap-2 mt-3">
+                  {data.tags && data.tags.length > 0 ? (
+                    data.tags.map((tag: any) => (
+                      <span
+                        key={tag.id}
+                        style={{
+                          background: '#1a1a1a',
+                          border: '1px solid #f5c518',
+                          color: '#f5c518',
+                          borderRadius: '50px',
+                          padding: '4px 14px',
+                          fontSize: '0.85rem',
+                          fontWeight: 500,
+                        }}
+                      >
+                        #{tag.tag}
+                      </span>
+                    ))
+                  ) : (
+                    <p className="text-muted small">Aucun mot-clé pour ce spectacle.</p>
+                  )}
+                </div>
+
+                {/* FORMULAIRE AJOUT TAG — ADMIN UNIQUEMENT */}
+                {isAdmin && (
+                  <form onSubmit={handleSubmitTag} className="mt-4 d-flex gap-2 align-items-center flex-wrap">
+                    <input
+                      type="text"
+                      placeholder="Nouveau mot-clé..."
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      maxLength={30}
+                      style={{
+                        background: '#1a1a1a',
+                        border: '1px solid #444',
+                        borderRadius: '50px',
+                        color: 'white',
+                        padding: '8px 16px',
+                        outline: 'none',
+                        minWidth: '200px',
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={tagSubmitting || !newTag.trim()}
+                      style={{
+                        background: '#f5c518',
+                        color: '#000',
+                        border: 'none',
+                        borderRadius: '50px',
+                        padding: '8px 18px',
+                        fontWeight: 'bold',
+                        cursor: tagSubmitting ? 'not-allowed' : 'pointer',
+                        opacity: tagSubmitting ? 0.6 : 1,
+                      }}
+                    >
+                      {tagSubmitting ? '...' : '+ Ajouter'}
+                    </button>
+                    {tagError && <span className="text-danger small">{tagError}</span>}
+                    {tagSuccess && <span className="text-success small">✓ Tag ajouté !</span>}
+                  </form>
+                )}
+              </div>
+
+              {/* SECTION VIDÉOS */}
+              <div className={styles.infoSection}>
+                <h3>🎬 Vidéos</h3>
+                <div className="mt-3">
+                  {data.videos && data.videos.length > 0 ? (
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {data.videos.map((video: any) => (
+                        <li key={video.id} className="mb-3">
+                          <a
+                            href={video.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: '#f5c518', fontWeight: 600, textDecoration: 'none' }}
+                          >
+                            ▶ {video.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted small">Aucune vidéo pour ce spectacle.</p>
+                  )}
+                </div>
+
+                {isAdmin && (
+                  <form onSubmit={handleSubmitVideo} className="mt-4 d-flex flex-column gap-2">
+                    <div className="d-flex gap-2 flex-wrap">
+                      <input
+                        type="text"
+                        placeholder="Titre de la vidéo..."
+                        value={newVideoTitle}
+                        onChange={(e) => setNewVideoTitle(e.target.value)}
+                        maxLength={100}
+                        style={{
+                          background: '#1a1a1a', border: '1px solid #444',
+                          borderRadius: '6px', color: 'white',
+                          padding: '8px 14px', outline: 'none', flex: 1, minWidth: '180px',
+                        }}
+                      />
+                      <input
+                        type="url"
+                        placeholder="URL de la vidéo (YouTube, Vimeo…)"
+                        value={newVideoUrl}
+                        onChange={(e) => setNewVideoUrl(e.target.value)}
+                        style={{
+                          background: '#1a1a1a', border: '1px solid #444',
+                          borderRadius: '6px', color: 'white',
+                          padding: '8px 14px', outline: 'none', flex: 2, minWidth: '220px',
+                        }}
+                      />
+                      <button
+                        type="submit"
+                        disabled={videoSubmitting || !newVideoTitle.trim() || !newVideoUrl.trim()}
+                        style={{
+                          background: '#f5c518', color: '#000', border: 'none',
+                          borderRadius: '6px', padding: '8px 18px', fontWeight: 'bold',
+                          cursor: videoSubmitting ? 'not-allowed' : 'pointer',
+                          opacity: videoSubmitting ? 0.6 : 1,
+                        }}
+                      >
+                        {videoSubmitting ? '...' : '+ Ajouter'}
+                      </button>
+                    </div>
+                    {videoError && <span className="text-danger small">{videoError}</span>}
+                    {videoSuccess && <span className="text-success small">✓ Vidéo ajoutée !</span>}
+                  </form>
+                )}
+              </div>
+
+              <div className={styles.editorialNote}>
+                <h3>⭐ {t("show.editorialNoteTitle")}</h3>
+                <p>
+                  {t("show.editorialNoteText")}
+                </p>
+              </div>
+
+              <div className={styles.infoSection}>
+                <h3>{t('show.availableDates')}</h3>
+                <div className="d-flex flex-wrap gap-2 mt-3">
+                  {data.representations?.map((rep: any, index: number) => (
+                    <button
+                      key={rep.id}
+                      onClick={() => setSelectedRepIndex(index)}
+                      className={`btn ${selectedRepIndex === index ? "btn-warning" : "btn-outline-light"}`}
+                      style={
+                        selectedRepIndex === index
+                          ? { backgroundColor: "#f5c518", color: "#000" }
+                          : {}
+                      }
+                    >
+                      {formatDateTime(rep.when, i18n.language)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className={styles.infoSection}>
+                <h3>{t('show.artists')}</h3>
+                <div className="mt-3">
+                  {data.artists?.map((artist: any) => (
+                    <div key={artist.id} className="text-light mb-2">
+                      <span className="fw-bold">
+                        {artist.firstname} {artist.lastname}
+                      </span>
+                      <small className={styles.artistType}>
+                        ({artist.types.join(", ")})
+                      </small>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <hr className="border-secondary my-5" />
+
+              {/* SECTION AVIS */}
+              <div className={styles.infoSection}>
+                <h3 className="text-white mb-4">{t('show.reviews')}</h3>
+
+                {/* FORMULAIRE D'AVIS */}
+                <div className={styles.reviewFormContainer}>
+                  {user ? (
+                    <form
+                      onSubmit={handleSubmitReview}
+                      className={styles.reviewForm}
+                    >
+                      <h5 className="text-white mb-3">
+                        {t('show.reviewPrompt')}
+                      </h5>
+                      <div className="mb-3">
+                        <div className={styles.starPicker}>
+                          {[1, 2, 3, 4, 5].map((num) => (
+                            <span
+                              key={num}
+                              className={
+                                num <= stars
+                                  ? styles.starFull
+                                  : styles.starEmpty
+                              }
+                              onClick={() => setStars(num)}
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <textarea
+                        className={styles.reviewTextarea}
+                        placeholder={t('show.reviewPlaceholder')}
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        required
+                      />
+                      {submitError && (
+                        <div className="text-danger mt-2 small">
+                          {submitError}
+                        </div>
+                      )}
+                      {submitSuccess && (
+                        <div className="text-success mt-2 small">
+                          ✓ {t('show.reviewSuccess')}
+                        </div>
+                      )}
+                      <button
+                        type="submit"
+                        className={styles.submitReviewBtn}
+                        disabled={submitting}
+                      >
+                        {submitting ? t('show.reviewSubmitting').toUpperCase() : t('show.reviewSubmit').toUpperCase()}
+                      </button>
+                    </form>
+                  ) : (
+                    <div className={styles.loginPrompt}>
+                      {t('show.loginToReview')}
+                    </div>
+                  )}
+                </div>
+
+                {/* LISTE DES AVIS */}
+                <div className="mt-5">
+                  {data.reviews && data.reviews.length > 0 ? (
+                    data.reviews.map((rev: any) => (
+                      <div key={rev.id} className={styles.reviewCard}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <strong className="text-warning">
+                            @{rev.authorLogin}
+                          </strong>
+                          <span className="text-muted small">
+                            {formatDate(rev.createdAt, i18n.language)}
+                          </span>
+                        </div>
+                        <div className={styles.starsDisplay}>
+                          {"★".repeat(rev.stars)}
+                          {"☆".repeat(5 - rev.stars)}
+                        </div>
+                        <p className={styles.reviewComment}>
+                          "<TranslatableComment text={rev.comment} />"
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-muted italic">
+                      {t('show.noReviewsYet')}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* COLONNE DROITE (RÉSERVATION) */}
+            <div className="col-lg-4">
+              <div className={styles.bookingCard}>
+                <h4 className="text-white mb-4 text-center">{t('show.booking')}</h4>
+                {selectedRep ? (
+                  <>
+                    <p className="small text-muted mb-3">
+                      {t('show.sessionDate')}{" "}
+                      {formatDate(selectedRep.when, i18n.language)}
+                    </p>
+                    <div className="mb-4">
+                      {selectedRep.prices?.map((p: any) => (
+                        <div
+                          key={p.id}
+                          className={`${styles.priceItem} d-flex justify-content-between p-3 rounded`}
+                        >
+                          <span className="fw-bold">{p.type}</span>
+                          <span className="text-warning">{formatCurrency(p.amount, i18n.language)}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <button
+                      className={styles.reserveBtn}
+                      disabled={!data.bookable}
+                      onClick={handleBookingRedirect} // AJOUTE CET ÉVÉNEMENT ICI
+                    >
+                      {data.bookable ? `🎟️ ${t('show.reserve').toUpperCase()}` : t('show.full').toUpperCase()}
+                    </button>
+                  </>
+                ) : (
+                  <p className="text-center text-danger">
+                    {t('show.noRepresentation')}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+};
+
+export default ShowDetailPage;

@@ -1,0 +1,220 @@
+// frontend/src/types/models.ts
+import { StatutReservation, TypePrice, ShowStatus } from "./enums";
+
+export interface Artist {
+  id: number;
+  firstname: string;
+  lastname: string;
+  types: string[]; // Liste des types de l'artiste
+}
+
+export interface TicketDetail {
+  // 👈 Vérifie si c'est "TicketDetail" ou "TicketDetailDto"
+  id: number;
+  qrCodeReference: string;
+  showTitle: string;
+  date: string; // LocalDateTime arrive souvent en string ISO
+  locationName: string;
+  category: string;
+  price: number;
+}
+
+// Dans ton fichier de types (models.ts)
+export interface Representation {
+  id: number;
+  showId: number;
+  showTitle?: string;
+  when: string;
+  locationId?: number;
+
+  ticketsSold?: number;
+
+  // ✅ Ajoute cette ligne pour correspondre au JSON de ton backend
+  locationName?: string;
+
+  // Tu peux garder celle-ci si elle est utilisée par d'autres composants
+  locationDesignation?: string;
+
+  prices: Price[];
+}
+
+/**
+ * Détails des tarifs pour une représentation
+ */
+export interface Price {
+  id: number;
+  type: TypePrice; // "STANDARD", "VIP", "PREMIUM"
+  amount: number;
+  startDate: string;
+  endDate?: string;
+}
+
+/**
+ * Utilisateur du système
+ */
+export interface User {
+    id: number;
+    login: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    langue: string;
+    createdAt: string;
+    isActive: boolean;
+    roles?: Role[]; // Ajouté pour faciliter l'accès aux rôles de l'utilisateur
+    
+}
+
+export interface UserRegistrationDto {
+  firstname: string;
+  lastname: string;
+  login: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  langue: string;
+  /** Obligatoire pour l'inscription producteur (/become-producer). */
+  producerRequestDescription?: string;
+}
+
+export interface UserProfileDto {
+  isActive: boolean;
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  langue: string;
+  login: string;
+  role: string;
+  password?: string; // Optionnel lors d'une simple mise à jour
+  confirmPassword?: string; // Optionnel lors d'une simple mise à jour
+  profilePicture?: string; 
+  profilePictureUrl?: string; // URL de la photo de profil (optionnel)
+  /** Texte de la demande producteur (admin). */
+  producerRequestDescription?: string;
+}
+
+/**
+ * Rôle utilisateur (Admin, Membre, etc.)
+ */
+export interface Role {
+  id: number;
+  role: string; // ex: "ADMIN", "MEMBER"
+}
+
+/**
+ * Réservation globale effectuée par un utilisateur
+ */
+export interface Reservation {
+  id: number;
+  reservationDate: string;
+  statut: StatutReservation;
+  userId: number;
+  items: RepresentationReservation[]; // Détails des places réservées
+}
+
+/** Ligne agrégée renvoyée par GET /api/admin/reservations */
+export interface TicketDetailDto {
+    category: string;
+    quantity: number;
+}
+
+export interface ReservationAdminDto {
+    id: number;
+    reservationDate: string | null;
+    createdAt: string | null;
+    userLogin: string | null;
+    userEmail: string | null;
+    showTitle: string | null;
+    representationWhen: string | null;
+    ticketDetails: TicketDetailDto[];
+    totalAmount: number;
+}
+
+/**
+ * Ligne de détail d'une réservation (Table de liaison)
+ */
+export interface RepresentationReservation {
+  id: number;
+  representationId: number;
+  representationWhen: string;
+  showTitle: string;
+  priceId: number;
+  priceType: TypePrice;
+  priceAmount: number;
+  quantity: number;
+}
+
+/**
+ * Objet utilisé pour envoyer une nouvelle réservation au Backend
+ * (Correspond à votre ReservationItemRequest Java)
+ */
+export interface ReservationRequest {
+  representationId: number;
+  priceId: number;
+  places: number;
+}
+
+export interface Tag {
+  id: number;
+  tag: string;
+}
+
+export interface Troupe {
+  id: number;
+  name: string;
+  logoUrl: string | null;
+}
+
+export interface Video {
+  id: number;
+  title: string;
+  videoUrl: string;
+  showId: number;
+  showTitle?: string;
+}
+
+export interface Show {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  posterUrl: string;
+  bookable: boolean;
+  status: ShowStatus; // Ajout du statut via Enum
+  locationId?: number; // AJOUTE CETTE LIGNE (indispensable pour ShowSchedule)
+  locationDesignation: string;
+  averageRating?: number;
+  reviewCount?: number;
+  representations?: Representation[];
+  reviews?: Review[];
+  artists?: Artist[];
+  tags?: Tag[];
+  videos?: Video[];
+  createdAt: string;
+}
+
+export interface Locality {
+  id: number;
+  postalCode: number;
+  locality: string;
+}
+
+export interface Location {
+  id: number;
+  designation: string;
+  address: string;
+  website: string;
+  localityName: string;
+}
+
+export interface Review {
+  id: number;
+  authorLogin: string;
+  comment: string;
+  stars: number;
+  showTitle: string;
+  createdAt: string; // Les dates JSON arrivent en string ISO
+}
+
+export { ShowStatus };

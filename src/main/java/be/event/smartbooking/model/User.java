@@ -1,0 +1,171 @@
+package be.event.smartbooking.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false, length = 50)
+    private String login;
+
+    @Column(nullable = false)
+    private String password; // À hasher avec BCrypt en pratique !
+
+    private String firstname;
+    private String lastname;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    private String langue; // ex: "fr", "en", "nl"
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)   
+    private boolean isActive = true;    // Par défaut, un utilisateur est actif
+    
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    // =================================================================
+    // ROLES
+    // =================================================================
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
+
+    // =================================================================
+    // RÉSERVATIONS (relation principale)
+    // =================================================================
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // <-- Ne pas envoyer les réservations ici
+    @ToString.Exclude
+    private List<Reservation> reservations = new ArrayList<>();
+
+
+    // =================================================================
+    // AVIS (reviews)
+    // =================================================================
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // <-- Ne pas envoyer les avis quand on demande le profil user
+    @ToString.Exclude
+    private List<Review> reviews = new ArrayList<>();
+
+    @Builder.Default
+    @Column(name = "is_approved", nullable = false)
+    @org.hibernate.annotations.ColumnDefault("1")
+    private boolean isApproved = false;
+
+    @Column(name = "profile_picture")
+    private String profilePicture;
+
+    /** Motivation / description fournie lors d'une demande producteur (null pour les membres). */
+    @Column(name = "producer_request_description", columnDefinition = "TEXT")
+    private String producerRequestDescription;
+
+    // =================================================================
+    // MÉTHODES UTILITAIRES
+    // =================================================================
+
+    // --- Rôles ---
+    public void addRole(Role role) {
+        if (!roles.contains(role)) {
+            roles.add(role);
+            role.getUsers().add(this);
+        }
+    }
+
+    public void removeRole(Role role) {
+        if (roles.remove(role)) {
+            role.getUsers().remove(this);
+        }
+    }
+
+    // --- Réservations ---
+    public void addReservation(Reservation reservation) {
+        reservations.add(reservation);
+        reservation.setUser(this);
+    }
+
+    public void removeReservation(Reservation reservation) {
+        reservations.remove(reservation);
+        reservation.setUser(null);
+    }
+
+
+    public void addReview(Review review) {
+        reviews.add(review);
+        review.setUser(this);
+    }
+
+    public void removeReview(Review review) {
+        reviews.remove(review);
+        review.setUser(null);
+    }
+
+    // --- Méthodes pratiques très utiles ---
+   
+
+    /**
+     * Vérifie si l'utilisateur a le rôle donné
+     */
+    public boolean hasRole(String roleName) {
+        return roles.stream()
+                .anyMatch(role -> role.getRole().equalsIgnoreCase(roleName));
+    }
+
+    /**
+     * Désactive l'utilisateur (soft delete)
+     */
+    public void deactivate() {
+        this.isActive = false;  
+    }
+    /**
+     * Réactive l'utilisateur
+     */
+    public void activate() {
+        this.isActive = true;  
+    }
+
+    @Override
+    public String toString() {
+        return login + " (" + firstname + " " + lastname + ")";
+    }
+
+    // =================================================================
+    // API KEYS
+    // =================================================================
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ApiKey> apiKeys = new ArrayList<>();
+
+    public void addApiKey(ApiKey key) {
+        apiKeys.add(key);
+        key.setUser(this);
+    }
+
+    public void removeApiKey(ApiKey key) {
+        apiKeys.remove(key);
+        key.setUser(null);
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\PID\\\\smartbooking\" -Recurse -Depth 3)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path 'c:\\\\PID\\\\smartbooking' -Force)",
+      "Bash(Select-Object Name, FullName, PSIsContainer)"
+    ]
+  }
+}

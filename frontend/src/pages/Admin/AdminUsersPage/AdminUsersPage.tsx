@@ -1,0 +1,182 @@
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { userApi } from '../../../services/api';
+import { UserProfileDto } from '../../../types/models';
+import Loader from '../../../components/ui/loader/Loader';
+import Toast from '../../../components/ui/toast/Toast';
+import styles from './AdminUsersPage.module.css';
+import ExportButton from '../../../components/ui/exportButton/ExportButton';
+import ImportZone from '../../../components/ui/importZone/ImportZone';
+import AdminBackToDashboardButton from '../../../components/admin/AdminBackToDashboardButton';
+
+const AdminUsersPage: React.FC = () => {
+    const { t } = useTranslation();
+    const [users, setUsers] = useState<UserProfileDto[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [showImport, setShowImport] = useState(false);
+    const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const [toastType, setToastType] = useState<'success' | 'error' | 'info'>('info');
+
+    const loadUsers = async () => {
+        try {
+            const data = await userApi.getAll();
+            setUsers(data);
+        } catch (err) {
+            console.error("Erreur chargement users:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadUsers();
+    }, []);
+
+    const handleDelete = async (id: number, name: string) => {
+        if (!window.confirm(t("admin.users.confirmDelete", { name }))) return;
+        
+        try {
+            await userApi.delete(id);
+            setUsers(prevUsers => prevUsers.filter(u => u.id !== id));
+        } catch (err) {
+            alert(t("admin.users.errorDelete"));
+        }
+    };
+
+    const handleToggleStatus = async (id: number, wasActive: boolean) => {
+        if (updatingUserId === id) return;
+
+        setUpdatingUserId(id);
+        setUsers((prev) =>
+            prev.map((u) =>
+                u.id === id ? { ...u, isActive: !wasActive } : u
+            )
+        );
+
+        try {
+            if (wasActive) {
+                await userApi.deactivate(id);
+            } else {
+                await userApi.activate(id);
+            }
+        } catch (err) {
+            console.error("Erreur changement statut utilisateur:", err);
+            setUsers((prev) =>
+                prev.map((u) =>
+                    u.id === id ? { ...u, isActive: wasActive } : u
+                )
+            );
+            setToastType("error");
+            setToastMessage(t("admin.users.errorToggleStatus"));
+        } finally {
+            setUpdatingUserId(null);
+        }
+    };
+
+    // Transforme "ROLE_ADMIN" en "admin" pour correspondre aux classes CSS
+    const getRoleClass = (role: string) => {
+        if (!role) return styles.member;
+        const cleanRole = role.replace('ROLE_', '').toLowerCase();
+        return styles[cleanRole] || styles.member;
+    };
+
+    if (loading) return <div className={styles.loaderContainer}><Loader /></div>;
+
+    return (
+        <div className={styles.container}>
+            <AdminBackToDashboardButton />
+            <header className={styles.header}>
+                <h1>{t("admin.users.title")} <span className={styles.yellow}>{t("admin.users.titleHighlight")}</span></h1>
+                <p>{t("admin.users.subtitle", { count: users.length })}</p>
+                <div className={styles.headerActions}>
+                      <ExportButton type="users" label={t("admin.users.export")} />
+                            <button 
+                                type="button" 
+                                className={styles.importToggleBtn} 
+                                aria-expanded={showImport} 
+                                onClick={() => setShowImport((prev: boolean) => !prev)}
+                            >
+                                {showImport
+                                ? t("admin.users.hideImport")
+                                : t("admin.users.showImport")}
+                            </button>
+                </div>
+                {showImport && (
+ <div className={styles.importSection}>
+    <ImportZone type="users" onSuccess={loadUsers} />
+  </div>
+)}
+            </header>
+
+            <div className={styles.tableWrapper}>
+                <table className={styles.userTable}>
+                    <thead>
+                        <tr>
+                            <th>{t("admin.users.colIdentity")}</th>
+                            <th>{t("admin.users.colLogin")}</th>
+                            <th>{t("admin.users.colEmail")}</th>
+                            <th>{t("admin.users.colStatus")}</th>
+                            <th>{t("admin.users.colActions")}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.length > 0 ? (
+                            users.map(user => (
+                                <tr key={user.id}>
+                                    <td className={styles.userName}>
+                                        {user.lastname?.toUpperCase()} {user.firstname}
+                                    </td>
+                                    <td>
+                                        <code className={styles.loginTag}>{user.login}</code>
+                                    </td>
+                                    <td>{user.email}</td>
+                                    <td>
+                                        <span className={`${styles.roleBadge} ${getRoleClass(user.role)}`}>
+                                            {user.role?.replace('ROLE_', '') || 'MEMBRE'} 
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button
+                                            type="button"
+                                            disabled={updatingUserId === user.id}
+                                            onClick={() =>
+                                                handleToggleStatus(
+                                                    user.id,
+                                                    user.isActive ?? false
+                                                )
+                                            }
+                                            className={
+                                                user.isActive
+                                                    ? "btn btn-warning"
+                                                    : "btn btn-success"
+                                            }
+                                        >
+                                            {user.isActive
+                                                ? t("admin.users.deactivate")
+                                                : t("admin.users.activate")}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={5} className={styles.empty}>{t("admin.users.empty")}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
+            {toastMessage && (
+                <Toast
+                    message={toastMessage}
+                    type={toastType}
+                    onClose={() => setToastMessage(null)}
+                />
+            )}
+        </div>
+    );
+};
+
+export default AdminUsersPage;

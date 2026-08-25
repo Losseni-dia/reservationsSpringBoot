@@ -1,0 +1,168 @@
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 1rem;
+    background-color: #141414;
+    min-height: 90vh;
+}
+
+.card {
+    background-color: #000;
+    padding: 2.5rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid #222;
+}
+
+.label {
+    color: #f5c518;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.input {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input:focus {
+    border-color: #f5c518;
+}
+
+.btn {
+    width: 100%;
+    background-color: #f5c518;
+    color: black;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    background-color: #dfb215;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.success {
+    background: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #28a745;
+    text-align: center;
+}
+
+.error {
+    background: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #dc3545;
+    text-align: center;
+}
+
+/* Styles pour les textes informatifs */
+.title {
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.info {
+    color: #666;
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.ticketShortcut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.ticketContent h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.ticketContent p {
+  margin: 5px 0 0 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.ticketBtn {
+  background: white;
+  color: #764ba2;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.ticketBtn:hover {
+  transform: scale(1.05);
+  background: #f8f9fa;
+  color: #667eea;
+}
+
+.editButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+/* Style spécifique pour affiner le bouton d'édition */
+.editProfileBtn {
+  display: inline-block;
+  width: auto;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.avatarWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.profileImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* Rend l'image parfaitement ronde */
+  object-fit: cover;   /* Évite de déformer l'image */
+  border: 3px solid #fff; /* Un petit contour blanc pour le style */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
